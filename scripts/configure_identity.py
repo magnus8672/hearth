@@ -40,7 +40,7 @@ def configure():
                 'registrationAllowed': False}).raise_for_status()
         else:
             current.raise_for_status()
-        client.put(realm_path, json={'displayName': 'Hearth', 'bruteForceProtected': True,
+        client.put(realm_path, json={'displayName': 'Hearth', 'loginTheme': 'hearth', 'bruteForceProtected': True,
             'failureFactor': 5, 'waitIncrementSeconds': 60, 'maxFailureWaitSeconds': 900,
             'permanentLockout': False, 'registrationEmailAsUsername': False, 'loginWithEmailAllowed': False,
             'duplicateEmailsAllowed': True, 'verifyEmail': False, 'resetPasswordAllowed': False,
@@ -65,7 +65,7 @@ def configure():
         for audience, port in [('admin', 8443), ('user', 8444)]:
             client_id = f'hearth-{audience}'
             origin = f'https://localhost:{port}'
-            body = {'clientId': client_id, 'name': 'Hearth ' + audience.title(), 'enabled': True,
+            body = {'clientId': client_id, 'name': 'Hearth Administration' if audience == 'admin' else 'Your Hearth workspace', 'enabled': True,
                 'protocol': 'openid-connect', 'publicClient': False, 'clientAuthenticatorType': 'client-secret',
                 'secret': values[f'HEARTH_{audience.upper()}_CLIENT_SECRET'], 'standardFlowEnabled': True,
                 'implicitFlowEnabled': False, 'directAccessGrantsEnabled': False, 'serviceAccountsEnabled': False,
@@ -93,6 +93,19 @@ def configure():
                     client.delete(scope_path + '/' + scope['id']).raise_for_status()
         client.put(realm_path, json={'registrationAllowed': owner_created(values)}).raise_for_status()
     print('Hearth identity clients configured. Passwords and MFA remain in Keycloak.')
+
+
+def configure_branding():
+    """Update presentation only, including on a farm with existing accounts."""
+    with admin_client(configuration()) as client:
+        path = f'/admin/realms/{REALM}'
+        client.put(path, json={'displayName': 'Hearth', 'loginTheme': 'hearth'}).raise_for_status()
+        for audience, name in [('admin', 'Hearth Administration'), ('user', 'Your Hearth workspace')]:
+            clients = client.get(path + '/clients', params={'clientId': f'hearth-{audience}'}).json()
+            if len(clients) != 1:
+                raise ValueError('Configure the Hearth identity clients before applying the theme.')
+            client.put(path + '/clients/' + clients[0]['id'], json={'name': name}).raise_for_status()
+    print('Hearth sign-in branding applied. Existing accounts and authentication settings preserved.')
 
 
 def configure_mfa_flow(client, realm_path):
@@ -193,11 +206,13 @@ def create_owner(data):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['configure', 'owner', 'status'])
+    parser.add_argument('action', choices=['configure', 'theme', 'owner', 'status'])
     args = parser.parse_args()
     try:
         if args.action == 'configure':
             configure()
+        elif args.action == 'theme':
+            configure_branding()
         elif args.action == 'status':
             print(json.dumps({'owner_created': owner_created(configuration())}))
         else:

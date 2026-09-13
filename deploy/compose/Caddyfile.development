@@ -23,9 +23,19 @@
         header_up X-Forwarded-Proto https
     }
 }
+(browser_trust_probe) {
+    # Static, credential-free response used by the local setup browser itself.
+    handle /health/browser {
+        header Content-Type application/json
+        header Access-Control-Allow-Origin *
+        header Cache-Control no-store
+        respond "{\"service\":\"{args[0]}\",\"status\":\"ok\"}" 200
+    }
+}
 https://localhost:8443, https://127.0.0.1:8443 {
     import hearth_headers
-    @api path /api/* /auth/* /health/*
+    import browser_trust_probe hearth-admin
+    @api path /api/* /auth/* /health/ready /health/live
     handle @api {
         import bff_proxy api:8080
     }
@@ -37,7 +47,8 @@ https://localhost:8443, https://127.0.0.1:8443 {
 }
 https://localhost:8444 {
     import hearth_headers
-    @api path /api/* /auth/* /health/*
+    import browser_trust_probe hearth-user
+    @api path /api/* /auth/* /health/ready /health/live
     handle @api {
         import bff_proxy user-api:8080
     }
@@ -49,6 +60,7 @@ https://localhost:8444 {
 }
 https://localhost:8445 {
     tls internal
+    import browser_trust_probe hearth-identity
     @identity path /realms/hearth/* /resources/* /robots.txt
     handle @identity {
         reverse_proxy keycloak:8085 {

@@ -51,6 +51,8 @@ def main():
             result = {'owner_created': True}
         elif data['action'] == 'status':
             result = status()
+        elif data['action'] == 'certificate':
+            result = {'certificate': CERTIFICATE.read_text(encoding='ascii')}
         else:
             raise ValueError('Unsupported setup action.')
         print(json.dumps(result))

@@ -1,8 +1,12 @@
 # Hearth implementation ledger
 
-Updated 12 September 2026. Baseline: engineering specification 1.2 and visual identity 1.0. The supplied 119 design/brand files remain unchanged and are also preserved under `docs/plan/`.
+Updated 13 September 2026. Baseline: engineering specification 1.2 and visual identity 1.0. The supplied 119 design/brand files remain unchanged and are also preserved under `docs/plan/`.
 
 **Current milestone: first local accounts-and-workspaces test build, spanning P0 and P1.** Real Owner setup, MFA, Member registration, separate application sessions and private drafts are ready for user testing on the prepared Windows machine. Follow [TESTING.md](../../TESTING.md). Assistant replies and provider setup remain unfinished; neither P0 nor P1 exit is complete.
+
+The user has now imported the local certificate, enrolled an authenticator and reached Administration. Zen initially reported an unknown issuer but accepted trust on a subsequent page load. Setup now distinguishes Windows root installation from three actual browser HTTPS checks, retries initial failures, and supplies browser-specific help. Its Windows status check uses the certificate-store API directly because the PowerShell `Cert:` provider was sometimes absent in Python-launched helper processes.
+
+The running identity service now uses Hearth branding for sign-in, registration, authenticator and recovery screens. A resource-only theme JAR is available through `scripts/package_identity_theme.py`. Five appearance/flow checks and three setup-UI regressions pass. The appearance suite uses anonymous real HTTPS plus a disposable identity realm for OTP/recovery and PKCE checks; existing user accounts and credential identities were preserved. See [theme evidence](../../evidence/identity-theme/2026-09-13/theme-browser.json).
 
 ## Implemented
 
@@ -30,10 +34,10 @@ Updated 12 September 2026. Baseline: engineering specification 1.2 and visual id
 - TypeScript: 116 common fixture tests, type checking and both Vite production builds pass.
 - Browser: eight real-Keycloak acceptance checks pass in Chromium 153, covering Owner/MFA/recovery enrollment, real self-registration, separate sessions, private drafts, two-Member isolation, CSRF, cookie substitution and copied-session rejection after logout. The additional missing-second-factor check passes. Desktop and mobile screenshots were visually inspected.
 - Welcome screens: four Playwright cases pass, including live appliance readiness; setup/session responses in these four cases remain fixtures.
-- TLS: browser certificate validation stays enabled using an isolated Linux NSS store and a root obtained over pinned SSH. Windows user trust is still unmodified; the explicit native trust action is left for the user's local test.
+- TLS: automated browser certificate validation stays enabled using an isolated Linux NSS store and a root obtained over pinned SSH. The user subsequently completed Windows trust and reached Administration in Zen. Automated theme work made no additional OS or browser trust changes.
 - Persistence: one normal guest shutdown/start preserved all four synthetic accounts, draft contents/revisions and the Caddy root. Both HTTPS apps and identity returned healthy. See [restart evidence](../../evidence/identity/2026-09-12/restart.json).
 - Identity and PKI: Keycloak S256 login and MFA work. Recovery-code generation was exercised; consuming/replaying recovery codes and enrolled-worker issuance are not yet acceptance-qualified.
-- Handoff: recorded synthetic accounts and draft data were removed after validation. The real Owner remains unclaimed. No models were downloaded and no paid inference calls were made.
+- Initial handoff: recorded synthetic accounts and draft data were removed before user testing. The user has since created the real Owner and completed MFA. That account is preserved. No models were downloaded and no paid inference calls were made.
 - GitHub Actions is configured but has not run remotely.
 
 ## Findings and remaining P0 work
@@ -42,7 +46,7 @@ Updated 12 September 2026. Baseline: engineering specification 1.2 and visual id
 2. The official Switchyard Linux x86-64 wheel stopped with SIGILL on the WHPX guest. Explicit AVX requests still produced a kernel XSAVE consistency failure, so simply adding flags is insufficient. Resolved by compiling the same hash-pinned release for x86-64-v2 with pinned Rust and maturin versions. The real Linux suite passes, without changing upstream source or substituting a fixture.
 3. The production native installer/supervisor, fixed privileged-helper IPC, signed appliance distribution, watchdog and lifecycle failure recovery are not implemented by the Python development helper.
 4. Go verification of the selected signed-recipe JWS profile passes against Python signatures and negative cases. Additional adversarial wire semantics and explicit version normalization need completion before accepting executable plans.
-5. Trusted HTTPS BFF login and private workspaces are implemented and tested. The signed production installer, real Windows trust-button interaction, role-management UI, broader recovery/step-up scenarios, SSE lifecycle and LAN browser trust remain open.
+5. Trusted HTTPS BFF login and private workspaces are implemented and tested, and the user has completed Windows trust and Owner/MFA setup. The signed production installer, wider browser-trust qualification, role-management UI, broader recovery/step-up scenarios, SSE lifecycle and LAN browser trust remain open.
 6. The database was upgraded to migration 0002. A complete nonempty upgrade/backup/restore acceptance fixture remains pending; a normal restart is narrower evidence.
 7. Other host/guest architectures remain unqualified. OS floors and release constraints are recorded in [ADR 0002](../adr/0002-installation-trust-and-native-boundaries.md).
 8. The required local geometry pipeline has a selected qualification candidate in [ADR 0003](../adr/0003-local-geometry-pipeline.md). No 3D model has been installed or run.

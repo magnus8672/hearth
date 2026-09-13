@@ -46,6 +46,8 @@ The launcher configures the fixed Keycloak realm and clients, builds the native 
 
 Use [Administration](https://localhost:8443) and [Workspace](https://localhost:8444) after setup. Caddy serves the separate production bundles and proxies each to its fixed-audience BFF. The identity origin is `https://localhost:8445`. Rebuild with `pnpm build` and run the stack command after changing frontend or server code.
 
+Identity screens use the Hearth theme described in [deploy/identity](deploy/identity/README.md). The theme can also be packaged as a resource-only JAR. The setup tool verifies all three origins in the user's browser independently of the Windows root-store check. Browser-probe endpoints return only a static service label, accept no credentials and grant no authority.
+
 For frontend fixture development only, use separate terminals:
 
 ```powershell

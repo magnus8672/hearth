@@ -13,6 +13,7 @@ Open PowerShell in this folder and run:
 Keep the setup console open. It opens a native, loopback-only setup session in your default browser. The session expires after 30 minutes; rerun the command if it expires. The prepared appliance is already installed in this checkout. Startup after a reboot may take a minute.
 
 1. Click **Trust this Hearth certificate** after reviewing the displayed fingerprint. This explicit action adds the appliance's local CA to **your Windows user's** trusted roots. Applications using that trust store can then trust certificates issued by this CA. The launcher itself does not install browser trust.
+   The setup page then checks Administration, Workspace and Sign-in from this browser. It retries a first failed connection and only offers the app links after all three HTTPS checks succeed. Windows certificate installation and browser readiness are shown separately.
 2. Create your Hearth name, Owner name, username and password. Passwords need at least 14 characters. Use a fresh username; ordinary registration can never claim Owner.
 3. Open **Administration** and sign in. Have your TOTP authenticator ready. Complete authenticator setup and save the one-use recovery codes somewhere safe.
 4. You should see your name, the farm overview and 14 capabilities marked **Unassigned**.
@@ -22,7 +23,9 @@ Use these exact addresses after trust and setup:
 - [Administration](https://localhost:8443)
 - [Your workspace](https://localhost:8444)
 
-The identity service is on `https://localhost:8445`. Do not click past a certificate warning. Reopen the local setup tool to check trust if one appears. This build binds to host loopback, so these URLs are for this machine, not another LAN device.
+The Hearth-branded sign-in service is on `https://localhost:8445`. The redirect to that separate origin is expected; its page names the application you are entering. Your existing Hearth username, password and authenticator work there.
+
+Zen/Firefox may need another connection after importing a Windows root. If the first visit reports `SEC_ERROR_UNKNOWN_ISSUER`, return to setup and use **Check browser connections**. If needed, fully quit/reopen the browser and rerun the launcher. Persistent warnings have a browser-specific certificate import guide and a download of this Hearth's public root in setup. Do not add a website exception. This build binds to host loopback, so these URLs are for this machine, not another LAN device.
 
 ## What to test
 

@@ -44,14 +44,14 @@ The 61 binding gates retain their original meaning in [the validation plan](../.
 | S16 | User promotes self via role API | Partial evidence | Public login provisioning grants only Member; real Members cannot inspect the admin farm. Role-editing APIs and promotion attack acceptance remain pending. |
 | S17 | Cloud access through Graphify ambient env | Not run | Requires later product implementation and end-to-end validation. |
 | S18 | IPv6 or alternate admin route bypass | Not run | Requires later product implementation and end-to-end validation. |
-| C01 | First node creates Hearth | Partial evidence | Local accelerated stack, console-bound Owner setup, MFA and private drafts work. Explicit Windows trust interaction, signed installer and sustained VM reliability remain pending. |
+| C01 | First node creates Hearth | Partial evidence | Local accelerated stack, console-bound Owner setup, MFA and private drafts work; the user completed Windows trust and reached Administration in Zen. Signed installer, other-system trust and sustained VM reliability remain pending. |
 | C02 | Member needs only head address/port | Not run | Requires later product implementation and end-to-end validation. |
 | C03 | All normal settings managed centrally | Not run | Requires later product implementation and end-to-end validation. |
 | C04 | Correct service for assigned job | Not run | Requires later product implementation and end-to-end validation. |
 | C05 | Pairing proof/envelope integrity | Partial evidence | Go/Python JWE interoperability and narrow tamper cases pass; full enrollment lifecycle pending. |
 | C06 | Rogue head or anonymous endpoint | Not run | Requires later product implementation and end-to-end validation. |
 | C07 | Untrusted provisioning input | Partial evidence | Python signature/digest checks and revision policy pass; native installer and provisioning still pending. |
-| C08 | Setup and browser-origin isolation | Partial evidence | Exact-origin BFFs, one-use callback state, PKCE, secure audience-bound cookies, CSRF, local setup proof/Host/Origin checks and copied-session logout rejection pass. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending. |
+| C08 | Setup and browser-origin isolation | Partial evidence | Exact-origin BFFs, one-use callback state, PKCE, audience-bound cookies, CSRF, setup proof/Host/Origin checks and logout rejection pass. Browser setup now verifies all three HTTPS origins independently of OS trust. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending. |
 | C09 | Recovery and single control head | Not run | Requires later product implementation and end-to-end validation. |
 | A01 | First provider on Hearth itself | Not run | Requires later product implementation and end-to-end validation. |
 | A02 | First provider on a member | Not run | Requires later product implementation and end-to-end validation. |

@@ -81,6 +81,8 @@ services:
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
       KC_PROXY_HEADERS: xforwarded
     ports: ["8085:8085"]
+    volumes:
+      - ../identity/themes/hearth:/opt/keycloak/themes/hearth:ro
     depends_on:
       postgres: {condition: service_healthy}
     restart: unless-stopped

@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-09-13T03:20:31.957373+00:00",
+  "original_inputs_unchanged": 119,
+  "theme_artwork_matches_original": true,
+  "theme_jar_sha256": "050c6622975edf4fc1fa093fd1e800eef29b8ddb738838348d4593784081f3ae",
+  "jar_deterministic": true,
+  "windows_root_detected_via_python_helper": true,
+  "owner_preserved": true,
+  "disposable_realms_remaining": 0,
+  "user_report": "Zen accepted trust on a subsequent connection; Owner completed OTP and reached Administration",
+  "browser_checks": "theme-browser.json",
+  "setup_regressions": "setup-browser.json",
+  "go": "all packages pass; Windows setup executable built",
+  "typescript": "typecheck passed",
+  "ruff": "passed",
+  "trust_changes_by_this_fix": false,
+  "certificate_exceptions_used": false
+}

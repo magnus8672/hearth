@@ -245,7 +245,7 @@
       "gate": "C01",
       "scenario": "First node creates Hearth",
       "status": "partial",
-      "note": "Local accelerated stack, console-bound Owner setup, MFA and private drafts work. Explicit Windows trust interaction, signed installer and sustained VM reliability remain pending."
+      "note": "Local accelerated stack, console-bound Owner setup, MFA and private drafts work; the user completed Windows trust and reached Administration in Zen. Signed installer, other-system trust and sustained VM reliability remain pending."
     },
     {
       "gate": "C02",
@@ -287,7 +287,7 @@
       "gate": "C08",
       "scenario": "Setup and browser-origin isolation",
       "status": "partial",
-      "note": "Exact-origin BFFs, one-use callback state, PKCE, secure audience-bound cookies, CSRF, local setup proof/Host/Origin checks and copied-session logout rejection pass. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending."
+      "note": "Exact-origin BFFs, one-use callback state, PKCE, audience-bound cookies, CSRF, setup proof/Host/Origin checks and logout rejection pass. Browser setup now verifies all three HTTPS origins independently of OS trust. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending."
     },
     {
       "gate": "C09",

@@ -35,7 +35,7 @@ func (s *setupServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Referrer-Policy", "no-referrer")
 	w.Header().Set("X-Content-Type-Options", "nosniff")
-	w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+	w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'self'; script-src 'self'; connect-src 'self' https://localhost:8443 https://localhost:8444 https://localhost:8445; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
 	if "http://"+r.Host != s.origin || time.Now().After(s.expires) {
 		http.Error(w, "Setup is unavailable.", 403)
 		return
@@ -62,7 +62,7 @@ func (s *setupServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		decoder := json.NewDecoder(bytes.NewReader(body))
 		decoder.DisallowUnknownFields()
-		if decoder.Decode(&input) != nil || (input.Action != "status" && input.Action != "trust" && input.Action != "owner") {
+		if decoder.Decode(&input) != nil || (input.Action != "status" && input.Action != "trust" && input.Action != "owner" && input.Action != "certificate") {
 			http.Error(w, "Unsupported setup action.", 400)
 			return
 		}

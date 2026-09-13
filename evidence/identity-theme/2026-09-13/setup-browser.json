@@ -1,0 +1,11 @@
+{
+  "scope": "UI fixtures for browser probe failure, first-failure retry and explicit trust gating; not a certificate validation test",
+  "stats": {
+    "startTime": "2026-09-13T03:13:46.577Z",
+    "duration": 7172.526999999999,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

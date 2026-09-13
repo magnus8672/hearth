@@ -1,0 +1,13 @@
+{
+  "passed": [
+    "Public HTTPS admin and workspace login branding and context",
+    "Daylight, Firelight and mobile layout",
+    "All three HTTPS browser probe responses",
+    "Disposable realm registration form",
+    "Disposable realm authenticator and recovery enrollment with real PKCE code exchange"
+  ],
+  "browser": "153.0.8010.12",
+  "public_tls_validation": true,
+  "mfa_scope": "Separate disposable Keycloak realm on guest HTTP loopback; no BFF or existing farm account used",
+  "secret_regions_masked_in_screenshots": true
+}
