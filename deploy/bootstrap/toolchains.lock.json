@@ -1,0 +1,13 @@
+{
+  "go": {
+    "version": "1.26.8",
+    "url": "https://go.dev/dl/go1.26.8.windows-amd64.zip",
+    "sha256": "b92c3b2adae85a11ba71fe7216daf0d84e82af4c8ab6c5625807f28622043a59"
+  },
+  "qemu_development_probe": {
+    "url": "https://qemu.weilnetz.de/w64/qemu-w64-setup-20260811.exe",
+    "sha512": "5bcf9eed634e8575a37b74f445af41a2fe4106da512d0c30c368301d4c105037fdfab40a5287367a28a957624cddebbc8c07e16c88ab6634f554cdf3d16bf543",
+    "sha256": "f98a8aeb5f7faea9765b6dee28316c266cd179d80354a2fed8e50176f9a2e59f",
+    "scope": "Development qualification; release packages require separately approved distribution signing"
+  }
+}

@@ -1,0 +1,14 @@
+.git
+.hearth
+.venv
+node_modules
+**/node_modules
+**/dist
+docs
+brand
+diagrams
+evidence
+*.md
+phases
+tests
+worker

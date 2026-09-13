@@ -1,0 +1,2063 @@
+[
+  {
+    "name": "AdminApplyRequest.valid",
+    "contract": "AdminApplyRequest",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_revision": 1
+    }
+  },
+  {
+    "name": "AdminApplyRequest.unknown_authority",
+    "contract": "AdminApplyRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_revision": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "AdminApplyRequest.future_version",
+    "contract": "AdminApplyRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_revision": 1
+    }
+  },
+  {
+    "name": "AdminApplyRequest.boolean_version",
+    "contract": "AdminApplyRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expected_revision": 1
+    }
+  },
+  {
+    "name": "AdminChangeSet.valid",
+    "contract": "AdminChangeSet",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "intent": {
+        "schema_version": 1,
+        "action": "assign_capability",
+        "target_node_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "capability_id": null,
+        "approved_recipe_id": null,
+        "settings": {}
+      },
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "node_plans": [],
+      "preconditions": [
+        {
+          "schema_version": 1,
+          "resource_id": "00000000-0000-4000-8000-000000000001",
+          "expected_revision": 0
+        }
+      ],
+      "download_bytes": 0,
+      "disruption": "fixture",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "AdminChangeSet.unknown_authority",
+    "contract": "AdminChangeSet",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "intent": {
+        "schema_version": 1,
+        "action": "assign_capability",
+        "target_node_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "capability_id": null,
+        "approved_recipe_id": null,
+        "settings": {}
+      },
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "node_plans": [],
+      "preconditions": [
+        {
+          "schema_version": 1,
+          "resource_id": "00000000-0000-4000-8000-000000000001",
+          "expected_revision": 0
+        }
+      ],
+      "download_bytes": 0,
+      "disruption": "fixture",
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "AdminChangeSet.future_version",
+    "contract": "AdminChangeSet",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "intent": {
+        "schema_version": 1,
+        "action": "assign_capability",
+        "target_node_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "capability_id": null,
+        "approved_recipe_id": null,
+        "settings": {}
+      },
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "node_plans": [],
+      "preconditions": [
+        {
+          "schema_version": 1,
+          "resource_id": "00000000-0000-4000-8000-000000000001",
+          "expected_revision": 0
+        }
+      ],
+      "download_bytes": 0,
+      "disruption": "fixture",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "AdminChangeSet.boolean_version",
+    "contract": "AdminChangeSet",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "intent": {
+        "schema_version": 1,
+        "action": "assign_capability",
+        "target_node_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "capability_id": null,
+        "approved_recipe_id": null,
+        "settings": {}
+      },
+      "change_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "node_plans": [],
+      "preconditions": [
+        {
+          "schema_version": 1,
+          "resource_id": "00000000-0000-4000-8000-000000000001",
+          "expected_revision": 0
+        }
+      ],
+      "download_bytes": 0,
+      "disruption": "fixture",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "AdminExecutionGrant.valid",
+    "contract": "AdminExecutionGrant",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "change_hash": null,
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "actions": [
+        "fixture"
+      ],
+      "maximum_download_bytes": 0,
+      "authorization_version": 1,
+      "expires_at": "2026-09-12T19:00:00Z",
+      "revoked_at": null
+    }
+  },
+  {
+    "name": "AdminExecutionGrant.unknown_authority",
+    "contract": "AdminExecutionGrant",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "change_hash": null,
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "actions": [
+        "fixture"
+      ],
+      "maximum_download_bytes": 0,
+      "authorization_version": 1,
+      "expires_at": "2026-09-12T19:00:00Z",
+      "revoked_at": null,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "AdminExecutionGrant.future_version",
+    "contract": "AdminExecutionGrant",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "change_hash": null,
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "actions": [
+        "fixture"
+      ],
+      "maximum_download_bytes": 0,
+      "authorization_version": 1,
+      "expires_at": "2026-09-12T19:00:00Z",
+      "revoked_at": null
+    }
+  },
+  {
+    "name": "AdminExecutionGrant.boolean_version",
+    "contract": "AdminExecutionGrant",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "change_hash": null,
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "actions": [
+        "fixture"
+      ],
+      "maximum_download_bytes": 0,
+      "authorization_version": 1,
+      "expires_at": "2026-09-12T19:00:00Z",
+      "revoked_at": null
+    }
+  },
+  {
+    "name": "AdminIntent.valid",
+    "contract": "AdminIntent",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "action": "assign_capability",
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "capability_id": null,
+      "approved_recipe_id": null,
+      "settings": {}
+    }
+  },
+  {
+    "name": "AdminIntent.unknown_authority",
+    "contract": "AdminIntent",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "action": "assign_capability",
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "capability_id": null,
+      "approved_recipe_id": null,
+      "settings": {},
+      "is_admin": true
+    }
+  },
+  {
+    "name": "AdminIntent.future_version",
+    "contract": "AdminIntent",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "action": "assign_capability",
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "capability_id": null,
+      "approved_recipe_id": null,
+      "settings": {}
+    }
+  },
+  {
+    "name": "AdminIntent.boolean_version",
+    "contract": "AdminIntent",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "action": "assign_capability",
+      "target_node_ids": [
+        "00000000-0000-4000-8000-000000000001"
+      ],
+      "capability_id": null,
+      "approved_recipe_id": null,
+      "settings": {}
+    }
+  },
+  {
+    "name": "AdminOperation.valid",
+    "contract": "AdminOperation",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "change_id": "00000000-0000-4000-8000-000000000001",
+      "state": "accepted",
+      "revision": 1,
+      "completed_service_ids": [],
+      "reason": null,
+      "deadline": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "AdminOperation.unknown_authority",
+    "contract": "AdminOperation",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "change_id": "00000000-0000-4000-8000-000000000001",
+      "state": "accepted",
+      "revision": 1,
+      "completed_service_ids": [],
+      "reason": null,
+      "deadline": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "AdminOperation.future_version",
+    "contract": "AdminOperation",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "change_id": "00000000-0000-4000-8000-000000000001",
+      "state": "accepted",
+      "revision": 1,
+      "completed_service_ids": [],
+      "reason": null,
+      "deadline": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "AdminOperation.boolean_version",
+    "contract": "AdminOperation",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "change_id": "00000000-0000-4000-8000-000000000001",
+      "state": "accepted",
+      "revision": 1,
+      "completed_service_ids": [],
+      "reason": null,
+      "deadline": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "ArtifactMetadata.valid",
+    "contract": "ArtifactMetadata",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "owner_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "source_task_id": "00000000-0000-4000-8000-000000000001",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "content_type": "fixture",
+      "size_bytes": 1,
+      "locality": "local_only",
+      "source_artifact_ids": []
+    }
+  },
+  {
+    "name": "ArtifactMetadata.unknown_authority",
+    "contract": "ArtifactMetadata",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "owner_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "source_task_id": "00000000-0000-4000-8000-000000000001",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "content_type": "fixture",
+      "size_bytes": 1,
+      "locality": "local_only",
+      "source_artifact_ids": [],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ArtifactMetadata.future_version",
+    "contract": "ArtifactMetadata",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "owner_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "source_task_id": "00000000-0000-4000-8000-000000000001",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "content_type": "fixture",
+      "size_bytes": 1,
+      "locality": "local_only",
+      "source_artifact_ids": []
+    }
+  },
+  {
+    "name": "ArtifactMetadata.boolean_version",
+    "contract": "ArtifactMetadata",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "owner_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "source_task_id": "00000000-0000-4000-8000-000000000001",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "content_type": "fixture",
+      "size_bytes": 1,
+      "locality": "local_only",
+      "source_artifact_ids": []
+    }
+  },
+  {
+    "name": "CapabilityAvailability.valid",
+    "contract": "CapabilityAvailability",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "assignment_state": "unassigned",
+      "local_state": "unavailable",
+      "local_deployment_ids": [],
+      "cloud_configured": false,
+      "cloud_allowed_for_caller": false,
+      "effective_state": "unavailable",
+      "reason": null,
+      "available_actions": []
+    }
+  },
+  {
+    "name": "CapabilityAvailability.unknown_authority",
+    "contract": "CapabilityAvailability",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "assignment_state": "unassigned",
+      "local_state": "unavailable",
+      "local_deployment_ids": [],
+      "cloud_configured": false,
+      "cloud_allowed_for_caller": false,
+      "effective_state": "unavailable",
+      "reason": null,
+      "available_actions": [],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "CapabilityAvailability.future_version",
+    "contract": "CapabilityAvailability",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "capability_id": "fixture",
+      "assignment_state": "unassigned",
+      "local_state": "unavailable",
+      "local_deployment_ids": [],
+      "cloud_configured": false,
+      "cloud_allowed_for_caller": false,
+      "effective_state": "unavailable",
+      "reason": null,
+      "available_actions": []
+    }
+  },
+  {
+    "name": "CapabilityAvailability.boolean_version",
+    "contract": "CapabilityAvailability",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "capability_id": "fixture",
+      "assignment_state": "unassigned",
+      "local_state": "unavailable",
+      "local_deployment_ids": [],
+      "cloud_configured": false,
+      "cloud_allowed_for_caller": false,
+      "effective_state": "unavailable",
+      "reason": null,
+      "available_actions": []
+    }
+  },
+  {
+    "name": "CapabilityDefinition.valid",
+    "contract": "CapabilityDefinition",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "revision": 1,
+      "display_name": "fixture",
+      "description": "fixture",
+      "icon": "fixture",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "fixture",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true
+    }
+  },
+  {
+    "name": "CapabilityDefinition.unknown_authority",
+    "contract": "CapabilityDefinition",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "revision": 1,
+      "display_name": "fixture",
+      "description": "fixture",
+      "icon": "fixture",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "fixture",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "CapabilityDefinition.future_version",
+    "contract": "CapabilityDefinition",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "capability_id": "fixture",
+      "revision": 1,
+      "display_name": "fixture",
+      "description": "fixture",
+      "icon": "fixture",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "fixture",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true
+    }
+  },
+  {
+    "name": "CapabilityDefinition.boolean_version",
+    "contract": "CapabilityDefinition",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "capability_id": "fixture",
+      "revision": 1,
+      "display_name": "fixture",
+      "description": "fixture",
+      "icon": "fixture",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "fixture",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true
+    }
+  },
+  {
+    "name": "CloudAuthorization.valid",
+    "contract": "CloudAuthorization",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "provider_enabled": true,
+      "capability_allowed": true,
+      "user_opt_in": true,
+      "workspace_allowed": true,
+      "price_known": true,
+      "farm_remaining_minor": 0,
+      "user_remaining_minor": 0,
+      "requested_reservation_minor": 1,
+      "input_localities": [
+        "local_only"
+      ]
+    }
+  },
+  {
+    "name": "CloudAuthorization.unknown_authority",
+    "contract": "CloudAuthorization",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "provider_enabled": true,
+      "capability_allowed": true,
+      "user_opt_in": true,
+      "workspace_allowed": true,
+      "price_known": true,
+      "farm_remaining_minor": 0,
+      "user_remaining_minor": 0,
+      "requested_reservation_minor": 1,
+      "input_localities": [
+        "local_only"
+      ],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "CloudAuthorization.future_version",
+    "contract": "CloudAuthorization",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "provider_enabled": true,
+      "capability_allowed": true,
+      "user_opt_in": true,
+      "workspace_allowed": true,
+      "price_known": true,
+      "farm_remaining_minor": 0,
+      "user_remaining_minor": 0,
+      "requested_reservation_minor": 1,
+      "input_localities": [
+        "local_only"
+      ]
+    }
+  },
+  {
+    "name": "CloudAuthorization.boolean_version",
+    "contract": "CloudAuthorization",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "provider_enabled": true,
+      "capability_allowed": true,
+      "user_opt_in": true,
+      "workspace_allowed": true,
+      "price_known": true,
+      "farm_remaining_minor": 0,
+      "user_remaining_minor": 0,
+      "requested_reservation_minor": 1,
+      "input_localities": [
+        "local_only"
+      ]
+    }
+  },
+  {
+    "name": "EnrollmentEnvelope.valid",
+    "contract": "EnrollmentEnvelope",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "farm_ca_pem": "fixturexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "control_origin": "https://127.0.0.1:8443",
+      "enrollment_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "EnrollmentEnvelope.unknown_authority",
+    "contract": "EnrollmentEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "farm_ca_pem": "fixturexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "control_origin": "https://127.0.0.1:8443",
+      "enrollment_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "EnrollmentEnvelope.future_version",
+    "contract": "EnrollmentEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "farm_ca_pem": "fixturexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "control_origin": "https://127.0.0.1:8443",
+      "enrollment_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "EnrollmentEnvelope.boolean_version",
+    "contract": "EnrollmentEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "farm_ca_pem": "fixturexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "control_origin": "https://127.0.0.1:8443",
+      "enrollment_token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "EnrollmentPending.valid",
+    "contract": "EnrollmentPending",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "fixture",
+      "protocol_version": 1
+    }
+  },
+  {
+    "name": "EnrollmentPending.unknown_authority",
+    "contract": "EnrollmentPending",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "fixture",
+      "protocol_version": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "EnrollmentPending.future_version",
+    "contract": "EnrollmentPending",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "fixture",
+      "protocol_version": 1
+    }
+  },
+  {
+    "name": "EnrollmentPending.boolean_version",
+    "contract": "EnrollmentPending",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "public_key_fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "display_name": "fixture",
+      "protocol_version": 1
+    }
+  },
+  {
+    "name": "ErrorDetail.valid",
+    "contract": "ErrorDetail",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "code": "fixture",
+      "message": "fixture",
+      "retryable": false,
+      "trace_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "name": "ErrorDetail.unknown_authority",
+    "contract": "ErrorDetail",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "code": "fixture",
+      "message": "fixture",
+      "retryable": false,
+      "trace_id": "00000000-0000-4000-8000-000000000001",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ErrorDetail.future_version",
+    "contract": "ErrorDetail",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "code": "fixture",
+      "message": "fixture",
+      "retryable": false,
+      "trace_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "name": "ErrorDetail.boolean_version",
+    "contract": "ErrorDetail",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "code": "fixture",
+      "message": "fixture",
+      "retryable": false,
+      "trace_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "name": "ErrorResponse.valid",
+    "contract": "ErrorResponse",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "error": {
+        "schema_version": 1,
+        "code": "fixture",
+        "message": "fixture",
+        "retryable": false,
+        "trace_id": "00000000-0000-4000-8000-000000000001"
+      }
+    }
+  },
+  {
+    "name": "ErrorResponse.unknown_authority",
+    "contract": "ErrorResponse",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "error": {
+        "schema_version": 1,
+        "code": "fixture",
+        "message": "fixture",
+        "retryable": false,
+        "trace_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ErrorResponse.future_version",
+    "contract": "ErrorResponse",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "error": {
+        "schema_version": 1,
+        "code": "fixture",
+        "message": "fixture",
+        "retryable": false,
+        "trace_id": "00000000-0000-4000-8000-000000000001"
+      }
+    }
+  },
+  {
+    "name": "ErrorResponse.boolean_version",
+    "contract": "ErrorResponse",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "error": {
+        "schema_version": 1,
+        "code": "fixture",
+        "message": "fixture",
+        "retryable": false,
+        "trace_id": "00000000-0000-4000-8000-000000000001"
+      }
+    }
+  },
+  {
+    "name": "EventEnvelope.valid",
+    "contract": "EventEnvelope",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "event_id": "00000000-0000-4000-8000-000000000001",
+      "event_type": "fixture",
+      "occurred_at": "2026-09-12T19:00:00Z",
+      "aggregate_id": "00000000-0000-4000-8000-000000000001",
+      "aggregate_version": 1,
+      "trace_id": "00000000-0000-4000-8000-000000000001",
+      "data": {}
+    }
+  },
+  {
+    "name": "EventEnvelope.unknown_authority",
+    "contract": "EventEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "event_id": "00000000-0000-4000-8000-000000000001",
+      "event_type": "fixture",
+      "occurred_at": "2026-09-12T19:00:00Z",
+      "aggregate_id": "00000000-0000-4000-8000-000000000001",
+      "aggregate_version": 1,
+      "trace_id": "00000000-0000-4000-8000-000000000001",
+      "data": {},
+      "is_admin": true
+    }
+  },
+  {
+    "name": "EventEnvelope.future_version",
+    "contract": "EventEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "event_id": "00000000-0000-4000-8000-000000000001",
+      "event_type": "fixture",
+      "occurred_at": "2026-09-12T19:00:00Z",
+      "aggregate_id": "00000000-0000-4000-8000-000000000001",
+      "aggregate_version": 1,
+      "trace_id": "00000000-0000-4000-8000-000000000001",
+      "data": {}
+    }
+  },
+  {
+    "name": "EventEnvelope.boolean_version",
+    "contract": "EventEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "event_id": "00000000-0000-4000-8000-000000000001",
+      "event_type": "fixture",
+      "occurred_at": "2026-09-12T19:00:00Z",
+      "aggregate_id": "00000000-0000-4000-8000-000000000001",
+      "aggregate_version": 1,
+      "trace_id": "00000000-0000-4000-8000-000000000001",
+      "data": {}
+    }
+  },
+  {
+    "name": "GeometryRequest.valid",
+    "contract": "GeometryRequest",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "prompt": "A fixture stone arch",
+      "input_image_id": null,
+      "output_format": "glb",
+      "units": "meters",
+      "up_axis": "Y",
+      "maximum_triangles": 100000,
+      "maximum_texture_size": 2048
+    }
+  },
+  {
+    "name": "GeometryRequest.unknown_authority",
+    "contract": "GeometryRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "prompt": "A fixture stone arch",
+      "input_image_id": null,
+      "output_format": "glb",
+      "units": "meters",
+      "up_axis": "Y",
+      "maximum_triangles": 100000,
+      "maximum_texture_size": 2048,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "GeometryRequest.future_version",
+    "contract": "GeometryRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "prompt": "A fixture stone arch",
+      "input_image_id": null,
+      "output_format": "glb",
+      "units": "meters",
+      "up_axis": "Y",
+      "maximum_triangles": 100000,
+      "maximum_texture_size": 2048
+    }
+  },
+  {
+    "name": "GeometryRequest.boolean_version",
+    "contract": "GeometryRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "prompt": "A fixture stone arch",
+      "input_image_id": null,
+      "output_format": "glb",
+      "units": "meters",
+      "up_axis": "Y",
+      "maximum_triangles": 100000,
+      "maximum_texture_size": 2048
+    }
+  },
+  {
+    "name": "Heartbeat.valid",
+    "contract": "Heartbeat",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "controller_generation": 1,
+      "sequence": 1,
+      "observed_plan_revision": 0,
+      "active_attempt_ids": [],
+      "services": []
+    }
+  },
+  {
+    "name": "Heartbeat.unknown_authority",
+    "contract": "Heartbeat",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "controller_generation": 1,
+      "sequence": 1,
+      "observed_plan_revision": 0,
+      "active_attempt_ids": [],
+      "services": [],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "Heartbeat.future_version",
+    "contract": "Heartbeat",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "controller_generation": 1,
+      "sequence": 1,
+      "observed_plan_revision": 0,
+      "active_attempt_ids": [],
+      "services": []
+    }
+  },
+  {
+    "name": "Heartbeat.boolean_version",
+    "contract": "Heartbeat",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "controller_generation": 1,
+      "sequence": 1,
+      "observed_plan_revision": 0,
+      "active_attempt_ids": [],
+      "services": []
+    }
+  },
+  {
+    "name": "JobScope.valid",
+    "contract": "JobScope",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "task_id": "00000000-0000-4000-8000-000000000001",
+      "parent_task_id": null,
+      "authorization_version": 1,
+      "resource_grant_ids": [],
+      "locality": "local_only",
+      "remaining_budget_id": "00000000-0000-4000-8000-000000000001",
+      "audience": "fixture",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "fencing_token": 1,
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "JobScope.unknown_authority",
+    "contract": "JobScope",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "task_id": "00000000-0000-4000-8000-000000000001",
+      "parent_task_id": null,
+      "authorization_version": 1,
+      "resource_grant_ids": [],
+      "locality": "local_only",
+      "remaining_budget_id": "00000000-0000-4000-8000-000000000001",
+      "audience": "fixture",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "fencing_token": 1,
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "JobScope.future_version",
+    "contract": "JobScope",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "task_id": "00000000-0000-4000-8000-000000000001",
+      "parent_task_id": null,
+      "authorization_version": 1,
+      "resource_grant_ids": [],
+      "locality": "local_only",
+      "remaining_budget_id": "00000000-0000-4000-8000-000000000001",
+      "audience": "fixture",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "fencing_token": 1,
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "JobScope.boolean_version",
+    "contract": "JobScope",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "principal_id": "00000000-0000-4000-8000-000000000001",
+      "workspace_id": "00000000-0000-4000-8000-000000000001",
+      "task_id": "00000000-0000-4000-8000-000000000001",
+      "parent_task_id": null,
+      "authorization_version": 1,
+      "resource_grant_ids": [],
+      "locality": "local_only",
+      "remaining_budget_id": "00000000-0000-4000-8000-000000000001",
+      "audience": "fixture",
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "fencing_token": 1,
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "NodePlan.valid",
+    "contract": "NodePlan",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "controller_generation": 1,
+      "node_epoch": 1,
+      "expected_revision": 0,
+      "desired_revision": 1,
+      "services": [],
+      "drain_policy": "finish_active",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "NodePlan.unknown_authority",
+    "contract": "NodePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "controller_generation": 1,
+      "node_epoch": 1,
+      "expected_revision": 0,
+      "desired_revision": 1,
+      "services": [],
+      "drain_policy": "finish_active",
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "NodePlan.future_version",
+    "contract": "NodePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "controller_generation": 1,
+      "node_epoch": 1,
+      "expected_revision": 0,
+      "desired_revision": 1,
+      "services": [],
+      "drain_policy": "finish_active",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "NodePlan.boolean_version",
+    "contract": "NodePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "controller_generation": 1,
+      "node_epoch": 1,
+      "expected_revision": 0,
+      "desired_revision": 1,
+      "services": [],
+      "drain_policy": "finish_active",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "PackageReference.valid",
+    "contract": "PackageReference",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "package_id": "fixture",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 1,
+      "signer_id": "fixture"
+    }
+  },
+  {
+    "name": "PackageReference.unknown_authority",
+    "contract": "PackageReference",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "package_id": "fixture",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 1,
+      "signer_id": "fixture",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "PackageReference.future_version",
+    "contract": "PackageReference",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "package_id": "fixture",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 1,
+      "signer_id": "fixture"
+    }
+  },
+  {
+    "name": "PackageReference.boolean_version",
+    "contract": "PackageReference",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "package_id": "fixture",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 1,
+      "signer_id": "fixture"
+    }
+  },
+  {
+    "name": "ProviderBootstrap.valid",
+    "contract": "ProviderBootstrap",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "path": "local_head",
+      "readiness": "unconfigured",
+      "node_id": null,
+      "deployment_id": null,
+      "provider_configuration_id": null,
+      "probe_evidence_id": null,
+      "reason": null,
+      "revision": 1
+    }
+  },
+  {
+    "name": "ProviderBootstrap.unknown_authority",
+    "contract": "ProviderBootstrap",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "path": "local_head",
+      "readiness": "unconfigured",
+      "node_id": null,
+      "deployment_id": null,
+      "provider_configuration_id": null,
+      "probe_evidence_id": null,
+      "reason": null,
+      "revision": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ProviderBootstrap.future_version",
+    "contract": "ProviderBootstrap",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "path": "local_head",
+      "readiness": "unconfigured",
+      "node_id": null,
+      "deployment_id": null,
+      "provider_configuration_id": null,
+      "probe_evidence_id": null,
+      "reason": null,
+      "revision": 1
+    }
+  },
+  {
+    "name": "ProviderBootstrap.boolean_version",
+    "contract": "ProviderBootstrap",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "path": "local_head",
+      "readiness": "unconfigured",
+      "node_id": null,
+      "deployment_id": null,
+      "provider_configuration_id": null,
+      "probe_evidence_id": null,
+      "reason": null,
+      "revision": 1
+    }
+  },
+  {
+    "name": "ProviderProbeRequest.valid",
+    "contract": "ProviderProbeRequest",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "expected_revision": 1,
+      "maximum_cost_minor": 0,
+      "paid_probe_grant_id": null
+    }
+  },
+  {
+    "name": "ProviderProbeRequest.unknown_authority",
+    "contract": "ProviderProbeRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "expected_revision": 1,
+      "maximum_cost_minor": 0,
+      "paid_probe_grant_id": null,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ProviderProbeRequest.future_version",
+    "contract": "ProviderProbeRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "expected_revision": 1,
+      "maximum_cost_minor": 0,
+      "paid_probe_grant_id": null
+    }
+  },
+  {
+    "name": "ProviderProbeRequest.boolean_version",
+    "contract": "ProviderProbeRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "expected_revision": 1,
+      "maximum_cost_minor": 0,
+      "paid_probe_grant_id": null
+    }
+  },
+  {
+    "name": "RecipeDependency.valid",
+    "contract": "RecipeDependency",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "dependency_id": "fixture",
+      "package": {
+        "schema_version": 1,
+        "package_id": "fixture",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size_bytes": 1,
+        "signer_id": "fixture"
+      },
+      "depends_on": []
+    }
+  },
+  {
+    "name": "RecipeDependency.unknown_authority",
+    "contract": "RecipeDependency",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "dependency_id": "fixture",
+      "package": {
+        "schema_version": 1,
+        "package_id": "fixture",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size_bytes": 1,
+        "signer_id": "fixture"
+      },
+      "depends_on": [],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "RecipeDependency.future_version",
+    "contract": "RecipeDependency",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "dependency_id": "fixture",
+      "package": {
+        "schema_version": 1,
+        "package_id": "fixture",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size_bytes": 1,
+        "signer_id": "fixture"
+      },
+      "depends_on": []
+    }
+  },
+  {
+    "name": "RecipeDependency.boolean_version",
+    "contract": "RecipeDependency",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "dependency_id": "fixture",
+      "package": {
+        "schema_version": 1,
+        "package_id": "fixture",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size_bytes": 1,
+        "signer_id": "fixture"
+      },
+      "depends_on": []
+    }
+  },
+  {
+    "name": "ResourceEnvelope.valid",
+    "contract": "ResourceEnvelope",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "ram_bytes": 0,
+      "vram_bytes": 0,
+      "disk_bytes": 0,
+      "cpu_millicores": 0,
+      "generation_slots": 0
+    }
+  },
+  {
+    "name": "ResourceEnvelope.unknown_authority",
+    "contract": "ResourceEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "ram_bytes": 0,
+      "vram_bytes": 0,
+      "disk_bytes": 0,
+      "cpu_millicores": 0,
+      "generation_slots": 0,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ResourceEnvelope.future_version",
+    "contract": "ResourceEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "ram_bytes": 0,
+      "vram_bytes": 0,
+      "disk_bytes": 0,
+      "cpu_millicores": 0,
+      "generation_slots": 0
+    }
+  },
+  {
+    "name": "ResourceEnvelope.boolean_version",
+    "contract": "ResourceEnvelope",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "ram_bytes": 0,
+      "vram_bytes": 0,
+      "disk_bytes": 0,
+      "cpu_millicores": 0,
+      "generation_slots": 0
+    }
+  },
+  {
+    "name": "RevisionPrecondition.valid",
+    "contract": "RevisionPrecondition",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "expected_revision": 0
+    }
+  },
+  {
+    "name": "RevisionPrecondition.unknown_authority",
+    "contract": "RevisionPrecondition",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "expected_revision": 0,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "RevisionPrecondition.future_version",
+    "contract": "RevisionPrecondition",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "expected_revision": 0
+    }
+  },
+  {
+    "name": "RevisionPrecondition.boolean_version",
+    "contract": "RevisionPrecondition",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "expected_revision": 0
+    }
+  },
+  {
+    "name": "SecureInputReceipt.valid",
+    "contract": "SecureInputReceipt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "receipt_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "form": "provider_credential",
+      "status": "awaiting_input",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "SecureInputReceipt.unknown_authority",
+    "contract": "SecureInputReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "receipt_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "form": "provider_credential",
+      "status": "awaiting_input",
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "SecureInputReceipt.future_version",
+    "contract": "SecureInputReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "receipt_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "form": "provider_credential",
+      "status": "awaiting_input",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "SecureInputReceipt.boolean_version",
+    "contract": "SecureInputReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "receipt_id": "00000000-0000-4000-8000-000000000001",
+      "run_id": "00000000-0000-4000-8000-000000000001",
+      "resource_id": "00000000-0000-4000-8000-000000000001",
+      "form": "provider_credential",
+      "status": "awaiting_input",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "ServiceObservation.valid",
+    "contract": "ServiceObservation",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "desired_revision": 1,
+      "observed_revision": 0,
+      "state": "unassigned",
+      "reason": null,
+      "completed_bytes": 0,
+      "total_bytes": null,
+      "observed_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "ServiceObservation.unknown_authority",
+    "contract": "ServiceObservation",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "desired_revision": 1,
+      "observed_revision": 0,
+      "state": "unassigned",
+      "reason": null,
+      "completed_bytes": 0,
+      "total_bytes": null,
+      "observed_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ServiceObservation.future_version",
+    "contract": "ServiceObservation",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "desired_revision": 1,
+      "observed_revision": 0,
+      "state": "unassigned",
+      "reason": null,
+      "completed_bytes": 0,
+      "total_bytes": null,
+      "observed_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "ServiceObservation.boolean_version",
+    "contract": "ServiceObservation",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "desired_revision": 1,
+      "observed_revision": 0,
+      "state": "unassigned",
+      "reason": null,
+      "completed_bytes": 0,
+      "total_bytes": null,
+      "observed_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "ServicePlan.valid",
+    "contract": "ServicePlan",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "recipe_id": "fixture",
+      "recipe_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "package_digests": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "model_digests": [],
+      "capability_ids": [],
+      "settings": {},
+      "secret_reference_ids": [],
+      "reservations": {
+        "schema_version": 1,
+        "ram_bytes": 0,
+        "vram_bytes": 0,
+        "disk_bytes": 0,
+        "cpu_millicores": 0,
+        "generation_slots": 0
+      },
+      "pinned": true
+    }
+  },
+  {
+    "name": "ServicePlan.unknown_authority",
+    "contract": "ServicePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "recipe_id": "fixture",
+      "recipe_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "package_digests": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "model_digests": [],
+      "capability_ids": [],
+      "settings": {},
+      "secret_reference_ids": [],
+      "reservations": {
+        "schema_version": 1,
+        "ram_bytes": 0,
+        "vram_bytes": 0,
+        "disk_bytes": 0,
+        "cpu_millicores": 0,
+        "generation_slots": 0
+      },
+      "pinned": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ServicePlan.future_version",
+    "contract": "ServicePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "recipe_id": "fixture",
+      "recipe_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "package_digests": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "model_digests": [],
+      "capability_ids": [],
+      "settings": {},
+      "secret_reference_ids": [],
+      "reservations": {
+        "schema_version": 1,
+        "ram_bytes": 0,
+        "vram_bytes": 0,
+        "disk_bytes": 0,
+        "cpu_millicores": 0,
+        "generation_slots": 0
+      },
+      "pinned": true
+    }
+  },
+  {
+    "name": "ServicePlan.boolean_version",
+    "contract": "ServicePlan",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "service_instance_id": "00000000-0000-4000-8000-000000000001",
+      "recipe_id": "fixture",
+      "recipe_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "package_digests": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "model_digests": [],
+      "capability_ids": [],
+      "settings": {},
+      "secret_reference_ids": [],
+      "reservations": {
+        "schema_version": 1,
+        "ram_bytes": 0,
+        "vram_bytes": 0,
+        "disk_bytes": 0,
+        "cpu_millicores": 0,
+        "generation_slots": 0
+      },
+      "pinned": true
+    }
+  },
+  {
+    "name": "ServiceRecipe.valid",
+    "contract": "ServiceRecipe",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "recipe_id": "fixture",
+      "revision": 1,
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "platforms": [
+        "windows_amd64"
+      ],
+      "capabilities": [],
+      "dependencies": [
+        {
+          "schema_version": 1,
+          "dependency_id": "fixture",
+          "package": {
+            "schema_version": 1,
+            "package_id": "fixture",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 1,
+            "signer_id": "fixture"
+          },
+          "depends_on": []
+        }
+      ],
+      "entrypoint_id": "llama_cpp",
+      "minimum_node_protocol": 1,
+      "isolation": "native_unprivileged",
+      "settings_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "readiness_probe": "fixture",
+      "rollback": "compatible"
+    }
+  },
+  {
+    "name": "ServiceRecipe.unknown_authority",
+    "contract": "ServiceRecipe",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "recipe_id": "fixture",
+      "revision": 1,
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "platforms": [
+        "windows_amd64"
+      ],
+      "capabilities": [],
+      "dependencies": [
+        {
+          "schema_version": 1,
+          "dependency_id": "fixture",
+          "package": {
+            "schema_version": 1,
+            "package_id": "fixture",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 1,
+            "signer_id": "fixture"
+          },
+          "depends_on": []
+        }
+      ],
+      "entrypoint_id": "llama_cpp",
+      "minimum_node_protocol": 1,
+      "isolation": "native_unprivileged",
+      "settings_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "readiness_probe": "fixture",
+      "rollback": "compatible",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ServiceRecipe.future_version",
+    "contract": "ServiceRecipe",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "recipe_id": "fixture",
+      "revision": 1,
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "platforms": [
+        "windows_amd64"
+      ],
+      "capabilities": [],
+      "dependencies": [
+        {
+          "schema_version": 1,
+          "dependency_id": "fixture",
+          "package": {
+            "schema_version": 1,
+            "package_id": "fixture",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 1,
+            "signer_id": "fixture"
+          },
+          "depends_on": []
+        }
+      ],
+      "entrypoint_id": "llama_cpp",
+      "minimum_node_protocol": 1,
+      "isolation": "native_unprivileged",
+      "settings_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "readiness_probe": "fixture",
+      "rollback": "compatible"
+    }
+  },
+  {
+    "name": "ServiceRecipe.boolean_version",
+    "contract": "ServiceRecipe",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "recipe_id": "fixture",
+      "revision": 1,
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "platforms": [
+        "windows_amd64"
+      ],
+      "capabilities": [],
+      "dependencies": [
+        {
+          "schema_version": 1,
+          "dependency_id": "fixture",
+          "package": {
+            "schema_version": 1,
+            "package_id": "fixture",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 1,
+            "signer_id": "fixture"
+          },
+          "depends_on": []
+        }
+      ],
+      "entrypoint_id": "llama_cpp",
+      "minimum_node_protocol": 1,
+      "isolation": "native_unprivileged",
+      "settings_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "readiness_probe": "fixture",
+      "rollback": "compatible"
+    }
+  },
+  {
+    "name": "WorkerCommand.valid",
+    "contract": "WorkerCommand",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "operation": "reconcile_plan",
+      "reference_id": "00000000-0000-4000-8000-000000000001",
+      "reference_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "WorkerCommand.unknown_authority",
+    "contract": "WorkerCommand",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "operation": "reconcile_plan",
+      "reference_id": "00000000-0000-4000-8000-000000000001",
+      "reference_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "WorkerCommand.future_version",
+    "contract": "WorkerCommand",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "operation": "reconcile_plan",
+      "reference_id": "00000000-0000-4000-8000-000000000001",
+      "reference_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  },
+  {
+    "name": "WorkerCommand.boolean_version",
+    "contract": "WorkerCommand",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "command_id": "00000000-0000-4000-8000-000000000001",
+      "node_id": "00000000-0000-4000-8000-000000000001",
+      "node_epoch": 1,
+      "operation": "reconcile_plan",
+      "reference_id": "00000000-0000-4000-8000-000000000001",
+      "reference_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expires_at": "2026-09-12T19:00:00Z"
+    }
+  }
+]

@@ -1,0 +1,314 @@
+{
+  "capabilities": [
+    {
+      "schema_version": 1,
+      "capability_id": "chat.general",
+      "revision": 1,
+      "display_name": "Conversation",
+      "description": "Conversation through an approved Hearth deployment.",
+      "icon": "chat",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "chat.general.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "reason.plan",
+      "revision": 1,
+      "display_name": "Planning",
+      "description": "Planning through an approved Hearth deployment.",
+      "icon": "reasoning",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "reason.plan.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "code.explain",
+      "revision": 1,
+      "display_name": "Code explanation",
+      "description": "Code explanation through an approved Hearth deployment.",
+      "icon": "code",
+      "input_modalities": [
+        "text",
+        "artifact"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "code.explain.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "code.implement",
+      "revision": 1,
+      "display_name": "Coding",
+      "description": "Coding through an approved Hearth deployment.",
+      "icon": "code",
+      "input_modalities": [
+        "text",
+        "artifact"
+      ],
+      "output_modalities": [
+        "text",
+        "artifact"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "code.implement.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "write.compose",
+      "revision": 1,
+      "display_name": "Writing",
+      "description": "Writing through an approved Hearth deployment.",
+      "icon": "writing",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "write.compose.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "text.summarize",
+      "revision": 1,
+      "display_name": "Summarization",
+      "description": "Summarization through an approved Hearth deployment.",
+      "icon": "writing",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "text.summarize.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "data.extract",
+      "revision": 1,
+      "display_name": "Data extraction",
+      "description": "Data extraction through an approved Hearth deployment.",
+      "icon": "embeddings",
+      "input_modalities": [
+        "text",
+        "artifact"
+      ],
+      "output_modalities": [
+        "text",
+        "artifact"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "data.extract.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "vision.describe",
+      "revision": 1,
+      "display_name": "Vision",
+      "description": "Vision through an approved Hearth deployment.",
+      "icon": "vision",
+      "input_modalities": [
+        "image",
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "vision.describe.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "image.generate",
+      "revision": 1,
+      "display_name": "Image generation",
+      "description": "Image generation through an approved Hearth deployment.",
+      "icon": "image",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "image"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "image.generate.v1",
+      "deadline_seconds": 900,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "geometry.generate",
+      "revision": 1,
+      "display_name": "3D generation",
+      "description": "3D generation through an approved Hearth deployment.",
+      "icon": "cube",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "geometry"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "geometry.generate.v1",
+      "deadline_seconds": 900,
+      "cloud_eligible": false,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "audio.transcribe",
+      "revision": 1,
+      "display_name": "Transcription",
+      "description": "Transcription through an approved Hearth deployment.",
+      "icon": "microphone",
+      "input_modalities": [
+        "audio"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "audio.transcribe.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "audio.speak",
+      "revision": 1,
+      "display_name": "Speech",
+      "description": "Speech through an approved Hearth deployment.",
+      "icon": "speech",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "audio"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "audio.speak.v1",
+      "deadline_seconds": 900,
+      "cloud_eligible": true,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "memory.retrieve",
+      "revision": 1,
+      "display_name": "Memory retrieval",
+      "description": "Memory retrieval through an approved Hearth deployment.",
+      "icon": "knowledge",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "memory.retrieve.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true
+    },
+    {
+      "schema_version": 1,
+      "capability_id": "memory.index",
+      "revision": 1,
+      "display_name": "Memory indexing",
+      "description": "Memory indexing through an approved Hearth deployment.",
+      "icon": "knowledge",
+      "input_modalities": [
+        "artifact"
+      ],
+      "output_modalities": [
+        "artifact"
+      ],
+      "required_features": [],
+      "permitted_tool_categories": [],
+      "quality_suite": "memory.index.v1",
+      "deadline_seconds": 300,
+      "cloud_eligible": false,
+      "enabled": true
+    }
+  ],
+  "permissions": [
+    "admin_agent.read_history_own",
+    "admin_agent.use",
+    "api_key.own",
+    "artifact.own",
+    "audit.read",
+    "budget.configure",
+    "conversation.own",
+    "farm.inspect",
+    "memory.own",
+    "model.approve",
+    "node.assign",
+    "node.enroll",
+    "node.operate",
+    "node.revoke",
+    "package.approve",
+    "provider.configure",
+    "recovery.configure",
+    "role.grant",
+    "storage.configure",
+    "tool.approve"
+  ]
+}

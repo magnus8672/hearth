@@ -1,0 +1,61 @@
+name: Foundation checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  contracts-and-database:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
+        env:
+          POSTGRES_PASSWORD: ephemeral-ci-only
+        ports: ['5432:5432']
+        options: --health-cmd 'pg_isready -U postgres' --health-interval 3s --health-retries 30
+    env:
+      # Disposable CI database only. No application users or production credentials are seeded.
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGPASSWORD: ephemeral-ci-only
+      POSTGRES_USER: postgres
+      HEARTH_APP_PASSWORD: ephemeral-app-only
+      HEARTH_MIGRATION_PASSWORD: ephemeral-migration-only
+      HEARTH_IDENTITY_PASSWORD: ephemeral-identity-only
+      HEARTH_TEST_APP_DATABASE_URL: postgresql+psycopg://hearth_app:ephemeral-app-only@localhost:5432/hearth
+      HEARTH_TEST_MIGRATION_DATABASE_URL: postgresql+psycopg://hearth_migrator:ephemeral-migration-only@localhost:5432/hearth
+      HEARTH_MIGRATION_DATABASE_URL: postgresql+psycopg://hearth_migrator:ephemeral-migration-only@localhost:5432/hearth
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with: {version: '0.12.5', python-version: '3.12.10'}
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with: {go-version: '1.26.8', cache-dependency-path: worker/go.sum}
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with: {version: '11.19.0'}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: {node-version: '24.14.0', cache: pnpm}
+      - run: uv sync --locked --group knowledge
+      - run: pnpm install --frozen-lockfile
+      - run: sh deploy/compose/init-databases.sh
+      - run: uv run alembic upgrade head
+      - run: uv run --group knowledge python scripts/dev.py generate
+      - run: git diff --exit-code -- packages/contracts worker/internal/contracts/generated.go worker/internal/contracts/schema tests/fixtures
+      - run: uv run --group knowledge python scripts/dev.py check
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+  native-builds:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        target: [windows/amd64, linux/amd64, linux/arm64, darwin/amd64, darwin/arm64]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with: {go-version: '1.26.8', cache-dependency-path: worker/go.sum}
+      - name: Compile native entry point (not a runtime qualification)
+        working-directory: worker
+        env: {TARGET: '${{ matrix.target }}', CGO_ENABLED: '0'}
+        run: |
+          export GOOS="${TARGET%/*}"
+          export GOARCH="${TARGET#*/}"
+          go build -trimpath -o /tmp/hearth-worker ./cmd/hearth-worker

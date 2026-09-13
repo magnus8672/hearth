@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-09-13T01:26:12.744868+00:00",
+  "targets": [
+    {
+      "target": "windows-amd64",
+      "build": "passed",
+      "runtime_qualified": false,
+      "sha256": "33c7f2411f4eb7f26790f13281485f322ffa45a0381245fc575e5b5f2c2ad1dd"
+    },
+    {
+      "target": "linux-amd64",
+      "build": "passed",
+      "runtime_qualified": false,
+      "sha256": "bd236e9bdf6b4f2f55048c2041e7369678d3f9561c1ad1fff22191f4c1a44232"
+    },
+    {
+      "target": "linux-arm64",
+      "build": "passed",
+      "runtime_qualified": false,
+      "sha256": "a4974cb1f4e515b896a4377685518e95f2464f81b721872afd9e4732e1cda096"
+    },
+    {
+      "target": "darwin-amd64",
+      "build": "passed",
+      "runtime_qualified": false,
+      "sha256": "04ddefb991f1479ff2a8129a3c02c14a20358fe795b02dc5c014ae7a36c4ea1f"
+    },
+    {
+      "target": "darwin-arm64",
+      "build": "passed",
+      "runtime_qualified": false,
+      "sha256": "e62e477a7a31c03a13e3af9abf5cee9328d039a1067fe562e8ffccf4edfa2ec7"
+    }
+  ]
+}

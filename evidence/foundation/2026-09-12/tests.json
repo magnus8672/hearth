@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-09-13T01:33:38.699080+00:00",
+  "status": "passed_with_documented_scope",
+  "windows_python": {
+    "passed": 36,
+    "command": "uv run --group knowledge python scripts/dev.py check"
+  },
+  "linux_python": {
+    "passed": 36,
+    "command": "uv run --group appliance python scripts/development_stack.py qualify-linux"
+  },
+  "shared_contract_fixtures": {
+    "count": 116,
+    "validators": [
+      "Python Pydantic",
+      "Go JSON Schema",
+      "TypeScript AJV"
+    ],
+    "scope": "Structural wire validation. Additional semantic validators are not implied."
+  },
+  "browser": {
+    "passed": 4,
+    "live_appliance_enabled": true,
+    "command": "HEARTH_LIVE_UI=1 pnpm test:e2e"
+  },
+  "native_entry_point_builds": 5,
+  "frontend_builds": [
+    "admin-web",
+    "user-web"
+  ],
+  "lint": "passed",
+  "typecheck": "passed",
+  "known_warnings": [
+    "Starlette TestClient httpx compatibility is deprecated",
+    "AnyIO BlockingPortal alias is deprecated"
+  ],
+  "release_gates_completed": 0
+}

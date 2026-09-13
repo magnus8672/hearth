@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "package": "nemo-switchyard",
+  "version": "0.2.0",
+  "source": {
+    "url": "https://files.pythonhosted.org/packages/4b/4c/eb1a95385482bff5b7c3f7fd1eceac81dc23b307ed4516cf813bee70a70c/nemo_switchyard-0.2.0.tar.gz",
+    "hash": "sha256:da76a59ea88563d12828a439ae51475b4ffef2f231a6f44bde47eb2eda5e3648",
+    "size": 644540,
+    "upload-time": "2026-08-10T20:08:49.886Z"
+  },
+  "cpu_baseline": "x86-64-v2",
+  "rust_version": "1.96.1",
+  "maturin_version": "1.15.0",
+  "cargo_lock_sha256": "aae6c5a55dd6b11971cc38b6c934d512fa66ea742d862a6d5d0011231becf8cb",
+  "reason": "Published Linux wheel requires AVX2; this WHPX reference guest fails XSAVE validation. Build the pinned source instead.",
+  "source_modified": false,
+  "qualification_scope": "Linux x86-64 reference appliance only; other appliance architectures remain unqualified"
+}

@@ -1,0 +1,2113 @@
+{
+  "components": {
+    "schemas": {
+      "AdminApplyRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "change_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Change Hash",
+            "type": "string"
+          },
+          "expected_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Expected Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "change_hash",
+          "expected_revision"
+        ],
+        "title": "AdminApplyRequest",
+        "type": "object"
+      },
+      "AdminChangeSet": {
+        "additionalProperties": false,
+        "properties": {
+          "change_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Change Hash",
+            "type": "string"
+          },
+          "disruption": {
+            "maxLength": 500,
+            "title": "Disruption",
+            "type": "string"
+          },
+          "download_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Download Bytes",
+            "type": "integer"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/AdminIntent"
+          },
+          "node_plans": {
+            "items": {
+              "$ref": "#/components/schemas/NodePlan"
+            },
+            "maxItems": 30,
+            "title": "Node Plans",
+            "type": "array"
+          },
+          "preconditions": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionPrecondition"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Preconditions",
+            "type": "array"
+          },
+          "principal_id": {
+            "format": "uuid",
+            "title": "Principal Id",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "farm_id",
+          "principal_id",
+          "run_id",
+          "intent",
+          "change_hash",
+          "preconditions",
+          "download_bytes",
+          "disruption",
+          "expires_at"
+        ],
+        "title": "AdminChangeSet",
+        "type": "object"
+      },
+      "AdminExecutionGrant": {
+        "additionalProperties": false,
+        "description": "Server-held record, never a model tool argument or public response.",
+        "properties": {
+          "actions": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Actions",
+            "type": "array"
+          },
+          "authorization_version": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Authorization Version",
+            "type": "integer"
+          },
+          "change_hash": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Change Hash"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "maximum_download_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Maximum Download Bytes",
+            "type": "integer"
+          },
+          "principal_id": {
+            "format": "uuid",
+            "title": "Principal Id",
+            "type": "string"
+          },
+          "revoked_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Revoked At"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "target_node_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Target Node Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "farm_id",
+          "principal_id",
+          "run_id",
+          "target_node_ids",
+          "actions",
+          "maximum_download_bytes",
+          "authorization_version",
+          "expires_at"
+        ],
+        "title": "AdminExecutionGrant",
+        "type": "object"
+      },
+      "AdminIntent": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "assign_capability",
+              "configure_service",
+              "drain_node",
+              "resume_node",
+              "retry_service"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "approved_recipe_id": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Approved Recipe Id"
+          },
+          "capability_id": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Capability Id"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "settings": {
+            "additionalProperties": true,
+            "title": "Settings",
+            "type": "object"
+          },
+          "target_node_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Target Node Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "action",
+          "target_node_ids"
+        ],
+        "title": "AdminIntent",
+        "type": "object"
+      },
+      "AdminOperation": {
+        "additionalProperties": false,
+        "properties": {
+          "change_id": {
+            "format": "uuid",
+            "title": "Change Id",
+            "type": "string"
+          },
+          "completed_service_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Completed Service Ids",
+            "type": "array"
+          },
+          "deadline": {
+            "format": "date-time",
+            "title": "Deadline",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason"
+          },
+          "revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "accepted",
+              "running",
+              "waiting_node",
+              "completed",
+              "partially_completed",
+              "failed",
+              "cancelled"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "change_id",
+          "state",
+          "revision",
+          "deadline"
+        ],
+        "title": "AdminOperation",
+        "type": "object"
+      },
+      "ArtifactMetadata": {
+        "additionalProperties": false,
+        "properties": {
+          "content_type": {
+            "maxLength": 100,
+            "title": "Content Type",
+            "type": "string"
+          },
+          "digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Digest",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "locality": {
+            "$ref": "#/components/schemas/Locality",
+            "default": "local_only"
+          },
+          "owner_id": {
+            "format": "uuid",
+            "title": "Owner Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "size_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "source_artifact_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Source Artifact Ids",
+            "type": "array"
+          },
+          "source_task_id": {
+            "format": "uuid",
+            "title": "Source Task Id",
+            "type": "string"
+          },
+          "workspace_id": {
+            "format": "uuid",
+            "title": "Workspace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "farm_id",
+          "owner_id",
+          "workspace_id",
+          "source_task_id",
+          "digest",
+          "content_type",
+          "size_bytes"
+        ],
+        "title": "ArtifactMetadata",
+        "type": "object"
+      },
+      "CapabilityAvailability": {
+        "additionalProperties": false,
+        "properties": {
+          "assignment_state": {
+            "enum": [
+              "unassigned",
+              "assigned",
+              "disabled"
+            ],
+            "title": "Assignment State",
+            "type": "string"
+          },
+          "available_actions": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "title": "Available Actions",
+            "type": "array"
+          },
+          "capability_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Capability Id",
+            "type": "string"
+          },
+          "cloud_allowed_for_caller": {
+            "default": false,
+            "title": "Cloud Allowed For Caller",
+            "type": "boolean"
+          },
+          "cloud_configured": {
+            "default": false,
+            "title": "Cloud Configured",
+            "type": "boolean"
+          },
+          "effective_state": {
+            "enum": [
+              "unavailable",
+              "warming",
+              "ready",
+              "busy",
+              "cloud_available"
+            ],
+            "title": "Effective State",
+            "type": "string"
+          },
+          "local_deployment_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Local Deployment Ids",
+            "type": "array"
+          },
+          "local_state": {
+            "enum": [
+              "unavailable",
+              "warming",
+              "ready",
+              "busy",
+              "offline",
+              "failed"
+            ],
+            "title": "Local State",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "capability_id",
+          "assignment_state",
+          "local_state",
+          "effective_state"
+        ],
+        "title": "CapabilityAvailability",
+        "type": "object"
+      },
+      "CapabilityDefinition": {
+        "additionalProperties": false,
+        "properties": {
+          "capability_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Capability Id",
+            "type": "string"
+          },
+          "cloud_eligible": {
+            "default": false,
+            "title": "Cloud Eligible",
+            "type": "boolean"
+          },
+          "deadline_seconds": {
+            "default": 300,
+            "maximum": 7200,
+            "minimum": 1,
+            "title": "Deadline Seconds",
+            "type": "integer"
+          },
+          "description": {
+            "maxLength": 500,
+            "title": "Description",
+            "type": "string"
+          },
+          "display_name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "enabled": {
+            "default": true,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "icon": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Icon",
+            "type": "string"
+          },
+          "input_modalities": {
+            "items": {
+              "enum": [
+                "text",
+                "image",
+                "audio",
+                "artifact"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Input Modalities",
+            "type": "array"
+          },
+          "output_modalities": {
+            "items": {
+              "enum": [
+                "text",
+                "image",
+                "audio",
+                "geometry",
+                "artifact"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Output Modalities",
+            "type": "array"
+          },
+          "permitted_tool_categories": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "title": "Permitted Tool Categories",
+            "type": "array"
+          },
+          "quality_suite": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Quality Suite",
+            "type": "string"
+          },
+          "required_features": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "title": "Required Features",
+            "type": "array"
+          },
+          "revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "capability_id",
+          "revision",
+          "display_name",
+          "description",
+          "icon",
+          "input_modalities",
+          "output_modalities",
+          "quality_suite"
+        ],
+        "title": "CapabilityDefinition",
+        "type": "object"
+      },
+      "CloudAuthorization": {
+        "additionalProperties": false,
+        "properties": {
+          "capability_allowed": {
+            "title": "Capability Allowed",
+            "type": "boolean"
+          },
+          "farm_remaining_minor": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Farm Remaining Minor",
+            "type": "integer"
+          },
+          "input_localities": {
+            "items": {
+              "$ref": "#/components/schemas/Locality"
+            },
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Input Localities",
+            "type": "array"
+          },
+          "price_known": {
+            "title": "Price Known",
+            "type": "boolean"
+          },
+          "provider_enabled": {
+            "title": "Provider Enabled",
+            "type": "boolean"
+          },
+          "requested_reservation_minor": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Requested Reservation Minor",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "user_opt_in": {
+            "title": "User Opt In",
+            "type": "boolean"
+          },
+          "user_remaining_minor": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "User Remaining Minor",
+            "type": "integer"
+          },
+          "workspace_allowed": {
+            "title": "Workspace Allowed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "provider_enabled",
+          "capability_allowed",
+          "user_opt_in",
+          "workspace_allowed",
+          "price_known",
+          "farm_remaining_minor",
+          "user_remaining_minor",
+          "requested_reservation_minor",
+          "input_localities"
+        ],
+        "title": "CloudAuthorization",
+        "type": "object"
+      },
+      "EnrollmentEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "control_origin": {
+            "maxLength": 300,
+            "pattern": "^https://[^/?#@]+$",
+            "title": "Control Origin",
+            "type": "string"
+          },
+          "enrollment_token": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "title": "Enrollment Token",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "farm_ca_pem": {
+            "maxLength": 16384,
+            "minLength": 100,
+            "title": "Farm Ca Pem",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "node_id": {
+            "format": "uuid",
+            "title": "Node Id",
+            "type": "string"
+          },
+          "nonce": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "title": "Nonce",
+            "type": "string"
+          },
+          "public_key_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Public Key Fingerprint",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "farm_id",
+          "node_id",
+          "attempt_id",
+          "nonce",
+          "public_key_fingerprint",
+          "farm_ca_pem",
+          "control_origin",
+          "enrollment_token",
+          "expires_at"
+        ],
+        "title": "EnrollmentEnvelope",
+        "type": "object"
+      },
+      "EnrollmentPending": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "display_name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "node_id": {
+            "format": "uuid",
+            "title": "Node Id",
+            "type": "string"
+          },
+          "nonce": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "title": "Nonce",
+            "type": "string"
+          },
+          "protocol_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Protocol Version",
+            "type": "integer"
+          },
+          "public_key_fingerprint": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Public Key Fingerprint",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "node_id",
+          "nonce",
+          "public_key_fingerprint",
+          "display_name"
+        ],
+        "title": "EnrollmentPending",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 500,
+            "title": "Message",
+            "type": "string"
+          },
+          "retryable": {
+            "default": false,
+            "title": "Retryable",
+            "type": "boolean"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "trace_id": {
+            "format": "uuid",
+            "title": "Trace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "trace_id"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "EventEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "aggregate_id": {
+            "format": "uuid",
+            "title": "Aggregate Id",
+            "type": "string"
+          },
+          "aggregate_version": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Aggregate Version",
+            "type": "integer"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "event_id": {
+            "format": "uuid",
+            "title": "Event Id",
+            "type": "string"
+          },
+          "event_type": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Event Type",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "trace_id": {
+            "format": "uuid",
+            "title": "Trace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "event_id",
+          "event_type",
+          "occurred_at",
+          "aggregate_id",
+          "aggregate_version",
+          "trace_id"
+        ],
+        "title": "EventEnvelope",
+        "type": "object"
+      },
+      "GeometryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "input_image_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Input Image Id"
+          },
+          "maximum_texture_size": {
+            "default": 2048,
+            "enum": [
+              512,
+              1024,
+              2048,
+              4096
+            ],
+            "title": "Maximum Texture Size",
+            "type": "integer"
+          },
+          "maximum_triangles": {
+            "default": 100000,
+            "maximum": 1000000,
+            "minimum": 100,
+            "title": "Maximum Triangles",
+            "type": "integer"
+          },
+          "output_format": {
+            "const": "glb",
+            "default": "glb",
+            "title": "Output Format",
+            "type": "string"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Prompt"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "units": {
+            "const": "meters",
+            "default": "meters",
+            "title": "Units",
+            "type": "string"
+          },
+          "up_axis": {
+            "const": "Y",
+            "default": "Y",
+            "title": "Up Axis",
+            "type": "string"
+          }
+        },
+        "title": "GeometryRequest",
+        "type": "object"
+      },
+      "Heartbeat": {
+        "additionalProperties": false,
+        "properties": {
+          "active_attempt_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 64,
+            "title": "Active Attempt Ids",
+            "type": "array"
+          },
+          "controller_generation": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Controller Generation",
+            "type": "integer"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "node_epoch": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Node Epoch",
+            "type": "integer"
+          },
+          "node_id": {
+            "format": "uuid",
+            "title": "Node Id",
+            "type": "string"
+          },
+          "observed_plan_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Observed Plan Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "sequence": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "services": {
+            "items": {
+              "$ref": "#/components/schemas/ServiceObservation"
+            },
+            "maxItems": 30,
+            "title": "Services",
+            "type": "array"
+          }
+        },
+        "required": [
+          "node_id",
+          "farm_id",
+          "node_epoch",
+          "controller_generation",
+          "sequence",
+          "observed_plan_revision"
+        ],
+        "title": "Heartbeat",
+        "type": "object"
+      },
+      "JobScope": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "audience": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Audience",
+            "type": "string"
+          },
+          "authorization_version": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Authorization Version",
+            "type": "integer"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "fencing_token": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Fencing Token",
+            "type": "integer"
+          },
+          "locality": {
+            "$ref": "#/components/schemas/Locality",
+            "default": "local_only"
+          },
+          "parent_task_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Parent Task Id"
+          },
+          "principal_id": {
+            "format": "uuid",
+            "title": "Principal Id",
+            "type": "string"
+          },
+          "remaining_budget_id": {
+            "format": "uuid",
+            "title": "Remaining Budget Id",
+            "type": "string"
+          },
+          "resource_grant_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Resource Grant Ids",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "task_id": {
+            "format": "uuid",
+            "title": "Task Id",
+            "type": "string"
+          },
+          "workspace_id": {
+            "format": "uuid",
+            "title": "Workspace Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "farm_id",
+          "principal_id",
+          "workspace_id",
+          "task_id",
+          "authorization_version",
+          "remaining_budget_id",
+          "audience",
+          "attempt_id",
+          "fencing_token",
+          "expires_at"
+        ],
+        "title": "JobScope",
+        "type": "object"
+      },
+      "Locality": {
+        "enum": [
+          "local_only",
+          "cloud_allowed"
+        ],
+        "title": "Locality",
+        "type": "string"
+      },
+      "NodePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "controller_generation": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Controller Generation",
+            "type": "integer"
+          },
+          "desired_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Desired Revision",
+            "type": "integer"
+          },
+          "drain_policy": {
+            "default": "finish_active",
+            "enum": [
+              "finish_active",
+              "cancel_active"
+            ],
+            "title": "Drain Policy",
+            "type": "string"
+          },
+          "expected_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Expected Revision",
+            "type": "integer"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "farm_id": {
+            "format": "uuid",
+            "title": "Farm Id",
+            "type": "string"
+          },
+          "node_epoch": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Node Epoch",
+            "type": "integer"
+          },
+          "node_id": {
+            "format": "uuid",
+            "title": "Node Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "services": {
+            "items": {
+              "$ref": "#/components/schemas/ServicePlan"
+            },
+            "maxItems": 30,
+            "title": "Services",
+            "type": "array"
+          }
+        },
+        "required": [
+          "farm_id",
+          "node_id",
+          "controller_generation",
+          "node_epoch",
+          "expected_revision",
+          "desired_revision",
+          "expires_at"
+        ],
+        "title": "NodePlan",
+        "type": "object"
+      },
+      "PackageReference": {
+        "additionalProperties": false,
+        "properties": {
+          "digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Digest",
+            "type": "string"
+          },
+          "package_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Package Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "signer_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Signer Id",
+            "type": "string"
+          },
+          "size_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Size Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "package_id",
+          "digest",
+          "size_bytes",
+          "signer_id"
+        ],
+        "title": "PackageReference",
+        "type": "object"
+      },
+      "ProviderBootstrap": {
+        "additionalProperties": false,
+        "properties": {
+          "deployment_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Deployment Id"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "node_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Node Id"
+          },
+          "path": {
+            "enum": [
+              "local_head",
+              "joined_member",
+              "openai"
+            ],
+            "title": "Path",
+            "type": "string"
+          },
+          "probe_evidence_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Probe Evidence Id"
+          },
+          "provider_configuration_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Configuration Id"
+          },
+          "readiness": {
+            "enum": [
+              "unconfigured",
+              "configured",
+              "inference_verified",
+              "admin_agent_ready",
+              "failed"
+            ],
+            "title": "Readiness",
+            "type": "string"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason"
+          },
+          "revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "path",
+          "readiness",
+          "revision"
+        ],
+        "title": "ProviderBootstrap",
+        "type": "object"
+      },
+      "ProviderProbeRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Expected Revision",
+            "type": "integer"
+          },
+          "maximum_cost_minor": {
+            "default": 0,
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Maximum Cost Minor",
+            "type": "integer"
+          },
+          "paid_probe_grant_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Paid Probe Grant Id"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expected_revision"
+        ],
+        "title": "ProviderProbeRequest",
+        "type": "object"
+      },
+      "RecipeDependency": {
+        "additionalProperties": false,
+        "properties": {
+          "dependency_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Dependency Id",
+            "type": "string"
+          },
+          "depends_on": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "title": "Depends On",
+            "type": "array"
+          },
+          "package": {
+            "$ref": "#/components/schemas/PackageReference"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "dependency_id",
+          "package"
+        ],
+        "title": "RecipeDependency",
+        "type": "object"
+      },
+      "ResourceEnvelope": {
+        "additionalProperties": false,
+        "properties": {
+          "cpu_millicores": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Cpu Millicores",
+            "type": "integer"
+          },
+          "disk_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Disk Bytes",
+            "type": "integer"
+          },
+          "generation_slots": {
+            "default": 0,
+            "maximum": 64,
+            "minimum": 0,
+            "title": "Generation Slots",
+            "type": "integer"
+          },
+          "ram_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Ram Bytes",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "vram_bytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Vram Bytes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ram_bytes",
+          "vram_bytes",
+          "disk_bytes",
+          "cpu_millicores"
+        ],
+        "title": "ResourceEnvelope",
+        "type": "object"
+      },
+      "RevisionPrecondition": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Expected Revision",
+            "type": "integer"
+          },
+          "resource_id": {
+            "format": "uuid",
+            "title": "Resource Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "resource_id",
+          "expected_revision"
+        ],
+        "title": "RevisionPrecondition",
+        "type": "object"
+      },
+      "SecureInputReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "form": {
+            "enum": [
+              "provider_credential",
+              "nas_connector",
+              "pairing",
+              "model_license"
+            ],
+            "title": "Form",
+            "type": "string"
+          },
+          "receipt_id": {
+            "format": "uuid",
+            "title": "Receipt Id",
+            "type": "string"
+          },
+          "resource_id": {
+            "format": "uuid",
+            "title": "Resource Id",
+            "type": "string"
+          },
+          "run_id": {
+            "format": "uuid",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "awaiting_input",
+              "validated",
+              "failed",
+              "expired"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "receipt_id",
+          "run_id",
+          "resource_id",
+          "form",
+          "status",
+          "expires_at"
+        ],
+        "title": "SecureInputReceipt",
+        "type": "object"
+      },
+      "ServiceObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "completed_bytes": {
+            "default": 0,
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Completed Bytes",
+            "type": "integer"
+          },
+          "desired_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Desired Revision",
+            "type": "integer"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "observed_revision": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "title": "Observed Revision",
+            "type": "integer"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "service_instance_id": {
+            "format": "uuid",
+            "title": "Service Instance Id",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "unassigned",
+              "planning",
+              "downloading",
+              "installing",
+              "configuring",
+              "starting",
+              "warming",
+              "ready",
+              "degraded",
+              "draining",
+              "stopped",
+              "failed"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "total_bytes": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Total Bytes"
+          }
+        },
+        "required": [
+          "service_instance_id",
+          "desired_revision",
+          "observed_revision",
+          "state",
+          "observed_at"
+        ],
+        "title": "ServiceObservation",
+        "type": "object"
+      },
+      "ServicePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "capability_ids": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "title": "Capability Ids",
+            "type": "array"
+          },
+          "model_digests": {
+            "items": {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Model Digests",
+            "type": "array"
+          },
+          "package_digests": {
+            "items": {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Package Digests",
+            "type": "array"
+          },
+          "pinned": {
+            "default": true,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "recipe_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Recipe Digest",
+            "type": "string"
+          },
+          "recipe_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Recipe Id",
+            "type": "string"
+          },
+          "reservations": {
+            "$ref": "#/components/schemas/ResourceEnvelope"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "secret_reference_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Secret Reference Ids",
+            "type": "array"
+          },
+          "service_instance_id": {
+            "format": "uuid",
+            "title": "Service Instance Id",
+            "type": "string"
+          },
+          "settings": {
+            "additionalProperties": true,
+            "title": "Settings",
+            "type": "object"
+          }
+        },
+        "required": [
+          "service_instance_id",
+          "recipe_id",
+          "recipe_digest",
+          "package_digests",
+          "reservations"
+        ],
+        "title": "ServicePlan",
+        "type": "object"
+      },
+      "ServiceRecipe": {
+        "additionalProperties": false,
+        "properties": {
+          "capabilities": {
+            "items": {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "dependencies": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeDependency"
+            },
+            "maxItems": 30,
+            "minItems": 1,
+            "title": "Dependencies",
+            "type": "array"
+          },
+          "digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Digest",
+            "type": "string"
+          },
+          "entrypoint_id": {
+            "enum": [
+              "llama_cpp",
+              "diffusers",
+              "whisper_cpp",
+              "kokoro_onnx",
+              "geometry",
+              "toolbox",
+              "knowledge",
+              "storage_gateway"
+            ],
+            "title": "Entrypoint Id",
+            "type": "string"
+          },
+          "isolation": {
+            "enum": [
+              "native_unprivileged",
+              "linux_container"
+            ],
+            "title": "Isolation",
+            "type": "string"
+          },
+          "minimum_node_protocol": {
+            "const": 1,
+            "default": 1,
+            "title": "Minimum Node Protocol",
+            "type": "integer"
+          },
+          "platforms": {
+            "items": {
+              "enum": [
+                "windows_amd64",
+                "linux_amd64",
+                "darwin_amd64",
+                "darwin_arm64",
+                "linux_arm64"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Platforms",
+            "type": "array"
+          },
+          "readiness_probe": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Readiness Probe",
+            "type": "string"
+          },
+          "recipe_id": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "title": "Recipe Id",
+            "type": "string"
+          },
+          "revision": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "rollback": {
+            "enum": [
+              "compatible",
+              "restore_required"
+            ],
+            "title": "Rollback",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "settings_schema": {
+            "additionalProperties": true,
+            "title": "Settings Schema",
+            "type": "object"
+          }
+        },
+        "required": [
+          "recipe_id",
+          "revision",
+          "digest",
+          "platforms",
+          "dependencies",
+          "entrypoint_id",
+          "isolation",
+          "settings_schema",
+          "readiness_probe",
+          "rollback"
+        ],
+        "title": "ServiceRecipe",
+        "type": "object"
+      },
+      "WorkerCommand": {
+        "additionalProperties": false,
+        "properties": {
+          "command_id": {
+            "format": "uuid",
+            "title": "Command Id",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "node_epoch": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "title": "Node Epoch",
+            "type": "integer"
+          },
+          "node_id": {
+            "format": "uuid",
+            "title": "Node Id",
+            "type": "string"
+          },
+          "operation": {
+            "enum": [
+              "reconcile_plan",
+              "stage",
+              "load",
+              "drain",
+              "unload",
+              "cancel_attempt"
+            ],
+            "title": "Operation",
+            "type": "string"
+          },
+          "reference_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Reference Digest",
+            "type": "string"
+          },
+          "reference_id": {
+            "format": "uuid",
+            "title": "Reference Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "command_id",
+          "node_id",
+          "node_epoch",
+          "operation",
+          "reference_id",
+          "reference_digest",
+          "expires_at"
+        ],
+        "title": "WorkerCommand",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Hearth control plane",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/session": {
+      "get": {
+        "operationId": "session_api_v1_session_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Session",
+        "tags": [
+          "identity"
+        ]
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "live_health_live_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Live",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "ready_health_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}

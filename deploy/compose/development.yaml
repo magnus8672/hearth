@@ -1,0 +1,116 @@
+name: hearth-development
+services:
+  postgres:
+    image: library/postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run the development configuration generator}
+      HEARTH_APP_PASSWORD: ${HEARTH_APP_PASSWORD:?}
+      HEARTH_MIGRATION_PASSWORD: ${HEARTH_MIGRATION_PASSWORD:?}
+      HEARTH_IDENTITY_PASSWORD: ${HEARTH_IDENTITY_PASSWORD:?}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./init-databases.sh:/docker-entrypoint-initdb.d/01-hearth.sh:ro
+    # Only exposed to the private appliance network. QEMU forwards host loopback for integration tests.
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  migrate:
+    build:
+      context: ../..
+      dockerfile: services/api/Dockerfile
+    image: hearth-control:development
+    environment:
+      HEARTH_MIGRATION_DATABASE_URL: postgresql+psycopg://hearth_migrator:${HEARTH_MIGRATION_PASSWORD}@postgres:5432/hearth
+    command: [".venv/bin/alembic", "upgrade", "head"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  api:
+    image: hearth-control:development
+    pull_policy: never
+    environment:
+      HEARTH_MODE: development
+      HEARTH_DATABASE_URL: postgresql+psycopg://hearth_app:${HEARTH_APP_PASSWORD}@postgres:5432/hearth
+      HEARTH_SESSION_ENCRYPTION_KEY: ${HEARTH_SESSION_ENCRYPTION_KEY:?}
+      HEARTH_TRUSTED_HOSTS: '["localhost","127.0.0.1","api"]'
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports: ["8080:8080"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    restart: unless-stopped
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.3@sha256:ff4257d0d64efbe99ed1ddfaf07765cc3c36dc7518bf8324d41961327f441c54
+    command: ["start-dev", "--http-port=8085"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/hearth_identity
+      KC_DB_USERNAME: hearth_identity
+      KC_DB_PASSWORD: ${HEARTH_IDENTITY_PASSWORD:?}
+      KC_BOOTSTRAP_ADMIN_USERNAME: bootstrap
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${HEARTH_IDENTITY_BOOTSTRAP_PASSWORD:?}
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+    ports: ["8085:8085"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+  edge:
+    image: library/caddy:2@sha256:13ba145cba2f3e28fa801994876e4c086d1b95d5aa2a520a734765ffb6b12017
+    volumes:
+      - ./Caddyfile.development:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    ports: ["8443:8443"]
+    depends_on: [api]
+    restart: unless-stopped
+  ca-init:
+    image: smallstep/step-ca:latest@sha256:a2b17872915c193259b75a5474c398326f41bd199f0842093e52cf4182bc8270
+    entrypoint: ["/bin/sh", "/scripts/init-ca.sh"]
+    volumes:
+      - step-data:/home/step
+      - ./init-ca.sh:/scripts/init-ca.sh:ro
+    secrets: [ca-password]
+  step-ca:
+    image: smallstep/step-ca:latest@sha256:a2b17872915c193259b75a5474c398326f41bd199f0842093e52cf4182bc8270
+    entrypoint: ["step-ca"]
+    command: ["/home/step/config/ca.json", "--password-file", "/run/secrets/ca-password"]
+    volumes: ["step-data:/home/step"]
+    secrets: [ca-password]
+    depends_on:
+      ca-init: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "step", "ca", "health", "--ca-url", "https://step-ca:9000", "--root", "/home/step/certs/root_ca.crt"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+  tests:
+    profiles: [qualification]
+    build:
+      context: ../..
+      dockerfile: services/api/Dockerfile
+      target: test
+    image: hearth-control-test:development
+    user: '1000:1000'
+    working_dir: /workspace
+    environment:
+      HEARTH_PROBE_ENVIRONMENT: isolated_development_container
+      HEARTH_APP_PASSWORD: ${HEARTH_APP_PASSWORD:?}
+      HEARTH_MIGRATION_PASSWORD: ${HEARTH_MIGRATION_PASSWORD:?}
+    volumes: ['../..:/workspace']
+    command: ['/opt/hearth/.venv/bin/python', 'scripts/linux_probe.py']
+    depends_on:
+      postgres: {condition: service_healthy}
+secrets:
+  ca-password:
+    file: ./.ca-password
+volumes:
+  postgres-data:
+  caddy-data:
+  step-data:

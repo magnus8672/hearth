@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "base_images": {
+    "linux_amd64": {
+      "distribution": "Ubuntu 24.04 LTS",
+      "build": "20260911",
+      "url": "https://cloud-images.ubuntu.com/noble/20260911/noble-server-cloudimg-amd64.img",
+      "sha256": "612b2c0cc1bc413a6cb8c38fd611794caf0f2b436c50013d8b3794db12ad7354"
+    }
+  },
+  "status": "Base image for development qualification; Hearth release image must be built, signed and approved separately"
+}

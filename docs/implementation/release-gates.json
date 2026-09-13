@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "gates": [
+    {
+      "gate": "E01",
+      "scenario": "First boot and LAN signup",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E02",
+      "scenario": "Start a new worker",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E03",
+      "scenario": "Pair and assign coding",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E04",
+      "scenario": "Restart/change DHCP address",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E05",
+      "scenario": "NAS model transfer interruption",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E06",
+      "scenario": "One local chat",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E07",
+      "scenario": "Unassigned job type",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E08",
+      "scenario": "OpenAI fallback",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E09",
+      "scenario": "Local-only workflow",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E10",
+      "scenario": "Shared toolbox",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E11",
+      "scenario": "Specialist consultation",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E12",
+      "scenario": "Cross-session recall",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E13",
+      "scenario": "Superseded preference",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E14",
+      "scenario": "Delete conversation",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E15",
+      "scenario": "Concurrent users",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E16",
+      "scenario": "Worker loss mid-task",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E17",
+      "scenario": "Controller restart",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E18",
+      "scenario": "NAS/internet unavailable",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E19",
+      "scenario": "Media workflow",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E20",
+      "scenario": "Backup restoration",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E21",
+      "scenario": "Install/update/uninstall",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "E22",
+      "scenario": "Budget race",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S01",
+      "scenario": "Spoofed discovery hostname/key",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S02",
+      "scenario": "Replay/steal encrypted enrollment grant",
+      "status": "partial",
+      "note": "JWE tamper and binding checks only; durable one-use grants/CSR/revocation pending."
+    },
+    {
+      "gate": "S03",
+      "scenario": "Revoked node on existing stream",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S04",
+      "scenario": "User A requests User B IDs or SSE cursor",
+      "status": "partial",
+      "note": "Real PostgreSQL personal partitions and pooled-connection isolation pass; API, SSE and shared-workspace cases pending."
+    },
+    {
+      "gate": "S05",
+      "scenario": "Graph search reveals another user's node/count",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S06",
+      "scenario": "Prompt says to use admin tool/cloud",
+      "status": "partial",
+      "note": "Locality and grant policy primitives pass; end-to-end prompt/tool paths pending."
+    },
+    {
+      "gate": "S07",
+      "scenario": "NAS path traversal/symlink/corrupt weights",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S08",
+      "scenario": "Uploaded HTML/SVG/script/tool output",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S09",
+      "scenario": "Forged mTLS identity headers",
+      "status": "partial",
+      "note": "Spoofed identity headers cannot authenticate; worker mTLS listener pending."
+    },
+    {
+      "gate": "S10",
+      "scenario": "Malicious tool URL / DNS rebinding",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S11",
+      "scenario": "Tool adds schema/requests wider credentials",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S12",
+      "scenario": "Database pool reuses prior identity",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S13",
+      "scenario": "Concurrent deletion and index write",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S14",
+      "scenario": "Copied node certificate",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S15",
+      "scenario": "Unknown paid-call outcome/retry",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S16",
+      "scenario": "User promotes self via role API",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S17",
+      "scenario": "Cloud access through Graphify ambient env",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "S18",
+      "scenario": "IPv6 or alternate admin route bypass",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C01",
+      "scenario": "First node creates Hearth",
+      "status": "partial",
+      "note": "Reference accelerated development guest and control services boot; product installer, Owner/MFA and browser trust pending."
+    },
+    {
+      "gate": "C02",
+      "scenario": "Member needs only head address/port",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C03",
+      "scenario": "All normal settings managed centrally",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C04",
+      "scenario": "Correct service for assigned job",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C05",
+      "scenario": "Pairing proof/envelope integrity",
+      "status": "partial",
+      "note": "Go/Python JWE interoperability and narrow tamper cases pass; full enrollment lifecycle pending."
+    },
+    {
+      "gate": "C06",
+      "scenario": "Rogue head or anonymous endpoint",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C07",
+      "scenario": "Untrusted provisioning input",
+      "status": "partial",
+      "note": "Python signature/digest checks and revision policy pass; native installer and provisioning still pending."
+    },
+    {
+      "gate": "C08",
+      "scenario": "Setup and browser-origin isolation",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "C09",
+      "scenario": "Recovery and single control head",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A01",
+      "scenario": "First provider on Hearth itself",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A02",
+      "scenario": "First provider on a member",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A03",
+      "scenario": "OpenAI-first setup",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A04",
+      "scenario": "Missing/broken provider",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A05",
+      "scenario": "Real agentic management",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A06",
+      "scenario": "Role and history isolation",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A07",
+      "scenario": "Secret and cloud boundary",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A08",
+      "scenario": "Prompt injection and fake approval",
+      "status": "partial",
+      "note": "Server-normalized plan digests and typed grant checks pass; real agent injection fixtures pending."
+    },
+    {
+      "gate": "A09",
+      "scenario": "Plans and bounded routine grants",
+      "status": "partial",
+      "note": "Grant scope, expiry, revocation, hash and current revision checks pass; durable Apply and execution pending."
+    },
+    {
+      "gate": "A10",
+      "scenario": "Idempotent durable operations",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A11",
+      "scenario": "Agent changes its own provider",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    },
+    {
+      "gate": "A12",
+      "scenario": "Useful setup and growth before optional services",
+      "status": "not_run",
+      "note": "Requires later product implementation and end-to-end validation."
+    }
+  ]
+}

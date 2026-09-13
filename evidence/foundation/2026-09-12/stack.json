@@ -1,0 +1,90 @@
+{
+  "recorded_at": "2026-09-13T01:32:00.131057+00:00",
+  "qualification": "development_foundation_only",
+  "host": {
+    "os": "Windows",
+    "release": "11",
+    "architecture": "AMD64"
+  },
+  "accelerator": "whpx",
+  "cpu_profile": "qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt,+cx16,+lahf-lm",
+  "services": [
+    {
+      "Service": "api",
+      "State": "running",
+      "Health": "",
+      "Image": "hearth-control:development"
+    },
+    {
+      "Service": "edge",
+      "State": "running",
+      "Health": "",
+      "Image": "library/caddy:2@sha256:13ba145cba2f3e28fa801994876e4c086d1b95d5aa2a520a734765ffb6b12017"
+    },
+    {
+      "Service": "keycloak",
+      "State": "running",
+      "Health": "",
+      "Image": "quay.io/keycloak/keycloak:26.7.3@sha256:ff4257d0d64efbe99ed1ddfaf07765cc3c36dc7518bf8324d41961327f441c54"
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy",
+      "Image": "library/postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280"
+    },
+    {
+      "Service": "step-ca",
+      "State": "running",
+      "Health": "healthy",
+      "Image": "smallstep/step-ca:latest@sha256:a2b17872915c193259b75a5474c398326f41bd199f0842093e52cf4182bc8270"
+    }
+  ],
+  "api_https_readiness": {
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "forged_identity_status": 401,
+  "tls": {
+    "validation": "certificate chain and hostname verified",
+    "root_sha256": "362012de84f6058a3cb7be6215cf00a8ef792af8d6bc904a4525fad9c8337df3",
+    "trust_delivery": "pinned SSH host key; application-scoped CA file",
+    "os_trust_store_changed": false
+  },
+  "keycloak": {
+    "discovery": "master realm reachable",
+    "pkce_s256": true,
+    "hearth_login_qualified": false
+  },
+  "step_ca": {
+    "health": "ok",
+    "member_issuance_qualified": false
+  },
+  "python_versions": {
+    "fastapi": "0.141.1",
+    "pydantic": "2.13.5",
+    "sqlalchemy": "2.0.52",
+    "alembic": "1.20.0",
+    "joserfc": "1.7.5",
+    "nemo-switchyard": "0.2.0",
+    "graphifyy": "0.1.14"
+  },
+  "linux_switchyard": {
+    "version": "0.2.0",
+    "binary_sha256": "3b746d763ce10851da9c8690506088ed10872beba3358a3f70620cd874db3f16",
+    "avx_visible": false,
+    "build": "hash-pinned source release compiled for x86-64-v2",
+    "rust": "1.96.1",
+    "maturin": "1.15.0"
+  },
+  "original_design_files_unchanged": 119,
+  "not_qualified": [
+    "production installer",
+    "trusted browser signup",
+    "OIDC BFF sessions",
+    "member enrollment lifecycle",
+    "inference",
+    "media",
+    "non-Windows appliance boot"
+  ]
+}
