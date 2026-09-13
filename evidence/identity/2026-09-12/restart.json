@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-09-13T02:40:26.662670+00:00",
+  "passed": true,
+  "shutdown": "authenticated guest poweroff; original QEMU process exited normally",
+  "restart": "same persistent disk, QEMU 11.1 WHPX and UEFI",
+  "accounts_preserved": 4,
+  "drafts_preserved": 1,
+  "account_role_draft_digest_unchanged": true,
+  "certificate_fingerprint_unchanged": true,
+  "tls_chain_and_hostname_validation": true,
+  "readiness": {
+    "admin": {
+      "status": "ready",
+      "version": "0.1.0"
+    },
+    "user": {
+      "status": "ready",
+      "version": "0.1.0"
+    },
+    "identity_issuer": "https://localhost:8445/realms/hearth"
+  },
+  "guest_cpu_command_line": "BOOT_IMAGE=/vmlinuz-6.8.0-139-generic root=UUID=9a3e62be-4b82-4a7a-8f47-0b25d728fa3a ro console=tty1 console=ttyS0 clearcpuid=519",
+  "user_shadow_stack_flag_absent": true,
+  "guest_uptime": "up 1 minute",
+  "qualification_limit": "one normal restart; no long-duration soak or abrupt-failure guarantee"
+}

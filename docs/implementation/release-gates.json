@@ -4,8 +4,8 @@
     {
       "gate": "E01",
       "scenario": "First boot and LAN signup",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Local native Owner provisioning and real HTTPS Member signup/MFA pass. LAN setup, signed installer and other-system trust remain pending."
     },
     {
       "gate": "E02",
@@ -100,8 +100,8 @@
     {
       "gate": "E17",
       "scenario": "Controller restart",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "One normal guest poweroff/start preserved accounts, draft content/revisions and certificates. In-flight task recovery and abrupt controller-loss behavior remain pending."
     },
     {
       "gate": "E18",
@@ -155,7 +155,7 @@
       "gate": "S04",
       "scenario": "User A requests User B IDs or SSE cursor",
       "status": "partial",
-      "note": "Real PostgreSQL personal partitions and pooled-connection isolation pass; API, SSE and shared-workspace cases pending."
+      "note": "Real PostgreSQL forced RLS and two real Members reject guessed Owner draft IDs. SSE cursors and shared-workspace paths remain pending."
     },
     {
       "gate": "S05",
@@ -202,8 +202,8 @@
     {
       "gate": "S12",
       "scenario": "Database pool reuses prior identity",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Real pooled PostgreSQL transactions reset personal identity and fail closed without it. Broader shared/index/stream paths remain pending."
     },
     {
       "gate": "S13",
@@ -226,8 +226,8 @@
     {
       "gate": "S16",
       "scenario": "User promotes self via role API",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Public login provisioning grants only Member; real Members cannot inspect the admin farm. Role-editing APIs and promotion attack acceptance remain pending."
     },
     {
       "gate": "S17",
@@ -245,7 +245,7 @@
       "gate": "C01",
       "scenario": "First node creates Hearth",
       "status": "partial",
-      "note": "Reference accelerated development guest and control services boot; product installer, Owner/MFA and browser trust pending."
+      "note": "Local accelerated stack, console-bound Owner setup, MFA and private drafts work. Explicit Windows trust interaction, signed installer and sustained VM reliability remain pending."
     },
     {
       "gate": "C02",
@@ -286,8 +286,8 @@
     {
       "gate": "C08",
       "scenario": "Setup and browser-origin isolation",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Exact-origin BFFs, one-use callback state, PKCE, secure audience-bound cookies, CSRF, local setup proof/Host/Origin checks and copied-session logout rejection pass. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending."
     },
     {
       "gate": "C09",

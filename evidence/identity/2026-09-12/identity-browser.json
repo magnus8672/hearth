@@ -1,0 +1,15 @@
+{
+  "passed": [
+    "Owner sign-in, authenticator enrollment and recovery codes",
+    "Fourteen real capability definitions remain explicitly Unassigned",
+    "Admin cookie does not sign the browser into the user application",
+    "Private draft creation, persistence across reload, revision update and mobile layout",
+    "Missing CSRF rejected; renaming a user cookie to the admin name does not authenticate",
+    "Two Members cannot read guessed Owner draft IDs or inspect the admin farm",
+    "Real browser self-registration, MFA and recovery enrollment provision only Member rights and one personal workspace",
+    "Logout invalidates a previously copied server session"
+  ],
+  "browser": "153.0.8010.12",
+  "tls": "isolated NSS root, certificate validation enabled",
+  "fixtures": "three prepared synthetic Keycloak accounts plus one browser signup; no mocked auth responses"
+}

@@ -8,6 +8,15 @@
     "url": "https://qemu.weilnetz.de/w64/qemu-w64-setup-20260811.exe",
     "sha512": "5bcf9eed634e8575a37b74f445af41a2fe4106da512d0c30c368301d4c105037fdfab40a5287367a28a957624cddebbc8c07e16c88ab6634f554cdf3d16bf543",
     "sha256": "f98a8aeb5f7faea9765b6dee28316c266cd179d80354a2fed8e50176f9a2e59f",
-    "scope": "Development qualification; release packages require separately approved distribution signing"
+    "scope": "Development qualification; release packages require separately approved distribution signing",
+    "directory": "qemu"
+  },
+  "qemu_cet_comparison_probe": {
+    "version": "10.2.0",
+    "url": "https://qemu.weilnetz.de/w64/2025/qemu-w64-setup-20251224.exe",
+    "sha512": "f37d9ee8f498879b7ca92a9959d30ce7971f9894f584de574f2ac6f5ba925a7265e9d8556d0f56bc75e4e384fc7cac6baed78a89c2e42cdbef109724f01ec16c",
+    "sha256": "1285e85026910c7350fdf49c92323bb813f9feb0889f7aa7f2c6e3409c901ed5",
+    "directory": "qemu-10.2.0",
+    "scope": "Reference WHPX compatibility build; avoids unqualified CET exposure in the 11.1 development probe. Release distribution and soak qualification remain open."
   }
 }

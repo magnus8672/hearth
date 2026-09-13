@@ -38,7 +38,7 @@ def check(integration):
     run(go, "build", "-trimpath", "-o", binary, "./cmd/hearth-contracts", cwd=ROOT / "worker")
     os.environ["HEARTH_REQUIRE_INTEGRATIONS"] = "1" if integration else "0"
     run(sys.executable, "-m", "ruff", "check", "services/api/src", "scripts", "tests")
-    arguments = [] if integration else ["--ignore=tests/integration/test_postgres.py"]
+    arguments = [] if integration else ["--ignore=tests/integration/test_postgres.py", "--ignore=tests/integration/test_identity.py"]
     run(sys.executable, "-m", "pytest", "-q", *arguments)
     for command in ("typecheck", "test", "build"):
         run(shutil.which("pnpm"), command)

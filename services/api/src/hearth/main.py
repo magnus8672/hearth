@@ -6,14 +6,17 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from starlette.exceptions import HTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from hearth import __version__
 from hearth.config import Settings, get_settings
 from hearth.contracts import ErrorDetail, ErrorResponse
 from hearth.database import make_engine, verify_application_role
+from hearth.identity import router as identity_router
 from hearth.middleware import BodyLimitMiddleware
 from hearth.policy import PolicyDenied
+from hearth.workspace import router as workspace_router
 
 logger = logging.getLogger("hearth")
 
@@ -64,6 +67,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # Do not echo inputs, including credentials, into validation responses or logs.
         return error(request, 422, "invalid_request", "The request does not match the required contract.")
 
+    @app.exception_handler(HTTPException)
+    async def http_error(request: Request, exc: HTTPException):
+        return error(request, exc.status_code, 'authentication_required' if exc.status_code == 401 else 'request_rejected', str(exc.detail))
+
     @app.get("/health/live", tags=["health"])
     def live():
         return {"status": "live", "version": __version__}
@@ -80,9 +87,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return error(request, 503, "database_unavailable", "The control database is not ready.")
         return {"status": "ready", "version": __version__}
 
-    @app.get("/api/v1/session", tags=["identity"], responses={401: {"model": ErrorResponse}})
-    def session(request: Request):
-        return error(request, 401, "authentication_required", "Sign in to Hearth to continue.")
+    app.include_router(identity_router)
+    app.include_router(workspace_router)
 
     return app
 

@@ -2,18 +2,61 @@
     admin off
     auto_https disable_redirects
 }
-https://localhost:8443, https://127.0.0.1:8443 {
+(hearth_headers) {
     tls internal
     header {
         X-Content-Type-Options nosniff
         Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
     }
     request_body {
         max_size 1MB
     }
-    reverse_proxy api:8080 {
+}
+(bff_proxy) {
+    reverse_proxy {args[0]} {
+        header_up -Forwarded
         header_up -X-User-ID
         header_up -X-Client-Cert
         header_up -X-Forwarded-Client-Cert
+        header_up X-Forwarded-Proto https
     }
+}
+https://localhost:8443, https://127.0.0.1:8443 {
+    import hearth_headers
+    @api path /api/* /auth/* /health/*
+    handle @api {
+        import bff_proxy api:8080
+    }
+    handle {
+        root * /srv/admin
+        try_files {path} /index.html
+        file_server
+    }
+}
+https://localhost:8444 {
+    import hearth_headers
+    @api path /api/* /auth/* /health/*
+    handle @api {
+        import bff_proxy user-api:8080
+    }
+    handle {
+        root * /srv/user
+        try_files {path} /index.html
+        file_server
+    }
+}
+https://localhost:8445 {
+    tls internal
+    @identity path /realms/hearth/* /resources/* /robots.txt
+    handle @identity {
+        reverse_proxy keycloak:8085 {
+            header_up -Forwarded
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-Host localhost:8445
+            header_up X-Forwarded-Port 8445
+        }
+    }
+    respond 404
 }

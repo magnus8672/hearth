@@ -32,16 +32,36 @@ services:
   api:
     image: hearth-control:development
     pull_policy: never
-    environment:
+    environment: &bff-environment
       HEARTH_MODE: development
       HEARTH_DATABASE_URL: postgresql+psycopg://hearth_app:${HEARTH_APP_PASSWORD}@postgres:5432/hearth
       HEARTH_SESSION_ENCRYPTION_KEY: ${HEARTH_SESSION_ENCRYPTION_KEY:?}
       HEARTH_TRUSTED_HOSTS: '["localhost","127.0.0.1","api"]'
+      HEARTH_FARM_ID: ${HEARTH_FARM_ID:?}
+      HEARTH_ADMIN_CLIENT_SECRET: ${HEARTH_ADMIN_CLIENT_SECRET:?}
+      HEARTH_USER_CLIENT_SECRET: ${HEARTH_USER_CLIENT_SECRET:?}
+      HEARTH_ADMIN_ORIGIN: https://localhost:8443
+      HEARTH_USER_ORIGIN: https://localhost:8444
+      HEARTH_IDENTITY_ORIGIN: https://localhost:8445
+      FORWARDED_ALLOW_IPS: '*'
     read_only: true
     tmpfs: [/tmp]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     ports: ["8080:8080"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    restart: unless-stopped
+  user-api:
+    image: hearth-control:development
+    pull_policy: never
+    environment:
+      <<: *bff-environment
+      HEARTH_AUDIENCE: user
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     depends_on:
       migrate: {condition: service_completed_successfully}
     restart: unless-stopped
@@ -57,6 +77,9 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${HEARTH_IDENTITY_BOOTSTRAP_PASSWORD:?}
       KC_HTTP_ENABLED: "true"
       KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME: https://localhost:8445
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_PROXY_HEADERS: xforwarded
     ports: ["8085:8085"]
     depends_on:
       postgres: {condition: service_healthy}
@@ -66,8 +89,10 @@ services:
     volumes:
       - ./Caddyfile.development:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
-    ports: ["8443:8443"]
-    depends_on: [api]
+      - ../../apps/admin-web/dist:/srv/admin:ro
+      - ../../apps/user-web/dist:/srv/user:ro
+    ports: ["8443:8443", "8444:8444", "8445:8445"]
+    depends_on: [api, user-api, keycloak]
     restart: unless-stopped
   ca-init:
     image: smallstep/step-ca:latest@sha256:a2b17872915c193259b75a5474c398326f41bd199f0842093e52cf4182bc8270

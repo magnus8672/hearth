@@ -1,0 +1,103 @@
+{
+  "recorded_at": "2026-09-13T02:45:15.438263+00:00",
+  "qualification": "local accounts and private drafts test build; full release gates open",
+  "windows_python": {
+    "passed": 41,
+    "evidence": "local scripts/dev.py check result"
+  },
+  "linux_python": {
+    "passed": 41,
+    "evidence": "linux-python.xml"
+  },
+  "go": "all packages pass; native Windows setup executable built",
+  "typescript": {
+    "shared_fixtures_passed": 116,
+    "typecheck": "passed",
+    "both_production_builds": "passed"
+  },
+  "welcome_browser": {
+    "startTime": "2026-09-13T02:14:55.490Z",
+    "duration": 3793.905,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "real_keycloak_browser": {
+    "passed": 8,
+    "browser": "153.0.8010.12",
+    "evidence": "identity-browser.json"
+  },
+  "missing_second_factor": "credential-loss.json",
+  "normal_restart": "restart.json",
+  "final_https": {
+    "admin": "ready",
+    "user": "ready",
+    "identity": "ready",
+    "forged_identity": "401 on both apps",
+    "identity_admin_and_master_routes": "404"
+  },
+  "setup_handoff": {
+    "owner_created": false,
+    "trusted": false,
+    "fingerprint": "36:20:12:DE:84:F6:05:8A:3C:B7:BE:62:15:CF:00:A8:EF:79:2A:F8:D6:BC:90:4A:45:25:FA:D9:C8:33:7D:F3"
+  },
+  "synthetic_accounts_remaining": 0,
+  "self_registration_before_owner": false,
+  "original_design_files_unchanged": 119,
+  "services": [
+    {
+      "Service": "api",
+      "State": "running",
+      "Health": "",
+      "Image": "hearth-control:development"
+    },
+    {
+      "Service": "edge",
+      "State": "running",
+      "Health": "",
+      "Image": "library/caddy:2@sha256:13ba145cba2f3e28fa801994876e4c086d1b95d5aa2a520a734765ffb6b12017"
+    },
+    {
+      "Service": "keycloak",
+      "State": "running",
+      "Health": "",
+      "Image": "quay.io/keycloak/keycloak:26.7.3@sha256:ff4257d0d64efbe99ed1ddfaf07765cc3c36dc7518bf8324d41961327f441c54"
+    },
+    {
+      "Service": "postgres",
+      "State": "running",
+      "Health": "healthy",
+      "Image": "library/postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280"
+    },
+    {
+      "Service": "step-ca",
+      "State": "running",
+      "Health": "healthy",
+      "Image": "smallstep/step-ca:latest@sha256:a2b17872915c193259b75a5474c398326f41bd199f0842093e52cf4182bc8270"
+    },
+    {
+      "Service": "user-api",
+      "State": "running",
+      "Health": "",
+      "Image": "hearth-control:development"
+    }
+  ],
+  "virtualization": {
+    "accelerator": "whpx",
+    "cpu": "qemu64,+ssse3,+sse4.1,+sse4.2,+popcnt,+cx16,+lahf-lm",
+    "guest_workaround": "clearcpuid=519",
+    "qualification": "ADR 0005; short acceptance and normal restart only"
+  },
+  "not_qualified": [
+    "production installer and privileged helper",
+    "Windows trust-button interaction",
+    "long-duration guest reliability",
+    "LAN and other-system deployment",
+    "recovery-code consumption/replay",
+    "worker enrollment",
+    "provider installation and inference",
+    "shared workspaces and role editing",
+    "full release gates"
+  ]
+}

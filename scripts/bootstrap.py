@@ -42,11 +42,12 @@ def main():
         with zipfile.ZipFile(go_archive) as archive:
             archive.extractall(STATE / "toolchains")
     fetch(locks["qemu_development_probe"], qemu_archive)
-    if not (STATE / "toolchains/qemu/qemu-system-x86_64.exe").exists():
+    qemu_directory = STATE / 'toolchains' / locks['qemu_development_probe']['directory']
+    if not (qemu_directory / 'qemu-system-x86_64.exe').exists():
         extractor = shutil.which("7z") or r"C:\Program Files\7-Zip\7z.exe"
         if not Path(extractor).exists():
             raise SystemExit("7-Zip is required to extract the pinned portable QEMU package.")
-        subprocess.run([extractor, "x", str(qemu_archive), "-o" + str(STATE / "toolchains/qemu"), "-y"],
+        subprocess.run([extractor, "x", str(qemu_archive), "-o" + str(qemu_directory), "-y"],
                        check=True, stdout=subprocess.DEVNULL)
     image = json.loads((ROOT / "deploy/appliance/base-images.lock.json").read_text())["base_images"]["linux_amd64"]
     fetch(image, STATE / "appliance/base.img")

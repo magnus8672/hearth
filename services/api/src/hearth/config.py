@@ -2,6 +2,7 @@ from base64 import urlsafe_b64decode
 from functools import lru_cache
 from typing import Literal
 from urllib.parse import urlsplit
+from uuid import UUID
 
 from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -21,6 +22,29 @@ class Settings(BaseSettings):
     admin_client_secret: SecretStr = SecretStr("")
     user_client_secret: SecretStr = SecretStr("")
     session_encryption_key: SecretStr = SecretStr("")
+    audience: Literal["admin", "user"] = "admin"
+    farm_id: UUID | None = None
+    identity_internal_origin: str = "http://keycloak:8085"
+
+    @property
+    def origin(self):
+        return self.admin_origin if self.audience == "admin" else self.user_origin
+
+    @property
+    def issuer(self):
+        return f"{self.identity_origin}/realms/{self.oidc_realm}"
+
+    @property
+    def oidc_internal(self):
+        return f"{self.identity_internal_origin}/realms/{self.oidc_realm}/protocol/openid-connect"
+
+    @property
+    def client_id(self):
+        return f"hearth-{self.audience}"
+
+    @property
+    def client_secret(self):
+        return (self.admin_client_secret if self.audience == "admin" else self.user_client_secret).get_secret_value()
 
     @model_validator(mode="after")
     def fail_closed(self):

@@ -9,6 +9,7 @@ WORKDIR /opt/hearth
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential pkg-config cmake && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir uv==0.12.5
 COPY pyproject.toml uv.lock ./
+RUN uv sync --locked --no-dev --no-install-project --no-binary-package nemo-switchyard
 COPY services/api services/api
 COPY alembic.ini ./
 RUN uv sync --locked --no-dev --no-binary-package nemo-switchyard

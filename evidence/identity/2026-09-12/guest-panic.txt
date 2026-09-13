@@ -1,0 +1,50 @@
+         Starting [0;1;39mcloud-final.service[0m - Cloud-init: Final Stage...
+
+         Starting [0;1;39msystemd-update-utmp-runleâ€¦[0m- Record Runlevel Change in UTMP...
+
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-utmp-runleâ€¦e[0m - Record Runlevel Change in UTMP.
+
+[    9.214237] cloud-init[1805]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:final' at Sun, 13 Sep 2026 01:49:24 +0000. Up 9.18 seconds.
+[    9.239062] cloud-init[1805]: Hearth development appliance base provisioned
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-final.service[0m - Cloud-init: Final Stage.
+
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-init.target[0m - Cloud-init target.
+
+
+
+Ubuntu 24.04.5 LTS hearth-development ttyS0
+
+hearth-development login:
+
+[ 1745.846119] systemd[1]: segfault at 7d5fdf5fffb8 ip 0000752500f29cbd sp 00007ffc731bbac8 error 44 in libc.so.6[752500e28000+189000] likely on CPU 2 (core 2, socket 0)
+[ 1745.848558] Code: f0 74 38 48 89 4e f8 48 83 ee 10 48 89 3e 48 89 d7 4c 89 c2 4d 89 c8 4c 8b 54 24 08 b8 38 00 00 00 0f 05 48 85 c0 7c 13 74 01 <c3> 31 ed 58 5f ff d0 48 89 c7 b8 3c 00 00 00 0f 05 48 8b 0d 23 a1
+[ 1745.851276] systemd[1]: segfault at 7d5fdf5fffb0 ip 0000562d014befdf sp 00007ffc731bb500 error 46 in systemd[562d014b5000+b000] likely on CPU 2 (core 2, socket 0)
+[ 1745.852697] Code: f5 41 54 41 89 fc 53 48 8d 9d 30 ff ff ff 48 89 df 48 81 ec 48 01 00 00 64 48 8b 04 25 28 00 00 00 48 89 45 c8 31 c0 f3 48 ab <e8> 8c 7b ff ff 83 f8 01 0f 85 5a 02 00 00 80 3d 7c 92 00 00 00 0f
+[ 1745.863979] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b
+[ 1745.865562] CPU: 2 PID: 1 Comm: systemd Not tainted 6.8.0-139-generic #139-Ubuntu
+[ 1745.868330] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-stable202408-prebuilt.qemu.org 08/13/2024
+[ 1745.870350] Call Trace:
+[ 1745.870594]  <TASK>
+[ 1745.870875]  dump_stack_lvl+0x27/0xa0
+[ 1745.871293]  dump_stack+0x10/0x20
+[ 1745.871623]  panic+0x366/0x3c0
+[ 1745.871947]  do_exit+0x513/0x530
+[ 1745.872264]  do_group_exit+0x35/0x90
+[ 1745.872609]  get_signal+0x96e/0x9b0
+[ 1745.872961]  ? signal_setup_done+0x183/0x1b0
+[ 1745.873387]  arch_do_signal_or_restart+0x42/0x210
+[ 1745.873854]  irqentry_exit_to_user_mode+0x154/0x1e0
+[ 1745.874418]  irqentry_exit+0x43/0x50
+[ 1745.874807]  exc_page_fault+0x94/0x1b0
+[ 1745.875192]  asm_exc_page_fault+0x27/0x30
+[ 1745.875607] RIP: 0033:0x562d014befdf
+[ 1745.875984] Code: f5 41 54 41 89 fc 53 48 8d 9d 30 ff ff ff 48 89 df 48 81 ec 48 01 00 00 64 48 8b 04 25 28 00 00 00 48 89 45 c8 31 c0 f3 48 ab <e8> 8c 7b ff ff 83 f8 01 0f 85 5a 02 00 00 80 3d 7c 92 00 00 00 0f
+[ 1745.877753] RSP: 002b:00007ffc729c0440 EFLAGS: 00010246
+[ 1745.878247] RAX: 0000000000000000 RBX: 00007ffc729c04e0 RCX: 0000000000000000
+[ 1745.878903] RDX: 00007ffc729c05c0 RSI: 00007ffc729c06f0 RDI: 00007ffc729c0578
+[ 1745.879575] RBP: 00007ffc729c05b0 R08: 0000000000000007 R09: 0000000000000007
+[ 1745.880230] R10: 0000562d0b97b810 R11: 0000000000000206 R12: 000000000000000b
+[ 1745.880892] R13: 00007ffc729c06f0 R14: 0000000000000002 R15: 0000562d0b912790
+[ 1745.881570]  </TASK>
+[ 1745.881831] Kernel Offset: 0x14400000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[ 1746.707843] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000008b ]---

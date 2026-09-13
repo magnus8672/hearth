@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/v1/session', route => route.fulfill({ status: 401, json: { error: { message: 'Sign in to Hearth to continue.' } } }));
+  await page.route('**/api/v1/setup', route => route.fulfill({ status: 200, json: { owner_created: false } }));
+});
+
 test('an unavailable service can recover without inventing sign-in readiness', async ({ page }) => {
   let ready = false;
   await page.route('**/health/ready', route => route.fulfill({ status: ready ? 200 : 503, json: ready ? { status: 'ready' } : { error: 'fixture_unavailable' } }));
@@ -8,8 +13,8 @@ test('an unavailable service can recover without inventing sign-in readiness', a
   ready = true;
   await page.getByRole('button', { name: 'Check connection', exact: true }).click();
   await expect(page.getByText('Database connected', { exact: true })).toBeVisible();
-  await expect(page.getByText('Sign-in is not available in this foundation build.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toHaveCount(0);
+  await expect(page.getByText('Open the local Hearth setup tool to create the Owner account and prepare browser trust.')).toBeVisible();
+  await expect(page.getByRole('link', { name: /Sign in to/ })).toHaveCount(0);
 });
 
 test('theme choice restores on reload and system mode follows the browser', async ({ page }) => {
@@ -47,11 +52,11 @@ test('live appliance readiness is visible in the real application', async ({ pag
   await page.goto('/');
   await expect(page.getByText('Database connected', { exact: true })).toBeVisible({ timeout: 15000 });
   await page.getByLabel('Appearance').selectOption('light');
-  await page.screenshot({ path: 'evidence/foundation/2026-09-12/admin-daylight.png', fullPage: true });
+  await page.screenshot({ path: '.hearth/test-results/welcome-daylight.png', fullPage: true });
   await page.getByLabel('Appearance').selectOption('dark');
-  await page.screenshot({ path: 'evidence/foundation/2026-09-12/admin-firelight.png', fullPage: true });
+  await page.screenshot({ path: '.hearth/test-results/welcome-firelight.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('http://127.0.0.1:5174');
   await expect(page.getByText('Database connected', { exact: true })).toBeVisible();
-  await page.screenshot({ path: 'evidence/foundation/2026-09-12/user-mobile.png', fullPage: true });
+  await page.screenshot({ path: '.hearth/test-results/welcome-mobile.png', fullPage: true });
 });

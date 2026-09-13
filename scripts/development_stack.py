@@ -6,6 +6,7 @@ import os
 import secrets
 import subprocess
 import tarfile
+import uuid
 
 from appliance import ROOT, STATE, ssh_args
 
@@ -18,8 +19,10 @@ def configuration():
     for name in (
             "POSTGRES_PASSWORD", "HEARTH_APP_PASSWORD", "HEARTH_MIGRATION_PASSWORD", "HEARTH_IDENTITY_PASSWORD",
             "HEARTH_IDENTITY_BOOTSTRAP_PASSWORD", "HEARTH_SESSION_ENCRYPTION_KEY", "HEARTH_CA_PASSWORD",
+            "HEARTH_ADMIN_CLIENT_SECRET", "HEARTH_USER_CLIENT_SECRET",
         ):
         values.setdefault(name, secrets.token_urlsafe(32))
+    values.setdefault('HEARTH_FARM_ID', str(uuid.uuid4()))
     if set(values) != old_names:
         CONFIG.parent.mkdir(parents=True, exist_ok=True)
         CONFIG.write_text(json.dumps(values, indent=2))
@@ -33,9 +36,14 @@ def configuration():
 
 def sync():
     values = configuration()
+    cpu_ready = subprocess.run([str(x) for x in ssh_args()] + ['grep -q clearcpuid=519 /proc/cmdline'], check=False)
+    if cpu_ready.returncode != 0:
+        with (ROOT / 'deploy/appliance/60-hearth-cpu.cfg').open('rb') as stream:
+            subprocess.run([str(x) for x in ssh_args()] + ['sudo tee /etc/default/grub.d/60-hearth-cpu.cfg >/dev/null && sudo update-grub'], stdin=stream, check=True)
+        raise SystemExit('Guest CPU compatibility profile prepared. Run appliance.py down, appliance.py up, then repeat this stack command.')
     archive_path = STATE / "source.tar"
     with tarfile.open(archive_path, "w") as archive:
-        for name in ("pyproject.toml", "uv.lock", "alembic.ini", "services", "deploy", "scripts", "tests", ".dockerignore"):
+        for name in ("pyproject.toml", "uv.lock", "alembic.ini", "services", "deploy", "scripts", "tests", "apps/admin-web/dist", "apps/user-web/dist", ".dockerignore"):
             path = ROOT / name
             if path.is_dir():
                 for child in path.rglob("*"):

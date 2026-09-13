@@ -107,7 +107,7 @@ def up():
             "-drive", f"if=pflash,format=raw,unit=1,file={STATE / 'uefi-vars.fd'}",
             "-drive", f"file={STATE / 'system.qcow2'},if=virtio,format=qcow2",
             "-drive", f"file={STATE / 'seed.iso'},format=raw,media=cdrom,readonly=on",
-            "-netdev", "user,id=net0,hostfwd=tcp:127.0.0.1:22220-:22,hostfwd=tcp:127.0.0.1:55432-:5432,hostfwd=tcp:127.0.0.1:18080-:8080,hostfwd=tcp:127.0.0.1:18085-:8085,hostfwd=tcp:127.0.0.1:18443-:8443",
+            "-netdev", "user,id=net0,hostfwd=tcp:127.0.0.1:22220-:22,hostfwd=tcp:127.0.0.1:55432-:5432,hostfwd=tcp:127.0.0.1:18080-:8080,hostfwd=tcp:127.0.0.1:18085-:8085,hostfwd=tcp:127.0.0.1:18443-:8443,hostfwd=tcp:127.0.0.1:8443-:8443,hostfwd=tcp:127.0.0.1:8444-:8444,hostfwd=tcp:127.0.0.1:8445-:8445",
             "-device", "virtio-net-pci,netdev=net0", "-serial", f"file:{STATE / 'serial.log'}"]
     with (STATE / "process.log").open("ab") as log:
         process = subprocess.Popen(args, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
@@ -137,7 +137,10 @@ def wait_for_recorded_exit(record):
         buffer, length = ctypes.create_unicode_buffer(32768), wintypes.DWORD(32768)
         if not kernel.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(length)):
             raise SystemExit("Cannot identify the recorded process. Its state record has been preserved.")
-        if Path(buffer.value).resolve() != (TOOLS / "qemu-system-x86_64.exe").resolve():
+        expected = Path(record['executable']).resolve()
+        allowed = {(TOOLS / 'qemu-system-x86_64.exe').resolve(),
+                   (ROOT / '.hearth/toolchains/qemu-10.2.0/qemu-system-x86_64.exe').resolve()}
+        if expected not in allowed or Path(buffer.value).resolve() != expected:
             raise SystemExit("Recorded PID belongs to another executable. No process action was taken.")
         if kernel.WaitForSingleObject(handle, 30_000) != 0:
             raise SystemExit("Guest shutdown is still in progress. The process record prevents duplicate startup.")
