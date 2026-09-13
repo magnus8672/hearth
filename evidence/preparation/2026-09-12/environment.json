@@ -1,0 +1,17 @@
+{
+  "checked_at_utc": "2026-09-12T23:52:11.1918757Z",
+  "scope": "Read-only host/toolchain inspection; no environment installation or hardware qualification",
+  "versions": {
+    "python": "Python 3.12.10",
+    "uv": "uv 0.12.5 (210d1f678 2026-08-14 x86_64-pc-windows-msvc)",
+    "node": "v24.14.0",
+    "npm": "11.9.0",
+    "pnpm": "11.19.0"
+  },
+  "notes": [
+    "Commands missing from PATH may be installed elsewhere; no full disk search performed.",
+    "HypervisorPresent does not qualify WHPX, QEMU or guest appliance boot.",
+    "GPU backend, model fit, signing credentials, remote workers and NAS were not probed."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

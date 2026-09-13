@@ -1,0 +1,37 @@
+{
+  "artifact": "Hearth brand kit v1.0",
+  "browser": "Chrome via Puppeteer",
+  "themeSwitch": true,
+  "layouts": [
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "overflow": false
+    },
+    {
+      "width": 960,
+      "scrollWidth": 960,
+      "overflow": false
+    },
+    {
+      "width": 640,
+      "scrollWidth": 640,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "overflow": false
+    }
+  ],
+  "imageFailures": [],
+  "svgCount": 46,
+  "svgErrors": [],
+  "javascriptErrors": [],
+  "notes": "Brand artifacts only. Screens use illustrative states; no Hearth application or hardware tested."
+}

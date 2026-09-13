@@ -1,0 +1,109 @@
+/* Hearth identity v1.0. Explicit data-theme choice overrides the system preference. */
+:root {
+  color-scheme: light;
+  --hearth-background: #F5F0E8;
+  --hearth-surface: #FFFCF7;
+  --hearth-raised: #EDE4D8;
+  --hearth-text: #29211B;
+  --hearth-muted: #746354;
+  --hearth-border: #D9CBB9;
+  --hearth-control-border: #927B65;
+  --hearth-primary: #A94724;
+  --hearth-primary-hover: #903C1E;
+  --hearth-on-primary: #FFFCF7;
+  --hearth-accent: #A94724;
+  --hearth-accent-soft: #F8E4D6;
+  --hearth-success: #406044;
+  --hearth-success-soft: #E5EDDF;
+  --hearth-warning: #765418;
+  --hearth-warning-soft: #F7EBCE;
+  --hearth-danger: #A0372C;
+  --hearth-danger-soft: #F9E4DE;
+  --hearth-info: #375F73;
+  --hearth-info-soft: #E1EDF1;
+  --hearth-focus: #9A482B;
+  --hearth-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hearth-font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --hearth-radius-control: 10px;
+  --hearth-radius-card: 16px;
+  --hearth-radius-dialog: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  --hearth-background: #171412;
+  --hearth-surface: #211D1A;
+  --hearth-raised: #2C2520;
+  --hearth-text: #F5EBDF;
+  --hearth-muted: #BFB0A1;
+  --hearth-border: #44382F;
+  --hearth-control-border: #8C7867;
+  --hearth-primary: #F4A261;
+  --hearth-primary-hover: #FFB77C;
+  --hearth-on-primary: #24160F;
+  --hearth-accent: #E68B65;
+  --hearth-accent-soft: #3D281D;
+  --hearth-success: #ADC7A3;
+  --hearth-success-soft: #253226;
+  --hearth-warning: #E8C778;
+  --hearth-warning-soft: #3A301D;
+  --hearth-danger: #F0A194;
+  --hearth-danger-soft: #422823;
+  --hearth-info: #A7C5D3;
+  --hearth-info-soft: #24323A;
+  --hearth-focus: #FFD2AC;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --hearth-background: #171412;
+  --hearth-surface: #211D1A;
+  --hearth-raised: #2C2520;
+  --hearth-text: #F5EBDF;
+  --hearth-muted: #BFB0A1;
+  --hearth-border: #44382F;
+  --hearth-control-border: #8C7867;
+  --hearth-primary: #F4A261;
+  --hearth-primary-hover: #FFB77C;
+  --hearth-on-primary: #24160F;
+  --hearth-accent: #E68B65;
+  --hearth-accent-soft: #3D281D;
+  --hearth-success: #ADC7A3;
+  --hearth-success-soft: #253226;
+  --hearth-warning: #E8C778;
+  --hearth-warning-soft: #3A301D;
+  --hearth-danger: #F0A194;
+  --hearth-danger-soft: #422823;
+  --hearth-info: #A7C5D3;
+  --hearth-info-soft: #24323A;
+  --hearth-focus: #FFD2AC;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --hearth-background: #F5F0E8;
+  --hearth-surface: #FFFCF7;
+  --hearth-raised: #EDE4D8;
+  --hearth-text: #29211B;
+  --hearth-muted: #746354;
+  --hearth-border: #D9CBB9;
+  --hearth-control-border: #927B65;
+  --hearth-primary: #A94724;
+  --hearth-primary-hover: #903C1E;
+  --hearth-on-primary: #FFFCF7;
+  --hearth-accent: #A94724;
+  --hearth-accent-soft: #F8E4D6;
+  --hearth-success: #406044;
+  --hearth-success-soft: #E5EDDF;
+  --hearth-warning: #765418;
+  --hearth-warning-soft: #F7EBCE;
+  --hearth-danger: #A0372C;
+  --hearth-danger-soft: #F9E4DE;
+  --hearth-info: #375F73;
+  --hearth-info-soft: #E1EDF1;
+  --hearth-focus: #9A482B;
+}
+/* Components opt in to these tokens. Do not recolor brand SVGs with CSS filters. */
+.hearth-focus:focus-visible { outline: 3px solid var(--hearth-focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .hearth-motion { animation: none !important; transition: none !important; }
+}

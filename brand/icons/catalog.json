@@ -1,0 +1,200 @@
+[
+  {
+    "name": "hearth",
+    "label": "Hearth control node",
+    "file": "hearth.svg",
+    "symbol": "hearth-hearth"
+  },
+  {
+    "name": "chat",
+    "label": "Conversation",
+    "file": "chat.svg",
+    "symbol": "hearth-chat"
+  },
+  {
+    "name": "writing",
+    "label": "Writing",
+    "file": "writing.svg",
+    "symbol": "hearth-writing"
+  },
+  {
+    "name": "code",
+    "label": "Coding",
+    "file": "code.svg",
+    "symbol": "hearth-code"
+  },
+  {
+    "name": "reasoning",
+    "label": "Reasoning",
+    "file": "reasoning.svg",
+    "symbol": "hearth-reasoning"
+  },
+  {
+    "name": "image",
+    "label": "Image generation",
+    "file": "image.svg",
+    "symbol": "hearth-image"
+  },
+  {
+    "name": "cube",
+    "label": "3D generation",
+    "file": "cube.svg",
+    "symbol": "hearth-cube"
+  },
+  {
+    "name": "vision",
+    "label": "Vision",
+    "file": "vision.svg",
+    "symbol": "hearth-vision"
+  },
+  {
+    "name": "microphone",
+    "label": "Transcription",
+    "file": "microphone.svg",
+    "symbol": "hearth-microphone"
+  },
+  {
+    "name": "speech",
+    "label": "Speech synthesis",
+    "file": "speech.svg",
+    "symbol": "hearth-speech"
+  },
+  {
+    "name": "embeddings",
+    "label": "Embeddings",
+    "file": "embeddings.svg",
+    "symbol": "hearth-embeddings"
+  },
+  {
+    "name": "node",
+    "label": "Compute node",
+    "file": "node.svg",
+    "symbol": "hearth-node"
+  },
+  {
+    "name": "nodes",
+    "label": "Farm nodes",
+    "file": "nodes.svg",
+    "symbol": "hearth-nodes"
+  },
+  {
+    "name": "cloud",
+    "label": "Cloud provider",
+    "file": "cloud.svg",
+    "symbol": "hearth-cloud"
+  },
+  {
+    "name": "tools",
+    "label": "Toolbox",
+    "file": "tools.svg",
+    "symbol": "hearth-tools"
+  },
+  {
+    "name": "knowledge",
+    "label": "Knowledge graph",
+    "file": "knowledge.svg",
+    "symbol": "hearth-knowledge"
+  },
+  {
+    "name": "storage",
+    "label": "NAS storage",
+    "file": "storage.svg",
+    "symbol": "hearth-storage"
+  },
+  {
+    "name": "models",
+    "label": "Model library",
+    "file": "models.svg",
+    "symbol": "hearth-models"
+  },
+  {
+    "name": "security",
+    "label": "Security and policy",
+    "file": "security.svg",
+    "symbol": "hearth-security"
+  },
+  {
+    "name": "users",
+    "label": "Users and roles",
+    "file": "users.svg",
+    "symbol": "hearth-users"
+  },
+  {
+    "name": "admin-agent",
+    "label": "Admin agent",
+    "file": "admin-agent.svg",
+    "symbol": "hearth-admin-agent"
+  },
+  {
+    "name": "routing",
+    "label": "Capability routing",
+    "file": "routing.svg",
+    "symbol": "hearth-routing"
+  },
+  {
+    "name": "activity",
+    "label": "Activity and audit",
+    "file": "activity.svg",
+    "symbol": "hearth-activity"
+  },
+  {
+    "name": "settings",
+    "label": "Settings",
+    "file": "settings.svg",
+    "symbol": "hearth-settings"
+  },
+  {
+    "name": "add-node",
+    "label": "Join a node",
+    "file": "add-node.svg",
+    "symbol": "hearth-add-node"
+  },
+  {
+    "name": "ready",
+    "label": "Ready",
+    "file": "ready.svg",
+    "symbol": "hearth-ready"
+  },
+  {
+    "name": "warming",
+    "label": "Warming",
+    "file": "warming.svg",
+    "symbol": "hearth-warming"
+  },
+  {
+    "name": "unassigned",
+    "label": "Unassigned",
+    "file": "unassigned.svg",
+    "symbol": "hearth-unassigned"
+  },
+  {
+    "name": "offline",
+    "label": "Offline",
+    "file": "offline.svg",
+    "symbol": "hearth-offline"
+  },
+  {
+    "name": "failed",
+    "label": "Failed",
+    "file": "failed.svg",
+    "symbol": "hearth-failed"
+  },
+  {
+    "name": "lock",
+    "label": "Private or locked",
+    "file": "lock.svg",
+    "symbol": "hearth-lock"
+  },
+  {
+    "name": "sun",
+    "label": "Light appearance",
+    "file": "sun.svg",
+    "symbol": "hearth-sun"
+  },
+  {
+    "name": "moon",
+    "label": "Dark appearance",
+    "file": "moon.svg",
+    "symbol": "hearth-moon"
+  }
+]

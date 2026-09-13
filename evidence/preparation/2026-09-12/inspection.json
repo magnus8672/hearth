@@ -1,0 +1,1589 @@
+{
+  "inspected_at": "2026-09-12T23:51:38.483167+00:00",
+  "scope": "Delivered design/brand sources only; no application, provider, browser interaction, or hardware acceptance test",
+  "status": "PASS",
+  "file_count": 119,
+  "extension_counts": {
+    ".md": 30,
+    ".svg": 61,
+    ".json": 5,
+    ".html": 1,
+    ".png": 19,
+    ".ico": 1,
+    ".js": 1,
+    ".css": 1
+  },
+  "markdown_files": [
+    "01-ARCHITECTURE.md",
+    "02-DISCOVERY-AND-WORKERS.md",
+    "03-NAS-AND-MODELS.md",
+    "04-SECURITY-AND-RBAC.md",
+    "05-RUNTIME-ROUTING-AND-TOOLS.md",
+    "06-MEMORY-AND-KNOWLEDGE.md",
+    "07-INTERFACES.md",
+    "08-DATA-AND-API-CONTRACTS.md",
+    "09-VALIDATION-AND-RELEASE.md",
+    "10-OPERATIONS.md",
+    "11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+    "12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+    "brand/BRAND_GUIDE.md",
+    "BUILD_HANDOFF.md",
+    "BUILD_STATUS.md",
+    "diagrams/README.md",
+    "DOCUMENT_CHECKS.md",
+    "phases/P0-FOUNDATION.md",
+    "phases/P1-IDENTITY-AND-SHELLS.md",
+    "phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+    "phases/P3-NAS-AND-CATALOG.md",
+    "phases/P4-LOCAL-INFERENCE.md",
+    "phases/P5-ROUTING-AND-CLOUD.md",
+    "phases/P6-SHARED-TOOLS.md",
+    "phases/P7-CONVERSATION-MEMORY.md",
+    "phases/P8-COLLABORATION-AND-MEDIA.md",
+    "phases/P9-HARDENING-AND-RELEASE.md",
+    "README.md",
+    "SOURCES.md",
+    "VIDEO-REVIEW-IH8XmxiwliQ.md"
+  ],
+  "mermaid_count": 14,
+  "matching_diagram_files": [
+    "diagrams/01-ARCHITECTURE-1.svg",
+    "diagrams/02-DISCOVERY-AND-WORKERS-1.svg",
+    "diagrams/02-DISCOVERY-AND-WORKERS-2.svg",
+    "diagrams/03-NAS-AND-MODELS-1.svg",
+    "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-1.svg",
+    "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-2.svg",
+    "diagrams/06-MEMORY-AND-KNOWLEDGE-1.svg",
+    "diagrams/06-MEMORY-AND-KNOWLEDGE-2.svg",
+    "diagrams/07-INTERFACES-1.svg",
+    "diagrams/11-INSTALLATION-AND-CENTRAL-MANAGEMENT-1.svg",
+    "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-1.svg",
+    "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-2.svg",
+    "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-1.svg",
+    "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-2.svg"
+  ],
+  "parsed_svg_count": 61,
+  "brand_logo_icon_svg_count": 46,
+  "icon_catalog_count": 33,
+  "contrast_check_count": 68,
+  "contrast_checks": [
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 15.57,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 15.570141602020259,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "background",
+      "ratio": 8.68,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.679532788986114,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "background",
+      "ratio": 7.2,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.199928407335262,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "success",
+      "background": "background",
+      "ratio": 10.02,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 10.019908957903208,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "warning",
+      "background": "background",
+      "ratio": 11.239,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 11.239454302863521,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "danger",
+      "background": "background",
+      "ratio": 8.933,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.93326006722879,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "info",
+      "background": "background",
+      "ratio": 10.103,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 10.102986696173549,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "control-border",
+      "background": "background",
+      "ratio": 4.364,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 4.363786362056774,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "focus",
+      "background": "background",
+      "ratio": 13.156,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 13.155757544830761,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 14.205,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 14.2045418334275,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 7.918,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.918282938400635,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "surface",
+      "ratio": 6.568,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.56844920706481,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "success",
+      "background": "surface",
+      "ratio": 9.141,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 9.141099650706048,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "warning",
+      "background": "surface",
+      "ratio": 10.254,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 10.253683165553646,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "danger",
+      "background": "surface",
+      "ratio": 8.15,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.149756731651953,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "info",
+      "background": "surface",
+      "ratio": 9.217,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 9.21689094656263,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "control-border",
+      "background": "surface",
+      "ratio": 3.981,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 3.981054733884571,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "focus",
+      "background": "surface",
+      "ratio": 12.002,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 12.001914508711407,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "raised",
+      "ratio": 12.805,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 12.804570308837606,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "muted",
+      "background": "raised",
+      "ratio": 7.138,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.1378726465797655,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "raised",
+      "ratio": 5.921,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.9210758557494065,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "success",
+      "background": "raised",
+      "ratio": 8.24,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.2401709643396,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "warning",
+      "background": "raised",
+      "ratio": 9.243,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 9.243100450371617,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "danger",
+      "background": "raised",
+      "ratio": 7.347,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.346532840980747,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "info",
+      "background": "raised",
+      "ratio": 8.308,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.308492420108745,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "control-border",
+      "background": "raised",
+      "ratio": 3.589,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 3.588689859985124,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "focus",
+      "background": "raised",
+      "ratio": 10.819,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 10.819029573048265,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "on-primary",
+      "background": "primary",
+      "ratio": 8.513,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 8.51305720937535,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "on-primary",
+      "background": "primary-hover",
+      "ratio": 10.292,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 10.292217215671966,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent",
+      "background": "accent-soft",
+      "ratio": 5.426,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.425860929527569,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "success",
+      "background": "success-soft",
+      "ratio": 7.342,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.342213153924694,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "warning",
+      "background": "warning-soft",
+      "ratio": 7.943,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.943408640494175,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "danger",
+      "background": "danger-soft",
+      "ratio": 6.56,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.560461381501644,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "info",
+      "background": "info-soft",
+      "ratio": 7.266,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.266124400642333,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 13.943,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 13.943236089149334,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "background",
+      "ratio": 5.064,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.064287118863441,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "background",
+      "ratio": 5.123,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.122559485089772,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "success",
+      "background": "background",
+      "ratio": 6.223,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.223244368857581,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "warning",
+      "background": "background",
+      "ratio": 6.066,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.066191876276494,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "danger",
+      "background": "background",
+      "ratio": 6.015,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.015076604769101,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "info",
+      "background": "background",
+      "ratio": 6.076,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.075628817663237,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "control-border",
+      "background": "background",
+      "ratio": 3.531,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 3.5305576859055336,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "focus",
+      "background": "background",
+      "ratio": 5.549,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 5.549367017265965,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 15.455,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 15.455282335183535,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 5.613,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.613473568691674,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "surface",
+      "ratio": 5.678,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.678065164689107,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "success",
+      "background": "surface",
+      "ratio": 6.898,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.898111611004284,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "warning",
+      "background": "surface",
+      "ratio": 6.724,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.724027876154958,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "danger",
+      "background": "surface",
+      "ratio": 6.667,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.667369511645079,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "info",
+      "background": "surface",
+      "ratio": 6.734,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 6.734488187705315,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "control-border",
+      "background": "surface",
+      "ratio": 3.913,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 3.913421926405269,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "focus",
+      "background": "surface",
+      "ratio": 6.151,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 6.151156982857441,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "raised",
+      "ratio": 12.571,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 12.57094141156556,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "muted",
+      "background": "raised",
+      "ratio": 4.566,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 4.56585947878492,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "raised",
+      "ratio": 4.618,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 4.618396672952819,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "success",
+      "background": "raised",
+      "ratio": 5.611,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.610752041389039,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "warning",
+      "background": "raised",
+      "ratio": 5.469,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.469156670690727,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "danger",
+      "background": "raised",
+      "ratio": 5.423,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.423072169270303,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "info",
+      "background": "raised",
+      "ratio": 5.478,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.477664827371043,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "control-border",
+      "background": "raised",
+      "ratio": 3.183,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 3.183079848601967,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "focus",
+      "background": "raised",
+      "ratio": 5.003,
+      "minimum": 3,
+      "pass": true,
+      "recomputed_ratio": 5.003197765518206,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "on-primary",
+      "background": "primary",
+      "ratio": 5.678,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.678065164689107,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "on-primary",
+      "background": "primary-hover",
+      "ratio": 7.197,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 7.197336331753258,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "accent",
+      "background": "accent-soft",
+      "ratio": 4.721,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 4.720733209233407,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "success",
+      "background": "success-soft",
+      "ratio": 5.887,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.886747365525193,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "warning",
+      "background": "warning-soft",
+      "ratio": 5.81,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.809817421547388,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "danger",
+      "background": "danger-soft",
+      "ratio": 5.582,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.582371695334693,
+      "recomputed_pass": true
+    },
+    {
+      "theme": "light",
+      "foreground": "info",
+      "background": "info-soft",
+      "ratio": 5.772,
+      "minimum": 4.5,
+      "pass": true,
+      "recomputed_ratio": 5.771577737814812,
+      "recomputed_pass": true
+    }
+  ],
+  "css_palette_blocks_checked": [
+    "default_light",
+    "explicit_light",
+    "explicit_dark",
+    "system_dark"
+  ],
+  "png_chunk_validation": [
+    {
+      "file": "brand/logos/hearth-app-1024.png",
+      "dimensions": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-128.png",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-16.png",
+      "dimensions": [
+        16,
+        16
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-24.png",
+      "dimensions": [
+        24,
+        24
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-256.png",
+      "dimensions": [
+        256,
+        256
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-32.png",
+      "dimensions": [
+        32,
+        32
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-48.png",
+      "dimensions": [
+        48,
+        48
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-512.png",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-64.png",
+      "dimensions": [
+        64,
+        64
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-square-1024.png",
+      "dimensions": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-app-square-512.png",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-mark-dark-512.png",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "brand/logos/hearth-mark-light-512.png",
+      "dimensions": [
+        512,
+        512
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-daylight.png",
+      "dimensions": [
+        1264,
+        1226
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-firelight.png",
+      "dimensions": [
+        1264,
+        1226
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-gallery-dark.png",
+      "dimensions": [
+        1440,
+        2736
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-identity.png",
+      "dimensions": [
+        1280,
+        810
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-mobile-top.png",
+      "dimensions": [
+        320,
+        1100
+      ]
+    },
+    {
+      "file": "brand/previews/hearth-mobile.png",
+      "dimensions": [
+        320,
+        4795
+      ]
+    }
+  ],
+  "ico_frame_dimensions": [
+    [
+      16,
+      16
+    ],
+    [
+      24,
+      24
+    ],
+    [
+      32,
+      32
+    ],
+    [
+      48,
+      48
+    ],
+    [
+      64,
+      64
+    ],
+    [
+      128,
+      128
+    ],
+    [
+      256,
+      256
+    ]
+  ],
+  "gate_ids": [
+    "E01",
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E07",
+    "E08",
+    "E09",
+    "E10",
+    "E11",
+    "E12",
+    "E13",
+    "E14",
+    "E15",
+    "E16",
+    "E17",
+    "E18",
+    "E19",
+    "E20",
+    "E21",
+    "E22",
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12"
+  ],
+  "gate_counts": {
+    "E": 22,
+    "S": 18,
+    "C": 9,
+    "A": 12
+  },
+  "errors": [],
+  "source_inventory": [
+    {
+      "file": "01-ARCHITECTURE.md",
+      "bytes": 9547,
+      "sha256": "d3e522e40c28c3ecf012c2796bc07b2a172122d15025c39d67f92fe56f2c1821"
+    },
+    {
+      "file": "02-DISCOVERY-AND-WORKERS.md",
+      "bytes": 8728,
+      "sha256": "9c18fa660a655dd8bf57a6a5ec18e4fb9c571ce08e8846ccb97f60f40f91ba23"
+    },
+    {
+      "file": "03-NAS-AND-MODELS.md",
+      "bytes": 9663,
+      "sha256": "c51de81295cbb8239ff936f6fd45f489dc8ec15caf595d7ef866cf9e71d29738"
+    },
+    {
+      "file": "04-SECURITY-AND-RBAC.md",
+      "bytes": 15467,
+      "sha256": "8ead5698bb7f8dd62a596f096aaee100a80ebea0cd950d97544832ae708edb6d"
+    },
+    {
+      "file": "05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "bytes": 12786,
+      "sha256": "d77f57c041395dc3304ac19d000c1c159c83a43cdf94e4ed9089073dedde423a"
+    },
+    {
+      "file": "06-MEMORY-AND-KNOWLEDGE.md",
+      "bytes": 10686,
+      "sha256": "6785be99608c02c47b0ab5d49159588483ee725cca09f623ababf4ae71052856"
+    },
+    {
+      "file": "07-INTERFACES.md",
+      "bytes": 11428,
+      "sha256": "31bd6beadcf102be5629399cfe51833ba51f8692648315baa0f6ed075efa9b33"
+    },
+    {
+      "file": "08-DATA-AND-API-CONTRACTS.md",
+      "bytes": 14572,
+      "sha256": "1cb2124e1fb0759e7bf3e5d000e7b9271fca06aa2d30ca35bc4c93b167583287"
+    },
+    {
+      "file": "09-VALIDATION-AND-RELEASE.md",
+      "bytes": 17091,
+      "sha256": "f5d94fef6a1cc847b81c388780d2090022b1d0b0c19ccc8f7ad79e1b515ab1ff"
+    },
+    {
+      "file": "10-OPERATIONS.md",
+      "bytes": 9506,
+      "sha256": "e9d733b681476dd3351115a1182a7b90bc90dbcc12364969ce284188399145be"
+    },
+    {
+      "file": "11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "bytes": 21956,
+      "sha256": "9749d00036d06fb5f434303800fa803870b1b448fa71f75fb90a5a3591379d15"
+    },
+    {
+      "file": "12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "bytes": 21078,
+      "sha256": "57e1e750178dcc1e9172c0b8b2a9468fad64e4066e2fc648cdb7fe0405b1d849"
+    },
+    {
+      "file": "brand/BRAND_GUIDE.md",
+      "bytes": 14370,
+      "sha256": "286ed034def8de40cc87d21e68435547f3e2795dab8945f53ee345a0b5499355"
+    },
+    {
+      "file": "brand/icons/activity.svg",
+      "bytes": 262,
+      "sha256": "8da7a51a2c17570d5d96cae0124183fa4e98f4070b9f7cf378083725f2e5eb78"
+    },
+    {
+      "file": "brand/icons/add-node.svg",
+      "bytes": 269,
+      "sha256": "557885efcc981d1080847dbe29509ac4f862d4cfe196ddfd6fdb826d910a0554"
+    },
+    {
+      "file": "brand/icons/admin-agent.svg",
+      "bytes": 305,
+      "sha256": "b2b69d641e83bcb84eb9e6ce7527f7895878db8e0f5924edbefe76e38e5897ee"
+    },
+    {
+      "file": "brand/icons/catalog.json",
+      "bytes": 3872,
+      "sha256": "0fcc4d1721bee4bd62673f4c3ba147ab2c93e18abeee9e8557028e36d079bd2d"
+    },
+    {
+      "file": "brand/icons/chat.svg",
+      "bytes": 298,
+      "sha256": "780daddda48e2f99021c2199e5a34c5caf6bfdf56fe78ee289643658a8483a70"
+    },
+    {
+      "file": "brand/icons/cloud.svg",
+      "bytes": 286,
+      "sha256": "5413dcd098cfe44784e4c5ab57e3a937ec423a12e5a2192edbd7dcf4951ba243"
+    },
+    {
+      "file": "brand/icons/code.svg",
+      "bytes": 254,
+      "sha256": "7b5a7319c9f216df8f8e210e7cb5667230c8c9a79affce0d3bc738dd9d801541"
+    },
+    {
+      "file": "brand/icons/cube.svg",
+      "bytes": 274,
+      "sha256": "b46c0bcf3a4e8e899de430b1703257db777816f86a65e2027efff11d849fdd79"
+    },
+    {
+      "file": "brand/icons/embeddings.svg",
+      "bytes": 335,
+      "sha256": "49fce85aa44718257dc4ae224eebe3091748c6229b7f627ee5dd8bdc7a417d31"
+    },
+    {
+      "file": "brand/icons/failed.svg",
+      "bytes": 267,
+      "sha256": "5d0dd012f36c3aa8d689ad14a62d0a2650afccd5ac6c07d158e0e420b8a902a1"
+    },
+    {
+      "file": "brand/icons/hearth-icons.svg",
+      "bytes": 8234,
+      "sha256": "9a797d7ede1e6b01b55c9826e07732416dd3888cb2e76ff0cd6525f4931a28ea"
+    },
+    {
+      "file": "brand/icons/hearth.svg",
+      "bytes": 412,
+      "sha256": "832785e0288bebb8bd3612bedfb642a63b6bfc9014e36e890f5e89ed79aa6a41"
+    },
+    {
+      "file": "brand/icons/image.svg",
+      "bytes": 354,
+      "sha256": "de57aa7bdd2f28c7b350a4973735070a7ed106644fd240e79dedf2dd9f711745"
+    },
+    {
+      "file": "brand/icons/knowledge.svg",
+      "bytes": 346,
+      "sha256": "bec58ce08f66dcc88e8aabc08fe79399436c0532e77cfbce53294da8ec9e001b"
+    },
+    {
+      "file": "brand/icons/lock.svg",
+      "bytes": 277,
+      "sha256": "2ade51a6ea2ba7148bf8f876304a201d22845bc8276433c27666936db96936b0"
+    },
+    {
+      "file": "brand/icons/microphone.svg",
+      "bytes": 302,
+      "sha256": "c93da5aafaa6a9878b0cbf5d90f1148fb782bb83074164e63febc4c185e26760"
+    },
+    {
+      "file": "brand/icons/models.svg",
+      "bytes": 280,
+      "sha256": "ce9cd2c4a35cb50b080da66c5c90b640f436afd5914cf348c80be8ede9130d86"
+    },
+    {
+      "file": "brand/icons/moon.svg",
+      "bytes": 265,
+      "sha256": "0a95efc2fa4b006b73d4fbac74866e5b72509c75f5707acfaa2e674819562e52"
+    },
+    {
+      "file": "brand/icons/node.svg",
+      "bytes": 267,
+      "sha256": "004b4f5150d8d465a8d854b99a082b92ced5d0ea36ae713db1f58b945287e27c"
+    },
+    {
+      "file": "brand/icons/nodes.svg",
+      "bytes": 293,
+      "sha256": "0c99bcc6690ac88594b43778512b083af840b3ade9aad3bb9e004530247b4937"
+    },
+    {
+      "file": "brand/icons/offline.svg",
+      "bytes": 268,
+      "sha256": "2c9dbfa3a219dc7928ab0fb8e595ed79cb1ef44b0129aed4c811f4109981887d"
+    },
+    {
+      "file": "brand/icons/ready.svg",
+      "bytes": 263,
+      "sha256": "8c9689e4b7a511e7e59a6c7de5657668202fe238cab1df989958fa022cf79e69"
+    },
+    {
+      "file": "brand/icons/reasoning.svg",
+      "bytes": 289,
+      "sha256": "bd1bba23fc667e9b68a26d1dd13266945ab00bc59c562fdee0a8f0eb46490c84"
+    },
+    {
+      "file": "brand/icons/routing.svg",
+      "bytes": 298,
+      "sha256": "57a65fc7900203d7dc7069c12a2b79cb5908bf2d92b6838a6ab56e945b6fd942"
+    },
+    {
+      "file": "brand/icons/security.svg",
+      "bytes": 288,
+      "sha256": "7f962de58b1638568a91bad3a7f91a89cb6c6dc3ffe3638aa064657b99642182"
+    },
+    {
+      "file": "brand/icons/settings.svg",
+      "bytes": 309,
+      "sha256": "24aadcf4428a48665ae0058d12d27876f2819de7a7a396371ff342583fc6a74c"
+    },
+    {
+      "file": "brand/icons/speech.svg",
+      "bytes": 292,
+      "sha256": "181b00ba6afd9d0dae85e30099bb858c503e6c2dcc10c6d9c2949c475c0a434a"
+    },
+    {
+      "file": "brand/icons/storage.svg",
+      "bytes": 282,
+      "sha256": "1d6ee0b0fad5fd0d422cb0e3036209d4819dca075f0a331b10050b90aa3beada"
+    },
+    {
+      "file": "brand/icons/sun.svg",
+      "bytes": 344,
+      "sha256": "53f369d9b6967a9d9581f650a2212d3e1747e3b81fc354df483e6fd7bdcb440a"
+    },
+    {
+      "file": "brand/icons/tools.svg",
+      "bytes": 295,
+      "sha256": "35065f4a9cfd64f5ce19a1f3f65bfd5327bcd78540703bb13c7be28aa180712e"
+    },
+    {
+      "file": "brand/icons/unassigned.svg",
+      "bytes": 283,
+      "sha256": "b74aab1739577bbeb6846f0c4fe11a80dc6d81c4ea88aa84aa74480e0287c9e2"
+    },
+    {
+      "file": "brand/icons/users.svg",
+      "bytes": 322,
+      "sha256": "b8f64ffeb7efc2cc0a9637cf03e66afe990500606504e5084934b1a1ecb69329"
+    },
+    {
+      "file": "brand/icons/vision.svg",
+      "bytes": 285,
+      "sha256": "11110a9ede671c1f219beafeb0c93ac1025ea092c1f7cfa3f49fcb153bdfa13a"
+    },
+    {
+      "file": "brand/icons/warming.svg",
+      "bytes": 295,
+      "sha256": "97606879aa8f0112bd73a0cceb08a13832e67d175a03995659fc794ed1cdb6a7"
+    },
+    {
+      "file": "brand/icons/writing.svg",
+      "bytes": 280,
+      "sha256": "dca8a7c3a3050bfac174bb0e23ee87e12925e0a0befca7144919570d2b929754"
+    },
+    {
+      "file": "brand/index.html",
+      "bytes": 16520,
+      "sha256": "de77521b9dec986de267e4948488228b2428b22ce0dea58ba22ce8614dde9caf"
+    },
+    {
+      "file": "brand/logos/hearth-app-1024.png",
+      "bytes": 33625,
+      "sha256": "00892fb578b6970211d9b5f5f556526b6b78c0498db188da6cdd26ccb6bce477"
+    },
+    {
+      "file": "brand/logos/hearth-app-128.png",
+      "bytes": 2717,
+      "sha256": "e10483e96a2b358622d1bc505fc8f7c20be15e7baf988a242885ce672f2efa0f"
+    },
+    {
+      "file": "brand/logos/hearth-app-16.png",
+      "bytes": 434,
+      "sha256": "d50ad5966bfaa8fb967ee7356a116423841ca7b7b905c653b33c7b03d18d0eb9"
+    },
+    {
+      "file": "brand/logos/hearth-app-24.png",
+      "bytes": 626,
+      "sha256": "1cc88d0b634e6edb18cae543be4958f0f3a66d94c4182c2c032d2df346bd0cc5"
+    },
+    {
+      "file": "brand/logos/hearth-app-256.png",
+      "bytes": 5472,
+      "sha256": "b5c3d4088d5793a1787c8dc2a51ad0df3491f2b1c7908ac1ab2f1a56e309a3bc"
+    },
+    {
+      "file": "brand/logos/hearth-app-32.png",
+      "bytes": 849,
+      "sha256": "b649df73fb043748a2ddcd23abc55587896c39b95460af3fb6b55408d28dfacb"
+    },
+    {
+      "file": "brand/logos/hearth-app-48.png",
+      "bytes": 1040,
+      "sha256": "f1ff0927b9b90127b567494a63fa3264d43835aee4542be7b2b57f4ffdad1c6e"
+    },
+    {
+      "file": "brand/logos/hearth-app-512.png",
+      "bytes": 11572,
+      "sha256": "fc4820783dd4188eb4a9a27e8f209335e60f2ebbc3b508d8942852497c18972f"
+    },
+    {
+      "file": "brand/logos/hearth-app-64.png",
+      "bytes": 1370,
+      "sha256": "8de66afcd404fc431f32e211bc863f78678da1d937fef2bac3b448194613044d"
+    },
+    {
+      "file": "brand/logos/hearth-app-square-1024.png",
+      "bytes": 23234,
+      "sha256": "5ee303bfc9bc2105d6ac3bc57f231ac1f59a276b5d0d6af1320cc7ef1e01afbb"
+    },
+    {
+      "file": "brand/logos/hearth-app-square-512.png",
+      "bytes": 7111,
+      "sha256": "540383e625d0f975915aab64ff9ded9bf41fde32101ba05c672ca16162448e0d"
+    },
+    {
+      "file": "brand/logos/hearth-app-square.svg",
+      "bytes": 586,
+      "sha256": "190bd8f73683dd76291beb22297da142267ec8bf40041d080520818c58e5db67"
+    },
+    {
+      "file": "brand/logos/hearth-app.svg",
+      "bytes": 579,
+      "sha256": "83db9b83c7580c90af817b40537d7e0db7c25a599aa1fb862888b2a4096b5c0b"
+    },
+    {
+      "file": "brand/logos/hearth-favicon.svg",
+      "bytes": 398,
+      "sha256": "96d798eb6e8a6ed0068816de6f346e569f768e0cbe2563674fc654d3a9fc9876"
+    },
+    {
+      "file": "brand/logos/hearth-lockup-dark.svg",
+      "bytes": 932,
+      "sha256": "66c96c93bd695c16d8aa24c7d84bcfbc86b4dc6bcb3f2f579c22cf6b4e93b7a6"
+    },
+    {
+      "file": "brand/logos/hearth-lockup-light.svg",
+      "bytes": 932,
+      "sha256": "6e160edc65b189c4ff61e7a725c9e2161b17f85cd65621c96856044445f72221"
+    },
+    {
+      "file": "brand/logos/hearth-lockup-mono.svg",
+      "bytes": 952,
+      "sha256": "e63fc86c44114325251360b8f89c0cb4925ac0a715e3704980d6650ef4f2f625"
+    },
+    {
+      "file": "brand/logos/hearth-mark-dark-512.png",
+      "bytes": 11499,
+      "sha256": "a1f4b24558f60ac06159856f448a1ba5d2365cf36874dc0c8099f50e690f5bd4"
+    },
+    {
+      "file": "brand/logos/hearth-mark-dark.svg",
+      "bytes": 467,
+      "sha256": "99f477c7319c7ca94fcc279f76ada3c3cca20e0f90240c56fe20bb4003a3c6f4"
+    },
+    {
+      "file": "brand/logos/hearth-mark-light-512.png",
+      "bytes": 11875,
+      "sha256": "a2d6a545a356f51b5223de6e4d7b981003775c98a03040ad0c7db2e4e89cc102"
+    },
+    {
+      "file": "brand/logos/hearth-mark-light.svg",
+      "bytes": 467,
+      "sha256": "c00e0644947dbc1390127d4bb7250c27261636326d106b5f7fd64659d0f6ddcf"
+    },
+    {
+      "file": "brand/logos/hearth-mark-mono.svg",
+      "bytes": 482,
+      "sha256": "dd1d948e5ddcf1b3fd1a2442b92d155cc8093c27dfb62fb04a13126e61d783ab"
+    },
+    {
+      "file": "brand/logos/hearth-wordmark-dark.svg",
+      "bytes": 526,
+      "sha256": "8affb28053bb05c8b6444b05845f6a0b8e2d8828f568966e869680131912f8bb"
+    },
+    {
+      "file": "brand/logos/hearth-wordmark-light.svg",
+      "bytes": 526,
+      "sha256": "6e9da60fe381e97c61c4ca50f76d29d42dda9e63cb1fe991ed0f08bfcd4335ab"
+    },
+    {
+      "file": "brand/logos/hearth-wordmark-mono.svg",
+      "bytes": 531,
+      "sha256": "4235842f254daa371007584c7857955323bf8f5a66a9b92b35d00a236660dd82"
+    },
+    {
+      "file": "brand/logos/hearth.ico",
+      "bytes": 12626,
+      "sha256": "970075f262325f7f06933770e0674f3da74021c5fc6a99a748a915bfcd266437"
+    },
+    {
+      "file": "brand/previews/brand-data.json",
+      "bytes": 1783,
+      "sha256": "bfe978c4836a7fb7523282467631d281a0c5916b96f3696fb3af75fce89a1d85"
+    },
+    {
+      "file": "brand/previews/hearth-daylight.png",
+      "bytes": 99418,
+      "sha256": "2739c637b12c255b979da767f987cde29a135fe2319d3dc32aa467c39d4dfd9c"
+    },
+    {
+      "file": "brand/previews/hearth-firelight.png",
+      "bytes": 97324,
+      "sha256": "ca88f0b1b6dd8e63cf22cfad19001060b600a4eb09bfe77571b5115a043b8cc6"
+    },
+    {
+      "file": "brand/previews/hearth-gallery-dark.png",
+      "bytes": 192281,
+      "sha256": "3633d31f36a09810ee9143236cd20bc8670a1099ccef969728418dee344943ed"
+    },
+    {
+      "file": "brand/previews/hearth-identity.png",
+      "bytes": 56217,
+      "sha256": "69f581e8001a1275029dea13c24104e70d44901dd5ede41e535b00eb36f09107"
+    },
+    {
+      "file": "brand/previews/hearth-mobile-top.png",
+      "bytes": 49507,
+      "sha256": "739452f71ac3fc534cfe6bf8abe120c98fe4fc8e39d6c8e585cd307ba99dfb4c"
+    },
+    {
+      "file": "brand/previews/hearth-mobile.png",
+      "bytes": 174500,
+      "sha256": "6425acf0d56fa083736c0e450285e501547784b17d312e922672f5306226c645"
+    },
+    {
+      "file": "brand/previews/icons-inline.js",
+      "bytes": 10903,
+      "sha256": "1dc837941911074f67726f1755614d2fb7c153c4929beb743e4817a16cb5b44a"
+    },
+    {
+      "file": "brand/previews/identity-overview.svg",
+      "bytes": 10121,
+      "sha256": "c66747e8744537066a3e237b7e32aca146c746dbbe95a11a57eef995e9dcd50a"
+    },
+    {
+      "file": "brand/previews/validation.json",
+      "bytes": 735,
+      "sha256": "ec00adc913ca3bb736a8b4e22f98f81a59c6b71bdc052b54f32b3083ccb726e0"
+    },
+    {
+      "file": "brand/tokens/contrast-report.json",
+      "bytes": 11140,
+      "sha256": "4bc36768bedff3b3f1e0242c94d8dae88b11f3476c9dd12fb6aeab72b9ece420"
+    },
+    {
+      "file": "brand/tokens/hearth-tokens.json",
+      "bytes": 1974,
+      "sha256": "1f2e3cec72112fea10570dff652f77c13942c192cb3d279824f3a63c00d61095"
+    },
+    {
+      "file": "brand/tokens/hearth.css",
+      "bytes": 3439,
+      "sha256": "2459f9f9dd33292941d024dabaa996d5f31b7e534786b1a41708f6f27265f81a"
+    },
+    {
+      "file": "BUILD_HANDOFF.md",
+      "bytes": 10442,
+      "sha256": "21b476907eedcc1c1ec8f4e5186cd8afb1b9eda1700620866728119b3584ae1f"
+    },
+    {
+      "file": "BUILD_STATUS.md",
+      "bytes": 2882,
+      "sha256": "637c644387aba83d5e2919b84e91920a0253209289ce6c88445b2f25f84c77db"
+    },
+    {
+      "file": "diagrams/01-ARCHITECTURE-1.svg",
+      "bytes": 43275,
+      "sha256": "dc38857cde8639ee624f51d0da74bd1f4749fb8812e84b336fc04823dd3aca41"
+    },
+    {
+      "file": "diagrams/02-DISCOVERY-AND-WORKERS-1.svg",
+      "bytes": 29507,
+      "sha256": "135230c60f2ad51016f271162d7c2eed8c7fa22d5e7843ecc23e6fb98c781065"
+    },
+    {
+      "file": "diagrams/02-DISCOVERY-AND-WORKERS-2.svg",
+      "bytes": 51785,
+      "sha256": "566a29dfcf57be5964a78fb686ba08ef1ed46211383008b814d9f0262c809078"
+    },
+    {
+      "file": "diagrams/03-NAS-AND-MODELS-1.svg",
+      "bytes": 22220,
+      "sha256": "81ee93b0903223782f516da3fcde3521dbe11aa87f42b309bfcae3407dcf20bf"
+    },
+    {
+      "file": "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-1.svg",
+      "bytes": 33942,
+      "sha256": "f06fcc27bbdb0b1f9ab4218049a4cdba0658cf424aa0f6cc076c1351c4b416ad"
+    },
+    {
+      "file": "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-2.svg",
+      "bytes": 31140,
+      "sha256": "176942fea9ee8b2303f45f8d67ee6182b87ed1d0caf7cb22f470e2a0b4b2a33e"
+    },
+    {
+      "file": "diagrams/06-MEMORY-AND-KNOWLEDGE-1.svg",
+      "bytes": 22096,
+      "sha256": "89451ef15ff60b0ff9a3565eb1bcd741d75bd9d109ce3aa0a9fabcb6685dc800"
+    },
+    {
+      "file": "diagrams/06-MEMORY-AND-KNOWLEDGE-2.svg",
+      "bytes": 17378,
+      "sha256": "6bd9d405cd03365281b955afef35f7d835851ab06f3dd68621a1121cb0c29159"
+    },
+    {
+      "file": "diagrams/07-INTERFACES-1.svg",
+      "bytes": 23197,
+      "sha256": "09b7285c607ff8ead4b3fd1f412b2ee06691f3cd2147edc78f5ad0d444d067c3"
+    },
+    {
+      "file": "diagrams/11-INSTALLATION-AND-CENTRAL-MANAGEMENT-1.svg",
+      "bytes": 25523,
+      "sha256": "94c7f2e962702dc9bb55101b07f50d767227f0ec60db69f1745eadd6a3f5f2c5"
+    },
+    {
+      "file": "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-1.svg",
+      "bytes": 26826,
+      "sha256": "a70215ad2d85b90b3c6423bffc87d3458a581bc01779da8ecc9ea89a978c219e"
+    },
+    {
+      "file": "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-2.svg",
+      "bytes": 29624,
+      "sha256": "2088b846b399eb07a83abd4848d2dccafb7f59d6c20c1edf0127edb737c23438"
+    },
+    {
+      "file": "diagrams/README.md",
+      "bytes": 2443,
+      "sha256": "bb36834fe77fc0b926118145f966e2611dae457f3b7f81c868baeae1bf191bb9"
+    },
+    {
+      "file": "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-1.svg",
+      "bytes": 30905,
+      "sha256": "0163917ab421679646f9f5d3118b4900ad7525f7d54aa6dfb31415da413d7f38"
+    },
+    {
+      "file": "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-2.svg",
+      "bytes": 24128,
+      "sha256": "fa691ace37c0a9f8428a4ddc3fb859fcb304a0db1a00d4783ac90909717bbe77"
+    },
+    {
+      "file": "DOCUMENT_CHECKS.md",
+      "bytes": 3913,
+      "sha256": "38c68868539044324c845aa49f22648d31e6d3d7f30ce32fea92c8ce2fe03d50"
+    },
+    {
+      "file": "phases/P0-FOUNDATION.md",
+      "bytes": 3376,
+      "sha256": "82eb1c5548d387012edaf5ad6a331cf6365824b0fbb84abe4077054e5e3a42dd"
+    },
+    {
+      "file": "phases/P1-IDENTITY-AND-SHELLS.md",
+      "bytes": 2975,
+      "sha256": "6cd11e80f9e15368d04a92f289eb8bbcf68c026cd9cdd148eea52404820e2780"
+    },
+    {
+      "file": "phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "bytes": 2410,
+      "sha256": "ec200fc2f68e46ed3b8dfe909da5f780f6c269bf31bfb7d152a75d79d291dcc0"
+    },
+    {
+      "file": "phases/P3-NAS-AND-CATALOG.md",
+      "bytes": 3030,
+      "sha256": "34a6e26f8036841294708ff7be6691f6f867aee3f0e1437912e223acf09116ea"
+    },
+    {
+      "file": "phases/P4-LOCAL-INFERENCE.md",
+      "bytes": 4027,
+      "sha256": "e15c395f4ccba3faeb64595601edd6feb20826d01a38009f3ee1324bc4ff88ae"
+    },
+    {
+      "file": "phases/P5-ROUTING-AND-CLOUD.md",
+      "bytes": 2682,
+      "sha256": "b4ef1e197f1e6ccebf07d291a5216db24240f727ff88b7c5ab54f62067741bf1"
+    },
+    {
+      "file": "phases/P6-SHARED-TOOLS.md",
+      "bytes": 2205,
+      "sha256": "be76faf7c69c7509ddb7e7fa6fba3189223b59a8f4ddf4e945feda960c1ad703"
+    },
+    {
+      "file": "phases/P7-CONVERSATION-MEMORY.md",
+      "bytes": 2171,
+      "sha256": "f5940ddb7d4981df507404a6f958e868f9f1f18d471b7c65910c8c58b92e7506"
+    },
+    {
+      "file": "phases/P8-COLLABORATION-AND-MEDIA.md",
+      "bytes": 3740,
+      "sha256": "8e5028cc49493fcc4a5861908843d84845e35faaeabe4a06018a63e93af92c0b"
+    },
+    {
+      "file": "phases/P9-HARDENING-AND-RELEASE.md",
+      "bytes": 3184,
+      "sha256": "8f6d2bd84b916de3b21ba89f1ce6295901a76692432f2153f88c37b449848b37"
+    },
+    {
+      "file": "README.md",
+      "bytes": 8430,
+      "sha256": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98"
+    },
+    {
+      "file": "SOURCES.md",
+      "bytes": 5464,
+      "sha256": "86ad9ab0e9cb8a01629fb3e1c2ebb4b4ff1ccf1f6fcf4b2f53d16672764f8923"
+    },
+    {
+      "file": "VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "bytes": 25347,
+      "sha256": "942662826f878b4e9c76ea509d90ecd9b5cb96b95d3ee40ad3fbad040ca75e24"
+    }
+  ]
+}
