@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Welcome to hearth</title><link rel="stylesheet" href="/setup.css"><script defer src="/setup.js"></script></head>
+<body>
+<header><img src="/hearth.svg" alt="hearth" width="180" height="52"><span>WELCOME HOME</span></header>
+<main>
+<section class="intro"><p class="eyebrow">A LITTLE SPARK</p><h1>Make yourself<br>at home.</h1><p>Your hearth is here at <strong>@@SERVER_NAME@@</strong>. Start by helping this browser recognize it, then open your workspace.</p><p class="note">This welcome page uses HTTP so you can reach it before installing the certificate. Sign-in and your private workspace use HTTPS.</p></section>
+<section class="card"><p class="eyebrow">01 · RECOGNIZE YOUR hearth</p><h2>Trust this hearth.</h2><p>Download its public root certificate, then import it as a trusted certificate authority. A download alone does not install trust.</p>
+<div class="actions"><a class="button" href="/hearth-root.crt" download>Download certificate</a><a class="secondary" href="/hearth-root.cer" download>Windows certificate (.cer)</a><a class="secondary" href="/hearth-client-certificates.zip" download>Full certificate package</a></div>
+<details><summary>Check the certificate fingerprint</summary><p>Compare this SHA-256 fingerprint with the one printed in your VM console or retrieved over your trusted SSH connection.</p><code class="fingerprint">@@FINGERPRINT@@</code></details>
+<details id="trust-help" open><summary>Import in Zen or Firefox</summary><p>Open <strong>Settings → Privacy &amp; Security → Certificates → View Certificates → Authorities → Import</strong>. Choose the downloaded <strong>hearth-root.crt</strong> and allow it to identify websites.</p><p>If you trusted it through Windows but Zen still shows <strong>SEC_ERROR_BAD_SIGNATURE</strong>, fully quit and reopen Zen, then check again. If it persists, import this exact root in Zen’s Authorities tab. Your old laptop hearth uses a different root certificate.</p><p>For Chrome or Edge on Windows, import the .cer file into <strong>Trusted Root Certification Authorities</strong> for your Windows account, then reopen the browser if needed.</p></details>
+<p class="note">A web page cannot automatically install trusted certificates. Keep certificate checking enabled; you do not need a website exception.</p>
+</section>
+<section class="card"><p class="eyebrow">02 · CHECK THIS BROWSER</p><h2>Ready to connect?</h2><p>Check the workspace, administration and sign-in addresses separately. These checks send no account credentials.</p>
+<ul class="checks" aria-live="polite"><li id="check-user">Workspace · Not checked</li><li id="check-admin">Administration · Not checked</li><li id="check-identity">Sign-in · Not checked</li></ul>
+<button id="check-browser" type="button">Check browser connections</button><p id="browser-status" role="status">Import the certificate first, then check these connections.</p>
+<div class="actions"><a class="secondary" href="@@WORKSPACE_URL@@/health/browser" target="_blank" rel="noopener noreferrer">Open workspace check ↗</a><a class="secondary" href="@@ADMIN_URL@@/health/browser" target="_blank" rel="noopener noreferrer">Open admin check ↗</a><a class="secondary" href="@@IDENTITY_URL@@/health/browser" target="_blank" rel="noopener noreferrer">Open sign-in check ↗</a></div>
+</section>
+<section class="card"><p class="eyebrow">03 · MAKE IT YOURS</p><h2>Your place to begin.</h2><p>If this is a new farm, create the first Owner from the VM console:</p><code>cd /opt/hearth<br>sudo python3 scripts/head.py owner</code><p>Already created your Owner? Open Administration to sign in, enroll your authenticator and connect your providers.</p>
+<div class="actions"><a class="button" href="@@ADMIN_URL@@">Open Administration ↗</a><a class="secondary" href="@@WORKSPACE_URL@@">Open your workspace ↗</a></div>
+<p class="note">This page never asks for a password and cannot create an account. Once trust is installed, bookmark the HTTPS workspace.</p></section>
+</main><footer>hearth · Your models. Your machines. Your place.</footer>
+</body></html>

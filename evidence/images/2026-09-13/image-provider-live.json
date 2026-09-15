@@ -1,0 +1,56 @@
+{
+  "scope": "Real loopback HTTP authenticated job API, actual GPU cancellation after at least one step, subsequent render, validated PNG and digest. No BFF fixture in this check.",
+  "provider": {
+    "schema_version": 1,
+    "protocol": "hearth.image.v1",
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "model_revision": "462165984030d82259a11f4367a4eed129e94a7b",
+    "manifest_sha256": "27a8b17e544d1189572b33c1e1d52ab4b16f2ef9f385ecd406df072b10b3a03b",
+    "shapes": [
+      "square",
+      "landscape",
+      "portrait"
+    ],
+    "steps": [
+      20,
+      30,
+      40
+    ],
+    "job_cancellation": true,
+    "offline": true
+  },
+  "cancelled": {
+    "schema_version": 1,
+    "id": "06b5db0c-50c1-46f3-b8b0-4fba0da9ea80",
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "state": "cancelled",
+    "progress": 3,
+    "steps": 20,
+    "seed": 24,
+    "shape": "square",
+    "width": 1024,
+    "height": 1024,
+    "reason": "Image generation stopped.",
+    "sha256": null,
+    "execution_released": true,
+    "manifest_sha256": "27a8b17e544d1189572b33c1e1d52ab4b16f2ef9f385ecd406df072b10b3a03b",
+    "cancel_requested": true
+  },
+  "completed": {
+    "schema_version": 1,
+    "id": "a1b15a17-fec8-44e5-8f18-88c2b88a1631",
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "state": "completed",
+    "progress": 20,
+    "steps": 20,
+    "seed": 109,
+    "shape": "landscape",
+    "width": 1024,
+    "height": 768,
+    "reason": null,
+    "sha256": "e5886e5a42c03d03bc7479098fafa57e4354caf31e275fcff4bdbf750931c957",
+    "execution_released": true,
+    "manifest_sha256": "27a8b17e544d1189572b33c1e1d52ab4b16f2ef9f385ecd406df072b10b3a03b",
+    "cancel_requested": false
+  }
+}

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api/v1/session', route => route.fulfill({ status: 401, json: { error: { message: 'Sign in to Hearth to continue.' } } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ status: 401, json: { error: { message: 'Sign in to hearth to continue.' } } }));
   await page.route('**/api/v1/setup', route => route.fulfill({ status: 200, json: { owner_created: false } }));
 });
 
@@ -13,7 +13,7 @@ test('an unavailable service can recover without inventing sign-in readiness', a
   ready = true;
   await page.getByRole('button', { name: 'Check connection', exact: true }).click();
   await expect(page.getByText('Database connected', { exact: true })).toBeVisible();
-  await expect(page.getByText('Open the local Hearth setup tool to create the Owner account and prepare browser trust.')).toBeVisible();
+  await expect(page.getByText('Open the local hearth setup tool to create the Owner account and prepare browser trust.')).toBeVisible();
   await expect(page.getByRole('link', { name: /Sign in to/ })).toHaveCount(0);
 });
 

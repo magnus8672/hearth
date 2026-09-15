@@ -2,7 +2,7 @@
 
 Status: selected qualification candidate, not an advertised deployment, 12 September 2026.
 
-Local 3D and validated GLB output remain required scope. Select TripoSR as the first image-to-mesh qualification candidate at source revision `107cefdc244c39106fa830359024f6a2f1c78871`. Its upstream describes source and pretrained weights as MIT licensed and reports roughly 6 GB VRAM for default single-image inference. Those are upstream statements, not Hearth performance results. [TripoSR repository](https://github.com/VAST-AI-Research/TripoSR).
+Local 3D and validated GLB output remain required scope. Select TripoSR as the first image-to-mesh qualification candidate at source revision `107cefdc244c39106fa830359024f6a2f1c78871`. Its upstream describes source and pretrained weights as MIT licensed and reports roughly 6 GB VRAM for default single-image inference. Those are upstream statements, not hearth performance results. [TripoSR repository](https://github.com/VAST-AI-Research/TripoSR).
 
 [Historical deployment inventory removed for repository privacy.]
 

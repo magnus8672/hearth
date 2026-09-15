@@ -1,0 +1,31 @@
+{
+  "scope": "Two real LM Studio servers and resident models through real PostgreSQL/BFF APIs in a disposable farm, with explicit OIDC fixtures.",
+  "servers": [
+    [
+      "http://127.0.0.1:1234",
+      "openai/gpt-oss-20b",
+      "chat.general"
+    ],
+    [
+      "http://10.20.30.40:1234",
+      "qwen/qwen3.8-27b",
+      "code.implement"
+    ]
+  ],
+  "simultaneous_stream_seconds": 0.485,
+  "independent_pool_ids": true,
+  "second_coding_request_rejected_while_busy": true,
+  "both_completed": true,
+  "loaded_before_and_after": {
+    "http://127.0.0.1:1234": [
+      "openai/gpt-oss-20b"
+    ],
+    "http://10.20.30.40:1234": [
+      "qwen/qwen3.8-27b"
+    ]
+  },
+  "no_load_or_unload_in_dispatch": true,
+  "setup": "The existing local GPT-OSS was loaded explicitly before this test; no models were downloaded.",
+  "remaining": "Physical server failure/recovery and external JIT configuration are not attested.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

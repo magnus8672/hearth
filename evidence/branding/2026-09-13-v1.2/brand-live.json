@@ -1,0 +1,28 @@
+{
+  "scope": "Anonymous real HTTPS brand rendering only; no account provisioning or sign-in",
+  "checks": [
+    {
+      "surface": "admin",
+      "logo": "v1.2",
+      "favicon": "v1.2",
+      "https": "validated"
+    },
+    {
+      "surface": "workspace",
+      "logo": "v1.2",
+      "favicon": "v1.2",
+      "https": "validated"
+    },
+    {
+      "surface": "login-light",
+      "logo": "v1.2",
+      "https": "validated"
+    },
+    {
+      "surface": "login-dark",
+      "logo": "v1.2",
+      "https": "validated"
+    }
+  ],
+  "mobileOverflow": false
+}

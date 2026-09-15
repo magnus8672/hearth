@@ -1,0 +1,54 @@
+import hashlib
+import io
+from contextlib import contextmanager
+from uuid import uuid4
+
+import httpx
+import pytest
+from hearth import image_transport
+from hearth.config import Settings
+from hearth.contracts import ImageGeneration, ImageReceipt
+from hearth.inference import ProviderError
+from PIL import Image
+
+
+@pytest.mark.parametrize('fault', ['none', 'wrong_job', 'wrong_digest', 'invalid_png', 'lost_receipt', 'unreleased', 'running_released'])
+def test_receipt_binding_artifact_verification_and_unknown_execution(monkeypatch, fault):
+    data = ImageGeneration(id=uuid4(), model='fixture-image', prompt='A cabin', seed=7)
+    output = io.BytesIO()
+    Image.new('RGB', (1024, 1024), 'orange').save(output, format='PNG')
+    artifact = b'not a PNG' if fault == 'invalid_png' else output.getvalue()
+    result = ImageReceipt(id=data.id, model=data.model, state='completed', progress=20, steps=20, seed=7,
+        shape='square', width=1024, height=1024, sha256=hashlib.sha256(artifact).hexdigest(), execution_released=True,
+        manifest_sha256='a' * 64, cancel_requested=False)
+    if fault == 'wrong_job':
+        result.id = uuid4()
+    if fault == 'wrong_digest':
+        result.sha256 = '0' * 64
+    if fault == 'unreleased':
+        result.execution_released = False
+    if fault == 'running_released':
+        result.state = 'running'
+
+    def handler(request):
+        if request.url.path.endswith('/image'):
+            return httpx.Response(200, content=artifact, headers={'content-type': 'image/png'})
+        if fault == 'lost_receipt':
+            if request.method == 'POST':
+                return httpx.Response(202, json=result.model_copy(update={'state': 'running', 'execution_released': False}).model_dump(mode='json'))
+            raise httpx.ReadError('explicit lost receipt')
+        return httpx.Response(202, json=result.model_dump(mode='json'))
+
+    @contextmanager
+    def client(*args):
+        with httpx.Client(base_url='http://fixture/v1/', transport=httpx.MockTransport(handler)) as client:
+            yield client, {}
+
+    monkeypatch.setattr(image_transport, 'client_for', client)
+    if fault == 'none':
+        _, collected = image_transport.render('http://fixture', '', Settings(mode='test'), data)
+        assert collected == artifact
+    else:
+        with pytest.raises(ProviderError) as error:
+            image_transport.render('http://fixture', '', Settings(mode='test'), data)
+        assert error.value.uncertain is (fault in {'wrong_job', 'lost_receipt', 'unreleased', 'running_released'})

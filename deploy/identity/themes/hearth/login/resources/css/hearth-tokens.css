@@ -1,4 +1,4 @@
-/* Hearth identity v1.0. Explicit data-theme choice overrides the system preference. */
+/* hearth identity v1.0. Explicit data-theme choice overrides the system preference. */
 :root {
   color-scheme: light;
   --hearth-background: #F5F0E8;

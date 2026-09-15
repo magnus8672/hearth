@@ -1,0 +1,57 @@
+{
+  "network": "separate Docker bridge client to guest non-loopback interface",
+  "tls_verified": true,
+  "three_origins": true,
+  "configured_identity_redirects": true,
+  "theme_links": true,
+  "api_mcp_auth_required": true,
+  "identity_admin_hidden": true,
+  "published_ports": {
+    "edge": [
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 18843,
+        "published": "18843",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 18844,
+        "published": "18844",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 18845,
+        "published": "18845",
+        "protocol": "tcp"
+      }
+    ]
+  },
+  "production_settings": true,
+  "actual_published_ports": {
+    "edge": {
+      "18843/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "18843"
+        }
+      ],
+      "18844/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "18844"
+        }
+      ],
+      "18845/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "18845"
+        }
+      ]
+    }
+  }
+}

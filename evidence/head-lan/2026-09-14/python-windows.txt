@@ -1,0 +1,17 @@
+................................s...........s...s.............s......... [ 19%]
+......s..ssss.......s..s..s............s........s.....s................s [ 39%]
+....s................................................................... [ 59%]
+........................................................................ [ 78%]
+........................................................................ [ 98%]
+......                                                                   [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\starlette\testclient.py:53
+  C:\src\hearth\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+services\api\src\hearth\transcription_audio.py:3
+  C:\src\hearth\services\api\src\hearth\transcription_audio.py:3: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+349 passed, 17 skipped, 2 warnings in 98.39s (0:01:38)

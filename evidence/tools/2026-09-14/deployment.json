@@ -1,0 +1,62 @@
+{
+  "checked_at": "2026-09-15T00:10:45.487685+00:00",
+  "database_migration": "0020",
+  "private_pre_migration_backup": true,
+  "capability_bindings_preserved": true,
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "https_verified": true,
+      "exact_build": true,
+      "assets": [
+        "/assets/index-VEVv4TG-.js",
+        "/assets/index-Cnav0UaS.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "https_verified": true,
+      "exact_build": true,
+      "assets": [
+        "/assets/index-CQXi7Cxt.js",
+        "/assets/index-Cnav0UaS.css"
+      ]
+    }
+  ],
+  "backend_sha256": {
+    "client_api.py": "def5b724586ba0d4611c53f0bd1591b67ff4cc8afd853740d0cc955d1b2f1cde",
+    "client_keys.py": "963432cb323eec884d4ce1ca174f2882eead1015eb5567a57f27208f013f64ea",
+    "toolbox.py": "25261a80f24be708bd41c9926978c9ffc3d8884a515138dc75f43065994aa7ea",
+    "tool_schemas.py": "939d2c6a378e2da3468a458ea14121e20cfb0e33783e0bc2bde52494c2b7aed5",
+    "tool_harness.py": "5dee0cc40d690b7a952679ea4a51acd741c8839ba9879140008b1e52e32b508f",
+    "tool_probe.py": "a4a25407e361bcd8880d5d30084336811c9f384943b4c8aa77dbbb450b06d400",
+    "mcp_gateway.py": "fef2c1e2665167ae7aa2b7d14ed29c7128ecb76c3f30656c7f3a812382091eec",
+    "mcp_transport.py": "095e16ee75e5ce364a5730707a567b0868703a2def77984f12c0112c37691247",
+    "reference_tools.py": "095dd36bb9b1264dfb84299eb3cee7e151a9bd1c23934a9852bd0925e842e417",
+    "chat.py": "6b99f26fb292124f879f5faafd079158baaa3cc86f2e416d5066682cf459f364",
+    "inference.py": "da4632193080c7e9babe18e63354a2b24e692f819554d6ab9b0b0825dcafe777",
+    "providers.py": "1f1c667e5dc36ef68eaf2d8aaad46043bbbd0123b6bf5c874c02d20272d4efbb",
+    "routing.py": "7d35283c1ffc72d55c0f98c1f7e13b9b52409e8dbe732cf3620e78aa5bde5e2d",
+    "main.py": "aad0d0bd4e385a6edf99f70f1361d2efb14e2e82f9ec8987511aa20cbdbebb34",
+    "middleware.py": "de24cb10532cc8defddf4b07595962e26ded8f27cdc2e0c63998b1b9de3947f2"
+  },
+  "vault_storage": {
+    "private_vaults": 1,
+    "permissions_checked": true
+  },
+  "authentication_required_for_client_and_mcp": true,
+  "reference_service": {
+    "tools": [
+      "calculate",
+      "current_time"
+    ],
+    "calculation": {
+      "operation": "multiply",
+      "a": 137.0,
+      "b": 29.0,
+      "result": 3973.0
+    },
+    "actual_network_sdk_call": true
+  },
+  "scope": "Deployed HTTPS authentication boundaries, source/assets, database revision, existing assignments and actual internal MCP execution. Authenticated client/model interaction separately qualified in disposable farm fixtures with real LAN Qwen."
+}

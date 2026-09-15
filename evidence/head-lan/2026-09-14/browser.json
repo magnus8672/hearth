@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "identity": "real disposable Owner, PKCE, TOTP and recovery enrollment on production Keycloak",
+  "network": "Windows Chromium through pinned SSH SOCKS to guest LAN interface; no browser/API response fixtures",
+  "browser_trust": "specific disposable certificate SPKI pins; no global certificate bypass or OS trust changes",
+  "protocols": {
+    "base": "https://10.0.2.15:18844/v1",
+    "mcp": "https://10.0.2.15:18844/mcp",
+    "models": 200,
+    "mcpStatus": 200,
+    "tools": [
+      "list_tools",
+      "describe_tool",
+      "run_tool"
+    ],
+    "revoke": 200,
+    "after": 401
+  }
+}

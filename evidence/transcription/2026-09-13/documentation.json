@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-09-13T22:00:49.324387+00:00",
+  "scope": "Local documentation file/asset links, balanced fences, docs placement and original snapshot hashes. External URLs and Markdown heading anchors are not checked. No product tests or inference rerun.",
+  "status": "passed",
+  "markdown_files": 99,
+  "local_links_checked": 837,
+  "documents_outside_docs": [],
+  "root_pointers": [
+    "AGENTS.md",
+    "README.md"
+  ],
+  "original_snapshot_files_verified": 119,
+  "original_snapshot_file_count": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "errors": []
+}

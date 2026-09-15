@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "certificate_san": [
+    "hearth-setup.test"
+  ],
+  "https_default_port": 443,
+  "tls_validation": true,
+  "bundle_matches_served_certificate": true,
+  "wrong_ip_certificate_rejected": true,
+  "redirects_and_theme_links": true,
+  "client_api_mcp_auth_required": true,
+  "network": "separate Docker bridge to VM interface, test DNS supplied only in disposable client container",
+  "package_public_only": true,
+  "package_files": [
+    "hearth-root.crt",
+    "hearth-root.cer",
+    "hearth-server-chain.pem",
+    "connection.json",
+    "README.txt"
+  ],
+  "metadata": {
+    "schema_version": 1,
+    "base_url": "https://hearth-setup.test",
+    "admin_url": "https://hearth-setup.test:18943",
+    "identity_url": "https://hearth-setup.test:18945",
+    "api_base_url": "https://hearth-setup.test/v1",
+    "mcp_url": "https://hearth-setup.test/mcp",
+    "server_name": "hearth-setup.test",
+    "root_sha256": "cba54c2a936aa68791d79d57150beeb0bc0ed7165ab808acd1c1c7554f05c3c5",
+    "server_sha256": "7b1d4efee916cf13eef76d32b9531259b3bc22936a1ae7435cf83ef996cfa299"
+  },
+  "published_ports": {
+    "edge": [
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 18943,
+        "published": "18943",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 443,
+        "published": "443",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 18945,
+        "published": "18945",
+        "protocol": "tcp"
+      }
+    ]
+  }
+}
+........................................................................ [ 97%]
+..                                                                       [100%]
+=============================== warnings summary ===============================
+../opt/hearth/.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /opt/hearth/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+../opt/hearth/services/api/src/hearth/transcription_audio.py:3
+  /opt/hearth/services/api/src/hearth/transcription_audio.py:3: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+74 passed, 2 warnings in 15.35s

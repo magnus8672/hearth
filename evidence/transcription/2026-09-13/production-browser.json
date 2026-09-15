@@ -1,0 +1,15 @@
+{
+  "scope": "Actual deployed HTTPS production bundle and CSP; explicit identity/list fixtures; simulated microphone source through real browser capture, AudioWorklet and blob playback. No real user session or physical microphone accessed.",
+  "tls_errors_ignored": false,
+  "secure_context": true,
+  "worklets": [
+    {
+      "url": "https://localhost:8444/assets/audio-recorder-worklet-C5nUTeLq.js",
+      "status": 200,
+      "source": "Actual addModule URL, capture success and independent browser HTTPS asset retrieval"
+    }
+  ],
+  "recorded_seconds": 1.536,
+  "browser_errors": [],
+  "preview_playback": true
+}

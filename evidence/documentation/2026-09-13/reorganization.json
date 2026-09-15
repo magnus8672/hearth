@@ -1,0 +1,968 @@
+{
+  "date": "2026-09-13",
+  "scope": "Documentation reorganization and source/evidence audit; no application or inference acceptance rerun.",
+  "markdown_before": [
+    {
+      "path": "01-ARCHITECTURE.md",
+      "sha256": "d3e522e40c28c3ecf012c2796bc07b2a172122d15025c39d67f92fe56f2c1821"
+    },
+    {
+      "path": "02-DISCOVERY-AND-WORKERS.md",
+      "sha256": "9c18fa660a655dd8bf57a6a5ec18e4fb9c571ce08e8846ccb97f60f40f91ba23"
+    },
+    {
+      "path": "03-NAS-AND-MODELS.md",
+      "sha256": "c51de81295cbb8239ff936f6fd45f489dc8ec15caf595d7ef866cf9e71d29738"
+    },
+    {
+      "path": "04-SECURITY-AND-RBAC.md",
+      "sha256": "8ead5698bb7f8dd62a596f096aaee100a80ebea0cd950d97544832ae708edb6d"
+    },
+    {
+      "path": "05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "sha256": "d77f57c041395dc3304ac19d000c1c159c83a43cdf94e4ed9089073dedde423a"
+    },
+    {
+      "path": "06-MEMORY-AND-KNOWLEDGE.md",
+      "sha256": "6785be99608c02c47b0ab5d49159588483ee725cca09f623ababf4ae71052856"
+    },
+    {
+      "path": "07-INTERFACES.md",
+      "sha256": "31bd6beadcf102be5629399cfe51833ba51f8692648315baa0f6ed075efa9b33"
+    },
+    {
+      "path": "08-DATA-AND-API-CONTRACTS.md",
+      "sha256": "1cb2124e1fb0759e7bf3e5d000e7b9271fca06aa2d30ca35bc4c93b167583287"
+    },
+    {
+      "path": "09-VALIDATION-AND-RELEASE.md",
+      "sha256": "f5d94fef6a1cc847b81c388780d2090022b1d0b0c19ccc8f7ad79e1b515ab1ff"
+    },
+    {
+      "path": "10-OPERATIONS.md",
+      "sha256": "e9d733b681476dd3351115a1182a7b90bc90dbcc12364969ce284188399145be"
+    },
+    {
+      "path": "11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "sha256": "9749d00036d06fb5f434303800fa803870b1b448fa71f75fb90a5a3591379d15"
+    },
+    {
+      "path": "12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "sha256": "57e1e750178dcc1e9172c0b8b2a9468fad64e4066e2fc648cdb7fe0405b1d849"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "9d9385295268e19a009481f86189ac29a6fd3248dfc947de899d0eda0b0c4afe"
+    },
+    {
+      "path": "BUILD_HANDOFF.md",
+      "sha256": "21b476907eedcc1c1ec8f4e5186cd8afb1b9eda1700620866728119b3584ae1f"
+    },
+    {
+      "path": "BUILD_STATUS.md",
+      "sha256": "637c644387aba83d5e2919b84e91920a0253209289ce6c88445b2f25f84c77db"
+    },
+    {
+      "path": "DEVELOPMENT.md",
+      "sha256": "85c7721f2d0b9b55cb0763e04599c9a1f44986e092b493f27107de67726bc471"
+    },
+    {
+      "path": "DOCUMENT_CHECKS.md",
+      "sha256": "38c68868539044324c845aa49f22648d31e6d3d7f30ce32fea92c8ce2fe03d50"
+    },
+    {
+      "path": "README.md",
+      "sha256": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98"
+    },
+    {
+      "path": "SOURCES.md",
+      "sha256": "86ad9ab0e9cb8a01629fb3e1c2ebb4b4ff1ccf1f6fcf4b2f53d16672764f8923"
+    },
+    {
+      "path": "TESTING.md",
+      "sha256": "c0d18df80289a83fb1a8edfe748ac5433dab6b400ad1a0245cf2f2cbbd20d08b"
+    },
+    {
+      "path": "VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "sha256": "942662826f878b4e9c76ea509d90ecd9b5cb96b95d3ee40ad3fbad040ca75e24"
+    },
+    {
+      "path": "brand/BRAND_GUIDE.md",
+      "sha256": "38af2f087c96cbe5cc7d3ac20fe42c725ad48f2d80fe8e1a76ff3de6bcbfde04"
+    },
+    {
+      "path": "deploy/identity/README.md",
+      "sha256": "a3f93d7aad7b7230050f366e071a4a2d774abb618cba4129e9500a1773363ee0"
+    },
+    {
+      "path": "diagrams/README.md",
+      "sha256": "bb36834fe77fc0b926118145f966e2611dae457f3b7f81c868baeae1bf191bb9"
+    },
+    {
+      "path": "docs/adr/0001-foundation-and-upstream-adapters.md",
+      "sha256": "2b2cffecf83a2bb44aefac57e7a804ebc3120c1bca0eb0738e08f31114710c1c"
+    },
+    {
+      "path": "docs/adr/0002-installation-trust-and-native-boundaries.md",
+      "sha256": "4ac03bbad7eca9af4e713c931276705ca39f17e5e3e9c1683aa3a6c7dcf6f9c6"
+    },
+    {
+      "path": "docs/adr/0003-local-geometry-pipeline.md",
+      "sha256": "ce66982ef391b3e44e23cdac80eddb47ba4c49105500cd293d02e09f8c90dc3e"
+    },
+    {
+      "path": "docs/adr/0004-first-testable-identity-slice.md",
+      "sha256": "997690988b43ee8db452f6e8a6f5705ca756573b4647fbaba6605c48ec097e80"
+    },
+    {
+      "path": "docs/adr/0005-whpx-shadow-stack-compatibility.md",
+      "sha256": "fe4403b6eb8054f628151113797feec3fed26584891bfa6503054a180c1040e8"
+    },
+    {
+      "path": "docs/adr/0006-managed-and-external-providers.md",
+      "sha256": "706d4b879818f9d3ef196016039257ea06030a20e5767241dbe179f1e6285b2d"
+    },
+    {
+      "path": "docs/implementation/BRAND_REVISION_1_1.md",
+      "sha256": "2cda8c0ecff737fb887f81f0989fe25d985f83a60be93a00a19451356cd1cb18"
+    },
+    {
+      "path": "docs/implementation/BRAND_REVISION_1_2.md",
+      "sha256": "d9214fa65aa3079b704f7f9437cc45e6ea5e3b4de2f7dac7b39643440ef75979"
+    },
+    {
+      "path": "docs/implementation/BUILD_PREPARATION.md",
+      "sha256": "5de0e50b5cfa8d12db53c9a2922ae30a0b1f085e5b67e6af16f30ff1c73df9ba"
+    },
+    {
+      "path": "docs/implementation/BUILD_STATUS.md",
+      "sha256": "26663e0c0d604b5cee7c1d120491ce76306aa4461c2f5fa56bfca4303de1b809"
+    },
+    {
+      "path": "docs/implementation/CAPABILITY_ROUTING.md",
+      "sha256": "f5aa78e542ddc9d40949abc6374ec51672002d99cd2ac3665d0bf50075ea1aac"
+    },
+    {
+      "path": "docs/implementation/CONTEXTUAL_IMAGE_PLANNING.md",
+      "sha256": "9b0a3035fc0181e12cb33f6f5c814ef6192914dac6ff01dcdb653cc294b302b9"
+    },
+    {
+      "path": "docs/implementation/CONVERSATION_IMAGES.md",
+      "sha256": "688a1132708b6434387760f41d93fbfb263c26fb15481c170d14ad65e50c1d70"
+    },
+    {
+      "path": "docs/implementation/EXISTING_PROVIDER_CHAT.md",
+      "sha256": "a91a775202bc4d8118a69efa521494c2b20524dca3156c5cd227377e1e862b29"
+    },
+    {
+      "path": "docs/implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md",
+      "sha256": "9fdb31fd775dc834894ef368dbf33417e1801d9656bf776cf911a0de04abc153"
+    },
+    {
+      "path": "docs/implementation/LAN_PROVIDER_TESTING.md",
+      "sha256": "a18a878a7234c8532c90d74f691dbe9e3c4eca14d7ac713e90c51109d90a531b"
+    },
+    {
+      "path": "docs/implementation/NOTES_CHANNELS_IMAGES.md",
+      "sha256": "40648e892ab542f8ecddb2b7429e91fe6480cc2c6cac601a3fca78a08380a827"
+    },
+    {
+      "path": "docs/implementation/RELEASE_GATES.md",
+      "sha256": "c7bc1a744559f8acb084921b46b27a45a50718225f47c773ec8914c387fb1fba"
+    },
+    {
+      "path": "docs/implementation/SHAPECAST_INSPECTION.md",
+      "sha256": "b4266119cfadd60731811ca9825bbba872bc98d16470db9a51486f4905bd598a"
+    },
+    {
+      "path": "docs/plan/01-ARCHITECTURE.md",
+      "sha256": "d3e522e40c28c3ecf012c2796bc07b2a172122d15025c39d67f92fe56f2c1821"
+    },
+    {
+      "path": "docs/plan/02-DISCOVERY-AND-WORKERS.md",
+      "sha256": "9c18fa660a655dd8bf57a6a5ec18e4fb9c571ce08e8846ccb97f60f40f91ba23"
+    },
+    {
+      "path": "docs/plan/03-NAS-AND-MODELS.md",
+      "sha256": "c51de81295cbb8239ff936f6fd45f489dc8ec15caf595d7ef866cf9e71d29738"
+    },
+    {
+      "path": "docs/plan/04-SECURITY-AND-RBAC.md",
+      "sha256": "8ead5698bb7f8dd62a596f096aaee100a80ebea0cd950d97544832ae708edb6d"
+    },
+    {
+      "path": "docs/plan/05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "sha256": "d77f57c041395dc3304ac19d000c1c159c83a43cdf94e4ed9089073dedde423a"
+    },
+    {
+      "path": "docs/plan/06-MEMORY-AND-KNOWLEDGE.md",
+      "sha256": "6785be99608c02c47b0ab5d49159588483ee725cca09f623ababf4ae71052856"
+    },
+    {
+      "path": "docs/plan/07-INTERFACES.md",
+      "sha256": "31bd6beadcf102be5629399cfe51833ba51f8692648315baa0f6ed075efa9b33"
+    },
+    {
+      "path": "docs/plan/08-DATA-AND-API-CONTRACTS.md",
+      "sha256": "1cb2124e1fb0759e7bf3e5d000e7b9271fca06aa2d30ca35bc4c93b167583287"
+    },
+    {
+      "path": "docs/plan/09-VALIDATION-AND-RELEASE.md",
+      "sha256": "f5d94fef6a1cc847b81c388780d2090022b1d0b0c19ccc8f7ad79e1b515ab1ff"
+    },
+    {
+      "path": "docs/plan/10-OPERATIONS.md",
+      "sha256": "e9d733b681476dd3351115a1182a7b90bc90dbcc12364969ce284188399145be"
+    },
+    {
+      "path": "docs/plan/11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "sha256": "9749d00036d06fb5f434303800fa803870b1b448fa71f75fb90a5a3591379d15"
+    },
+    {
+      "path": "docs/plan/12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "sha256": "57e1e750178dcc1e9172c0b8b2a9468fad64e4066e2fc648cdb7fe0405b1d849"
+    },
+    {
+      "path": "docs/plan/BUILD_HANDOFF.md",
+      "sha256": "21b476907eedcc1c1ec8f4e5186cd8afb1b9eda1700620866728119b3584ae1f"
+    },
+    {
+      "path": "docs/plan/BUILD_STATUS.md",
+      "sha256": "637c644387aba83d5e2919b84e91920a0253209289ce6c88445b2f25f84c77db"
+    },
+    {
+      "path": "docs/plan/DOCUMENT_CHECKS.md",
+      "sha256": "38c68868539044324c845aa49f22648d31e6d3d7f30ce32fea92c8ce2fe03d50"
+    },
+    {
+      "path": "docs/plan/README.md",
+      "sha256": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98"
+    },
+    {
+      "path": "docs/plan/SOURCES.md",
+      "sha256": "86ad9ab0e9cb8a01629fb3e1c2ebb4b4ff1ccf1f6fcf4b2f53d16672764f8923"
+    },
+    {
+      "path": "docs/plan/VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "sha256": "942662826f878b4e9c76ea509d90ecd9b5cb96b95d3ee40ad3fbad040ca75e24"
+    },
+    {
+      "path": "docs/plan/brand/BRAND_GUIDE.md",
+      "sha256": "286ed034def8de40cc87d21e68435547f3e2795dab8945f53ee345a0b5499355"
+    },
+    {
+      "path": "docs/plan/diagrams/README.md",
+      "sha256": "bb36834fe77fc0b926118145f966e2611dae457f3b7f81c868baeae1bf191bb9"
+    },
+    {
+      "path": "docs/plan/phases/P0-FOUNDATION.md",
+      "sha256": "82eb1c5548d387012edaf5ad6a331cf6365824b0fbb84abe4077054e5e3a42dd"
+    },
+    {
+      "path": "docs/plan/phases/P1-IDENTITY-AND-SHELLS.md",
+      "sha256": "6cd11e80f9e15368d04a92f289eb8bbcf68c026cd9cdd148eea52404820e2780"
+    },
+    {
+      "path": "docs/plan/phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "sha256": "ec200fc2f68e46ed3b8dfe909da5f780f6c269bf31bfb7d152a75d79d291dcc0"
+    },
+    {
+      "path": "docs/plan/phases/P3-NAS-AND-CATALOG.md",
+      "sha256": "34a6e26f8036841294708ff7be6691f6f867aee3f0e1437912e223acf09116ea"
+    },
+    {
+      "path": "docs/plan/phases/P4-LOCAL-INFERENCE.md",
+      "sha256": "e15c395f4ccba3faeb64595601edd6feb20826d01a38009f3ee1324bc4ff88ae"
+    },
+    {
+      "path": "docs/plan/phases/P5-ROUTING-AND-CLOUD.md",
+      "sha256": "b4ef1e197f1e6ccebf07d291a5216db24240f727ff88b7c5ab54f62067741bf1"
+    },
+    {
+      "path": "docs/plan/phases/P6-SHARED-TOOLS.md",
+      "sha256": "be76faf7c69c7509ddb7e7fa6fba3189223b59a8f4ddf4e945feda960c1ad703"
+    },
+    {
+      "path": "docs/plan/phases/P7-CONVERSATION-MEMORY.md",
+      "sha256": "f5940ddb7d4981df507404a6f958e868f9f1f18d471b7c65910c8c58b92e7506"
+    },
+    {
+      "path": "docs/plan/phases/P8-COLLABORATION-AND-MEDIA.md",
+      "sha256": "8e5028cc49493fcc4a5861908843d84845e35faaeabe4a06018a63e93af92c0b"
+    },
+    {
+      "path": "docs/plan/phases/P9-HARDENING-AND-RELEASE.md",
+      "sha256": "8f6d2bd84b916de3b21ba89f1ce6295901a76692432f2153f88c37b449848b37"
+    },
+    {
+      "path": "phases/P0-FOUNDATION.md",
+      "sha256": "82eb1c5548d387012edaf5ad6a331cf6365824b0fbb84abe4077054e5e3a42dd"
+    },
+    {
+      "path": "phases/P1-IDENTITY-AND-SHELLS.md",
+      "sha256": "6cd11e80f9e15368d04a92f289eb8bbcf68c026cd9cdd148eea52404820e2780"
+    },
+    {
+      "path": "phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "sha256": "ec200fc2f68e46ed3b8dfe909da5f780f6c269bf31bfb7d152a75d79d291dcc0"
+    },
+    {
+      "path": "phases/P3-NAS-AND-CATALOG.md",
+      "sha256": "34a6e26f8036841294708ff7be6691f6f867aee3f0e1437912e223acf09116ea"
+    },
+    {
+      "path": "phases/P4-LOCAL-INFERENCE.md",
+      "sha256": "e15c395f4ccba3faeb64595601edd6feb20826d01a38009f3ee1324bc4ff88ae"
+    },
+    {
+      "path": "phases/P5-ROUTING-AND-CLOUD.md",
+      "sha256": "b4ef1e197f1e6ccebf07d291a5216db24240f727ff88b7c5ab54f62067741bf1"
+    },
+    {
+      "path": "phases/P6-SHARED-TOOLS.md",
+      "sha256": "be76faf7c69c7509ddb7e7fa6fba3189223b59a8f4ddf4e945feda960c1ad703"
+    },
+    {
+      "path": "phases/P7-CONVERSATION-MEMORY.md",
+      "sha256": "f5940ddb7d4981df507404a6f958e868f9f1f18d471b7c65910c8c58b92e7506"
+    },
+    {
+      "path": "phases/P8-COLLABORATION-AND-MEDIA.md",
+      "sha256": "8e5028cc49493fcc4a5861908843d84845e35faaeabe4a06018a63e93af92c0b"
+    },
+    {
+      "path": "phases/P9-HARDENING-AND-RELEASE.md",
+      "sha256": "8f6d2bd84b916de3b21ba89f1ce6295901a76692432f2153f88c37b449848b37"
+    },
+    {
+      "path": "runtimes/image/README.md",
+      "sha256": "5f11337c6d0e71d9d18c2d1a906aceaba07d20531050785ddf60c4d9dd1956e0"
+    }
+  ],
+  "relocations": [
+    {
+      "source": "01-ARCHITECTURE.md",
+      "destination": "docs/archive/root-package/01-ARCHITECTURE.md",
+      "action": "archive_duplicate",
+      "sha256_before": "d3e522e40c28c3ecf012c2796bc07b2a172122d15025c39d67f92fe56f2c1821",
+      "canonical": "docs/plan/01-ARCHITECTURE.md",
+      "sha256_after": "7c9fac7fec251db992f7322c1215d1456e40e831d120ee78450e3d18073a70b7",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "02-DISCOVERY-AND-WORKERS.md",
+      "destination": "docs/archive/root-package/02-DISCOVERY-AND-WORKERS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "9c18fa660a655dd8bf57a6a5ec18e4fb9c571ce08e8846ccb97f60f40f91ba23",
+      "canonical": "docs/plan/02-DISCOVERY-AND-WORKERS.md",
+      "sha256_after": "fc6f19e6f225242caf253cdb5b2c98aebc8b2119a0acba37fdaa64135f9b5c93",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "03-NAS-AND-MODELS.md",
+      "destination": "docs/archive/root-package/03-NAS-AND-MODELS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "c51de81295cbb8239ff936f6fd45f489dc8ec15caf595d7ef866cf9e71d29738",
+      "canonical": "docs/plan/03-NAS-AND-MODELS.md",
+      "sha256_after": "fbc035353fe09351e60440b55e7fecaf5f615b8d15d695a6a57b8dbcc0a56087",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "04-SECURITY-AND-RBAC.md",
+      "destination": "docs/archive/root-package/04-SECURITY-AND-RBAC.md",
+      "action": "archive_duplicate",
+      "sha256_before": "8ead5698bb7f8dd62a596f096aaee100a80ebea0cd950d97544832ae708edb6d",
+      "canonical": "docs/plan/04-SECURITY-AND-RBAC.md",
+      "sha256_after": "545be33ff797f1699b3018abdc16202fd9b6dda74840419c003d46e08bbff6f3",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "destination": "docs/archive/root-package/05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "d77f57c041395dc3304ac19d000c1c159c83a43cdf94e4ed9089073dedde423a",
+      "canonical": "docs/plan/05-RUNTIME-ROUTING-AND-TOOLS.md",
+      "sha256_after": "92359bfc6a9eaef25fa3d61e4ec0c4a9ccee644cbfc12a53dd5d0bdb86af8653",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "06-MEMORY-AND-KNOWLEDGE.md",
+      "destination": "docs/archive/root-package/06-MEMORY-AND-KNOWLEDGE.md",
+      "action": "archive_duplicate",
+      "sha256_before": "6785be99608c02c47b0ab5d49159588483ee725cca09f623ababf4ae71052856",
+      "canonical": "docs/plan/06-MEMORY-AND-KNOWLEDGE.md",
+      "sha256_after": "6785be99608c02c47b0ab5d49159588483ee725cca09f623ababf4ae71052856",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "07-INTERFACES.md",
+      "destination": "docs/archive/root-package/07-INTERFACES.md",
+      "action": "archive_duplicate",
+      "sha256_before": "31bd6beadcf102be5629399cfe51833ba51f8692648315baa0f6ed075efa9b33",
+      "canonical": "docs/plan/07-INTERFACES.md",
+      "sha256_after": "063d45e5ef91b496a7866ad93d780770c9975beeffda6319e5b6f22546e13621",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "08-DATA-AND-API-CONTRACTS.md",
+      "destination": "docs/archive/root-package/08-DATA-AND-API-CONTRACTS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "1cb2124e1fb0759e7bf3e5d000e7b9271fca06aa2d30ca35bc4c93b167583287",
+      "canonical": "docs/plan/08-DATA-AND-API-CONTRACTS.md",
+      "sha256_after": "26d37ff3c8ad982db6e215202deecb73132b1ef7fede2fe69e0f551eba4886e2",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "09-VALIDATION-AND-RELEASE.md",
+      "destination": "docs/archive/root-package/09-VALIDATION-AND-RELEASE.md",
+      "action": "archive_duplicate",
+      "sha256_before": "f5d94fef6a1cc847b81c388780d2090022b1d0b0c19ccc8f7ad79e1b515ab1ff",
+      "canonical": "docs/plan/09-VALIDATION-AND-RELEASE.md",
+      "sha256_after": "19ef338897b989777721733d83c3d5971339651493410120c49dc2b087d3b119",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "10-OPERATIONS.md",
+      "destination": "docs/archive/root-package/10-OPERATIONS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "e9d733b681476dd3351115a1182a7b90bc90dbcc12364969ce284188399145be",
+      "canonical": "docs/plan/10-OPERATIONS.md",
+      "sha256_after": "25df7ced84cc828dfd7ffe9a8185ff0eb377150dfb67613b9116209f43c814f9",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "destination": "docs/archive/root-package/11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "action": "archive_duplicate",
+      "sha256_before": "9749d00036d06fb5f434303800fa803870b1b448fa71f75fb90a5a3591379d15",
+      "canonical": "docs/plan/11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md",
+      "sha256_after": "b9bb0f1d4a1bb7db576a793dcda92ac7350a5feab5f5e9036e6a15650ba8a173",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "destination": "docs/archive/root-package/12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "action": "archive_duplicate",
+      "sha256_before": "57e1e750178dcc1e9172c0b8b2a9468fad64e4066e2fc648cdb7fe0405b1d849",
+      "canonical": "docs/plan/12-ADMIN-AGENT-AND-FIRST-PROVIDER.md",
+      "sha256_after": "c7c42f050e0f2b99a21a1fc5053533e7490949a2289a467ab14081053c123b1e",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "BUILD_HANDOFF.md",
+      "destination": "docs/archive/root-package/BUILD_HANDOFF.md",
+      "action": "archive_duplicate",
+      "sha256_before": "21b476907eedcc1c1ec8f4e5186cd8afb1b9eda1700620866728119b3584ae1f",
+      "canonical": "docs/plan/BUILD_HANDOFF.md",
+      "sha256_after": "dd3d1778c0fd7db94986f2bdb6d321e5ff0fc04067316e29818939a093751c36",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "BUILD_STATUS.md",
+      "destination": "docs/archive/root-package/BUILD_STATUS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "637c644387aba83d5e2919b84e91920a0253209289ce6c88445b2f25f84c77db",
+      "canonical": "docs/plan/BUILD_STATUS.md",
+      "sha256_after": "6f1355dd210384b09f76ebc49c2232be6171cd9fec2ab7613f7a63223d5c686b",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "DOCUMENT_CHECKS.md",
+      "destination": "docs/archive/root-package/DOCUMENT_CHECKS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "38c68868539044324c845aa49f22648d31e6d3d7f30ce32fea92c8ce2fe03d50",
+      "canonical": "docs/plan/DOCUMENT_CHECKS.md",
+      "sha256_after": "38c68868539044324c845aa49f22648d31e6d3d7f30ce32fea92c8ce2fe03d50",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "README.md",
+      "destination": "docs/plan/README.md",
+      "action": "retain_root_pointer",
+      "sha256_before": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98",
+      "sha256_after": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98",
+      "source_retained_as_pointer": true
+    },
+    {
+      "source": "SOURCES.md",
+      "destination": "docs/archive/root-package/SOURCES.md",
+      "action": "archive_duplicate",
+      "sha256_before": "86ad9ab0e9cb8a01629fb3e1c2ebb4b4ff1ccf1f6fcf4b2f53d16672764f8923",
+      "canonical": "docs/plan/SOURCES.md",
+      "sha256_after": "2ecc680d6ee6ef34203153ae5ed1c0924822850145420f6cd8d910071cbde5c6",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "destination": "docs/archive/root-package/VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "action": "archive_duplicate",
+      "sha256_before": "942662826f878b4e9c76ea509d90ecd9b5cb96b95d3ee40ad3fbad040ca75e24",
+      "canonical": "docs/plan/VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "sha256_after": "e96da0d7441295ae79cafda0cba38c629941bf77a5262cd2896d5e1f2eefccb7",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/README.md",
+      "destination": "docs/archive/root-package/diagrams/README.md",
+      "action": "archive_duplicate",
+      "sha256_before": "bb36834fe77fc0b926118145f966e2611dae457f3b7f81c868baeae1bf191bb9",
+      "canonical": "docs/plan/diagrams/README.md",
+      "sha256_after": "7185129dd89ae4b0cfd7370a08523dd0b3f267149fbd08f8cc67b629614fa289",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P0-FOUNDATION.md",
+      "destination": "docs/archive/root-package/phases/P0-FOUNDATION.md",
+      "action": "archive_duplicate",
+      "sha256_before": "82eb1c5548d387012edaf5ad6a331cf6365824b0fbb84abe4077054e5e3a42dd",
+      "canonical": "docs/plan/phases/P0-FOUNDATION.md",
+      "sha256_after": "6c805b74107fd289a7fb31aec320ade4667dd48798cded0b9c7e431983f79853",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P1-IDENTITY-AND-SHELLS.md",
+      "destination": "docs/archive/root-package/phases/P1-IDENTITY-AND-SHELLS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "6cd11e80f9e15368d04a92f289eb8bbcf68c026cd9cdd148eea52404820e2780",
+      "canonical": "docs/plan/phases/P1-IDENTITY-AND-SHELLS.md",
+      "sha256_after": "90daa531bc3d9fe55b2b8eaeabfdbf682f2f1773acc9cfdaffbe7f4378c64d20",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "destination": "docs/archive/root-package/phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "action": "archive_duplicate",
+      "sha256_before": "ec200fc2f68e46ed3b8dfe909da5f780f6c269bf31bfb7d152a75d79d291dcc0",
+      "canonical": "docs/plan/phases/P2-DISCOVERY-AND-ENROLLMENT.md",
+      "sha256_after": "2beb4ddc57d94e4401d2207f63625cc9f1a0ae8e248f347ebafe897118c997f3",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P3-NAS-AND-CATALOG.md",
+      "destination": "docs/archive/root-package/phases/P3-NAS-AND-CATALOG.md",
+      "action": "archive_duplicate",
+      "sha256_before": "34a6e26f8036841294708ff7be6691f6f867aee3f0e1437912e223acf09116ea",
+      "canonical": "docs/plan/phases/P3-NAS-AND-CATALOG.md",
+      "sha256_after": "da7353a176f3b7fa3f3b3f785e1b25842f8d74f9739807f1f794343fb512946a",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P4-LOCAL-INFERENCE.md",
+      "destination": "docs/archive/root-package/phases/P4-LOCAL-INFERENCE.md",
+      "action": "archive_duplicate",
+      "sha256_before": "e15c395f4ccba3faeb64595601edd6feb20826d01a38009f3ee1324bc4ff88ae",
+      "canonical": "docs/plan/phases/P4-LOCAL-INFERENCE.md",
+      "sha256_after": "7bedbb9635c264862a945e8ba04f749ec9c89d4b8334c3a4e0729a50f4df81c3",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P5-ROUTING-AND-CLOUD.md",
+      "destination": "docs/archive/root-package/phases/P5-ROUTING-AND-CLOUD.md",
+      "action": "archive_duplicate",
+      "sha256_before": "b4ef1e197f1e6ccebf07d291a5216db24240f727ff88b7c5ab54f62067741bf1",
+      "canonical": "docs/plan/phases/P5-ROUTING-AND-CLOUD.md",
+      "sha256_after": "81828469b64086057d4f879dd6abadae59815bb908a248a3abf525194aa9da30",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P6-SHARED-TOOLS.md",
+      "destination": "docs/archive/root-package/phases/P6-SHARED-TOOLS.md",
+      "action": "archive_duplicate",
+      "sha256_before": "be76faf7c69c7509ddb7e7fa6fba3189223b59a8f4ddf4e945feda960c1ad703",
+      "canonical": "docs/plan/phases/P6-SHARED-TOOLS.md",
+      "sha256_after": "f312354c159bdd006072819db431d21574f4615d0df750afb2b73d738d09f5d8",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P7-CONVERSATION-MEMORY.md",
+      "destination": "docs/archive/root-package/phases/P7-CONVERSATION-MEMORY.md",
+      "action": "archive_duplicate",
+      "sha256_before": "f5940ddb7d4981df507404a6f958e868f9f1f18d471b7c65910c8c58b92e7506",
+      "canonical": "docs/plan/phases/P7-CONVERSATION-MEMORY.md",
+      "sha256_after": "b856e5c4564e42b60cfa3bd6c0d7a46982c4125d8e3e114f3ad436a54b66b16f",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P8-COLLABORATION-AND-MEDIA.md",
+      "destination": "docs/archive/root-package/phases/P8-COLLABORATION-AND-MEDIA.md",
+      "action": "archive_duplicate",
+      "sha256_before": "8e5028cc49493fcc4a5861908843d84845e35faaeabe4a06018a63e93af92c0b",
+      "canonical": "docs/plan/phases/P8-COLLABORATION-AND-MEDIA.md",
+      "sha256_after": "3aa1553e8d4328e795fb7c8d21be0ed45aa74b7a3d47f3ab8f9e73b474b8450a",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "phases/P9-HARDENING-AND-RELEASE.md",
+      "destination": "docs/archive/root-package/phases/P9-HARDENING-AND-RELEASE.md",
+      "action": "archive_duplicate",
+      "sha256_before": "8f6d2bd84b916de3b21ba89f1ce6295901a76692432f2153f88c37b449848b37",
+      "canonical": "docs/plan/phases/P9-HARDENING-AND-RELEASE.md",
+      "sha256_after": "4fc637d0cedcc6fc339abcdd2f0cde42953225ee53426df2a7f1755930a63bcc",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/01-ARCHITECTURE-1.svg",
+      "destination": "docs/archive/root-package/diagrams/01-ARCHITECTURE-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "dc38857cde8639ee624f51d0da74bd1f4749fb8812e84b336fc04823dd3aca41",
+      "canonical": "docs/plan/diagrams/01-ARCHITECTURE-1.svg",
+      "sha256_after": "dc38857cde8639ee624f51d0da74bd1f4749fb8812e84b336fc04823dd3aca41",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/02-DISCOVERY-AND-WORKERS-1.svg",
+      "destination": "docs/archive/root-package/diagrams/02-DISCOVERY-AND-WORKERS-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "135230c60f2ad51016f271162d7c2eed8c7fa22d5e7843ecc23e6fb98c781065",
+      "canonical": "docs/plan/diagrams/02-DISCOVERY-AND-WORKERS-1.svg",
+      "sha256_after": "135230c60f2ad51016f271162d7c2eed8c7fa22d5e7843ecc23e6fb98c781065",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/02-DISCOVERY-AND-WORKERS-2.svg",
+      "destination": "docs/archive/root-package/diagrams/02-DISCOVERY-AND-WORKERS-2.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "566a29dfcf57be5964a78fb686ba08ef1ed46211383008b814d9f0262c809078",
+      "canonical": "docs/plan/diagrams/02-DISCOVERY-AND-WORKERS-2.svg",
+      "sha256_after": "566a29dfcf57be5964a78fb686ba08ef1ed46211383008b814d9f0262c809078",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/03-NAS-AND-MODELS-1.svg",
+      "destination": "docs/archive/root-package/diagrams/03-NAS-AND-MODELS-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "81ee93b0903223782f516da3fcde3521dbe11aa87f42b309bfcae3407dcf20bf",
+      "canonical": "docs/plan/diagrams/03-NAS-AND-MODELS-1.svg",
+      "sha256_after": "81ee93b0903223782f516da3fcde3521dbe11aa87f42b309bfcae3407dcf20bf",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-1.svg",
+      "destination": "docs/archive/root-package/diagrams/05-RUNTIME-ROUTING-AND-TOOLS-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "f06fcc27bbdb0b1f9ab4218049a4cdba0658cf424aa0f6cc076c1351c4b416ad",
+      "canonical": "docs/plan/diagrams/05-RUNTIME-ROUTING-AND-TOOLS-1.svg",
+      "sha256_after": "f06fcc27bbdb0b1f9ab4218049a4cdba0658cf424aa0f6cc076c1351c4b416ad",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/05-RUNTIME-ROUTING-AND-TOOLS-2.svg",
+      "destination": "docs/archive/root-package/diagrams/05-RUNTIME-ROUTING-AND-TOOLS-2.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "176942fea9ee8b2303f45f8d67ee6182b87ed1d0caf7cb22f470e2a0b4b2a33e",
+      "canonical": "docs/plan/diagrams/05-RUNTIME-ROUTING-AND-TOOLS-2.svg",
+      "sha256_after": "176942fea9ee8b2303f45f8d67ee6182b87ed1d0caf7cb22f470e2a0b4b2a33e",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/06-MEMORY-AND-KNOWLEDGE-1.svg",
+      "destination": "docs/archive/root-package/diagrams/06-MEMORY-AND-KNOWLEDGE-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "89451ef15ff60b0ff9a3565eb1bcd741d75bd9d109ce3aa0a9fabcb6685dc800",
+      "canonical": "docs/plan/diagrams/06-MEMORY-AND-KNOWLEDGE-1.svg",
+      "sha256_after": "89451ef15ff60b0ff9a3565eb1bcd741d75bd9d109ce3aa0a9fabcb6685dc800",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/06-MEMORY-AND-KNOWLEDGE-2.svg",
+      "destination": "docs/archive/root-package/diagrams/06-MEMORY-AND-KNOWLEDGE-2.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "6bd9d405cd03365281b955afef35f7d835851ab06f3dd68621a1121cb0c29159",
+      "canonical": "docs/plan/diagrams/06-MEMORY-AND-KNOWLEDGE-2.svg",
+      "sha256_after": "6bd9d405cd03365281b955afef35f7d835851ab06f3dd68621a1121cb0c29159",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/07-INTERFACES-1.svg",
+      "destination": "docs/archive/root-package/diagrams/07-INTERFACES-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "09b7285c607ff8ead4b3fd1f412b2ee06691f3cd2147edc78f5ad0d444d067c3",
+      "canonical": "docs/plan/diagrams/07-INTERFACES-1.svg",
+      "sha256_after": "09b7285c607ff8ead4b3fd1f412b2ee06691f3cd2147edc78f5ad0d444d067c3",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/11-INSTALLATION-AND-CENTRAL-MANAGEMENT-1.svg",
+      "destination": "docs/archive/root-package/diagrams/11-INSTALLATION-AND-CENTRAL-MANAGEMENT-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "94c7f2e962702dc9bb55101b07f50d767227f0ec60db69f1745eadd6a3f5f2c5",
+      "canonical": "docs/plan/diagrams/11-INSTALLATION-AND-CENTRAL-MANAGEMENT-1.svg",
+      "sha256_after": "94c7f2e962702dc9bb55101b07f50d767227f0ec60db69f1745eadd6a3f5f2c5",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-1.svg",
+      "destination": "docs/archive/root-package/diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "a70215ad2d85b90b3c6423bffc87d3458a581bc01779da8ecc9ea89a978c219e",
+      "canonical": "docs/plan/diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-1.svg",
+      "sha256_after": "a70215ad2d85b90b3c6423bffc87d3458a581bc01779da8ecc9ea89a978c219e",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-2.svg",
+      "destination": "docs/archive/root-package/diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-2.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "2088b846b399eb07a83abd4848d2dccafb7f59d6c20c1edf0127edb737c23438",
+      "canonical": "docs/plan/diagrams/12-ADMIN-AGENT-AND-FIRST-PROVIDER-2.svg",
+      "sha256_after": "2088b846b399eb07a83abd4848d2dccafb7f59d6c20c1edf0127edb737c23438",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-1.svg",
+      "destination": "docs/archive/root-package/diagrams/VIDEO-REVIEW-IH8XmxiwliQ-1.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "0163917ab421679646f9f5d3118b4900ad7525f7d54aa6dfb31415da413d7f38",
+      "canonical": "docs/plan/diagrams/VIDEO-REVIEW-IH8XmxiwliQ-1.svg",
+      "sha256_after": "0163917ab421679646f9f5d3118b4900ad7525f7d54aa6dfb31415da413d7f38",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "diagrams/VIDEO-REVIEW-IH8XmxiwliQ-2.svg",
+      "destination": "docs/archive/root-package/diagrams/VIDEO-REVIEW-IH8XmxiwliQ-2.svg",
+      "action": "archive_duplicate",
+      "sha256_before": "fa691ace37c0a9f8428a4ddc3fb859fcb304a0db1a00d4783ac90909717bbe77",
+      "canonical": "docs/plan/diagrams/VIDEO-REVIEW-IH8XmxiwliQ-2.svg",
+      "sha256_after": "fa691ace37c0a9f8428a4ddc3fb859fcb304a0db1a00d4783ac90909717bbe77",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "DEVELOPMENT.md",
+      "destination": "docs/DEVELOPMENT.md",
+      "action": "move",
+      "sha256_before": "85c7721f2d0b9b55cb0763e04599c9a1f44986e092b493f27107de67726bc471",
+      "sha256_after": "6d7aebc04c1d2e11108ec7c8fcf6322e051953573e7342a0b3fc9852be005d96",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "TESTING.md",
+      "destination": "docs/TESTING.md",
+      "action": "move",
+      "sha256_before": "c0d18df80289a83fb1a8edfe748ac5433dab6b400ad1a0245cf2f2cbbd20d08b",
+      "sha256_after": "7c0362ead7ca133be3dde4ac4fd995d3fbf937c19b6deb984337cadd0db88dee",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "AGENTS.md",
+      "destination": "docs/AGENT_GUIDANCE.md",
+      "action": "move",
+      "sha256_before": "9d9385295268e19a009481f86189ac29a6fd3248dfc947de899d0eda0b0c4afe",
+      "sha256_after": "beb43416dfca7e4291e5920622934754763d07ee89ac9ac06e10438dea6dcd33",
+      "source_retained_as_pointer": true
+    },
+    {
+      "source": "brand/BRAND_GUIDE.md",
+      "destination": "docs/brand/BRAND_GUIDE.md",
+      "action": "move",
+      "sha256_before": "38af2f087c96cbe5cc7d3ac20fe42c725ad48f2d80fe8e1a76ff3de6bcbfde04",
+      "sha256_after": "8b490c459cd1e157f36d9aea41e751657c4c02bdedcc7bde2fde3e5d67d0f23a",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "deploy/identity/README.md",
+      "destination": "docs/operations/IDENTITY.md",
+      "action": "move",
+      "sha256_before": "a3f93d7aad7b7230050f366e071a4a2d774abb618cba4129e9500a1773363ee0",
+      "sha256_after": "096ce839139e8810960719455faaa63b61a9bd0f8f4aaf9e901ffbb37fff2471",
+      "source_retained_as_pointer": false
+    },
+    {
+      "source": "runtimes/image/README.md",
+      "destination": "docs/runtimes/IMAGE_PROVIDER.md",
+      "action": "move",
+      "sha256_before": "5f11337c6d0e71d9d18c2d1a906aceaba07d20531050785ddf60c4d9dd1956e0",
+      "sha256_after": "fbe4a2c1ae806ec804aa7be1984fb80ef301f990cbec6fda2d13f3115037f4a2",
+      "source_retained_as_pointer": false
+    }
+  ],
+  "baseline_inventory": "evidence/preparation/2026-09-12/inspection.json",
+  "baseline_file_count": 119,
+  "gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "preexisting_worktree_status": [
+    " M AGENTS.md",
+    " M DEVELOPMENT.md",
+    " M Start-Hearth.ps1",
+    " M TESTING.md",
+    " M apps/admin-web/index.html",
+    " M apps/admin-web/public/favicon.svg",
+    " M apps/user-web/index.html",
+    " M apps/user-web/public/favicon.svg",
+    " M brand/BRAND_GUIDE.md",
+    " M brand/icons/catalog.json",
+    " M brand/icons/hearth-icons.svg",
+    " M brand/icons/hearth.svg",
+    " M brand/index.html",
+    " M brand/logos/hearth-app-1024.png",
+    " M brand/logos/hearth-app-128.png",
+    " M brand/logos/hearth-app-16.png",
+    " M brand/logos/hearth-app-24.png",
+    " M brand/logos/hearth-app-256.png",
+    " M brand/logos/hearth-app-32.png",
+    " M brand/logos/hearth-app-48.png",
+    " M brand/logos/hearth-app-512.png",
+    " M brand/logos/hearth-app-64.png",
+    " M brand/logos/hearth-app-square-1024.png",
+    " M brand/logos/hearth-app-square-512.png",
+    " M brand/logos/hearth-app-square.svg",
+    " M brand/logos/hearth-app.svg",
+    " M brand/logos/hearth-favicon.svg",
+    " M brand/logos/hearth-lockup-dark.svg",
+    " M brand/logos/hearth-lockup-light.svg",
+    " M brand/logos/hearth-lockup-mono.svg",
+    " M brand/logos/hearth-mark-dark-512.png",
+    " M brand/logos/hearth-mark-dark.svg",
+    " M brand/logos/hearth-mark-light-512.png",
+    " M brand/logos/hearth-mark-light.svg",
+    " M brand/logos/hearth-mark-mono.svg",
+    " M brand/logos/hearth-wordmark-dark.svg",
+    " M brand/logos/hearth-wordmark-light.svg",
+    " M brand/logos/hearth-wordmark-mono.svg",
+    " M brand/logos/hearth.ico",
+    " M brand/previews/hearth-daylight.png",
+    " M brand/previews/hearth-firelight.png",
+    " M brand/previews/hearth-gallery-dark.png",
+    " M brand/previews/hearth-identity.png",
+    " M brand/previews/hearth-mobile-top.png",
+    " M brand/previews/hearth-mobile.png",
+    " M brand/previews/icons-inline.js",
+    " M brand/previews/identity-overview.svg",
+    " M brand/previews/validation.json",
+    " M brand/tokens/hearth-tokens.json",
+    " M brand/tokens/hearth.css",
+    " M deploy/compose/development.yaml",
+    " M deploy/identity/README.md",
+    " M deploy/identity/themes/hearth/login/footer.ftl",
+    " M deploy/identity/themes/hearth/login/messages/messages_en.properties",
+    " M deploy/identity/themes/hearth/login/resources/css/hearth-login.css",
+    " M deploy/identity/themes/hearth/login/resources/css/hearth-tokens.css",
+    " M deploy/identity/themes/hearth/login/resources/img/hearth-favicon.svg",
+    " M deploy/identity/themes/hearth/login/resources/img/hearth-lockup-dark.svg",
+    " M deploy/identity/themes/hearth/login/resources/img/hearth-lockup-light.svg",
+    " M deploy/identity/themes/hearth/login/resources/img/hearth.ico",
+    " M docs/adr/0001-foundation-and-upstream-adapters.md",
+    " M docs/adr/0002-installation-trust-and-native-boundaries.md",
+    " M docs/adr/0003-local-geometry-pipeline.md",
+    " M docs/adr/0004-first-testable-identity-slice.md",
+    " M docs/adr/0005-whpx-shadow-stack-compatibility.md",
+    " M docs/implementation/BUILD_PREPARATION.md",
+    " M docs/implementation/BUILD_STATUS.md",
+    " M docs/implementation/RELEASE_GATES.md",
+    " M docs/implementation/release-gates.json",
+    " M packages/contracts/openapi.json",
+    " M packages/contracts/schema/hearth.json",
+    " M packages/contracts/src/api.generated.ts",
+    " M packages/contracts/src/generated.ts",
+    " M packages/ui/src/application.tsx",
+    " M packages/ui/src/index.tsx",
+    " M packages/ui/src/theme.css",
+    " M pyproject.toml",
+    " M scripts/configure_identity.py",
+    " M scripts/contract_fixtures.py",
+    " M scripts/dev.py",
+    " M scripts/development_stack.py",
+    " M scripts/identity_theme_qa.py",
+    " M scripts/record_evidence.py",
+    " M scripts/start_local.py",
+    " M services/api/src/hearth/catalog.py",
+    " M services/api/src/hearth/config.py",
+    " M services/api/src/hearth/contracts.py",
+    " M services/api/src/hearth/identity.py",
+    " M services/api/src/hearth/main.py",
+    " M services/api/src/hearth/workspace.py",
+    " M tests/browser/entry.spec.ts",
+    " M tests/browser/identity-live.mjs",
+    " M tests/browser/identity-theme-live.mjs",
+    " M tests/browser/setup.spec.ts",
+    " M tests/fixtures/contracts.json",
+    " M tests/integration/test_identity.py",
+    " M tests/integration/test_postgres.py",
+    " M uv.lock",
+    " M worker/cmd/hearth-setup/hearth-lockup-light.svg",
+    " M worker/cmd/hearth-setup/main.go",
+    " M worker/cmd/hearth-setup/setup.css",
+    " M worker/cmd/hearth-setup/setup.html",
+    " M worker/cmd/hearth-setup/setup.js",
+    " M worker/internal/contracts/generated.go",
+    " M worker/internal/contracts/schema/hearth.json",
+    "?? docs/adr/0006-managed-and-external-providers.md",
+    "?? docs/implementation/BRAND_REVISION_1_1.md",
+    "?? docs/implementation/BRAND_REVISION_1_2.md",
+    "?? docs/implementation/CAPABILITY_ROUTING.md",
+    "?? docs/implementation/CONTEXTUAL_IMAGE_PLANNING.md",
+    "?? docs/implementation/CONVERSATION_IMAGES.md",
+    "?? docs/implementation/EXISTING_PROVIDER_CHAT.md",
+    "?? docs/implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md",
+    "?? docs/implementation/LAN_PROVIDER_TESTING.md",
+    "?? docs/implementation/NOTES_CHANNELS_IMAGES.md",
+    "?? docs/implementation/SHAPECAST_INSPECTION.md",
+    "?? evidence/branding/",
+    "?? evidence/images/",
+    "?? evidence/inference/",
+    "?? evidence/overnight/",
+    "?? evidence/provider-design/",
+    "?? evidence/routing/",
+    "?? packages/ui/src/api.ts",
+    "?? packages/ui/src/capability-route.tsx",
+    "?? packages/ui/src/channels.tsx",
+    "?? packages/ui/src/chat.tsx",
+    "?? packages/ui/src/conversation-image.tsx",
+    "?? packages/ui/src/images.tsx",
+    "?? packages/ui/src/providers.tsx",
+    "?? packages/ui/src/side-notes.tsx",
+    "?? runtimes/",
+    "?? scripts/assign_capabilities.py",
+    "?? scripts/build_brand.mjs",
+    "?? scripts/build_connectors.py",
+    "?? scripts/connect_existing_provider.py",
+    "?? scripts/image_runtime.py",
+    "?? scripts/prepare_image_model.py",
+    "?? scripts/qualify_connector.py",
+    "?? services/api/migrations/versions/0003_existing_provider.py",
+    "?? services/api/migrations/versions/0004_notes_and_steering.py",
+    "?? services/api/migrations/versions/0005_channels.py",
+    "?? services/api/migrations/versions/0006_images.py",
+    "?? services/api/migrations/versions/0007_conversation_images.py",
+    "?? services/api/migrations/versions/0008_image_planning.py",
+    "?? services/api/migrations/versions/0009_image_batches.py",
+    "?? services/api/migrations/versions/0010_capability_routes.py",
+    "?? services/api/migrations/versions/0011_route_receipts.py",
+    "?? services/api/src/hearth/channels.py",
+    "?? services/api/src/hearth/chat.py",
+    "?? services/api/src/hearth/conversation_media.py",
+    "?? services/api/src/hearth/image_batches.py",
+    "?? services/api/src/hearth/image_planning.py",
+    "?? services/api/src/hearth/image_transport.py",
+    "?? services/api/src/hearth/images.py",
+    "?? services/api/src/hearth/inference.py",
+    "?? services/api/src/hearth/notes.py",
+    "?? services/api/src/hearth/providers.py",
+    "?? services/api/src/hearth/routing.py",
+    "?? tests/browser/chat.spec.ts",
+    "?? tests/browser/collaboration-images.spec.ts",
+    "?? tests/browser/conversation-images.spec.ts",
+    "?? tests/integration/test_capability_routes.py",
+    "?? tests/integration/test_channels.py",
+    "?? tests/integration/test_chat.py",
+    "?? tests/integration/test_conversation_images.py",
+    "?? tests/integration/test_image_batches.py",
+    "?? tests/integration/test_image_planning.py",
+    "?? tests/integration/test_images.py",
+    "?? tests/integration/test_live_routing.py",
+    "?? tests/security/test_capability_routing.py",
+    "?? tests/security/test_conversation_routing.py",
+    "?? tests/security/test_image_planning.py",
+    "?? tests/security/test_image_runtime.py",
+    "?? tests/security/test_image_transport.py",
+    "?? tests/security/test_inference.py",
+    "?? tests/security/test_provider_tls.py",
+    "?? worker/cmd/hearth-connector/"
+  ],
+  "reorganization_note": "Automatic approval review rejected duplicate removal as blocked by policy. Safer file moves preserve duplicate originals under docs/archive/root-package; no deletion is required.",
+  "completed": true,
+  "file_moves_completed": 48,
+  "archived_markdown_note": "Only links/line endings rebased in duplicate archived Markdown; canonical originals remain unchanged in docs/plan.",
+  "validation": "evidence/documentation/2026-09-13/validation.json"
+}

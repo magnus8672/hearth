@@ -1,0 +1,94 @@
+{
+  "checked_at": "2026-09-13T23:37:37.149222+00:00",
+  "database_migration": "0017 unchanged",
+  "startup_checks_completed": true,
+  "unavailable_provider_detected": "openai/gpt-oss-20b at local port 1234",
+  "capability_bindings_preserved": true,
+  "models_and_features_preserved": true,
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "https_verified": true,
+      "assets": [
+        "/assets/index-BLsBb_gO.js",
+        "/assets/index-Dk6F_g5t.css"
+      ],
+      "exact_build": true
+    },
+    {
+      "origin": "https://localhost:8444",
+      "https_verified": true,
+      "assets": [
+        "/assets/index-B9ZVHRmd.js",
+        "/assets/index-Dk6F_g5t.css"
+      ],
+      "exact_build": true
+    }
+  ],
+  "backend_sha256": {
+    "provider_health.py": "73a70ccd1e4ffa709d708bfa7db5cbd22673f70d448ffec2f0ecd0e2da416fe7",
+    "providers.py": "88849ce7e0017b4834cc82ad732c127fdb1cc42bea1eedea3888fd774b6220ae",
+    "routing.py": "e18698872de14da6a3e0142312a2bfd03bd8895313f22bacbd5cae46c461231a",
+    "main.py": "7d203c9b2af3f839a5065b0e93535360234919cb831f6c44d60c8f841011f5de",
+    "chat.py": "5f4ad85423832d6deba15a1f24af861860c750a7f092514c4f697e065beb567e",
+    "channels.py": "aae62ca6c1b30a39d43f4c56e2d98b6b89bc9bc202b83df3c17b6b02f1768232",
+    "images.py": "6999cca9f3409143cb743caceb18989911679ca3e0e5b25e6a92f3ada12e15cc",
+    "speech.py": "a4922362f5536ae68de5198cc3960230ffeb10ab9bd7fd8bef1de40475a11da8",
+    "transcription.py": "38815059dc93cecfccb8b5d10f8bbc3577c93bf4c53e8af8349e767d792dfa29",
+    "image_planning.py": "a6c4dab1095ea693fda42ae8222e169049d7b6ddf97ac55b5f6fbc8c1047a38c",
+    "inference.py": "f7872000fb0c37e6c265789c6d89ee5872d523b977c8b4340940e065547db292"
+  },
+  "providers": [
+    {
+      "model": "qwen/qwen3.8-27b",
+      "state": "ready",
+      "features": [
+        "chat",
+        "streaming",
+        "vision"
+      ],
+      "verified_until": null,
+      "connection_checked_at": "2026-09-13T23:35:17.817572+00:00"
+    },
+    {
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "features": [
+        "image.text_to_image",
+        "image.jobs"
+      ],
+      "verified_until": null,
+      "connection_checked_at": "2026-09-13T23:35:17.834922+00:00"
+    },
+    {
+      "model": "kokoro-82m-v1.0-onnx",
+      "state": "ready",
+      "features": [
+        "audio.speak",
+        "audio.jobs"
+      ],
+      "verified_until": null,
+      "connection_checked_at": "2026-09-13T23:35:17.804629+00:00"
+    },
+    {
+      "model": "openai/gpt-oss-20b",
+      "state": "failed",
+      "features": [
+        "chat",
+        "streaming"
+      ],
+      "verified_until": null,
+      "connection_checked_at": "2026-09-13T23:37:23.084202+00:00"
+    },
+    {
+      "model": "faster-whisper-small.en",
+      "state": "ready",
+      "features": [
+        "audio.transcribe",
+        "audio.jobs"
+      ],
+      "verified_until": null,
+      "connection_checked_at": "2026-09-13T23:35:17.797303+00:00"
+    }
+  ]
+}

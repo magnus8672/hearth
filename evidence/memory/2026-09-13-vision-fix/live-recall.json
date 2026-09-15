@@ -1,0 +1,57 @@
+{
+  "scope": "Real resident Qwen vision over LAN, restricted-role PostgreSQL and BFF in disposable farm; explicit OIDC fixtures.",
+  "model": "qwen/qwen3.8-27b",
+  "ordinary_note": true,
+  "prior_image_retained": true,
+  "replies": [
+    {
+      "prompt": "Describe this picture briefly.",
+      "reply": "The image shows a screen filled entirely with multicolored static noise\u2014randomly scattered pixels in reds, greens, blues, purples, and yellows\u2014resembling TV \"white noise\" or a lost signal. It is framed by solid black vertical bars on the left and right edges, with no recognizable objects, text, or figures visible.",
+      "receipt": {
+        "enabled": true,
+        "sources": [],
+        "search_status": "no_matches",
+        "older_messages": 0,
+        "settings_revision": 1
+      }
+    },
+    {
+      "prompt": "what is my name",
+      "reply": "Your name is Casey, according to your memory note titled \"Users Name.\"",
+      "receipt": {
+        "enabled": true,
+        "sources": [
+          {
+            "id": "903f91d1-57b9-4dfc-97a8-a4026b063a83",
+            "type": "note",
+            "title": "Users Name",
+            "revision": 1
+          }
+        ],
+        "search_status": "matched",
+        "older_messages": 0,
+        "settings_revision": 1
+      }
+    },
+    {
+      "prompt": "it's not in your attached memory system?",
+      "reply": "It is. The memory excerpt supplied for this turn includes a note titled **\"Users Name\"** (source `note/903f91d1-57b9-4dfc-97a8-a4026b063a83`) whose content is **Casey**. That's the basis for my earlier answer, and the interface provides a link to that source so you can verify it.\n\nIf that note is wrong or you'd like it changed, you can edit it directly in your memory notes.",
+      "receipt": {
+        "enabled": true,
+        "sources": [
+          {
+            "id": "903f91d1-57b9-4dfc-97a8-a4026b063a83",
+            "type": "note",
+            "title": "Users Name",
+            "revision": 1
+          }
+        ],
+        "search_status": "matched",
+        "older_messages": 0,
+        "settings_revision": 1
+      }
+    }
+  ],
+  "loaded_models_unchanged": true,
+  "cloud_calls": 0
+}

@@ -1,0 +1,74 @@
+{
+  "scope": "Deployed HTTPS assets and actual user-api source hashes, unauthenticated media denial, restricted-role provider state, immutable originals and release ledger. No personal user content read or modified.",
+  "https": [
+    {
+      "origin": "https://localhost:8443",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-BP3O8zDc.js",
+        "/assets/index-CUBYOMek.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-D-ZgWO7G.js",
+        "/assets/index-CUBYOMek.css"
+      ]
+    }
+  ],
+  "user_routes_require_signin": true,
+  "identity_tls_valid": true,
+  "migration": "0008",
+  "deployed_source_sha256": {
+    "conversation_media.py": "76038e00b4c184b3cdcee82cb64a039d3f6c0a023063efcd3d7ee0d30e3235c1",
+    "images.py": "fc4b0ad65c177cd25b73608a609ca82f8db0428409f8e9e2ef1351a4a2eb2ef7",
+    "chat.py": "5ba565c994f426cb1cdddd54f5fae5fe39f166d1331d39c5d8a9a66d30c551d6",
+    "channels.py": "567bdd3f01f53086200f6c42c2cb9e03bc56a129434e51f0804e3817519a4064",
+    "contracts.py": "e47c2e0e3b7da6e178389d8df3188152092e87fe168cd072a7802cb785b98f47",
+    "image_planning.py": "81c3d604334764cb9493b45d5d3f170e920982aed0d3d16d8470cebbf82166ef",
+    "inference.py": "a26565e9df1a586c5c71cc8b8dee4e0c4d89e6ef8df0739517b2ebc99ff7396f"
+  },
+  "providers": [
+    {
+      "protocol": "hearth.image.v1",
+      "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    },
+    {
+      "protocol": "openai.chat.v1",
+      "model_id": "openai/gpt-oss-20b",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    }
+  ],
+  "original_files_unchanged": 119,
+  "release_gates_open": 61,
+  "paid_inference": false,
+  "python_tests": {
+    "windows": {
+      "passed": 152,
+      "opt_in_skipped": 4
+    },
+    "linux": {
+      "passed": 152,
+      "opt_in_skipped": 4
+    }
+  },
+  "shared_contract_fixtures": 152,
+  "browser_tests_passed": 15,
+  "real_contextual_private_and_channel_test_passed": true,
+  "acknowledgement_preserves_image_focus": true,
+  "variation_is_new_render": true,
+  "oidc_in_api_tests": "Explicit fixtures in disposable farms; existing Owner/MFA preserved.",
+  "routing_boundary": "Explicit English image actions admit local context-to-prompt planning and description-based variations. Pixel editing and general action classification remain unfinished.",
+  "lm_studio_probe": "Observed final JSON header handled by exact GPT-OSS compatibility profile; unsupported channels still fail closed. Broader format reliability remains open."
+}

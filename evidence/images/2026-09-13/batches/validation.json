@@ -1,0 +1,76 @@
+{
+  "scope": "Deployed HTTPS assets and actual user-api source hashes, unauthenticated media denial, restricted-role provider state, immutable originals and release ledger. No personal user content read or modified.",
+  "https": [
+    {
+      "origin": "https://localhost:8443",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-B63mkFIP.js",
+        "/assets/index-DhpWQXDi.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-C-IBxWg0.js",
+        "/assets/index-DhpWQXDi.css"
+      ]
+    }
+  ],
+  "user_routes_require_signin": true,
+  "identity_tls_valid": true,
+  "migration": "0009",
+  "deployed_source_sha256": {
+    "conversation_media.py": "c14d6d1fde13a15e73c08e21a808e5c0c855d0d8271a1a9a06a5c0ed632c4ef2",
+    "images.py": "9948ec261cb507fea4ed7bb83c9c31845d1a6927018c966339540028651473ad",
+    "chat.py": "4b4a8e33c57ebbc7dd984fab6c3a7ea1f9fd4ea11bb88ca3dbd31aa5f995eb19",
+    "channels.py": "337a66823031ea66aff7b59282015bc4cb8e42f6bc993c9909580569b29ac240",
+    "contracts.py": "dc68956e7ed25ef8c16e71f15b45c2f118b289fa666c2f8fbf9740203f7dfd3c",
+    "image_planning.py": "aed9cae655ad8f6af2e6f6ec67ab3f5bc7710558ae2932afc9bbbdb98afe7388",
+    "image_batches.py": "8f1be85c55643173a28085c32c1e6b92d6f7d0b0fb88ce9455f9edf8c9cb786c",
+    "inference.py": "a26565e9df1a586c5c71cc8b8dee4e0c4d89e6ef8df0739517b2ebc99ff7396f"
+  },
+  "providers": [
+    {
+      "protocol": "hearth.image.v1",
+      "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    },
+    {
+      "protocol": "openai.chat.v1",
+      "model_id": "openai/gpt-oss-20b",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    }
+  ],
+  "original_files_unchanged": 119,
+  "release_gates_open": 61,
+  "paid_inference": false,
+  "python_tests": {
+    "windows": {
+      "passed": 170,
+      "opt_in_skipped": 5
+    },
+    "linux": {
+      "passed": 170,
+      "opt_in_skipped": 5
+    }
+  },
+  "shared_contract_fixtures": 156,
+  "browser_tests_passed": 18,
+  "real_four_image_batch_test_passed": true,
+  "maximum_batch_size": 4,
+  "capability_provider_navigation_verified": true,
+  "visual_review": "Four distinct pickups; grey, black and green match. SDXL rendered the red-prompt truck blue. Model color adherence remains unqualified.",
+  "oidc_in_api_tests": "Explicit fixtures in disposable farms; existing Owner/MFA preserved.",
+  "routing_boundary": "Explicit English singular/plural image actions and counted objects in focused image conversations admit bounded local planning. Up to four independent sequential images; no model-selected execution authority. Pixel editing and broad classification remain unfinished.",
+  "lm_studio_probe": "Observed final JSON header handled by exact GPT-OSS compatibility profile; unsupported channels still fail closed. Broader format reliability remains open."
+}

@@ -43,7 +43,7 @@ async function finishIdentity(account, origin) {
       account.otp = (await page.locator('#kc-totp-secret-key').innerText()).replace(/\s/g, '');
       writeFileSync('identity-qa.json', JSON.stringify(accounts), { mode: 0o600 });
       await page.locator('#totp').fill(await nextCode(account));
-      if (await page.locator('#userLabel').count()) await page.locator('#userLabel').fill('Hearth acceptance authenticator');
+      if (await page.locator('#userLabel').count()) await page.locator('#userLabel').fill('hearth acceptance authenticator');
       await page.locator('button[type=submit],input[type=submit]').first().click();
     } else if (await page.locator('#otp').count()) {
       await page.locator('#otp').fill(await nextCode(account));
@@ -78,7 +78,8 @@ try {
     await expect(page.locator('#totp')).toBeVisible();
     expect((await context.cookies()).filter(c => c.name === '__Host-hearth_user_session')).toHaveLength(0);
     await finishIdentity(accounts.alex, user);
-    await expect(page.getByRole('heading', { name: 'Keep the spark.' })).toBeVisible();
+    await page.getByRole('button', { name: 'Private drafts', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Keep the spark.' })).toBeVisible();
     writeFileSync('credential-loss.json', JSON.stringify({ passed: true, assertion: step, tls_validation: true }, null, 2));
     console.log('Missing second-factor re-enrollment passed. No password-only BFF session was issued.');
   } else {
@@ -167,6 +168,7 @@ try {
   await finishIdentity(accounts.signup, user);
   const registered = await page.evaluate(() => fetch('/api/v1/session').then(r => r.json()));
   expect(registered.roles).toEqual(['Member']);
+  await page.getByRole('button', { name: 'Private drafts', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Keep the spark.' })).toBeVisible();
   await expect(page.getByText('0 saved · Personal workspace')).toBeVisible();
   await signupContext.close();

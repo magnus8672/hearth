@@ -1,0 +1,41 @@
+{
+  "scope": "Real local SDXL, BFF dispatch and restricted PostgreSQL. Explicit OIDC fixtures in disposable farm; no real user records changed.",
+  "private_request": "Make an image of a little red fox asleep beside a glowing stone fireplace, warm storybook illustration",
+  "private_image": {
+    "schema_version": 1,
+    "request": {
+      "schema_version": 1,
+      "id": "e5999ec1-dc6b-4a1f-96f9-89190b465aaa",
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "prompt": "a little red fox asleep beside a glowing stone fireplace, warm storybook illustration",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 3977897728
+    },
+    "status": "completed",
+    "progress": 20,
+    "reason": null,
+    "sha256": "ff12ccd800d2a16a8e11c981dbb951edd1126fabb4aadfc4f1ae40332ef4a119"
+  },
+  "channel_image": {
+    "schema_version": 1,
+    "request": {
+      "schema_version": 1,
+      "id": "14e7e5ee-e276-40c4-90c3-eff4a7057536",
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "prompt": "drawing of a tiny wooden spaceship above a pine forest, warm storybook illustration",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 2867259796
+    },
+    "status": "completed",
+    "progress": 20,
+    "reason": null,
+    "sha256": "813ea56616225486ac0ca4626986a8485a00027fced4c8353870f9849ccc0c9f"
+  },
+  "fresh_session_restores_png": true,
+  "channel_excluded_from_private_gallery": true,
+  "text_model_required": false
+}

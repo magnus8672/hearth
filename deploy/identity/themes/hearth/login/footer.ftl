@@ -1,14 +1,14 @@
 <#macro content>
   <div class="hearth-signin-context">
     <#if client?? && client.clientId == "hearth-admin">
-      <strong>Hearth Administration</strong>
-      <p>Sign in with your Hearth account to manage your farm. Administration is available to the Owner and accounts with a farm role.</p>
-      <a href="https://localhost:8443/">Back to Administration</a>
+      <strong>hearth Administration</strong>
+      <p>Sign in with your hearth account to manage your farm. Administration is available to the Owner and accounts with a farm role.</p>
+      <#if client.baseUrl?has_content><a href="${client.baseUrl}">Back to Administration</a></#if>
     <#else>
-      <strong>Your Hearth workspace</strong>
-      <p>Sign in with your Hearth account. Your drafts and ideas stay in your own private workspace.</p>
-      <a href="https://localhost:8444/">Back to your workspace</a>
+      <strong>Your hearth workspace</strong>
+      <p>Sign in with your hearth account. Your drafts and ideas stay in your own private workspace.</p>
+      <#if client?? && client.baseUrl?has_content><a href="${client.baseUrl}">Back to your workspace</a></#if>
     </#if>
-    <span class="hearth-signin-privacy">Your account lives on this Hearth.</span>
+    <span class="hearth-signin-privacy">Your account lives on this hearth.</span>
   </div>
 </#macro>

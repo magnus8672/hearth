@@ -1,0 +1,153 @@
+{
+  "verified_at": "2026-09-13T22:00:48.908795+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0017",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-BgUKwIeO.js",
+        "/assets/index-Dk6F_g5t.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-BYQvE8RU.js",
+        "/assets/index-Dk6F_g5t.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "transcription.py": "7c5c5a618b294a2ae530bca356b562c9677bd00e8be2c061730e09a57d621db5",
+    "transcription_transport.py": "89cea52d514f8f0ba9222b1ace20c0857919c2e72879eb4c052e7b1b5b95d3ad",
+    "transcription_audio.py": "c42ac19f24445183e193b9e055d415ec56f69e6b149c7ea0630bd8486a8141f1",
+    "transcription_probe.py": "1d5ce2817807afb9e6a190deda7d6cc34febce96c6841bf40d98dd373bfbc442",
+    "speech_transport.py": "0e94c0ca657086b4f63700885a810a9723daa8a249c254fead6edb7c17fbd2d5",
+    "chat.py": "10f8fedc12578e424f25b28fc0c8f909bd111246f0e0a069cd9aed6e79626ba1",
+    "providers.py": "df6705b757174ff6c34955477c5a9837c8cce65b87787a35be57909be59d0134",
+    "routing.py": "910fb595fa7e1e8296064bfe92ed11d3a3d87e858ac83de02002a31012a8a5c7",
+    "main.py": "23c897d062738a2190526bafb19d35b6a37901e6baac674a9a9cd632a40f1d66",
+    "contracts.py": "7fb006db9135275d146bbfb73b329bc8383333110093f7ae3883d51524056809",
+    "middleware.py": "de24cb10532cc8defddf4b07595962e26ded8f27cdc2e0c63998b1b9de3947f2"
+  },
+  "windows": {
+    "python_passed": 269,
+    "optional_skipped": 13,
+    "go_packages": "passed",
+    "shared_typescript_cases": 180,
+    "typecheck": "passed",
+    "production_bundles": "passed"
+  },
+  "linux": {
+    "python_passed": 269,
+    "optional_skipped": 13
+  },
+  "browser": {
+    "passed": 32,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures",
+    "desktop_mobile_screenshots_visually_inspected": true,
+    "recording_review_cancel_reload_and_late_permission": true
+  },
+  "anonymous_transcription_create_read_cancel_dismiss_denied": true,
+  "edge_upload_limits_and_browser_policy": "passed",
+  "production_browser": {
+    "scope": "Actual deployed HTTPS production bundle and CSP; explicit identity/list fixtures; simulated microphone source through real browser capture, AudioWorklet and blob playback. No real user session or physical microphone accessed.",
+    "tls_errors_ignored": false,
+    "secure_context": true,
+    "worklets": [
+      {
+        "url": "https://localhost:8444/assets/audio-recorder-worklet-C5nUTeLq.js",
+        "status": 200,
+        "source": "Actual addModule URL, capture success and independent browser HTTPS asset retrieval"
+      }
+    ],
+    "recorded_seconds": 1.536,
+    "browser_errors": [],
+    "preview_playback": true
+  },
+  "transcription_target": {
+    "model_id": "faster-whisper-small.en",
+    "features": [
+      "audio.transcribe",
+      "audio.jobs"
+    ],
+    "state": "ready",
+    "fresh": true,
+    "execution_state": "idle"
+  },
+  "executable_profiles": 11,
+  "live_transcription": {
+    "scope": "Real CPU Whisper, authenticated provider job transport and restricted PostgreSQL/BFF; OIDC fixtures in a disposable farm; synthetic English source recording different from the provider probe.",
+    "model": "faster-whisper-small.en",
+    "reference": "Welcome home. Your hearth can bring your models together, while your conversations stay on your own machines.",
+    "recognized": "Welcome home. Your hearth can bring your models together while your conversations stay on your own machines.",
+    "word_error_rate": 0.0,
+    "elapsed_seconds": 1.547,
+    "source_sha256": "2ad97bb16f549066e545edfdf1556a1921f4c4c22921d884c1c89244635236b7",
+    "restored": true,
+    "chat_messages_created": 0
+  },
+  "activation": {
+    "model": "faster-whisper-small.en",
+    "features": [
+      "audio.transcribe",
+      "audio.jobs"
+    ],
+    "transcription_ready": true,
+    "other_bindings_preserved": true,
+    "independent_cpu_pool": true
+  },
+  "transcription_runtime": {
+    "info": {
+      "schema_version": 1,
+      "protocol": "hearth.transcription.v1",
+      "model": "faster-whisper-small.en",
+      "model_revision": "small.en",
+      "manifest_sha256": "3f3c4c94fd3454b3a6340e705c9368da3bb81ce7a10df7915be433fb3b298af6",
+      "languages": [
+        "en"
+      ],
+      "maximum_seconds": 120,
+      "sample_rate": 16000,
+      "job_cancellation": true,
+      "offline": true
+    },
+    "repeated_start_preserves_process": true,
+    "source_sha256": "c73787283c7911795caf4fc71e9f594930a239fc598b24f8e5e120f4905ff6b1",
+    "dependency_lock_sha256": "64a9ef6dc754072609fd8e91b7702117b2f2a7a6da55b857ba064efc32490458"
+  },
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Physical microphone, multilingual/accent/noise accuracy and compressed audio formats",
+    "Listening quality, more voices, Markdown cleanup and channel transcription",
+    "General artifact retention and deletion",
+    "Physical host loss/recovery and external no-auto-load acceptance",
+    "Live Switchyard integration, memory and required geometry adapters",
+    "Managed node enrollment, signed recipes and all release gates"
+  ],
+  "existing_qwen_text_and_vision_reverified": {
+    "providers": [
+      {
+        "model": "qwen/qwen3.8-27b",
+        "state": "ready",
+        "features": [
+          "chat",
+          "streaming",
+          "vision"
+        ],
+        "reason": null
+      }
+    ]
+  },
+  "provider_probe_budget": 4096
+}

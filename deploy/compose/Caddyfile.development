@@ -8,10 +8,7 @@
         X-Content-Type-Options nosniff
         Referrer-Policy no-referrer
         X-Frame-Options DENY
-        Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
-    }
-    request_body {
-        max_size 1MB
+        Content-Security-Policy "default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
     }
 }
 (bff_proxy) {
@@ -34,6 +31,9 @@
 }
 https://localhost:8443, https://127.0.0.1:8443 {
     import hearth_headers
+    request_body {
+        max_size 1048576
+    }
     import browser_trust_probe hearth-admin
     @api path /api/* /auth/* /health/ready /health/live
     handle @api {
@@ -47,8 +47,25 @@ https://localhost:8443, https://127.0.0.1:8443 {
 }
 https://localhost:8444 {
     import hearth_headers
+    header Permissions-Policy "microphone=(self)"
+    @image_upload {
+        method POST
+        path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+    }
+    @ordinary_body {
+        not {
+            method POST
+            path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+        }
+    }
+    request_body @image_upload {
+        max_size 8388608
+    }
+    request_body @ordinary_body {
+        max_size 1048576
+    }
     import browser_trust_probe hearth-user
-    @api path /api/* /auth/* /health/ready /health/live
+    @api path /api/* /auth/* /health/ready /health/live /v1/* /mcp
     handle @api {
         import bff_proxy user-api:8080
     }

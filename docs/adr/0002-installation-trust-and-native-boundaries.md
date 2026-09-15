@@ -1,12 +1,14 @@
 # ADR 0002: appliance, trust and native execution boundaries
 
+> Historical foundation decisions and then-current qualification are retained below. Real local BFF/Owner/MFA setup subsequently shipped; production supervisor, managed enrollment and the wider host/trust matrix remain open. See [current coverage](../implementation/DESIGN_COVERAGE.md).
+
 Status: accepted architecture; development qualification is partial, 12 September 2026.
 
 The first native installer explicitly creates the only control head. A restart, missing head or join failure must never create another farm. QEMU runs a same-architecture Linux appliance with hardware acceleration. Inference runs on native workers when the approved recipe supports that host; the appliance does not imply GPU passthrough.
 
 ## Target OS floor and qualification
 
-These floors are Hearth packaging decisions, not claims that every target has passed testing.
+These floors are hearth packaging decisions, not claims that every target has passed testing.
 
 | Target | Minimum packaging target | Accelerator | Current evidence |
 |---|---|---|---|

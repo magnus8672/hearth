@@ -1,0 +1,24 @@
+{
+  "scope": "Offline local CPU feasibility only. Not a hearth provider, transcription test, or perceptual quality approval.",
+  "packages": {
+    "kokoro-onnx": "0.5.0",
+    "onnxruntime": "1.25.1",
+    "numpy": "2.4.4"
+  },
+  "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+  "voice": "af_heart",
+  "text": "Welcome home. Your hearth can bring your models together, while your conversations stay on your own machines.",
+  "execution_provider": "CPUExecutionProvider",
+  "network_connect_blocked_in_probe": true,
+  "model_downloads": 0,
+  "load_seconds": 2.828,
+  "generation_seconds": 9.406,
+  "audio_seconds": 5.717,
+  "real_time_factor": 1.645,
+  "sample_rate": 24000,
+  "channels": 1,
+  "bits_per_sample": 16,
+  "sample_sha256": "2ad97bb16f549066e545edfdf1556a1921f4c4c22921d884c1c89244635236b7",
+  "perceptual_listening": "pending"
+}

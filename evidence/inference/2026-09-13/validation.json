@@ -1,0 +1,10 @@
+{
+  "scope": "Local existing-provider and private-chat development slice; no release gate closed",
+  "windows": {"python_passed": 70, "live_model_opt_in_skipped_in_normal_suite": 1, "ruff": "passed", "go_tests_and_native_setup_build": "passed"},
+  "linux": {"python_passed": 70, "live_model_opt_in_skipped_in_normal_suite": 1, "database": "real PostgreSQL 18 with restricted application role", "switchyard": "real pinned source build"},
+  "web": {"shared_contract_fixtures_passed": 132, "typecheck": "passed", "production_bundles": "both passed", "playwright_passed": 9, "provider_chat_identity_data": "explicit UI fixtures", "desktop_mobile_screenshots": "visually inspected"},
+  "live_inference": {"evidence": "live-chat.json", "provider": "LM Studio", "model": "openai/gpt-oss-20b", "real_model_and_database": true, "identity": "explicit OIDC fixtures in disposable farm", "fresh_session_persistence": true},
+  "appliance_provider": {"actual_farm_target": "ce1b2be6-d401-4453-9b19-35a2cbf91d62", "revision": 3, "state": "ready", "features": ["chat", "streaming"], "admin_agent_ready": false, "visible_base_url": "http://127.0.0.1:1234/v1", "development_transport_alias": "http://10.0.2.2:1234/v1", "server_lan_exposure_changed": false},
+  "branding": {"revision": "1.2", "combined_wordmark": "fireplace h followed by earth", "svg_files_validated": 47, "real_https_rendering": "both applications and identity, certificate validation enabled", "original_snapshot_files": 119, "original_snapshot_hashes_changed": 0},
+  "boundaries": {"real_owner_and_mfa_preserved": true, "existing_private_content_touched": false, "models_downloaded": 0, "paid_inference": false, "native_connector_qualified": false, "tools_or_media_enabled": false, "open_release_gates": 61}
+}

@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-09-15T01:21:12.622156+00:00",
+  "status": "passed",
+  "archive": "dist/hearth-vm.zip",
+  "archive_bytes": 614900,
+  "archive_sha256": "0f0cebc802b27bbb4e968ca00e57f38a18807266269eb870b5eca69203792de2",
+  "files": 118,
+  "uncompressed_bytes": 1810566,
+  "crc_and_all_payload_hashes_verified": true,
+  "private_state_models_environments_and_keys_excluded": true,
+  "python_sources_parse": true,
+  "browser_asset_references_verified": 8,
+  "extracted_head_console_imports_without_developer_appliance": true,
+  "windows_unit_tests": {
+    "passed": 57,
+    "scope": "package and head configuration"
+  },
+  "production_browser_builds": "passed",
+  "runtime_startup_test": "deferred to the user ESX VM as requested; no new farm started",
+  "current_farm": "not modified"
+}

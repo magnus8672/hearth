@@ -1,0 +1,91 @@
+{
+  "checked_at": "2026-09-15T00:14:02.692854+00:00",
+  "status": "passed_with_scoped_limitations",
+  "windows": {
+    "python_passed": 320,
+    "python_skipped": 17,
+    "go": "passed",
+    "ruff": "passed",
+    "typescript": "passed",
+    "shared_typescript_cases": 180,
+    "production_builds": [
+      "admin-web",
+      "user-web"
+    ],
+    "log": "windows.log"
+  },
+  "linux": {
+    "python_passed": 320,
+    "python_skipped": 17,
+    "pinned_switchyard_source_cpu": "x86-64-v2",
+    "log": "linux.log"
+  },
+  "browser": {
+    "passed": 47,
+    "log": "browser.log",
+    "report": "browser.json",
+    "scope": "46 fixture browser checks plus real appliance readiness through the development proxy; identity responses remain explicit fixtures. No real-user sign-in flow claimed."
+  },
+  "live_model": {
+    "evidence": "live-qwen.json",
+    "model": "qwen/qwen3.8-27b",
+    "client_function_round_trip": true,
+    "three_tool_mcp_round_trip": true,
+    "resident_set_preserved": true,
+    "identity": "disposable farm with explicit OIDC fixtures"
+  },
+  "deployment": "deployment.json",
+  "reference_container": "isolation.json",
+  "documentation": "documentation.json",
+  "regressions": [
+    "MCP native fragmented calls need validated arguments and a completed stream",
+    "schema drift quarantines tools",
+    "member credentials and receipts are isolated",
+    "connection edits invalidate credential bindings",
+    "exact write approval cannot be granted by API keys",
+    "repeated invocation IDs never replay side effects",
+    "revocation before dispatch and after tool result",
+    "stop during approval retires the request and releases its model slot",
+    "failed client receipt terminates response without a successful completion marker",
+    "completed chat receipts precede reading finalized message snapshots"
+  ],
+  "qualification_notes": [
+    "An initial browser readiness check hit a transient development-proxy 502 after deployment. Direct readiness, isolated browser retest and the final full 47-case suite passed.",
+    "Earlier regression runs exposed cancellation labeling and a READ COMMITTED reply-snapshot race; both were corrected and the final Windows/Linux suites passed."
+  ],
+  "open_work": [
+    "End-to-end Hermes, OpenClaw and Continue use",
+    "Whole-head VM installation and LAN exposure",
+    "Managed stdio tool packages and task filesystem sandboxes",
+    "MCP OAuth discovery",
+    "General tool-loop restart recovery",
+    "Shared-channel tool policy",
+    "Responses, legacy completions, embeddings and media compatibility APIs"
+  ],
+  "release_gates": {
+    "partial": 20,
+    "not_run": 41,
+    "fully_passed": 0,
+    "new_partial": [
+      "E10",
+      "S11"
+    ]
+  },
+  "source_sha256": {
+    "client_api.py": "def5b724586ba0d4611c53f0bd1591b67ff4cc8afd853740d0cc955d1b2f1cde",
+    "client_keys.py": "963432cb323eec884d4ce1ca174f2882eead1015eb5567a57f27208f013f64ea",
+    "toolbox.py": "25261a80f24be708bd41c9926978c9ffc3d8884a515138dc75f43065994aa7ea",
+    "tool_schemas.py": "939d2c6a378e2da3468a458ea14121e20cfb0e33783e0bc2bde52494c2b7aed5",
+    "tool_harness.py": "5dee0cc40d690b7a952679ea4a51acd741c8839ba9879140008b1e52e32b508f",
+    "tool_probe.py": "a4a25407e361bcd8880d5d30084336811c9f384943b4c8aa77dbbb450b06d400",
+    "mcp_gateway.py": "fef2c1e2665167ae7aa2b7d14ed29c7128ecb76c3f30656c7f3a812382091eec",
+    "mcp_transport.py": "095e16ee75e5ce364a5730707a567b0868703a2def77984f12c0112c37691247",
+    "reference_tools.py": "095dd36bb9b1264dfb84299eb3cee7e151a9bd1c23934a9852bd0925e842e417",
+    "chat.py": "6b99f26fb292124f879f5faafd079158baaa3cc86f2e416d5066682cf459f364",
+    "inference.py": "da4632193080c7e9babe18e63354a2b24e692f819554d6ab9b0b0825dcafe777",
+    "providers.py": "1f1c667e5dc36ef68eaf2d8aaad46043bbbd0123b6bf5c874c02d20272d4efbb",
+    "routing.py": "7d35283c1ffc72d55c0f98c1f7e13b9b52409e8dbe732cf3620e78aa5bde5e2d",
+    "main.py": "aad0d0bd4e385a6edf99f70f1361d2efb14e2e82f9ec8987511aa20cbdbebb34",
+    "middleware.py": "de24cb10532cc8defddf4b07595962e26ded8f27cdc2e0c63998b1b9de3947f2"
+  }
+}

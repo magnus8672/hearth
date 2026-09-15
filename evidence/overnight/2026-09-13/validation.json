@@ -1,0 +1,60 @@
+{
+  "scope": "Final deployed HTTPS assets, authenticated-route denial, restricted-role farm provider state, immutable source snapshot and release ledger. No user login or personal-content inspection.",
+  "https": [
+    {
+      "origin": "https://localhost:8443",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-CuAEoI_b.js",
+        "/assets/index-CRaZg0UE.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-Dr-bCw--.js",
+        "/assets/index-CRaZg0UE.css"
+      ]
+    }
+  ],
+  "user_routes_require_signin": true,
+  "identity_tls_valid": true,
+  "migration": "0006",
+  "providers": [
+    {
+      "protocol": "hearth.image.v1",
+      "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    },
+    {
+      "protocol": "openai.chat.v1",
+      "model_id": "openai/gpt-oss-20b",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    }
+  ],
+  "original_files_unchanged": 119,
+  "release_gates_open": 61,
+  "paid_inference": false,
+  "windows_python": {
+    "passed": 93,
+    "opt_in_skipped": 2
+  },
+  "linux_python": {
+    "passed": 93,
+    "opt_in_skipped": 2
+  },
+  "shared_contract_fixtures": 144,
+  "browser_tests_passed": 12,
+  "live_image_bff_passed": true,
+  "live_image_cancellation_passed": true,
+  "live_chat": "One unsupported-header failure, followed by a passing two-turn diagnostic. Known intermittent compatibility limit retained."
+}

@@ -70,16 +70,24 @@ export interface ArtifactMetadata {
 }
 
 export interface CapabilityAvailability {
-  schema_version?: 1;
+  schema_version?: 2;
   capability_id: string;
   assignment_state: "unassigned" | "assigned" | "disabled";
   local_state: "unavailable" | "warming" | "ready" | "busy" | "offline" | "failed";
   local_deployment_ids?: Array<string>;
+  external_target_ids?: Array<string>;
   cloud_configured?: boolean;
   cloud_allowed_for_caller?: boolean;
   effective_state: "unavailable" | "warming" | "ready" | "busy" | "cloud_available";
   reason?: string | null;
   available_actions?: Array<string>;
+}
+
+export interface CapabilityBinding {
+  schema_version?: 1;
+  capability_id: string;
+  target_id: string;
+  priority?: number;
 }
 
 export interface CapabilityDefinition {
@@ -110,6 +118,20 @@ export interface CloudAuthorization {
   user_remaining_minor: number;
   requested_reservation_minor: number;
   input_localities: Array<Locality>;
+}
+
+export interface ConversationImage {
+  schema_version?: 1;
+  request: ImageGeneration;
+  status: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  progress: number;
+  reason?: string | null;
+  sha256?: string | null;
+  planning_model?: string | null;
+  source_image_id?: string | null;
+  variation?: boolean;
+  batch_index?: number;
+  batch_count?: number;
 }
 
 export interface EnrollmentEnvelope {
@@ -159,6 +181,18 @@ export interface EventEnvelope {
   data?: Record<string, unknown>;
 }
 
+export interface ExternalProviderConnection {
+  schema_version?: 1;
+  id: string;
+  farm_id: string;
+  name: string;
+  base_url: string;
+  protocol?: "openai_compatible";
+  management?: "external";
+  locality_assurance?: "operator_declared_local";
+  credential_configured?: boolean;
+}
+
 export interface GeometryRequest {
   schema_version?: 1;
   prompt?: string | null;
@@ -180,6 +214,77 @@ export interface Heartbeat {
   observed_plan_revision: number;
   active_attempt_ids?: Array<string>;
   services?: Array<ServiceObservation>;
+}
+
+export interface ImageGeneration {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  prompt: string;
+  negative_prompt?: string;
+  shape?: "square" | "landscape" | "portrait";
+  steps?: 20 | 30 | 40;
+  seed: number;
+}
+
+export interface ImagePrompt {
+  schema_version?: 1;
+  prompt: string;
+  negative_prompt?: string;
+  shape?: "square" | "landscape" | "portrait";
+}
+
+export interface ImagePromptPlan {
+  schema_version?: 1;
+  action: "generate" | "clarify";
+  prompt?: string | null;
+  negative_prompt?: string;
+  shape?: "square" | "landscape" | "portrait";
+  question?: string | null;
+  images?: Array<ImagePrompt> | null;
+}
+
+export interface ImageProviderInfo {
+  schema_version?: 1;
+  protocol: "hearth.image.v1";
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  shapes: Array<"square" | "landscape" | "portrait">;
+  steps: Array<20 | 30 | 40>;
+  job_cancellation: boolean;
+  offline: boolean;
+}
+
+export interface ImageReceipt {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  progress: number;
+  steps: 20 | 30 | 40;
+  seed: number;
+  shape: "square" | "landscape" | "portrait";
+  width: number;
+  height: number;
+  reason?: string | null;
+  sha256?: string | null;
+  execution_released: boolean;
+  manifest_sha256: string;
+  cancel_requested: boolean;
+}
+
+export interface InferenceTarget {
+  schema_version?: 1;
+  id: string;
+  connection_id: string;
+  resource_pool_id: string;
+  model_id: string;
+  state: "configured" | "ready" | "failed" | "disabled";
+  features?: Array<string>;
+  probed_at?: string | null;
+  verified_until?: string | null;
+  revision: number;
 }
 
 export interface JobScope {
@@ -222,9 +327,9 @@ export interface PackageReference {
 }
 
 export interface ProviderBootstrap {
-  schema_version?: 1;
+  schema_version?: 2;
   id: string;
-  path: "local_head" | "joined_member" | "openai";
+  path: "local_head" | "joined_member" | "openai" | "existing_service";
   readiness: "unconfigured" | "configured" | "inference_verified" | "admin_agent_ready" | "failed";
   node_id?: string | null;
   deployment_id?: string | null;
@@ -239,6 +344,15 @@ export interface ProviderProbeRequest {
   expected_revision: number;
   maximum_cost_minor?: number;
   paid_probe_grant_id?: string | null;
+}
+
+export interface ProviderResourcePool {
+  schema_version?: 1;
+  id: string;
+  name: string;
+  generation_slots?: 1;
+  busy: boolean;
+  execution_state: "idle" | "running" | "unknown";
 }
 
 export interface RecipeDependency {
@@ -313,6 +427,78 @@ export interface ServiceRecipe {
   settings_schema: Record<string, unknown>;
   readiness_probe: string;
   rollback: "compatible" | "restore_required";
+}
+
+export interface SpeechGeneration {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  voice: string;
+  input: string;
+}
+
+export interface SpeechProviderInfo {
+  schema_version?: 1;
+  protocol: "hearth.speech.v1";
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  voices: Array<string>;
+  default_voice: string;
+  maximum_characters?: 6000;
+  sample_rate?: 24000;
+  job_cancellation: boolean;
+  offline: boolean;
+}
+
+export interface SpeechReceipt {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  voice: string;
+  input_sha256: string;
+  state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  reason?: string | null;
+  sha256?: string | null;
+  frames?: number;
+  sample_rate?: 24000;
+  execution_released: boolean;
+  manifest_sha256: string;
+  cancel_requested: boolean;
+}
+
+export interface TranscriptionProviderInfo {
+  schema_version?: 1;
+  protocol: "hearth.transcription.v1";
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  languages: Array<"en">;
+  maximum_seconds?: 120;
+  sample_rate?: 16000;
+  job_cancellation: boolean;
+  offline: boolean;
+}
+
+export interface TranscriptionReceipt {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  audio_sha256: string;
+  state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  reason?: string | null;
+  text?: string;
+  language?: "en";
+  execution_released: boolean;
+  manifest_sha256: string;
+  cancel_requested: boolean;
+}
+
+export interface TranscriptionRequest {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  audio_sha256: string;
 }
 
 export interface WorkerCommand {

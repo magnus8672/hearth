@@ -1,0 +1,10 @@
+{
+  "model": "faster-whisper-small.en",
+  "features": [
+    "audio.transcribe",
+    "audio.jobs"
+  ],
+  "transcription_ready": true,
+  "other_bindings_preserved": true,
+  "independent_cpu_pool": true
+}

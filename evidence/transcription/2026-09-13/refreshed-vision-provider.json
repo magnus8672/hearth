@@ -1,0 +1,14 @@
+{
+  "providers": [
+    {
+      "model": "qwen/qwen3.8-27b",
+      "state": "ready",
+      "features": [
+        "chat",
+        "streaming",
+        "vision"
+      ],
+      "reason": null
+    }
+  ]
+}

@@ -10,7 +10,7 @@ export function Icon({ name, className = '' }: { name: string; className?: strin
 }
 
 export function Brand() {
-  return <span className="brand"><img className="brand-light" src={lightLockup} alt="Hearth" /><img className="brand-dark" src={darkLockup} alt="Hearth" /></span>;
+  return <span className="brand"><img className="brand-light" src={lightLockup} alt="hearth" /><img className="brand-dark" src={darkLockup} alt="hearth" /></span>;
 }
 
 export function ThemeControl() {

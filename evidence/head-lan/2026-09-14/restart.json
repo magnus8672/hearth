@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "existing_owner_retained": true,
+  "config_and_ca_unchanged": true,
+  "realm_reconfigure_after_owner": true
+}

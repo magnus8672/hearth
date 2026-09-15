@@ -1,10 +1,17 @@
 """Bounded request bodies, including chunked requests without Content-Length."""
 
+import re
 from uuid import uuid4
 
 from starlette.responses import JSONResponse
 
 from hearth.contracts import ErrorDetail, ErrorResponse
+
+
+def request_body_limit(path, method, default=1_048_576):
+    if method == 'POST' and re.fullmatch(r'/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)', path):
+        return 8_388_608
+    return default
 
 
 class BodyLimitMiddleware:
@@ -20,7 +27,7 @@ class BodyLimitMiddleware:
             if message["type"] == "http.disconnect":
                 return
             content.extend(message.get("body", b""))
-            if len(content) > self.maximum_bytes:
+            if len(content) > request_body_limit(scope['path'], scope['method'], self.maximum_bytes):
                 trace_id = scope.get("state", {}).get("trace_id", uuid4())
                 body = ErrorResponse(error=ErrorDetail(code="body_too_large", message="This request exceeds the permitted size.", trace_id=trace_id))
                 response = JSONResponse(body.model_dump(mode="json"), status_code=413)

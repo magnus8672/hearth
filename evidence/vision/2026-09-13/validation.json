@@ -1,0 +1,143 @@
+{
+  "verified_at": "2026-09-13T20:22:06.747062+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0015",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-BWZbIFW-.js",
+        "/assets/index-D6LsP7lw.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-Dm067PNu.js",
+        "/assets/index-D6LsP7lw.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "vision.py": "c48e9d780ae3365f6f827afebb03be5e55eb9de39d8c66ef5412c764feca6c29",
+    "chat.py": "ea22e7c405fcd956d38cdadab1f290875404ac67174090a7d2d29921fe741eca",
+    "providers.py": "ec676d7becb68f7445af8778478011a3f8b94a314f5e5081025cfcbbc96fcc20",
+    "routing.py": "357972c517c1587106af680c0d88e7624ba83ada36605dd84e51df2f2c4517f1",
+    "middleware.py": "072ad572296101f1d4ee9f18f331f3a0bfc239c41716ed8d7a988a939b53ad3f",
+    "main.py": "84767cc7d96a4e3edd215722c83eb1998e441876fd0db3715559fdaf8f7195d9"
+  },
+  "windows": {
+    "python_passed": 225,
+    "optional_skipped": 11,
+    "go_packages": "passed",
+    "shared_typescript_cases": 156,
+    "typecheck": "passed",
+    "production_bundles": "passed"
+  },
+  "linux": {
+    "python_passed": 225,
+    "optional_skipped": 11
+  },
+  "browser": {
+    "passed": 24,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures",
+    "desktop_mobile_screenshots_visually_inspected": true
+  },
+  "edge_body_limits": {
+    "two_mib_upload_reaches_auth": true,
+    "nine_mib_upload_rejected": true,
+    "two_mib_ordinary_request_rejected": true
+  },
+  "vision_target": {
+    "model_id": "qwen/qwen3.8-27b",
+    "features": [
+      "chat",
+      "streaming",
+      "vision"
+    ],
+    "state": "ready",
+    "fresh": true
+  },
+  "executable_profiles": 9,
+  "live_vision": {
+    "scope": "Real remote Qwen, pixel challenge, uploaded synthetic image and restricted-role PostgreSQL/BFF APIs; explicit OIDC fixtures in disposable farm.",
+    "model": "qwen/qwen3.8-27b",
+    "capability": "vision.describe",
+    "finish_reason": "stop",
+    "answer": "- **Left:** a red square\n- **Right:** a blue circle",
+    "pixel_challenge_passed": true,
+    "restored_upload_and_reply": true
+  },
+  "live_concurrency": {
+    "scope": "Two real LM Studio servers and resident models through real PostgreSQL/BFF APIs in a disposable farm, with explicit OIDC fixtures.",
+    "servers": [
+      [
+        "http://127.0.0.1:1234",
+        "openai/gpt-oss-20b",
+        "chat.general"
+      ],
+      [
+        "http://10.20.30.40:1234",
+        "qwen/qwen3.8-27b",
+        "code.implement"
+      ]
+    ],
+    "simultaneous_stream_seconds": 0.485,
+    "independent_pool_ids": true,
+    "second_coding_request_rejected_while_busy": true,
+    "both_completed": true,
+    "loaded_before_and_after": {
+      "http://127.0.0.1:1234": [
+        "openai/gpt-oss-20b"
+      ],
+      "http://10.20.30.40:1234": [
+        "qwen/qwen3.8-27b"
+      ]
+    },
+    "no_load_or_unload_in_dispatch": true,
+    "setup": "The existing local GPT-OSS was loaded explicitly before this test; no models were downloaded.",
+    "remaining": "Physical server failure/recovery and external JIT configuration are not attested."
+  },
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Physical host loss/recovery and external no-auto-load configuration acceptance",
+    "Image editing, channel uploads and general artifact retention",
+    "Broader vision and provider context-window qualification",
+    "Audio, memory and geometry adapters",
+    "Managed node enrollment and release gates"
+  ],
+  "final_existing_provider_refresh": {
+    "checked_at": "2026-09-13T20:27:02.157227+00:00",
+    "providers": [
+      {
+        "model": "openai/gpt-oss-20b",
+        "state": "ready",
+        "features": [
+          "chat",
+          "streaming"
+        ],
+        "reason": null
+      },
+      {
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "state": "ready",
+        "features": [
+          "image.text_to_image",
+          "image.jobs"
+        ],
+        "reason": null
+      }
+    ]
+  },
+  "speech_preparation": "Offline CPU WAV feasibility only; provider/chat integration pending. See evidence/voice/2026-09-13/speech-feasibility.json.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-09-14T01:56:09.077814+00:00",
+  "database_migration": "0019",
+  "migration_needed": true,
+  "private_pre_migration_backup": true,
+  "capability_bindings_preserved": true,
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "https_verified": true,
+      "exact_build": true,
+      "assets": [
+        "/assets/index-CIuovo_c.js",
+        "/assets/index-CoIb27VW.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "https_verified": true,
+      "exact_build": true,
+      "assets": [
+        "/assets/index-DJQXIavh.js",
+        "/assets/index-CoIb27VW.css"
+      ]
+    }
+  ],
+  "backend_sha256": {
+    "inference.py": "1887fbc405a444520e90e53d697703caa9ed843d94ad3848942aa47a61b7b75d",
+    "memory.py": "1fdacf20907ad65c36485e14e472f345fd897d344bf5adf3a8687730e47bb47f",
+    "memory_vault.py": "12a58fa509a8ce37a50cc0e033cfcad6c0b1ee4614fcf6b0b5f20c5487ca2426",
+    "chat.py": "33815cb53ee251a8af035706179eadc3a97f000c9ee597e8986aeccd30cb2703",
+    "main.py": "36be925187247dee201a4a4a3f12526326cd207ca3d5cb825abb5c07158a135d",
+    "config.py": "30a2fdfeb8ed879a4624024054547a44cfe7a762564ebc10d5d1072acf807212",
+    "workspace.py": "03aaf481e44d488d72867ff0491668e75f3c5dc9a5c1c8fd9b4b72bb89ef79c6",
+    "routing.py": "7b3d7f734663c5abb72b7965a5074fcac07cf15cd4942cc0340dc8580dbb0b44"
+  },
+  "projected_workspaces": [
+    {
+      "generation": 18,
+      "projected_generation": 18,
+      "projected_at": "2026-09-14 01:42:49.641802+00:00"
+    }
+  ],
+  "vault_storage": {
+    "private_vaults": 1,
+    "permissions_checked": true
+  },
+  "authentication_required_for_memory_and_export": true
+}

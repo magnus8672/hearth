@@ -46,7 +46,7 @@ def main():
     native = json.loads(guest("cd /opt/hearth/deploy/compose && docker compose -f development.yaml exec -T api .venv/bin/python -c " + shlex.quote(native_probe)))
     inventory = json.loads((ROOT / "evidence/preparation/2026-09-12/inspection.json").read_text())
     original = inventory["source_inventory"]
-    changed = [item["file"] for item in original if hashlib.sha256((ROOT / item["file"]).read_bytes()).hexdigest() != item["sha256"]]
+    changed = [item["file"] for item in original if hashlib.sha256((ROOT / 'docs/plan' / item["file"]).read_bytes()).hexdigest() != item["sha256"]]
     if changed:
         raise RuntimeError(f"Original design inputs changed: {changed}")
     versions = {name: importlib.metadata.version(name) for name in ("fastapi", "pydantic", "sqlalchemy", "alembic", "joserfc", "nemo-switchyard", "graphifyy")}

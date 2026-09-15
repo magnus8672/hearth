@@ -1,0 +1,11 @@
+{
+  "scope": "Real CPU Kokoro, authenticated provider transport and restricted PostgreSQL/BFF APIs, with explicit text/OIDC fixtures in a disposable farm.",
+  "model": "kokoro-82m-v1.0-onnx",
+  "voice": "af_heart",
+  "text": "Welcome home. Your hearth brings your models together.",
+  "audio_seconds": 2.8373333333333335,
+  "elapsed_seconds": 4.453,
+  "sha256": "c50124dae61bad2beff3108aacde40eb8f8b3984efa5f5b5f271f50b1ca990c0",
+  "restored_audio_and_identity": true,
+  "perceptual_quality": "Not established by waveform validation."
+}

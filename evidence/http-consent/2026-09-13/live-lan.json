@@ -1,0 +1,17 @@
+{
+  "scope": "Real remote LM Studio over administrator-approved LAN HTTP; real PostgreSQL and BFF APIs with explicit OIDC fixtures in a disposable farm. The user's saved connection was not changed.",
+  "address": "http://10.20.30.40:1234",
+  "model": "qwen/qwen3.8-27b",
+  "blocked_without_approval": true,
+  "admin_approval_then_probe_passed": true,
+  "routed_reply_completed": true,
+  "reply_completion_seconds": 7.703,
+  "loaded_instances_before": [
+    "qwen/qwen3.8-27b"
+  ],
+  "loaded_instances_after": [
+    "qwen/qwen3.8-27b"
+  ],
+  "paid_inference": false,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

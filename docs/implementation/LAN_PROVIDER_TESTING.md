@@ -1,0 +1,87 @@
+# hearth provider network test
+
+This development build lets one hearth route work among existing model servers. Model applications stay under their owners' control. A provider is an address and model; a capability assignment is an ordered list of those models. A resource group describes one shared GPU. Different capabilities can share a model, and a capability can have several independently hosted choices.
+
+The preferred test topology keeps different specialist models resident on separate machines at the same time, then routes requests to their hosting machines. Give independent GPUs separate resource groups and deliberately group services sharing hardware. Multiple models on one machine are optional. The current shared-GPU local setup is integration evidence only; [multi-server onboarding, residency and concurrent dispatch](DESIGN_COVERAGE.md#same-type-provider-registration-and-resident-models) still need joint qualification. Record loaded models before and after probes and routed work because a compatible endpoint alone does not establish resident-only behavior.
+
+Built packages in this source checkout: [Windows x64](../../dist/connectors/hearth-connector-windows-amd64.zip), [Linux x64](../../dist/connectors/hearth-connector-linux-amd64.zip), [Linux ARM64](../../dist/connectors/hearth-connector-linux-arm64.zip), [macOS Apple Silicon](../../dist/connectors/hearth-connector-darwin-arm64.zip), [macOS Intel](../../dist/connectors/hearth-connector-darwin-amd64.zip). The accompanying `dist/connectors/manifest.json` records their hashes.
+
+## What can run now
+
+Conversation, planning, code explanation, coding, writing, summarization and data extraction accept text and produce text through OpenAI-compatible chat completions. They can all use the current LM Studio model or different servers. Coding does not run commands or write files. Extraction does not grant database access. A streaming probe proves the transport, not specialist task quality, tools or artifact support.
+
+Image generation uses the hearth image job protocol, including progress, scoped cancellation and PNG validation. The current SDXL provider serves it. Contextual image planning uses the planning assignment, releases that model's resource group, then admits the image model. Single images and batches retain their existing cancellation and privacy behavior.
+
+Vision now supports private uploads, inline image context and an actual pixel-reading verification probe. Use **Verify vision** on a compatible server, then assign it to Vision. The remote Qwen model passed this check. See [vision and concurrency](VISION_AND_CONCURRENT_FARM.md).
+
+Speech output now uses registered `hearth.speech.v1` providers, validated WAV artifacts and confirmed cancellation. The prepared Kokoro instance runs on a separate CPU pool; Read aloud saves its audio on private assistant replies. Multiple speech servers use the same connection and assignment controls. See [Read aloud](READ_ALOUD.md) and [the developer runtime](../runtimes/SPEECH_PROVIDER.md); the current live speech qualification covers one local CPU process, not a physical LAN speech deployment.
+
+English PCM WAV transcription now uses `hearth.transcription.v1`, independent provider registration and a known-recording word-error probe. Private microphone input produces a reviewed transcript draft. See [transcription](TRANSCRIPTION.md); the current live profile is one local CPU service.
+
+3D, memory indexing and memory retrieval have editable intended assignments and explicit required profiles; their invocation adapters are still pending. Pointing one at a text or image server preserves the intended topology but does not mark it ready. A text model cannot stand in for a memory store, audio decoder or mesh generator.
+
+## Direct HTTP with an existing service
+
+You can connect LM Studio or another supported server directly without a certificate or connector. On that machine, enable its LAN listening option and allow its actual API port through the firewall for the trusted private network. In hearth Providers, choose **Add server**, enter its private HTTP address such as `http://10.20.30.40:1234`, and check **I’m the administrator and I understand the risks. Allow HTTP for this server.** Give each independent GPU its own resource group, then connect/verify and assign capabilities.
+
+For a server already saved with the old HTTP rejection, use **I understand the risks. Use HTTP** on its card. This saves approval and retries verification. Approval covers all models at that saved address, persists across reloads and can be revoked. The warning covers unencrypted prompts, replies, images and API keys. Moving to another address needs new approval. [Implementation and validation](EXTERNAL_HTTP_PROVIDERS.md) describe the boundaries and the live test against a separate LM Studio machine.
+
+## Optional TLS connector on each model machine
+
+1. Start your existing service. Confirm its exact model identifier and its local API port. Keep it bound to loopback. LM Studio commonly uses `http://127.0.0.1:1234`; use the actual value on your machine.
+2. Extract the connector package matching that machine. These are unsigned development binaries. The build manifest includes SHA-256 hashes; signed installation, automatic enrollment and service management are unfinished.
+3. Initialize a private connector identity using the machine's private LAN IP or a stable local DNS name. Choose a separate listening port for each model service. Do not copy one connector's keys to another machine.
+
+Windows PowerShell, with the example IP replaced by this model machine's address:
+
+```powershell
+$connectorState = Join-Path $env:LOCALAPPDATA 'hearth\connectors\text'
+.\hearth-connector.exe --init --dir $connectorState --public-host 192.168.1.40 --listen 192.168.1.40:1240 --upstream http://127.0.0.1:1234
+icacls $connectorState /inheritance:r /grant:r "$($env:USERNAME):(OI)(CI)F"
+.\hearth-connector.exe --dir $connectorState
+```
+
+Linux or macOS:
+
+```sh
+chmod +x ./hearth-connector
+./hearth-connector --init --dir "$HOME/.local/share/hearth/connectors/text" --public-host 192.168.1.40 --listen 192.168.1.40:1240 --upstream http://127.0.0.1:1234
+./hearth-connector --dir "$HOME/.local/share/hearth/connectors/text"
+```
+
+The initialization prints the provider address and public CA fingerprint. It creates `provider-ca.pem`, `server.pem`, `server-key.pem`, `controller.key` and `connector.json` in the private state directory. It refuses to overwrite an existing identity. The CA signing key is discarded. Certificates last one year; use a new identity and update the target trust before expiry or after a hostname change.
+
+If the underlying local service requires a key, add `--upstream-key-file` with the absolute path to its key file during initialization. This is separate from the connector's `controller.key`. For the current hearth image runtime, use its controller key file and local port 1235. Use a separate connector listening port, such as 1241.
+
+The connector opens only the specified listener. It does not change firewall rules or enable a model app's network mode. If the head cannot connect, allow that one connector port from the hearth head's IP in the host firewall. No router port forwarding is needed. With the development QEMU appliance, the model machine normally sees the Windows host's LAN IP as the client. Check the host firewall's observed source address if needed.
+
+The process runs until stopped. On Windows, launch it from your own terminal for this test. Any background launch performed by a helper must use a hidden window. Automatic startup is not installed.
+
+## In hearth Administration
+
+1. Open Providers and choose **Add server** for each machine, including additional servers of the same type. Enter the connector's `https://192.168.1.40:1240/v1` address, actual model ID and provider type. Paste the connector's `controller.key` into the API key field. **Add model to this server** is a separate optional action for another model sharing an existing connection.
+2. Expand **Private network certificate**. Paste only `provider-ca.pem`, and compare its SHA-256 fingerprint with the value shown on the model machine. Never paste `server-key.pem`. This trust applies only to that connection; nothing is added to the operating system's trust store.
+3. Give the resource group a machine-specific name, such as `Workshop GPU`. Models and image services on the same GPU must use the same group, even if they use different ports. Independent machines should use different groups.
+4. For LM Studio, disable Just-in-Time loading and automatic unloading on that server, keep the chosen model loaded, then select **LM Studio · require a loaded instance** and confirm its configuration. Supply the loaded instance identifier. hearth reads `/api/v1/models` before text verification and generation; it stops if that instance is not loaded. Other compatible services may keep **residency unknown**. Use the rebuilt connector packages for this additional read-only endpoint.
+5. Confirm the local processing boundary and connect/verify. Verification sends a bounded text request or renders one synthetic image. It does not read private conversations. Successful registration clears the form; add the next machine with its own resource group.
+6. Choose a capability under **Give each capability a home**. Add provider choices in order and save. The first verified, idle compatible model receives a new request. Disabled, failed, incompatible and occupied targets are ineligible. Once a request starts, errors and uncertain outcomes never trigger an automatic second generation.
+
+Every capability card opens its assignment and matching connection controls. **Edit connection** changes an existing target's server/model/resource group while preserving assignments. It invalidates prior evidence, so the saved target must pass a new check. Busy or uncertain resource groups cannot be moved. Saved keys are never returned to the browser. A shared address cannot have its credentials or trust silently changed through one of several models.
+
+## Exercise the routes
+
+- Assign planning to one host, writing to another, and coding to a third. Initially all seven text capabilities may point to the current LM Studio model.
+- In Private chat, use **Reply with** to force each text specialist. Automatic routing also recognizes direct requests such as “Plan a garden project,” “Write a Python function,” “Summarize this text,” and “Extract the city from this sentence.” This is a conservative English intent matcher; the selector is useful for ambiguous requests.
+- The saved turn includes the selected capability, provider/model and configuration revision. Moving a target later does not rewrite its earlier execution identity. The latest route appears beside the model name.
+- Join a channel and send `@hearth summarize ...` to exercise specialist routing with channel-only context.
+- Ask for an image that requires previous conversation context. This exercises a planning-to-image handoff, including when the two services share a GPU.
+- Give a text capability two independent provider choices. While its first resource group is occupied by another hearth request, a new request can use the second. Stop or disconnect an in-progress stream and verify that hearth retains uncertainty instead of duplicating the work elsewhere.
+- Successful verification persists without an hourly deadline. The head rechecks qualified connections at startup. After an actual provider failure or configuration change, repair the service and run its capability verification. See [provider lifecycle](PROVIDER_LIFECYCLE.md).
+
+The same-machine Windows/Linux-appliance path and four concurrent loopback HTTP specialists have been tested. A second physical host, firewall behavior on your other systems, and macOS/Linux ARM execution require your LAN test. Cross-compilation alone does not qualify those systems. Loaded-state checks are observations, not atomic reservations; automatic-loading configuration remains operator-declared. See [the implementation and evidence](MULTI_PROVIDER_RESIDENCY.md).
+
+## Connector boundary
+
+The connector accepts authenticated TLS from private addresses, checks the configured Host and rejects browser Origin requests. It forwards only a fixed allowlist of inference operations to one literal loopback IP. No admin API, arbitrary URL, shell, file browsing, provider installation or general proxy is exposed. It strips incoming cookies and controller credentials, replaces the optional local upstream key, bounds request size, rejects redirects and keeps request contents out of logs.
+
+It is an optional external-service bridge, not an enrolled managed worker. The provider operator can still see requests and other applications can still use its GPU. Stronger worker identity, managed lifecycle, exclusive resource observations, signed recipes and enforced offline execution remain separate work.

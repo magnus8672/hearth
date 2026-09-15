@@ -1,0 +1,134 @@
+{
+  "verified_at": "2026-09-14T01:30:41.355844+00:00",
+  "status": "passed_memory_vision_recall_correction",
+  "scope": "Fix image-byte text budgeting, short memory follow-ups, truthful per-turn memory instructions and visible recall status.",
+  "migration_needed": false,
+  "automated": {
+    "windows_python_passed": 291,
+    "linux_python_passed": 291,
+    "optional_python_skipped": 15,
+    "go": "passed",
+    "ruff": "passed",
+    "shared_typescript_passed": 180,
+    "typecheck": "passed",
+    "production_bundles": "passed",
+    "browser_passed": 38,
+    "browser_optional_skipped": 1
+  },
+  "live_recall": {
+    "scope": "Real resident Qwen vision over LAN, restricted-role PostgreSQL and BFF in disposable farm; explicit OIDC fixtures.",
+    "model": "qwen/qwen3.8-27b",
+    "ordinary_note": true,
+    "prior_image_retained": true,
+    "replies": [
+      {
+        "prompt": "Describe this picture briefly.",
+        "reply": "The image shows a screen filled entirely with multicolored static noise\u2014randomly scattered pixels in reds, greens, blues, purples, and yellows\u2014resembling TV \"white noise\" or a lost signal. It is framed by solid black vertical bars on the left and right edges, with no recognizable objects, text, or figures visible.",
+        "receipt": {
+          "enabled": true,
+          "sources": [],
+          "search_status": "no_matches",
+          "older_messages": 0,
+          "settings_revision": 1
+        }
+      },
+      {
+        "prompt": "what is my name",
+        "reply": "Your name is Casey, according to your memory note titled \"Users Name.\"",
+        "receipt": {
+          "enabled": true,
+          "sources": [
+            {
+              "id": "903f91d1-57b9-4dfc-97a8-a4026b063a83",
+              "type": "note",
+              "title": "Users Name",
+              "revision": 1
+            }
+          ],
+          "search_status": "matched",
+          "older_messages": 0,
+          "settings_revision": 1
+        }
+      },
+      {
+        "prompt": "it's not in your attached memory system?",
+        "reply": "It is. The memory excerpt supplied for this turn includes a note titled **\"Users Name\"** (source `note/903f91d1-57b9-4dfc-97a8-a4026b063a83`) whose content is **Casey**. That's the basis for my earlier answer, and the interface provides a link to that source so you can verify it.\n\nIf that note is wrong or you'd like it changed, you can edit it directly in your memory notes.",
+        "receipt": {
+          "enabled": true,
+          "sources": [
+            {
+              "id": "903f91d1-57b9-4dfc-97a8-a4026b063a83",
+              "type": "note",
+              "title": "Users Name",
+              "revision": 1
+            }
+          ],
+          "search_status": "matched",
+          "older_messages": 0,
+          "settings_revision": 1
+        }
+      }
+    ],
+    "loaded_models_unchanged": true,
+    "cloud_calls": 0
+  },
+  "deployment": {
+    "checked_at": "2026-09-14T01:30:13.179291+00:00",
+    "database_migration": "0018",
+    "migration_needed": false,
+    "capability_bindings_preserved": true,
+    "origins": [
+      {
+        "origin": "https://localhost:8443",
+        "https_verified": true,
+        "exact_build": true,
+        "assets": [
+          "/assets/index-BB0mIbLs.js",
+          "/assets/index-sotNt5DD.css"
+        ]
+      },
+      {
+        "origin": "https://localhost:8444",
+        "https_verified": true,
+        "exact_build": true,
+        "assets": [
+          "/assets/index-BVjAm7kN.js",
+          "/assets/index-sotNt5DD.css"
+        ]
+      }
+    ],
+    "backend_sha256": {
+      "memory.py": "1fdacf20907ad65c36485e14e472f345fd897d344bf5adf3a8687730e47bb47f",
+      "memory_vault.py": "12a58fa509a8ce37a50cc0e033cfcad6c0b1ee4614fcf6b0b5f20c5487ca2426",
+      "chat.py": "612a0d2ff124f712e4e4b4921f0e27d881194afab702f9f42de53286d8c58560",
+      "main.py": "36be925187247dee201a4a4a3f12526326cd207ca3d5cb825abb5c07158a135d",
+      "config.py": "30a2fdfeb8ed879a4624024054547a44cfe7a762564ebc10d5d1072acf807212",
+      "workspace.py": "03aaf481e44d488d72867ff0491668e75f3c5dc9a5c1c8fd9b4b72bb89ef79c6",
+      "routing.py": "7b3d7f734663c5abb72b7965a5074fcac07cf15cd4942cc0340dc8580dbb0b44"
+    },
+    "projected_workspaces": [
+      {
+        "generation": 8,
+        "projected_generation": 8,
+        "projected_at": "2026-09-14 01:08:21.362691+00:00"
+      }
+    ],
+    "vault_storage": {
+      "private_vaults": 1,
+      "permissions_checked": true
+    },
+    "authentication_required_for_memory_and_export": true
+  },
+  "boundaries": [
+    "Restricted application database role and disposable fixture farm for real-model test; explicit OIDC fixtures.",
+    "No changes to real user notes or conversations, or existing capability assignments.",
+    "No model loading, swapping, or cloud inference.",
+    "Word-matching retrieval remains bounded; semantic graph extraction, summary compaction, automatic Obsidian sync and full deletion are still open."
+  ],
+  "release_gates": {
+    "partial": 18,
+    "not_run": 43,
+    "closed": 0
+  },
+  "documentation": "documentation.json"
+}

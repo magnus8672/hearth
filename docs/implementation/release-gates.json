@@ -5,7 +5,7 @@
       "gate": "E01",
       "scenario": "First boot and LAN signup",
       "status": "partial",
-      "note": "Local native Owner provisioning and real HTTPS Member signup/MFA pass. LAN setup, signed installer and other-system trust remain pending."
+      "note": "Local native Owner provisioning and real HTTPS Member signup/MFA pass. A standalone Linux LAN profile also passes real Owner/MFA sign-in, public origins and verified IP TLS on a disposable farm. Selected-LAN signup policy, physical ESX/other-system trust and signed installer remain pending."
     },
     {
       "gate": "E02",
@@ -34,8 +34,8 @@
     {
       "gate": "E06",
       "scenario": "One local chat",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Real LM Studio streaming, private owner isolation, target identity and saved follow-ups pass. Complete source-deployment and usage accounting, broader hardware and provider-format reliability remain pending."
     },
     {
       "gate": "E07",
@@ -58,8 +58,8 @@
     {
       "gate": "E10",
       "scenario": "Shared toolbox",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Actual Streamable HTTP tools use two fixture users' separate credentials; private receipts and real resident Qwen tool use pass. Real multi-user identity and managed remote toolbox acceptance remain open. See shared tools validation."
     },
     {
       "gate": "E11",
@@ -70,14 +70,14 @@
     {
       "gate": "E12",
       "scenario": "Cross-session recall",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Real resident LAN Qwen recalls a private note in a fresh chat. SQL scope/revision checks, source links and bounded context pass. Semantic graph retrieval, broader knowledge quality and complete P7 acceptance remain pending."
     },
     {
       "gate": "E13",
       "scenario": "Superseded preference",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "A corrected preference is recalled by real resident Qwen in another fresh chat. Original revisions, stale-import rejection, source-lineage invalidation and in-flight publication fencing pass. Topic assertion workflows and full semantic graph supersession remain pending."
     },
     {
       "gate": "E14",
@@ -112,8 +112,8 @@
     {
       "gate": "E19",
       "scenario": "Media workflow",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Real local SDXL images, private/chat/channel artifacts, contextual prompt planning, bounded image batches, description-based variations, provenance, digest/PNG validation and scoped cancellation pass. Required local 3D, transcription and speech in the same authorized session remain pending."
     },
     {
       "gate": "E20",
@@ -196,8 +196,8 @@
     {
       "gate": "S11",
       "scenario": "Tool adds schema/requests wider credentials",
-      "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "status": "partial",
+      "note": "Actual MCP schema drift disables the approved tool before execution; connection changes invalidate per-user credential bindings, and revoked keys cannot dispatch or receive results. Broader hostile-server and managed-package acceptance remain open. See shared tools validation."
     },
     {
       "gate": "S12",
@@ -365,7 +365,7 @@
       "gate": "A12",
       "scenario": "Useful setup and growth before optional services",
       "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "note": "Manual local chat/image provider assignment works without NAS/MCP setup. Agent-driven service addition, member installation/pairing/assignment and supported media/3D expansion are not implemented; the full P4 and P8 gate remains open."
     }
   ]
 }

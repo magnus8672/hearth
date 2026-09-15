@@ -1,0 +1,12 @@
+{
+  "tls_verified": true,
+  "anonymous_origin_host_rejected": true,
+  "real_cpu_synthesis": true,
+  "real_cpu_transcription": true,
+  "reference": "Welcome home. Your hearth brings your models together.",
+  "transcript": "Welcome home, your hearth brings your models together.",
+  "speech_seconds": 2.619,
+  "transcription_seconds": 5.837,
+  "service_restart_and_receipts": true,
+  "physical_esx_host_tested": false
+}

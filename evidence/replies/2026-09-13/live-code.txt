@@ -1,0 +1,83 @@
+Assuming you mean the first **1000 Fibonacci numbers**, here is a simple Python script:
+
+```python
+def fibonacci(count):
+    """Return the first `count` Fibonacci numbers."""
+    if count <= 0:
+        return []
+
+    sequence = [0, 1]
+
+    for _ in range(2, count):
+        sequence.append(sequence[-1] + sequence[-2])
+
+    return sequence
+
+
+def main():
+    n = 1000
+    fib = fibonacci(n)
+
+    print(f"Generated {len(fib)} Fibonacci numbers.")
+    print("First 10:", fib[:10])
+    print("Last 5:", fib[-5:])
+
+    # Optionally save the full sequence to a file
+    with open("fibonacci_1000.txt", "w") as f:
+        for i, value in enumerate(fib, start=1):
+            f.write(f"{i}: {value}\n")
+
+    print("Wrote full sequence to fibonacci_1000.txt")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### How to test it
+
+1. Save the script as `fibonacci.py`.
+2. Run it:
+
+```bash
+python fibonacci.py
+```
+
+3. You should see output like:
+
+```text
+Generated 1000 Fibonacci numbers.
+First 10: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+Last 5: [...]
+Wrote full sequence to fibonacci_1000.txt
+```
+
+4. Check that the output file has 1000 lines:
+
+```bash
+wc -l fibonacci_1000.txt
+```
+
+Expected:
+
+```text
+1000 fibonacci_1000.txt
+```
+
+5. You can also verify the first few values manually:
+
+```text
+1: 0
+2: 1
+3: 1
+4: 2
+5: 3
+6: 5
+```
+
+If you want to print all 1000 numbers directly to the terminal instead of writing them to a file, replace the file-writing block with:
+
+```python
+for i, value in enumerate(fib, start=1):
+    print(f"{i}: {value}")
+```

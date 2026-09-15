@@ -50,11 +50,13 @@ for name, model in sorted(CONTRACTS.items()):
     payload = example(definitions[name])
     if name == "GeometryRequest":
         payload["prompt"] = "A fixture stone arch"
+    if name == 'ImagePromptPlan':
+        payload['prompt'] = 'A fixture stone arch'
     payload = model.model_validate(payload).model_dump(mode="json")
     cases.extend([
         {"name": name + ".valid", "contract": name, "valid": True, "payload": payload},
         {"name": name + ".unknown_authority", "contract": name, "valid": False, "payload": payload | {"is_admin": True}},
-        {"name": name + ".future_version", "contract": name, "valid": False, "payload": payload | {"schema_version": 2}},
+        {"name": name + ".future_version", "contract": name, "valid": False, "payload": payload | {"schema_version": payload["schema_version"] + 1}},
         {"name": name + ".boolean_version", "contract": name, "valid": False, "payload": payload | {"schema_version": True}},
     ])
 path = ROOT / "tests/fixtures/contracts.json"

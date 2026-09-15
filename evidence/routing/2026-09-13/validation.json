@@ -1,0 +1,220 @@
+{
+  "verified_at": "2026-09-13T15:00:08.972342+00:00",
+  "database_revision": "0011",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-inKrQMIs.js",
+        "/assets/index-CypBiUWQ.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-BGiezJcW.js",
+        "/assets/index-CypBiUWQ.css"
+      ]
+    }
+  ],
+  "backend_source_sha256": {
+    "providers.py": "1784f33c82540f48a5f479391e1a00cf72852af16f128611a400fff7d7105e75",
+    "routing.py": "420a477f652f6b9baee6f3c46e7dfdd4fc1e621480763faec9fde88ed6eba916",
+    "workspace.py": "22e8d86129f88ea10cd5cdc706e2dd55bbe55d5490a7de612fd50e04826ecffc",
+    "chat.py": "5ddf6adfb096d2d523ed95bc486c8a5e88bdd49ae09bfd82297f1a6258c7ec5f",
+    "channels.py": "45f364df7e421ef7c2c94370fe00dadb7766c6f9b648b384fa80c90013d0827e",
+    "image_planning.py": "ceb6d3c00b5add78c1daf0ff139fdfafac0efaa296a7c9c949182245d8f30418",
+    "inference.py": "cada80eb1c88c4ee45b8791efb7e7b968fe1f302678d9bc7ab60bba420055fdf",
+    "images.py": "5024a504f46c54de9c1371f93a274b45cb0cba7646f6513c5f66af1d4627ffdc",
+    "conversation_media.py": "c14d6d1fde13a15e73c08e21a808e5c0c855d0d8271a1a9a06a5c0ed632c4ef2",
+    "image_batches.py": "8f1be85c55643173a28085c32c1e6b92d6f7d0b0fb88ce9455f9edf8c9cb786c",
+    "contracts.py": "dc68956e7ed25ef8c16e71f15b45c2f118b289fa666c2f8fbf9740203f7dfd3c"
+  },
+  "providers": [
+    {
+      "protocol": "hearth.image.v1",
+      "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    },
+    {
+      "protocol": "openai.chat.v1",
+      "model_id": "openai/gpt-oss-20b",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    }
+  ],
+  "assignments": [
+    {
+      "capability_id": "chat.general",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "reason.plan",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "code.explain",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "code.implement",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "write.compose",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "text.summarize",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "data.extract",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "vision.describe",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "image.generate",
+      "route_revision": 2,
+      "executable": true,
+      "ready": true,
+      "model": "stabilityai/stable-diffusion-xl-base-1.0"
+    },
+    {
+      "capability_id": "geometry.generate",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "stabilityai/stable-diffusion-xl-base-1.0"
+    },
+    {
+      "capability_id": "audio.transcribe",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "audio.speak",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "memory.retrieve",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "openai/gpt-oss-20b"
+    },
+    {
+      "capability_id": "memory.index",
+      "route_revision": 2,
+      "executable": false,
+      "ready": false,
+      "model": "openai/gpt-oss-20b"
+    }
+  ],
+  "python": {
+    "windows": {
+      "passed": 183,
+      "opt_in_skipped": 6
+    },
+    "linux": {
+      "passed": 183,
+      "opt_in_skipped": 6
+    }
+  },
+  "shared_contract_fixtures": 156,
+  "browser_passed": 19,
+  "live_specialists": 6,
+  "live_planning_to_image": true,
+  "native_connector": {
+    "windows_loopback_tls_tests": 3,
+    "linux_amd64_loopback_tls_tests": 3,
+    "packages": {
+      "kind": "unsigned-development-connectors",
+      "packages": [
+        {
+          "file": "hearth-connector-windows-amd64.zip",
+          "sha256": "d19840a7101b971b06b2251262fe543bf890ca8fb4c39b2f690b45d1150cff6c",
+          "binary_sha256": "078968564611fb65fbec56cbbec5e04a460844f49da10aa49f3989c32554c299",
+          "bytes": 5858198
+        },
+        {
+          "file": "hearth-connector-linux-amd64.zip",
+          "sha256": "f75a43ba807c1b705d24d2cc8b76a5dc9fd02ed1e557d99539bf4616f6994e77",
+          "binary_sha256": "f082213eef4c0faf6c200ce78c1ae5bf64732d86f50811f17b391cf1fd7c1c80",
+          "bytes": 5808904
+        },
+        {
+          "file": "hearth-connector-linux-arm64.zip",
+          "sha256": "8edd6026a592596f4c1f30645864e3cc99cd69838115d04b80221360e32ec690",
+          "binary_sha256": "4f8c866fc292f69f8e9fdf425ef5e21e5c7521b5a6a0e8124b2ce82197751d55",
+          "bytes": 5301901
+        },
+        {
+          "file": "hearth-connector-darwin-arm64.zip",
+          "sha256": "43b417061e448c1712da603da0fe4ca644d267188ee42cbfdce7c10ac618e6b8",
+          "binary_sha256": "d43ee369bcbc3d74902a1f41816fd70eb37f2915e86d451d38ae86d4199e0edf",
+          "bytes": 5608506
+        },
+        {
+          "file": "hearth-connector-darwin-amd64.zip",
+          "sha256": "742930c5ea69ac2458dabe7eb68643645c6c6fd4b9badfc2b35f5300fe11999c",
+          "binary_sha256": "964c110621daf7215651f9ccf5c1a0e2c383bcea440d3450cd040b810714ee57",
+          "bytes": 6005389
+        }
+      ]
+    },
+    "lan_listener_started": false,
+    "multi_host_tested": false,
+    "startup_block": "Automatic approval review rejected the combined LAN initialization/start command: blocked by policy."
+  },
+  "source_files_preserved": 119,
+  "unpassed_release_gates": 61,
+  "paid_provider_calls": 0,
+  "limits": [
+    "Six non-text capability adapters remain pending despite saved assignments.",
+    "Specialist text quality and tools are not implied by transport verification.",
+    "Live BFF test uses synthetic OIDC and a disposable farm; existing services share one physical GPU.",
+    "Linux ARM64 and macOS packages are cross-compiled only."
+  ]
+}

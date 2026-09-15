@@ -1,0 +1,18 @@
+{
+  "attempts": [
+    {
+      "check": "live two-turn BFF regression",
+      "first_turn": "completed",
+      "followup": "interrupted",
+      "reason": "Unsupported GPT-OSS channel header; exact header not captured."
+    },
+    {
+      "check": "diagnostic two-turn BFF regression",
+      "result": "passed",
+      "unsupported_headers": []
+    }
+  ],
+  "remaining_limitation": "Intermittent server-format compatibility, also observed in the earlier chat slice. No broadening of channel acceptance or automatic prompt replay.",
+  "actual_farm_probe": "passed",
+  "real_owner_modified": false
+}

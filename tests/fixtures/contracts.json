@@ -470,11 +470,12 @@
     "contract": "CapabilityAvailability",
     "valid": true,
     "payload": {
-      "schema_version": 1,
+      "schema_version": 2,
       "capability_id": "fixture",
       "assignment_state": "unassigned",
       "local_state": "unavailable",
       "local_deployment_ids": [],
+      "external_target_ids": [],
       "cloud_configured": false,
       "cloud_allowed_for_caller": false,
       "effective_state": "unavailable",
@@ -487,11 +488,12 @@
     "contract": "CapabilityAvailability",
     "valid": false,
     "payload": {
-      "schema_version": 1,
+      "schema_version": 2,
       "capability_id": "fixture",
       "assignment_state": "unassigned",
       "local_state": "unavailable",
       "local_deployment_ids": [],
+      "external_target_ids": [],
       "cloud_configured": false,
       "cloud_allowed_for_caller": false,
       "effective_state": "unavailable",
@@ -505,11 +507,12 @@
     "contract": "CapabilityAvailability",
     "valid": false,
     "payload": {
-      "schema_version": 2,
+      "schema_version": 3,
       "capability_id": "fixture",
       "assignment_state": "unassigned",
       "local_state": "unavailable",
       "local_deployment_ids": [],
+      "external_target_ids": [],
       "cloud_configured": false,
       "cloud_allowed_for_caller": false,
       "effective_state": "unavailable",
@@ -527,11 +530,57 @@
       "assignment_state": "unassigned",
       "local_state": "unavailable",
       "local_deployment_ids": [],
+      "external_target_ids": [],
       "cloud_configured": false,
       "cloud_allowed_for_caller": false,
       "effective_state": "unavailable",
       "reason": null,
       "available_actions": []
+    }
+  },
+  {
+    "name": "CapabilityBinding.valid",
+    "contract": "CapabilityBinding",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "target_id": "00000000-0000-4000-8000-000000000001",
+      "priority": 0
+    }
+  },
+  {
+    "name": "CapabilityBinding.unknown_authority",
+    "contract": "CapabilityBinding",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "capability_id": "fixture",
+      "target_id": "00000000-0000-4000-8000-000000000001",
+      "priority": 0,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "CapabilityBinding.future_version",
+    "contract": "CapabilityBinding",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "capability_id": "fixture",
+      "target_id": "00000000-0000-4000-8000-000000000001",
+      "priority": 0
+    }
+  },
+  {
+    "name": "CapabilityBinding.boolean_version",
+    "contract": "CapabilityBinding",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "capability_id": "fixture",
+      "target_id": "00000000-0000-4000-8000-000000000001",
+      "priority": 0
     }
   },
   {
@@ -710,6 +759,115 @@
       "input_localities": [
         "local_only"
       ]
+    }
+  },
+  {
+    "name": "ConversationImage.valid",
+    "contract": "ConversationImage",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "00000000-0000-4000-8000-000000000001",
+        "model": "fixture",
+        "prompt": "fixture",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 0
+      },
+      "status": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "planning_model": null,
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 1,
+      "batch_count": 1
+    }
+  },
+  {
+    "name": "ConversationImage.unknown_authority",
+    "contract": "ConversationImage",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "00000000-0000-4000-8000-000000000001",
+        "model": "fixture",
+        "prompt": "fixture",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 0
+      },
+      "status": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "planning_model": null,
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 1,
+      "batch_count": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ConversationImage.future_version",
+    "contract": "ConversationImage",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "request": {
+        "schema_version": 1,
+        "id": "00000000-0000-4000-8000-000000000001",
+        "model": "fixture",
+        "prompt": "fixture",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 0
+      },
+      "status": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "planning_model": null,
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 1,
+      "batch_count": 1
+    }
+  },
+  {
+    "name": "ConversationImage.boolean_version",
+    "contract": "ConversationImage",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "request": {
+        "schema_version": 1,
+        "id": "00000000-0000-4000-8000-000000000001",
+        "model": "fixture",
+        "prompt": "fixture",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 0
+      },
+      "status": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "planning_model": null,
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 1,
+      "batch_count": 1
     }
   },
   {
@@ -1010,6 +1168,71 @@
     }
   },
   {
+    "name": "ExternalProviderConnection.valid",
+    "contract": "ExternalProviderConnection",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "base_url": "fixture",
+      "protocol": "openai_compatible",
+      "management": "external",
+      "locality_assurance": "operator_declared_local",
+      "credential_configured": false
+    }
+  },
+  {
+    "name": "ExternalProviderConnection.unknown_authority",
+    "contract": "ExternalProviderConnection",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "base_url": "fixture",
+      "protocol": "openai_compatible",
+      "management": "external",
+      "locality_assurance": "operator_declared_local",
+      "credential_configured": false,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ExternalProviderConnection.future_version",
+    "contract": "ExternalProviderConnection",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "base_url": "fixture",
+      "protocol": "openai_compatible",
+      "management": "external",
+      "locality_assurance": "operator_declared_local",
+      "credential_configured": false
+    }
+  },
+  {
+    "name": "ExternalProviderConnection.boolean_version",
+    "contract": "ExternalProviderConnection",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "farm_id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "base_url": "fixture",
+      "protocol": "openai_compatible",
+      "management": "external",
+      "locality_assurance": "operator_declared_local",
+      "credential_configured": false
+    }
+  },
+  {
     "name": "GeometryRequest.valid",
     "contract": "GeometryRequest",
     "valid": true,
@@ -1133,6 +1356,408 @@
       "observed_plan_revision": 0,
       "active_attempt_ids": [],
       "services": []
+    }
+  },
+  {
+    "name": "ImageGeneration.valid",
+    "contract": "ImageGeneration",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 0
+    }
+  },
+  {
+    "name": "ImageGeneration.unknown_authority",
+    "contract": "ImageGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 0,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImageGeneration.future_version",
+    "contract": "ImageGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 0
+    }
+  },
+  {
+    "name": "ImageGeneration.boolean_version",
+    "contract": "ImageGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 0
+    }
+  },
+  {
+    "name": "ImagePrompt.valid",
+    "contract": "ImagePrompt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square"
+    }
+  },
+  {
+    "name": "ImagePrompt.unknown_authority",
+    "contract": "ImagePrompt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImagePrompt.future_version",
+    "contract": "ImagePrompt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square"
+    }
+  },
+  {
+    "name": "ImagePrompt.boolean_version",
+    "contract": "ImagePrompt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "prompt": "fixture",
+      "negative_prompt": "",
+      "shape": "square"
+    }
+  },
+  {
+    "name": "ImagePromptPlan.valid",
+    "contract": "ImagePromptPlan",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "action": "generate",
+      "prompt": "A fixture stone arch",
+      "negative_prompt": "",
+      "shape": "square",
+      "question": null,
+      "images": null
+    }
+  },
+  {
+    "name": "ImagePromptPlan.unknown_authority",
+    "contract": "ImagePromptPlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "action": "generate",
+      "prompt": "A fixture stone arch",
+      "negative_prompt": "",
+      "shape": "square",
+      "question": null,
+      "images": null,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImagePromptPlan.future_version",
+    "contract": "ImagePromptPlan",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "action": "generate",
+      "prompt": "A fixture stone arch",
+      "negative_prompt": "",
+      "shape": "square",
+      "question": null,
+      "images": null
+    }
+  },
+  {
+    "name": "ImagePromptPlan.boolean_version",
+    "contract": "ImagePromptPlan",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "action": "generate",
+      "prompt": "A fixture stone arch",
+      "negative_prompt": "",
+      "shape": "square",
+      "question": null,
+      "images": null
+    }
+  },
+  {
+    "name": "ImageProviderInfo.valid",
+    "contract": "ImageProviderInfo",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.image.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "shapes": [
+        "square"
+      ],
+      "steps": [
+        20
+      ],
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "ImageProviderInfo.unknown_authority",
+    "contract": "ImageProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.image.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "shapes": [
+        "square"
+      ],
+      "steps": [
+        20
+      ],
+      "job_cancellation": true,
+      "offline": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImageProviderInfo.future_version",
+    "contract": "ImageProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "protocol": "hearth.image.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "shapes": [
+        "square"
+      ],
+      "steps": [
+        20
+      ],
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "ImageProviderInfo.boolean_version",
+    "contract": "ImageProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "protocol": "hearth.image.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "shapes": [
+        "square"
+      ],
+      "steps": [
+        20
+      ],
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "ImageReceipt.valid",
+    "contract": "ImageReceipt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "state": "queued",
+      "progress": 0,
+      "steps": 20,
+      "seed": 0,
+      "shape": "square",
+      "width": 1,
+      "height": 1,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "ImageReceipt.unknown_authority",
+    "contract": "ImageReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "state": "queued",
+      "progress": 0,
+      "steps": 20,
+      "seed": 0,
+      "shape": "square",
+      "width": 1,
+      "height": 1,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImageReceipt.future_version",
+    "contract": "ImageReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "state": "queued",
+      "progress": 0,
+      "steps": 20,
+      "seed": 0,
+      "shape": "square",
+      "width": 1,
+      "height": 1,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "ImageReceipt.boolean_version",
+    "contract": "ImageReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "state": "queued",
+      "progress": 0,
+      "steps": 20,
+      "seed": 0,
+      "shape": "square",
+      "width": 1,
+      "height": 1,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "InferenceTarget.valid",
+    "contract": "InferenceTarget",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "connection_id": "00000000-0000-4000-8000-000000000001",
+      "resource_pool_id": "00000000-0000-4000-8000-000000000001",
+      "model_id": "fixture",
+      "state": "configured",
+      "features": [],
+      "probed_at": null,
+      "verified_until": null,
+      "revision": 1
+    }
+  },
+  {
+    "name": "InferenceTarget.unknown_authority",
+    "contract": "InferenceTarget",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "connection_id": "00000000-0000-4000-8000-000000000001",
+      "resource_pool_id": "00000000-0000-4000-8000-000000000001",
+      "model_id": "fixture",
+      "state": "configured",
+      "features": [],
+      "probed_at": null,
+      "verified_until": null,
+      "revision": 1,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "InferenceTarget.future_version",
+    "contract": "InferenceTarget",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "connection_id": "00000000-0000-4000-8000-000000000001",
+      "resource_pool_id": "00000000-0000-4000-8000-000000000001",
+      "model_id": "fixture",
+      "state": "configured",
+      "features": [],
+      "probed_at": null,
+      "verified_until": null,
+      "revision": 1
+    }
+  },
+  {
+    "name": "InferenceTarget.boolean_version",
+    "contract": "InferenceTarget",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "connection_id": "00000000-0000-4000-8000-000000000001",
+      "resource_pool_id": "00000000-0000-4000-8000-000000000001",
+      "model_id": "fixture",
+      "state": "configured",
+      "features": [],
+      "probed_at": null,
+      "verified_until": null,
+      "revision": 1
     }
   },
   {
@@ -1343,7 +1968,7 @@
     "contract": "ProviderBootstrap",
     "valid": true,
     "payload": {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "00000000-0000-4000-8000-000000000001",
       "path": "local_head",
       "readiness": "unconfigured",
@@ -1360,7 +1985,7 @@
     "contract": "ProviderBootstrap",
     "valid": false,
     "payload": {
-      "schema_version": 1,
+      "schema_version": 2,
       "id": "00000000-0000-4000-8000-000000000001",
       "path": "local_head",
       "readiness": "unconfigured",
@@ -1378,7 +2003,7 @@
     "contract": "ProviderBootstrap",
     "valid": false,
     "payload": {
-      "schema_version": 2,
+      "schema_version": 3,
       "id": "00000000-0000-4000-8000-000000000001",
       "path": "local_head",
       "readiness": "unconfigured",
@@ -1450,6 +2075,59 @@
       "expected_revision": 1,
       "maximum_cost_minor": 0,
       "paid_probe_grant_id": null
+    }
+  },
+  {
+    "name": "ProviderResourcePool.valid",
+    "contract": "ProviderResourcePool",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "generation_slots": 1,
+      "busy": true,
+      "execution_state": "idle"
+    }
+  },
+  {
+    "name": "ProviderResourcePool.unknown_authority",
+    "contract": "ProviderResourcePool",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "generation_slots": 1,
+      "busy": true,
+      "execution_state": "idle",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ProviderResourcePool.future_version",
+    "contract": "ProviderResourcePool",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "generation_slots": 1,
+      "busy": true,
+      "execution_state": "idle"
+    }
+  },
+  {
+    "name": "ProviderResourcePool.boolean_version",
+    "contract": "ProviderResourcePool",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "fixture",
+      "generation_slots": 1,
+      "busy": true,
+      "execution_state": "idle"
     }
   },
   {
@@ -1997,6 +2675,412 @@
       },
       "readiness_probe": "fixture",
       "rollback": "compatible"
+    }
+  },
+  {
+    "name": "SpeechGeneration.valid",
+    "contract": "SpeechGeneration",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input": "fixture"
+    }
+  },
+  {
+    "name": "SpeechGeneration.unknown_authority",
+    "contract": "SpeechGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input": "fixture",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "SpeechGeneration.future_version",
+    "contract": "SpeechGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input": "fixture"
+    }
+  },
+  {
+    "name": "SpeechGeneration.boolean_version",
+    "contract": "SpeechGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input": "fixture"
+    }
+  },
+  {
+    "name": "SpeechProviderInfo.valid",
+    "contract": "SpeechProviderInfo",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.speech.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "voices": [
+        "fixture"
+      ],
+      "default_voice": "fixture",
+      "maximum_characters": 6000,
+      "sample_rate": 24000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "SpeechProviderInfo.unknown_authority",
+    "contract": "SpeechProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.speech.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "voices": [
+        "fixture"
+      ],
+      "default_voice": "fixture",
+      "maximum_characters": 6000,
+      "sample_rate": 24000,
+      "job_cancellation": true,
+      "offline": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "SpeechProviderInfo.future_version",
+    "contract": "SpeechProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "protocol": "hearth.speech.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "voices": [
+        "fixture"
+      ],
+      "default_voice": "fixture",
+      "maximum_characters": 6000,
+      "sample_rate": 24000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "SpeechProviderInfo.boolean_version",
+    "contract": "SpeechProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "protocol": "hearth.speech.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "voices": [
+        "fixture"
+      ],
+      "default_voice": "fixture",
+      "maximum_characters": 6000,
+      "sample_rate": 24000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "SpeechReceipt.valid",
+    "contract": "SpeechReceipt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "sha256": null,
+      "frames": 0,
+      "sample_rate": 24000,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "SpeechReceipt.unknown_authority",
+    "contract": "SpeechReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "sha256": null,
+      "frames": 0,
+      "sample_rate": 24000,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "SpeechReceipt.future_version",
+    "contract": "SpeechReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "sha256": null,
+      "frames": 0,
+      "sample_rate": 24000,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "SpeechReceipt.boolean_version",
+    "contract": "SpeechReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "voice": "fixture",
+      "input_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "sha256": null,
+      "frames": 0,
+      "sample_rate": 24000,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "TranscriptionProviderInfo.valid",
+    "contract": "TranscriptionProviderInfo",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.transcription.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "languages": [
+        "en"
+      ],
+      "maximum_seconds": 120,
+      "sample_rate": 16000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "TranscriptionProviderInfo.unknown_authority",
+    "contract": "TranscriptionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.transcription.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "languages": [
+        "en"
+      ],
+      "maximum_seconds": 120,
+      "sample_rate": 16000,
+      "job_cancellation": true,
+      "offline": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "TranscriptionProviderInfo.future_version",
+    "contract": "TranscriptionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "protocol": "hearth.transcription.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "languages": [
+        "en"
+      ],
+      "maximum_seconds": 120,
+      "sample_rate": 16000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "TranscriptionProviderInfo.boolean_version",
+    "contract": "TranscriptionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "protocol": "hearth.transcription.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "languages": [
+        "en"
+      ],
+      "maximum_seconds": 120,
+      "sample_rate": 16000,
+      "job_cancellation": true,
+      "offline": true
+    }
+  },
+  {
+    "name": "TranscriptionReceipt.valid",
+    "contract": "TranscriptionReceipt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "text": "",
+      "language": "en",
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "TranscriptionReceipt.unknown_authority",
+    "contract": "TranscriptionReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "text": "",
+      "language": "en",
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "TranscriptionReceipt.future_version",
+    "contract": "TranscriptionReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "text": "",
+      "language": "en",
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "TranscriptionReceipt.boolean_version",
+    "contract": "TranscriptionReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "state": "queued",
+      "reason": null,
+      "text": "",
+      "language": "en",
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "TranscriptionRequest.valid",
+    "contract": "TranscriptionRequest",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "name": "TranscriptionRequest.unknown_authority",
+    "contract": "TranscriptionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "TranscriptionRequest.future_version",
+    "contract": "TranscriptionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "name": "TranscriptionRequest.boolean_version",
+    "contract": "TranscriptionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "audio_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   },
   {

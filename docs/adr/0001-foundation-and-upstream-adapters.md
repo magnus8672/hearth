@@ -1,5 +1,7 @@
 # ADR 0001: control stack and upstream boundaries
 
+> This ADR records the initial foundation contract counts. The current schema bundle has 39 models, 40 definitions and 156 shared fixtures; see [current build status](../implementation/BUILD_STATUS.md). The Switchyard library remains a separately tested adapter, not the live provider-dispatch selector.
+
 Status: accepted for the development foundation, 12 September 2026.
 
 Use the specified Python/FastAPI, PostgreSQL, Go and React/TypeScript boundaries. Resolve Python through `uv.lock`, JavaScript through `pnpm-lock.yaml`, Go through `go.sum`, and appliance containers through digest-pinned Compose references. Migration 0001 reads a frozen seed file, so future catalog changes cannot rewrite the meaning of an existing migration.
@@ -10,7 +12,7 @@ The application database role cannot own tables, become a superuser or bypass RL
 
 Pin `nemo-switchyard==0.2.0`. Its actual library exposes `switchyard.libsy.LlmTarget` and `algorithms.random(...).run(...)`, with Python clients called by a Rust-owned algorithm. Earlier example APIs in the design documents are not assumed to exist. The maintained installation notes also distinguish the library from the CLI. [Upstream installation](https://github.com/NVIDIA-NeMo/Switchyard/blob/main/INSTALLATION.md).
 
-Hearth filters authorization, capability, health expiry, context capacity, residency, quality and queue position first. It gives Switchyard only tied eligible candidates. Selection clients return a route receipt without dispatching inference or making a network call. An upstream error selects the first candidate from that same filtered set; an ineligible result fails closed. The real-package regression records each client invocation, so an accidental fallback cannot masquerade as successful integration.
+hearth filters authorization, capability, health expiry, context capacity, residency, quality and queue position first. It gives Switchyard only tied eligible candidates. Selection clients return a route receipt without dispatching inference or making a network call. An upstream error selects the first candidate from that same filtered set; an ineligible result fails closed. The real-package regression records each client invocation, so an accidental fallback cannot masquerade as successful integration.
 
 The Windows probe qualifies bounded selection behavior. The official Linux wheel requires AVX2 and faults in the current WHPX guest. The same locked release, built with Rust 1.96.1 and maturin 1.15.0 for x86-64-v2, passes the Linux suite. The source and Cargo lock hashes are recorded in `deploy/bootstrap/switchyard-build.lock.json`. No upstream source edits were needed. It does not qualify provider generation, context planning, cancellation, billing or model quality.
 

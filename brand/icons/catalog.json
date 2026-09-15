@@ -1,7 +1,7 @@
 [
   {
     "name": "hearth",
-    "label": "Hearth control node",
+    "label": "hearth control node",
     "file": "hearth.svg",
     "symbol": "hearth-hearth"
   },

@@ -1,13 +1,13 @@
-"""Idempotent local developer provisioning. Never imported by the public API."""
+"""Console-only identity provisioning for development and standalone heads."""
 import argparse
 import json
 import re
 import sys
 from contextlib import contextmanager
+from urllib.parse import urlsplit
 from uuid import UUID, uuid4
 
 import httpx
-from development_stack import configuration
 from hearth.database import make_engine
 from sqlalchemy import text
 
@@ -16,9 +16,24 @@ REALM = 'hearth'
 ISSUER = 'https://localhost:8445/realms/hearth'
 
 
+def configuration():
+    # Only the developer entry points need the QEMU appliance helpers. The VM
+    # package supplies explicit values and must import without those helpers.
+    from development_stack import configuration as development_configuration
+    return development_configuration()
+
+
 @contextmanager
 def admin_client(values):
-    client = httpx.Client(base_url=IDENTITY, timeout=20, trust_env=False)
+    # The standalone console reaches the private identity service directly. Its
+    # headers describe the same HTTPS edge as the public login flow.
+    headers = {}
+    if values.get('HEARTH_IDENTITY_INTERNAL_ORIGIN'):
+        public = urlsplit(values['HEARTH_IDENTITY_ORIGIN'])
+        headers = {'X-Forwarded-Proto': public.scheme, 'X-Forwarded-Host': public.netloc,
+                   'X-Forwarded-Port': str(public.port or 443)}
+    client = httpx.Client(base_url=values.get('HEARTH_IDENTITY_INTERNAL_ORIGIN', IDENTITY),
+                         headers=headers, timeout=20, trust_env=False)
     response = client.post('/realms/master/protocol/openid-connect/token', data={
         'grant_type': 'password', 'client_id': 'admin-cli', 'username': 'bootstrap',
         'password': values['HEARTH_IDENTITY_BOOTSTRAP_PASSWORD']})
@@ -30,17 +45,17 @@ def admin_client(values):
         client.close()
 
 
-def configure():
-    values = configuration()
+def configure(values=None):
+    values = configuration() if values is None else values
     with admin_client(values) as client:
         realm_path = f'/admin/realms/{REALM}'
         current = client.get(realm_path)
         if current.status_code == 404:
-            client.post('/admin/realms', json={'realm': REALM, 'enabled': True, 'displayName': 'Hearth',
+            client.post('/admin/realms', json={'realm': REALM, 'enabled': True, 'displayName': 'hearth',
                 'registrationAllowed': False}).raise_for_status()
         else:
             current.raise_for_status()
-        client.put(realm_path, json={'displayName': 'Hearth', 'loginTheme': 'hearth', 'bruteForceProtected': True,
+        client.put(realm_path, json={'displayName': 'hearth', 'loginTheme': 'hearth', 'bruteForceProtected': True,
             'failureFactor': 5, 'waitIncrementSeconds': 60, 'maxFailureWaitSeconds': 900,
             'permanentLockout': False, 'registrationEmailAsUsername': False, 'loginWithEmailAllowed': False,
             'duplicateEmailsAllowed': True, 'verifyEmail': False, 'resetPasswordAllowed': False,
@@ -64,11 +79,12 @@ def configure():
         configure_mfa_flow(client, realm_path)
         for audience, port in [('admin', 8443), ('user', 8444)]:
             client_id = f'hearth-{audience}'
-            origin = f'https://localhost:{port}'
-            body = {'clientId': client_id, 'name': 'Hearth Administration' if audience == 'admin' else 'Your Hearth workspace', 'enabled': True,
+            origin = values.get(f'HEARTH_{audience.upper()}_ORIGIN', f'https://localhost:{port}')
+            body = {'clientId': client_id, 'name': 'hearth Administration' if audience == 'admin' else 'Your hearth workspace', 'enabled': True,
                 'protocol': 'openid-connect', 'publicClient': False, 'clientAuthenticatorType': 'client-secret',
                 'secret': values[f'HEARTH_{audience.upper()}_CLIENT_SECRET'], 'standardFlowEnabled': True,
                 'implicitFlowEnabled': False, 'directAccessGrantsEnabled': False, 'serviceAccountsEnabled': False,
+                'rootUrl': origin, 'baseUrl': origin + '/',
                 'redirectUris': [origin + '/auth/callback'], 'webOrigins': [], 'fullScopeAllowed': False,
                 'attributes': {'pkce.code.challenge.method': 'S256', 'post.logout.redirect.uris': origin + '/*'},
                 'defaultClientScopes': ['basic', 'profile', 'acr'], 'optionalClientScopes': [],
@@ -92,20 +108,20 @@ def configure():
                 if scope['name'] not in body['defaultClientScopes']:
                     client.delete(scope_path + '/' + scope['id']).raise_for_status()
         client.put(realm_path, json={'registrationAllowed': owner_created(values)}).raise_for_status()
-    print('Hearth identity clients configured. Passwords and MFA remain in Keycloak.')
+    print('hearth identity clients configured. Passwords and MFA remain in Keycloak.')
 
 
 def configure_branding():
     """Update presentation only, including on a farm with existing accounts."""
     with admin_client(configuration()) as client:
         path = f'/admin/realms/{REALM}'
-        client.put(path, json={'displayName': 'Hearth', 'loginTheme': 'hearth'}).raise_for_status()
-        for audience, name in [('admin', 'Hearth Administration'), ('user', 'Your Hearth workspace')]:
+        client.put(path, json={'displayName': 'hearth', 'loginTheme': 'hearth'}).raise_for_status()
+        for audience, name in [('admin', 'hearth Administration'), ('user', 'Your hearth workspace')]:
             clients = client.get(path + '/clients', params={'clientId': f'hearth-{audience}'}).json()
             if len(clients) != 1:
-                raise ValueError('Configure the Hearth identity clients before applying the theme.')
+                raise ValueError('Configure the hearth identity clients before applying the theme.')
             client.put(path + '/clients/' + clients[0]['id'], json={'name': name}).raise_for_status()
-    print('Hearth sign-in branding applied. Existing accounts and authentication settings preserved.')
+    print('hearth sign-in branding applied. Existing accounts and authentication settings preserved.')
 
 
 def configure_mfa_flow(client, realm_path):
@@ -158,8 +174,12 @@ def configure_mfa_flow(client, realm_path):
     client.put(realm_path, json={'browserFlow': alias}).raise_for_status()
 
 
+def migration_url(values):
+    return values.get('HEARTH_MIGRATION_DATABASE_URL') or f"postgresql+psycopg://hearth_migrator:{values['HEARTH_MIGRATION_PASSWORD']}@127.0.0.1:55432/hearth"
+
+
 def owner_created(values):
-    engine = make_engine(f"postgresql+psycopg://hearth_migrator:{values['HEARTH_MIGRATION_PASSWORD']}@127.0.0.1:55432/hearth")
+    engine = make_engine(migration_url(values))
     try:
         with engine.connect() as db:
             return db.execute(text("SELECT EXISTS(SELECT 1 FROM role_grants WHERE farm_id=:farm AND role='Owner')"), {'farm': UUID(values['HEARTH_FARM_ID'])}).scalar_one()
@@ -167,22 +187,22 @@ def owner_created(values):
         engine.dispose()
 
 
-def create_owner(data):
+def create_owner(data, values=None):
     if set(data) != {'username', 'password', 'name', 'farm_name'}:
         raise ValueError('Invalid setup fields.')
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]{2,39}', data['username']):
         raise ValueError('Use 3 to 40 letters, numbers, dots, dashes or underscores for your username.')
     if not 14 <= len(data['password']) <= 256 or not 1 <= len(data['name'].strip()) <= 100 or not 1 <= len(data['farm_name'].strip()) <= 100:
         raise ValueError('Use a password of at least 14 characters and names of 1 to 100 characters.')
-    values = configuration()
+    values = configuration() if values is None else values
     farm_id = UUID(values['HEARTH_FARM_ID'])
-    engine = make_engine(f"postgresql+psycopg://hearth_migrator:{values['HEARTH_MIGRATION_PASSWORD']}@127.0.0.1:55432/hearth")
+    engine = make_engine(migration_url(values))
     try:
         with engine.begin() as db, admin_client(values) as client:
             # Serializes concurrent local setup tools; public account provisioning cannot create Owner.
             db.execute(text('SELECT pg_advisory_xact_lock(762309842)'))
             if db.execute(text("SELECT EXISTS(SELECT 1 FROM role_grants WHERE farm_id=:farm AND role='Owner')"), {'farm': farm_id}).scalar_one():
-                raise ValueError('Owner setup is already complete. Sign in to your existing Hearth.')
+                raise ValueError('Owner setup is already complete. Sign in to your existing hearth.')
             path = f'/admin/realms/{REALM}'
             response = client.post(path + '/users', json={'username': data['username'], 'firstName': data['name'].strip(),
                 'enabled': True, 'requiredActions': ['CONFIGURE_TOTP', 'CONFIGURE_RECOVERY_AUTHN_CODES'],
@@ -194,10 +214,12 @@ def create_owner(data):
             user_id = uuid4()
             db.execute(text('INSERT INTO farms(id,name) VALUES(:farm,:name)'), {'farm': farm_id, 'name': data['farm_name'].strip()})
             db.execute(text('INSERT INTO users(id,farm_id,issuer,subject,display_name) VALUES(:user,:farm,:issuer,:subject,:name)'),
-                {'user': user_id, 'farm': farm_id, 'issuer': ISSUER, 'subject': subject, 'name': data['name'].strip()})
+                {'user': user_id, 'farm': farm_id,
+                 'issuer': values.get('HEARTH_IDENTITY_ORIGIN', 'https://localhost:8445') + f'/realms/{REALM}',
+                 'subject': subject, 'name': data['name'].strip()})
             db.execute(text("INSERT INTO role_grants(id,user_id,farm_id,role) VALUES(gen_random_uuid(),:user,:farm,'Owner')"), {'user': user_id, 'farm': farm_id})
             db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:user,'identity.owner_bootstrap','{\"channel\":\"local_console\"}')"), {'farm': farm_id, 'user': user_id})
-        # This developer edge is reachable only from host loopback, the sole allowed signup range.
+        # Owner creation remains a local console action. Public signup creates Members only.
         with admin_client(values) as client:
             client.put(f'/admin/realms/{REALM}', json={'registrationAllowed': True}).raise_for_status()
     finally:

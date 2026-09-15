@@ -1,0 +1,124 @@
+{
+  "verified_at": "2026-09-13T16:56:14.995050+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0013",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-DT-oM7Es.js",
+        "/assets/index-CzbGR6rN.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-DNhQVdVZ.js",
+        "/assets/index-CzbGR6rN.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "providers.py": "3bba4e8bad5b494f02eaf8eca6a7605982fd52db2aab28ad875ee594dcddfb29",
+    "routing.py": "b26db910163adf03b37f9d0bff1b9b0f2abcb157287fabfa20abfbd444c2ca83",
+    "inference.py": "67382ede9dfa0031c9799454d3f0409b6b500cceff7f248817675f678c51effa",
+    "chat.py": "5ddf6adfb096d2d523ed95bc486c8a5e88bdd49ae09bfd82297f1a6258c7ec5f",
+    "channels.py": "45f364df7e421ef7c2c94370fe00dadb7766c6f9b648b384fa80c90013d0827e",
+    "image_planning.py": "ceb6d3c00b5add78c1daf0ff139fdfafac0efaa296a7c9c949182245d8f30418"
+  },
+  "windows": {
+    "python_passed": 202,
+    "optional_skipped": 7,
+    "go_packages": "passed",
+    "shared_typescript_cases": 156,
+    "typecheck": "passed",
+    "production_bundles": "passed"
+  },
+  "linux": {
+    "python_passed": 202,
+    "optional_skipped": 8
+  },
+  "browser": {
+    "passed": 20,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures"
+  },
+  "http_policy": {
+    "default": "approval_required",
+    "scope": "exact external connection",
+    "admin_csrf_revision_audit_revocation": "passed",
+    "private_address_restrictions_and_https_validation": "retained"
+  },
+  "live_remote_model": {
+    "scope": "Real remote LM Studio over administrator-approved LAN HTTP; real PostgreSQL and BFF APIs with explicit OIDC fixtures in a disposable farm. The user's saved connection was not changed.",
+    "address": "http://10.20.30.40:1234",
+    "model": "qwen/qwen3.8-27b",
+    "blocked_without_approval": true,
+    "admin_approval_then_probe_passed": true,
+    "routed_reply_completed": true,
+    "reply_completion_seconds": 7.703,
+    "loaded_instances_before": [
+      "qwen/qwen3.8-27b"
+    ],
+    "loaded_instances_after": [
+      "qwen/qwen3.8-27b"
+    ],
+    "paid_inference": false
+  },
+  "connector_packages": [
+    {
+      "file": "hearth-connector-windows-amd64.zip",
+      "sha256": "a92fb7c2a7cc8cd9d8ed0c048030839cfebfac7c4b8f57d8302ba3c378c32081",
+      "binary_sha256": "e2f0d86337f3eec2c69754a155019f453cc31c3a5377f72b2e20fbf028c859db",
+      "bytes": 5859309
+    },
+    {
+      "file": "hearth-connector-linux-amd64.zip",
+      "sha256": "170a241a7ecd7ce48b8f945ad31106273ca98cc42f884eb98d544b7ac579c81c",
+      "binary_sha256": "5879cd16ca6350816ea5068358edf4b5bc892c4ef39da2403ad634c7def01180",
+      "bytes": 5810140
+    },
+    {
+      "file": "hearth-connector-linux-arm64.zip",
+      "sha256": "1b038820b4e9592c81dcd91889bc437bb52cf8e602cf42748e63c15c75f3fe75",
+      "binary_sha256": "6c26a1c9ed4d3c6702372e65729d45729754f45264de118b32b69643af0ac971",
+      "bytes": 5302972
+    },
+    {
+      "file": "hearth-connector-darwin-arm64.zip",
+      "sha256": "d72d6b8253c1aec9741862fbeb1474dff00189856b6e483a6500fddcd11b560b",
+      "binary_sha256": "f7139d5e14b52347341e5cdd0a20d2f50481f4e4d3e4ce3e77f644ca92ab546b",
+      "bytes": 5609581
+    },
+    {
+      "file": "hearth-connector-darwin-amd64.zip",
+      "sha256": "d90ff6210751036948f4e3b5b6c1c7ff7f3e3493abca257fb97a75f94cc7836c",
+      "binary_sha256": "4e970fc85a7fce40d58b9a9fc65b07321166ac02394aaa6219f90f1904b0ad10",
+      "bytes": 6006723
+    }
+  ],
+  "existing_farm_policy_inventory": [
+    {
+      "allow_insecure_http": false,
+      "targets": 3
+    }
+  ],
+  "saved_capability_routes": 14,
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Full real browser and concurrent multi-host farm acceptance",
+    "Server JIT settings are operator-declared, not attested",
+    "Loaded-state observation is not an atomic reservation",
+    "Live candidate residency inventory and managed lifecycle",
+    "Pending modality adapters and full release gates"
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

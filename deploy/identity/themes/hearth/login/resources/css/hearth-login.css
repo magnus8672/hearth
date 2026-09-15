@@ -1,4 +1,4 @@
-/* Hearth artwork and palette, over the pinned Keycloak form components. */
+/* hearth artwork and palette, over the pinned Keycloak form components. */
 :root, :root.pf-v5-theme-dark {
   --pf-v5-global--FontFamily--text: var(--hearth-font);
   --pf-v5-global--FontFamily--heading: var(--hearth-font);

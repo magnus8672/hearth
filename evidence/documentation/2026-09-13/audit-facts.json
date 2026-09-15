@@ -1,0 +1,283 @@
+{
+  "scope": "Static current source and artifact comparison with previously recorded tests; no live inference or deployment qualification was repeated.",
+  "reviewed_distinct_markdown": 55,
+  "requirement_rows": 45,
+  "capabilities": {
+    "executable": [
+      "chat.general",
+      "reason.plan",
+      "code.explain",
+      "code.implement",
+      "write.compose",
+      "text.summarize",
+      "data.extract",
+      "image.generate"
+    ],
+    "assignment_only": [
+      "vision.describe",
+      "geometry.generate",
+      "audio.transcribe",
+      "audio.speak",
+      "memory.retrieve",
+      "memory.index"
+    ]
+  },
+  "latest_product_validation": "evidence/routing/2026-09-13/validation.json",
+  "current_backend_hashes_match_that_record": true,
+  "backend_sha256": {
+    "providers.py": "1784f33c82540f48a5f479391e1a00cf72852af16f128611a400fff7d7105e75",
+    "routing.py": "420a477f652f6b9baee6f3c46e7dfdd4fc1e621480763faec9fde88ed6eba916",
+    "workspace.py": "22e8d86129f88ea10cd5cdc706e2dd55bbe55d5490a7de612fd50e04826ecffc",
+    "chat.py": "5ddf6adfb096d2d523ed95bc486c8a5e88bdd49ae09bfd82297f1a6258c7ec5f",
+    "channels.py": "45f364df7e421ef7c2c94370fe00dadb7766c6f9b648b384fa80c90013d0827e",
+    "image_planning.py": "ceb6d3c00b5add78c1daf0ff139fdfafac0efaa296a7c9c949182245d8f30418",
+    "inference.py": "cada80eb1c88c4ee45b8791efb7e7b968fe1f302678d9bc7ab60bba420055fdf",
+    "images.py": "5024a504f46c54de9c1371f93a274b45cb0cba7646f6513c5f66af1d4627ffdc",
+    "conversation_media.py": "c14d6d1fde13a15e73c08e21a808e5c0c855d0d8271a1a9a06a5c0ed632c4ef2",
+    "image_batches.py": "8f1be85c55643173a28085c32c1e6b92d6f7d0b0fb88ce9455f9edf8c9cb786c",
+    "contracts.py": "dc68956e7ed25ef8c16e71f15b45c2f118b289fa666c2f8fbf9740203f7dfd3c"
+  },
+  "registered_route_declarations": [
+    {
+      "method": "GET",
+      "path": "/api/v1/capabilities",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/capability-routes",
+      "source": "services/api/src/hearth/routing.py"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/capability-routes/{capability_id}",
+      "source": "services/api/src/hearth/routing.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/channels",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/channels",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/channels/{channel_id}",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/channels/{channel_id}/join",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/channels/{channel_id}/leave",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/channels/{channel_id}/messages",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/channels/{channel_id}/runs/{run_id}/stop",
+      "source": "services/api/src/hearth/channels.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/chats",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/chats",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/chats/{chat_id}",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/chats/{chat_id}",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/chats/{chat_id}/pending/{request_id}/cancel",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/chats/{chat_id}/stop",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/chats/{chat_id}/turns",
+      "source": "services/api/src/hearth/chat.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/conversation-images/{job_id}/image",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/drafts",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/drafts/{draft_id}",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/drafts/{draft_id}",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/drafts/{draft_id}",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/farm",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/image-targets",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/images",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/images",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/images/{job_id}/cancel",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/images/{job_id}/image",
+      "source": "services/api/src/hearth/images.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/logout",
+      "source": "services/api/src/hearth/identity.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/provider-pools/{pool_id}/clear",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/providers",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/providers",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/providers/{target_id}",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/providers/{target_id}/disable",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/providers/{target_id}/probe",
+      "source": "services/api/src/hearth/providers.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/session",
+      "source": "services/api/src/hearth/identity.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/setup",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/side-notes",
+      "source": "services/api/src/hearth/notes.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/side-notes",
+      "source": "services/api/src/hearth/notes.py"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/side-notes/{note_id}/dismiss",
+      "source": "services/api/src/hearth/notes.py"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspace",
+      "source": "services/api/src/hearth/workspace.py"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/callback",
+      "source": "services/api/src/hearth/identity.py"
+    },
+    {
+      "method": "GET",
+      "path": "/auth/login",
+      "source": "services/api/src/hearth/identity.py"
+    },
+    {
+      "method": "GET",
+      "path": "/health/live",
+      "source": "services/api/src/hearth/main.py"
+    },
+    {
+      "method": "GET",
+      "path": "/health/ready",
+      "source": "services/api/src/hearth/main.py"
+    }
+  ],
+  "connector_package_hashes_verified": 5,
+  "gate_states_unchanged": true,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "verification_this_turn": [
+    "Documentation local file/asset links and code fences",
+    "No substantive Markdown outside docs",
+    "119 baseline SHA-256 comparisons",
+    "Moved-file destination/source checks",
+    "11 backend source hashes match latest routing evidence",
+    "5 connector archive hashes match build manifest",
+    "Ruff on documentation checker and updated helper scripts",
+    "Git whitespace diff check"
+  ]
+}

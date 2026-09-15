@@ -1,0 +1,26 @@
+{
+  "scope": "Real SDXL GPU jobs and authenticated local HTTP through admin/user BFF APIs and restricted PostgreSQL. Explicit OIDC fixtures in a disposable farm; no real user account modified.",
+  "probe_features": [
+    "image.text_to_image",
+    "image.jobs"
+  ],
+  "metadata": {
+    "id": "8cc0297e-21ac-4165-bb64-378e155c3cca",
+    "seed": 672,
+    "model": "stabilityai/stable-diffusion-xl-base-1.0",
+    "shape": "square",
+    "state": "completed",
+    "steps": 20,
+    "width": 1024,
+    "height": 1024,
+    "reason": null,
+    "sha256": "fdb6faea3ace7f6235a7fe478af40c47c513fa504fc5560ca0fc09530fa6f88a",
+    "progress": 20,
+    "model_revision": "462165984030d82259a11f4367a4eed129e94a7b",
+    "schema_version": 1,
+    "manifest_sha256": "27a8b17e544d1189572b33c1e1d52ab4b16f2ef9f385ecd406df072b10b3a03b",
+    "cancel_requested": false,
+    "execution_released": true
+  },
+  "fresh_session_restores_artifact": true
+}

@@ -1,0 +1,129 @@
+{
+  "verified_at": "2026-09-13T16:29:27.955836+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0012",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-CBIIhj90.js",
+        "/assets/index-CypBiUWQ.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-wlMEKd8p.js",
+        "/assets/index-CypBiUWQ.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "providers.py": "565ebb738a046e30a34ee621c65f9f9da7998ac415e5b1866e3393119e8e543c",
+    "routing.py": "ad78e816d5b4d939acbfa9f75cd3697b4bad2a030852f2b94326125f6e5d9dc2",
+    "inference.py": "bff8082736ba3e3b4d820ad519113c346024c036a1772512f0dde93369308530",
+    "chat.py": "5ddf6adfb096d2d523ed95bc486c8a5e88bdd49ae09bfd82297f1a6258c7ec5f",
+    "channels.py": "45f364df7e421ef7c2c94370fe00dadb7766c6f9b648b384fa80c90013d0827e",
+    "image_planning.py": "ceb6d3c00b5add78c1daf0ff139fdfafac0efaa296a7c9c949182245d8f30418"
+  },
+  "windows": {
+    "python_passed": 191,
+    "optional_skipped": 6,
+    "go_packages": "passed",
+    "shared_typescript_cases": 156,
+    "typecheck": "passed",
+    "production_bundles": "passed",
+    "final_pool_normalization_regression": {
+      "passed": 12,
+      "skipped": 1
+    }
+  },
+  "linux": {
+    "python_passed": 191,
+    "optional_skipped": 7,
+    "connector_tls_tests": "passed"
+  },
+  "browser": {
+    "passed": 19,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures"
+  },
+  "concurrent_topology": {
+    "independent_http_specialists": 4,
+    "physical_machines": 1,
+    "shared_capacity_enforced": true,
+    "unloaded_target_received_generation": false
+  },
+  "live_local_model": {
+    "scope": "Real local LM Studio, HTTP/SSE and PostgreSQL through BFF APIs. Disposable farm and explicit OIDC fixtures. One physical GPU only.",
+    "model": "openai/gpt-oss-20b",
+    "loaded_instances_before": [
+      "openai/gpt-oss-20b"
+    ],
+    "loaded_instances_after": [
+      "openai/gpt-oss-20b"
+    ],
+    "probe_completed": true,
+    "routed_reply_completed": true,
+    "request_admission_seconds": 0.031,
+    "time_to_first_output_seconds": 0.578,
+    "automatic_loading_configuration": "not changed or verified by this test; loaded-instance preflight only",
+    "no_observed_load_or_eviction": true,
+    "paid_inference": false
+  },
+  "connector_packages": [
+    {
+      "file": "hearth-connector-windows-amd64.zip",
+      "sha256": "955dac7e165d8bc9e208b1f9a80702c9bfed3d0d11a9f6e60d79ff4e2e8634f6",
+      "binary_sha256": "e2f0d86337f3eec2c69754a155019f453cc31c3a5377f72b2e20fbf028c859db",
+      "bytes": 5858906
+    },
+    {
+      "file": "hearth-connector-linux-amd64.zip",
+      "sha256": "65abe4453f6152d894173775a73b1dec18872ccf1bf33f84d60d54c701371035",
+      "binary_sha256": "5879cd16ca6350816ea5068358edf4b5bc892c4ef39da2403ad634c7def01180",
+      "bytes": 5809737
+    },
+    {
+      "file": "hearth-connector-linux-arm64.zip",
+      "sha256": "2bbb7b4b3805f673265021e98d3e79ff3598142d7594f0fdfa606e6692eba3ff",
+      "binary_sha256": "6c26a1c9ed4d3c6702372e65729d45729754f45264de118b32b69643af0ac971",
+      "bytes": 5302569
+    },
+    {
+      "file": "hearth-connector-darwin-arm64.zip",
+      "sha256": "2cf56dc4679626985cbfb893769f0845fb33a815ff2d6a7b900645cb94fbd8f5",
+      "binary_sha256": "f7139d5e14b52347341e5cdd0a20d2f50481f4e4d3e4ce3e77f644ca92ab546b",
+      "bytes": 5609178
+    },
+    {
+      "file": "hearth-connector-darwin-amd64.zip",
+      "sha256": "28af73b1e9e76c4ca319698b1feb21ba428a484347351436fc9a8ece4bb15bfc",
+      "binary_sha256": "4e970fc85a7fce40d58b9a9fc65b07321166ac02394aaa6219f90f1904b0ad10",
+      "bytes": 6006320
+    }
+  ],
+  "existing_farm_policy_inventory": [
+    {
+      "residency_policy": "unknown",
+      "targets": 2
+    }
+  ],
+  "saved_capability_routes": 14,
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Joint real browser/connector/provider test across physical hosts",
+    "Server JIT settings are operator-declared, not attested",
+    "Loaded-state observation is not an atomic reservation",
+    "Live candidate residency inventory and managed lifecycle",
+    "Pending modality adapters and full release gates"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-09-15T02:00:18.497352+00:00",
+  "passed": true,
+  "transport": "laptop to ESX VM over physical LAN",
+  "tls_verified": true,
+  "server_ip_san": "10.20.30.10",
+  "certificate_bundle_matches_server": true,
+  "metadata": {
+    "schema_version": 1,
+    "base_url": "https://10.20.30.10",
+    "admin_url": "https://10.20.30.10:8443",
+    "identity_url": "https://10.20.30.10:8445",
+    "api_base_url": "https://10.20.30.10/v1",
+    "mcp_url": "https://10.20.30.10/mcp",
+    "server_name": "10.20.30.10",
+    "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1",
+    "server_sha256": "2fcba464b9670e0964950ede25ec44a6825063c7c6763de3fd62dd9179006562"
+  },
+  "pages": {
+    "https://10.20.30.10": {
+      "ready": 200,
+      "frontend": 200
+    },
+    "https://10.20.30.10:8443": {
+      "ready": 200,
+      "frontend": 200
+    }
+  },
+  "browser_flows_exercised": false,
+  "owner_enrollment_and_provider_setup": "left to the user as requested",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

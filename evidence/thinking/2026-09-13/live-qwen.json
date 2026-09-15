@@ -1,0 +1,26 @@
+{
+  "scope": "Real resident LAN Qwen and restricted-role PostgreSQL/BFF, disposable farm, explicit OIDC fixtures. Synthetic garden arithmetic only.",
+  "model": "qwen/qwen3.8-27b",
+  "reasoning_visible_before_answer": true,
+  "distinct_preview_lengths": [
+    2,
+    27,
+    55,
+    83,
+    129,
+    137,
+    168,
+    194,
+    200,
+    209,
+    222,
+    241,
+    263
+  ],
+  "reasoning_characters": 263,
+  "reasoning_text_recorded_in_evidence": false,
+  "answer": "315 square metres.",
+  "saved_preview_restored": true,
+  "loaded_models_unchanged": true,
+  "cloud_calls": 0
+}

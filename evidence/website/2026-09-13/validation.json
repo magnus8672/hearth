@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-09-13T16:09:52.115Z",
+  "scope": "Static marketing website only; no product release gates",
+  "viewports": [
+    {
+      "theme": "light",
+      "width": 320,
+      "contentWidth": 320,
+      "brokenImages": []
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "contentWidth": 390,
+      "brokenImages": []
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "contentWidth": 768,
+      "brokenImages": []
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "contentWidth": 1024,
+      "brokenImages": []
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "contentWidth": 1440,
+      "brokenImages": []
+    },
+    {
+      "theme": "dark",
+      "width": 320,
+      "contentWidth": 320,
+      "brokenImages": []
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "contentWidth": 390,
+      "brokenImages": []
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "contentWidth": 768,
+      "brokenImages": []
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "contentWidth": 1024,
+      "brokenImages": []
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "contentWidth": 1440,
+      "brokenImages": []
+    }
+  ],
+  "checks": [
+    "All three routing illustrations, keyboard activation, and exclusive pressed state",
+    "Light/dark persistence, live system preference, and matching logos",
+    "Every navigation target exists; keyboard skip link works",
+    "200% text enlargement without horizontal overflow at 320, 768, 1440px",
+    "Theme controls work when browser storage is blocked",
+    "All six narrative sections render without JavaScript; enhancement-only controls are hidden",
+    "All six copied brand assets exactly match current repository masters"
+  ],
+  "errors": [],
+  "payloadBytes": 50509,
+  "passed": true
+}

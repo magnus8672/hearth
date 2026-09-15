@@ -1,0 +1,41 @@
+{
+  "scope": "Real resident Qwen over the LAN and real restricted-role PostgreSQL/BFF in a disposable farm. OIDC is an explicit fixture.",
+  "model": "qwen/qwen3.8-27b",
+  "new_chat_each_time": true,
+  "replies": [
+    {
+      "note_revision": 1,
+      "reply": "Juniper-edf89b93",
+      "finish_reason": "stop",
+      "memory_sources": [
+        {
+          "id": "0243a5c9-519c-4b4e-a539-08d2d5cad298",
+          "type": "note",
+          "title": "My telescope",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "note_revision": 2,
+      "reply": "Maple-edf89b93",
+      "finish_reason": "stop",
+      "memory_sources": [
+        {
+          "id": "0243a5c9-519c-4b4e-a539-08d2d5cad298",
+          "type": "note",
+          "title": "My telescope",
+          "revision": 2
+        },
+        {
+          "id": "d50976ca-2170-46b6-9a8d-f9a86c2d280f",
+          "type": "message",
+          "title": "What is my telescope currently named? Answer with just the name.",
+          "revision": 1
+        }
+      ]
+    }
+  ],
+  "loaded_models_unchanged": true,
+  "cloud_calls": 0
+}

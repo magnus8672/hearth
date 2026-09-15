@@ -25,6 +25,13 @@ class Settings(BaseSettings):
     audience: Literal["admin", "user"] = "admin"
     farm_id: UUID | None = None
     identity_internal_origin: str = "http://keycloak:8085"
+    # Only the development appliance may map a host-loopback URL to QEMU's
+    # same-machine gateway. Never accept transport aliases from browser input.
+    development_provider_aliases: dict[str, str] = Field(default_factory=dict)
+    memory_vault_path: str | None = None
+    # Reasoning models spend the completion budget on both reasoning and answers.
+    chat_max_output_tokens: int = Field(default=16384, ge=256, le=65536)
+    chat_timeout_seconds: int = Field(default=900, ge=30, le=3600)
 
     @property
     def origin(self):
@@ -49,6 +56,8 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def fail_closed(self):
         if self.mode == "production":
+            if self.development_provider_aliases:
+                raise ValueError("provider transport aliases are development-only")
             if self.fixture_identity:
                 raise ValueError("fixture identity cannot start in production")
             if not self.database_url.get_secret_value():
@@ -72,7 +81,7 @@ class Settings(BaseSettings):
             if parsed.port is not None and not 1 <= parsed.port <= 65535:
                 raise ValueError("invalid origin port")
         if self.database_url.get_secret_value() and not self.database_url.get_secret_value().startswith("postgresql+psycopg://"):
-            raise ValueError("Hearth requires PostgreSQL through psycopg")
+            raise ValueError("hearth requires PostgreSQL through psycopg")
         return self
 
 

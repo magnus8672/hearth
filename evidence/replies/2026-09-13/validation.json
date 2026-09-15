@@ -1,0 +1,91 @@
+{
+  "verified_at": "2026-09-13T19:08:35.340660+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0014",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-CS5thoio.js",
+        "/assets/index-CQu74KXG.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-CMtpWLtV.js",
+        "/assets/index-CQu74KXG.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "config.py": "14eeee9500c81af31abe45a69743d4ea9228a804626ba44c988580b126907de0",
+    "inference.py": "cc9f21b8c05aada8a8bca929d3550cb4cb9f4dc6be3658337ba20648df5bf275",
+    "chat.py": "9c797678a7c0977295830564b5afa27f2246115a9734dc7594cbafc6ac49fd78",
+    "channels.py": "fd063352e9f5b1f291b415171902f9fabba528900053662f31a01e55557c14f4"
+  },
+  "active_reply_tokens": 16384,
+  "active_reply_seconds": 900,
+  "windows": {
+    "python_passed": 208,
+    "optional_skipped": 9,
+    "go_packages": "passed",
+    "shared_typescript_cases": 156,
+    "typecheck": "passed",
+    "production_bundles": "passed",
+    "final_identity_edge_case_regressions": 10
+  },
+  "linux": {
+    "python_passed": 208,
+    "optional_skipped": 9,
+    "scope": "Initial qualification image build passed; final full suite rerun with current source mounted via PYTHONPATH in that image."
+  },
+  "browser": {
+    "passed": 22,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures"
+  },
+  "live_remote_model": {
+    "scope": "Real remote LM Studio, restricted-role PostgreSQL and both BFF APIs with explicit OIDC fixtures in a disposable farm. No user conversation modified.",
+    "model": "qwen/qwen3.8-27b",
+    "address": "http://10.20.30.40:1234",
+    "max_output_tokens": 16384,
+    "elapsed_seconds": 22.204,
+    "finish_reason": "stop",
+    "answer_characters": 1526,
+    "answer_chunks": 519,
+    "complete_python_blocks_parsed": 2,
+    "model_code_executed": false,
+    "saved_message_and_model_restored": true,
+    "loaded_before": [
+      "qwen/qwen3.8-27b"
+    ],
+    "loaded_after": [
+      "qwen/qwen3.8-27b"
+    ]
+  },
+  "reported_failure": {
+    "model": "qwen/qwen3.8-27b",
+    "finish_reason": "length",
+    "visible_characters": 53,
+    "old_requested_tokens": 768,
+    "recent_api_error_lines": 0
+  },
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Concurrent physical-host qualification",
+    "Context window negotiation and longer history",
+    "Provider-native limits still apply",
+    "Legacy model attribution has its original migration limits",
+    "Remaining capability adapters and release gates"
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

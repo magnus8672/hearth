@@ -32,10 +32,10 @@ def run():
         path = '/admin/realms/' + data['realm']
         try:
             client.post('/admin/realms', json={'realm': data['realm'], 'enabled': True, 'loginTheme': 'hearth',
-                'displayName': 'Hearth', 'registrationAllowed': True, 'sslRequired': 'none',
+                'displayName': 'hearth', 'registrationAllowed': True, 'sslRequired': 'none',
                 'attributes': {'frontendUrl': 'http://localhost:8085', 'hearthThemeQa': data['marker']}}).raise_for_status()
             configure_mfa_flow(client, path)
-            client.post(path + '/clients', json={'clientId': 'hearth-admin', 'name': 'Hearth Administration',
+            client.post(path + '/clients', json={'clientId': 'hearth-admin', 'name': 'hearth Administration',
                 'enabled': True, 'protocol': 'openid-connect', 'publicClient': False,
                 'secret': data['client_secret'], 'standardFlowEnabled': True,
                 'directAccessGrantsEnabled': False, 'redirectUris': ['http://localhost:8085/qa-complete'],

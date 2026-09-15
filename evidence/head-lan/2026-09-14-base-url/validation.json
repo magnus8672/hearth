@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-09-15T00:55:14.518606+00:00",
+  "status": "passed",
+  "scope": "Public workspace base URL configuration and public client certificate package",
+  "tests": {
+    "windows_targeted": 74,
+    "linux_targeted": 74,
+    "ruff": "passed",
+    "coverage": [
+      "interactive and scripted setup",
+      "canonical DNS/IP and default HTTPS port",
+      "invalid origins and port conflicts",
+      "unchanged existing farm credentials",
+      "public-only PEM/DER/chain package and fingerprints",
+      "BFF identity, client keys, MCP and toolbox regressions"
+    ]
+  },
+  "live_tls": "network.json",
+  "source_sha256": {
+    "scripts/head.py": "4cd90258a3e04673810462a333a9a95480c1a1e67dc3ba86de55d9d32ff03c83",
+    "tests/security/test_head_configuration.py": "560328bb963e9bcd26d948e53d0aa602cf06aff6d3984b45a474f74147a642d4",
+    "tests/integration/test_head_origins.py": "28599fdb64f2f6ef47f5c1f111d377db00099a6fd714fb1876712007a02e641d"
+  },
+  "limitations": [
+    "Disposable Linux Compose VM with test DNS entry scoped to probe container, not physical ESX deployment",
+    "No full external harness or existing-farm migration qualification",
+    "No release gate closed"
+  ]
+}

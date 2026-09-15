@@ -1,0 +1,7 @@
+{
+  "scope": "Verified idle, hearth-owned process restart with unchanged controller key, accepted receipt and artifact persistence. No inference replay. This is not a running-job crash test.",
+  "model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "manifest_sha256": "27a8b17e544d1189572b33c1e1d52ab4b16f2ef9f385ecd406df072b10b3a03b",
+  "completed_receipt_preserved": true,
+  "png_digest_preserved": true
+}

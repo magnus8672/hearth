@@ -1,6 +1,6 @@
 {
-  "artifact": "Hearth brand kit v1.0",
-  "browser": "Chrome via Puppeteer",
+  "artifact": "hearth brand kit v1.2",
+  "browser": "Chromium via Playwright",
   "themeSwitch": true,
   "layouts": [
     {
@@ -30,8 +30,8 @@
     }
   ],
   "imageFailures": [],
-  "svgCount": 46,
+  "svgCount": 47,
   "svgErrors": [],
   "javascriptErrors": [],
-  "notes": "Brand artifacts only. Screens use illustrative states; no Hearth application or hardware tested."
+  "notes": "Brand rendering and exports only. Gallery states are illustrative; no inference or release qualification."
 }

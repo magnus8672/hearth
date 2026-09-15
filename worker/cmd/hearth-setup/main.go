@@ -132,7 +132,7 @@ func main() {
 		}
 		return output, err
 	}
-	fmt.Println("Hearth local setup is open in your browser. Keep this window open until setup completes.")
+	fmt.Println("hearth local setup is open in your browser. Keep this window open until setup completes.")
 	fmt.Println("This setup session expires in 30 minutes. Close this window to end it.")
 	go func() { time.Sleep(300 * time.Millisecond); openBrowser(server.origin + "/#" + server.secret) }()
 	httpServer := &http.Server{Handler: server, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 20 * time.Second, WriteTimeout: 90 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 8192}

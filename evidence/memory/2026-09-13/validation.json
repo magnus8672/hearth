@@ -1,0 +1,140 @@
+{
+  "verified_at": "2026-09-14T00:21:34.097944+00:00",
+  "status": "passed_private_memory_slice",
+  "migration": "0018",
+  "automated": {
+    "windows_full": {
+      "passed": 288,
+      "optional_skipped": 14
+    },
+    "windows_final_memory": {
+      "passed": 7,
+      "optional_skipped": 1
+    },
+    "linux_full_final": {
+      "passed": 289,
+      "optional_skipped": 14
+    },
+    "windows_note": "Final full run covers 288 tests; the final seven-test memory suite adds the new corrected-audio regression. Linux full final run includes all 289.",
+    "go_packages": "passed",
+    "ruff": "passed",
+    "shared_typescript_cases": 180,
+    "typecheck": "passed",
+    "production_bundles": "passed",
+    "browser_passed": 35,
+    "browser_optional_skipped": 1,
+    "browser_scope": "Explicit identity/API fixtures with real Chromium rendering and interaction."
+  },
+  "deployment": {
+    "checked_at": "2026-09-14T00:20:11.504176+00:00",
+    "database_migration": "0018",
+    "private_pre_migration_backup": true,
+    "capability_bindings_preserved": true,
+    "origins": [
+      {
+        "origin": "https://localhost:8443",
+        "https_verified": true,
+        "exact_build": true,
+        "assets": [
+          "/assets/index-DEOp_rM_.js",
+          "/assets/index-sotNt5DD.css"
+        ]
+      },
+      {
+        "origin": "https://localhost:8444",
+        "https_verified": true,
+        "exact_build": true,
+        "assets": [
+          "/assets/index-r-NpVOPh.js",
+          "/assets/index-sotNt5DD.css"
+        ]
+      }
+    ],
+    "backend_sha256": {
+      "memory.py": "7f215c46046c35458145a70f11250bc57ed96c74599684d456e0e9f5617b4460",
+      "memory_vault.py": "12a58fa509a8ce37a50cc0e033cfcad6c0b1ee4614fcf6b0b5f20c5487ca2426",
+      "chat.py": "612a0d2ff124f712e4e4b4921f0e27d881194afab702f9f42de53286d8c58560",
+      "main.py": "36be925187247dee201a4a4a3f12526326cd207ca3d5cb825abb5c07158a135d",
+      "config.py": "30a2fdfeb8ed879a4624024054547a44cfe7a762564ebc10d5d1072acf807212",
+      "workspace.py": "03aaf481e44d488d72867ff0491668e75f3c5dc9a5c1c8fd9b4b72bb89ef79c6",
+      "routing.py": "871bf808493da5241cbbff07ee10e2436d0636ebdb78e86eeb84c98aeebd5bb8"
+    },
+    "projected_workspaces": [
+      {
+        "generation": 1,
+        "projected_generation": 1,
+        "projected_at": "2026-09-14 00:10:31.702372+00:00"
+      }
+    ],
+    "vault_storage": {
+      "private_vaults": 1,
+      "permissions_checked": true
+    },
+    "authentication_required_for_memory_and_export": true
+  },
+  "live_recall": {
+    "scope": "Real resident Qwen over the LAN and real restricted-role PostgreSQL/BFF in a disposable farm. OIDC is an explicit fixture.",
+    "model": "qwen/qwen3.8-27b",
+    "new_chat_each_time": true,
+    "replies": [
+      {
+        "note_revision": 1,
+        "reply": "Juniper-edf89b93",
+        "finish_reason": "stop",
+        "memory_sources": [
+          {
+            "id": "0243a5c9-519c-4b4e-a539-08d2d5cad298",
+            "type": "note",
+            "title": "My telescope",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "note_revision": 2,
+        "reply": "Maple-edf89b93",
+        "finish_reason": "stop",
+        "memory_sources": [
+          {
+            "id": "0243a5c9-519c-4b4e-a539-08d2d5cad298",
+            "type": "note",
+            "title": "My telescope",
+            "revision": 2
+          },
+          {
+            "id": "d50976ca-2170-46b6-9a8d-f9a86c2d280f",
+            "type": "message",
+            "title": "What is my telescope currently named? Answer with just the name.",
+            "revision": 1
+          }
+        ]
+      }
+    ],
+    "loaded_models_unchanged": true,
+    "cloud_calls": 0
+  },
+  "graphify": {
+    "package": "graphifyy",
+    "version": "0.1.14",
+    "scope": "Actual offline build/export functions for one scoped explicit-link graph. Network connect calls blocked during the adapter regression. No semantic extraction.",
+    "cloud_calls": 0
+  },
+  "release_gate_counts": {
+    "partial": 18,
+    "not_run": 43
+  },
+  "new_partial_gates": [
+    "E12",
+    "E13"
+  ],
+  "remaining": [
+    "Automatic Obsidian synchronization/plugin",
+    "Semantic Graphify extraction, embeddings and retrieval quality",
+    "Topic assertions and richer graph navigation",
+    "Model-generated summary compaction and context negotiation",
+    "Shared-channel memory and transcript export",
+    "External knowledge workers and NAS spool quotas",
+    "Physical deletion, backup tombstones and restore enforcement",
+    "Complete head migration and general artifact binary export"
+  ]
+}

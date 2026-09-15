@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-09-15T12:41:35.153292+00:00",
+  "branch": "main",
+  "remotes": [
+    "origin"
+  ],
+  "scope": "Current tracked and eligible untracked files, all locally referenced Git blobs, selected high-confidence credential patterns and JSON field names. This is not an exhaustive secret or screenshot privacy audit.",
+  "candidate_files": 800,
+  "candidate_bytes": 44480719,
+  "largest_candidate": {
+    "file": "evidence/images/2026-09-13/chat-routing/channel.png",
+    "bytes": 2164340
+  },
+  "all_local_refs_blob_count": 905,
+  "largest_local_refs_blob_bytes": 2164340,
+  "credential_pattern_findings": [],
+  "history_credential_pattern_findings": [],
+  "sensitive_json_fields_for_review": [],
+  "tracked_files_matching_ignore": [],
+  "ignore_examples_checked": 52,
+  "source_examples_checked": 23,
+  "rule_failures": [],
+  "git_object_integrity": "git fsck --full --no-dangling passed",
+  "remote_preflight": "SSH access succeeded; remote had no refs before publication",
+  "state_changes": "Ignore rules and source documentation only; no farm data deletion or history rewrite",
+  "status": "passed"
+}

@@ -1,0 +1,78 @@
+{
+  "scope": "Real LM Studio planning and SDXL generation through private and channel BFF APIs and restricted PostgreSQL. Explicit OIDC fixtures in a disposable farm; no actual user chats modified.",
+  "models": [
+    "openai/gpt-oss-20b",
+    "stabilityai/stable-diffusion-xl-base-1.0"
+  ],
+  "records": [
+    {
+      "request": "Please draw what we just discussed",
+      "image": {
+        "schema_version": 1,
+        "request": {
+          "schema_version": 1,
+          "id": "b14e251c-df46-4f00-8677-71276442658f",
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "prompt": "A bright red Jeep parked on a gravel road beside a dense pine forest, golden sunset light filtering through tall trees, casting long shadows and warm orange hues across the scene.",
+          "negative_prompt": "",
+          "shape": "square",
+          "steps": 20,
+          "seed": 2882468372
+        },
+        "status": "completed",
+        "progress": 20,
+        "reason": null,
+        "sha256": "fdcc75b222cde6a552dd485bedae49a0165b85713a0c3597a64344dc9b76b0f6",
+        "planning_model": "openai/gpt-oss-20b",
+        "source_image_id": null,
+        "variation": false
+      }
+    },
+    {
+      "request": "Make it blue instead",
+      "image": {
+        "schema_version": 1,
+        "request": {
+          "schema_version": 1,
+          "id": "6b189344-39a4-4b3b-a546-f372ecb7473d",
+          "model": "stabilityai/stable-diffusion-xl-base-1.0",
+          "prompt": "A bright blue Jeep parked on a gravel road beside a dense pine forest, golden sunset light filtering through tall trees, casting long shadows and warm orange hues across the scene.",
+          "negative_prompt": "",
+          "shape": "square",
+          "steps": 20,
+          "seed": 3344197818
+        },
+        "status": "completed",
+        "progress": 20,
+        "reason": null,
+        "sha256": "10ea1c406066beae62aeacddbf5f7e99d9c4a5831665c1ec282262f5ac63b91b",
+        "planning_model": "openai/gpt-oss-20b",
+        "source_image_id": "b14e251c-df46-4f00-8677-71276442658f",
+        "variation": true
+      }
+    }
+  ],
+  "channel_image": {
+    "schema_version": 1,
+    "request": {
+      "schema_version": 1,
+      "id": "de8db6e7-e53c-464d-9655-a91ee1192a24",
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "prompt": "tiny wooden spaceship floating above a pine forest at sunset, storybook illustration style",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 1812021996
+    },
+    "status": "completed",
+    "progress": 20,
+    "reason": null,
+    "sha256": "200f372210e9b128273002affb88badad6f403cf089e6d433a4e20bd7f01edf1",
+    "planning_model": "openai/gpt-oss-20b",
+    "source_image_id": null,
+    "variation": false
+  },
+  "acknowledgement_preserves_focus": true,
+  "fresh_session_restored": true,
+  "pixel_editing": false
+}

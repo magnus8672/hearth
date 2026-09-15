@@ -43,11 +43,11 @@ def sync():
         raise SystemExit('Guest CPU compatibility profile prepared. Run appliance.py down, appliance.py up, then repeat this stack command.')
     archive_path = STATE / "source.tar"
     with tarfile.open(archive_path, "w") as archive:
-        for name in ("pyproject.toml", "uv.lock", "alembic.ini", "services", "deploy", "scripts", "tests", "apps/admin-web/dist", "apps/user-web/dist", ".dockerignore"):
+        for name in ("pyproject.toml", "uv.lock", "alembic.ini", "services", "runtimes/image", "runtimes/speech", "runtimes/transcription", "deploy", "scripts", "tests", "apps/admin-web/dist", "apps/user-web/dist", ".dockerignore"):
             path = ROOT / name
             if path.is_dir():
                 for child in path.rglob("*"):
-                    if child.is_file() and "__pycache__" not in child.parts:
+                    if child.is_file() and "__pycache__" not in child.parts and ".venv" not in child.parts:
                         archive.add(child, arcname=child.relative_to(ROOT), recursive=False)
             else:
                 archive.add(path, arcname=name)
@@ -70,6 +70,9 @@ def main():
     command = "cd /opt/hearth/deploy/compose && docker compose -f development.yaml "
     if args.action == "up":
         subprocess.run([str(x) for x in ssh_args()] + [command + "up -d --build"], check=True)
+        # The edge admin API is disabled. A changed bind-mounted Caddyfile needs
+        # recreation to apply new upload limits and browser security headers.
+        subprocess.run([str(x) for x in ssh_args()] + [command + "up -d --no-deps --force-recreate edge"], check=True)
     if args.action == "status":
         subprocess.run([str(x) for x in ssh_args()] + [command + "ps"], check=True)
     if args.action == "qualify-linux":

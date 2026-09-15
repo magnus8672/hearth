@@ -1,0 +1,120 @@
+{
+  "verified_at": "2026-09-13T21:09:26.264464+00:00",
+  "status": "passed_local_scope",
+  "database_revision": "0016",
+  "origins": [
+    {
+      "origin": "https://localhost:8443",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-BbSN7DEU.js",
+        "/assets/index-CqLCPo56.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "tls_valid": true,
+      "assets_match_build": true,
+      "assets": [
+        "/assets/index-CFhS7OE7.js",
+        "/assets/index-CqLCPo56.css"
+      ]
+    }
+  ],
+  "both_bff_backend_source_sha256": {
+    "speech.py": "4663a2f29375c2c0540c0a1f09b0d2b6f56216fb64e65ddd87c6ff6fd58dc89d",
+    "speech_transport.py": "0e94c0ca657086b4f63700885a810a9723daa8a249c254fead6edb7c17fbd2d5",
+    "audio_codec.py": "f52bcbb53884bb6f28cae52316f0e9c11255801b719ea67d799af670e4dac3c3",
+    "chat.py": "10f8fedc12578e424f25b28fc0c8f909bd111246f0e0a069cd9aed6e79626ba1",
+    "providers.py": "bc7808114fecea0e2b94db6802838c63537c4c708527f5c6d70120c8e4c62398",
+    "routing.py": "2e2d42e8093b55d9c482d593281bebcb79dfcdbb581590a1b5b88bc40ae63d64",
+    "main.py": "257741f5c798a6f87fe5912a2e9943e600bb34fd5f1732d836d4fd7c34c972d5",
+    "contracts.py": "2ee4d72f415d3af23b52ba9ee479f6d680cedbb9347b5b9fa504ab48b9c8a780"
+  },
+  "windows": {
+    "python_passed": 243,
+    "optional_skipped": 12,
+    "go_packages": "passed",
+    "shared_typescript_cases": 168,
+    "typecheck": "passed",
+    "production_bundles": "passed"
+  },
+  "linux": {
+    "python_passed": 243,
+    "optional_skipped": 12
+  },
+  "browser": {
+    "passed": 27,
+    "optional_skipped": 1,
+    "identity_and_api": "explicit fixtures",
+    "desktop_mobile_screenshots_visually_inspected": true,
+    "valid_wav_playback_stop_and_reload": true
+  },
+  "anonymous_speech_create_read_cancel_denied": true,
+  "speech_target": {
+    "model_id": "kokoro-82m-v1.0-onnx",
+    "features": [
+      "audio.speak",
+      "audio.jobs"
+    ],
+    "state": "ready",
+    "fresh": true,
+    "execution_state": "idle"
+  },
+  "executable_profiles": 10,
+  "live_speech": {
+    "scope": "Real CPU Kokoro, authenticated provider transport and restricted PostgreSQL/BFF APIs, with explicit text/OIDC fixtures in a disposable farm.",
+    "model": "kokoro-82m-v1.0-onnx",
+    "voice": "af_heart",
+    "text": "Welcome home. Your hearth brings your models together.",
+    "audio_seconds": 2.8373333333333335,
+    "elapsed_seconds": 4.453,
+    "sha256": "c50124dae61bad2beff3108aacde40eb8f8b3984efa5f5b5f271f50b1ca990c0",
+    "restored_audio_and_identity": true,
+    "perceptual_quality": "Not established by waveform validation."
+  },
+  "activation": {
+    "model": "kokoro-82m-v1.0-onnx",
+    "features": [
+      "audio.speak",
+      "audio.jobs"
+    ],
+    "speech_ready": true,
+    "other_bindings_preserved": true,
+    "independent_cpu_pool": true
+  },
+  "speech_runtime": {
+    "info": {
+      "schema_version": 1,
+      "protocol": "hearth.speech.v1",
+      "model": "kokoro-82m-v1.0-onnx",
+      "model_revision": "1.0",
+      "manifest_sha256": "f3ef60536c2f8e746cb444b114f05b51428cf7f6bdaa912a6bf03fb3d9b83ee7",
+      "voices": [
+        "af_heart"
+      ],
+      "default_voice": "af_heart",
+      "maximum_characters": 6000,
+      "sample_rate": 24000,
+      "job_cancellation": true,
+      "offline": true
+    },
+    "repeated_start_preserves_process": true,
+    "source_sha256": "fa8891139c10a24b386bce1476419f68c48f25f7fc6faceb7ec64a2cb3c63b03",
+    "dependency_lock_sha256": "8c603890b8172243bc315e815ac857857c9cf0ce705c6fa983985e596d7d67fb"
+  },
+  "original_snapshot_files_verified": 119,
+  "release_gate_counts": {
+    "partial": 16,
+    "not_run": 45
+  },
+  "remaining": [
+    "Microphone capture, transcription and known-recording accuracy checks",
+    "Listening quality, more voices, Markdown cleanup and channel speech",
+    "General artifact retention and deletion",
+    "Physical host loss/recovery and external no-auto-load acceptance",
+    "Live Switchyard integration, memory and required geometry adapters",
+    "Managed node enrollment, signed recipes and all release gates"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "model": "stabilityai/stable-diffusion-xl-base-1.0",
+  "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+  "seed": 451,
+  "steps": 20,
+  "size": [
+    1024,
+    1024
+  ],
+  "seconds": 13.48,
+  "gpu": "[redacted deployment detail]",
+  "peak_allocated_bytes": 5593327104,
+  "offline": true,
+  "prompt": "A cozy little stone cottage in a pine forest at dusk, warm amber firelight through a round window, a tiny chimney, storybook illustration, soft painterly detail, inviting and peaceful",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

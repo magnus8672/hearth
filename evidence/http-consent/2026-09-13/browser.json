@@ -1,0 +1,868 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\src\\hearth\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "C:\\src\\hearth\\playwright.config.ts",
+    "rootDir": "C:/src/hearth/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 12
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/src/hearth/.hearth/test-results/browser",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 12
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/src/hearth/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": ".hearth/test-results/browser.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 12,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "chat.spec.ts",
+      "file": "chat.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "capability assignments persist ordered providers and connection edits require new verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3154,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.758Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dac514d5d837ca37b9e-4b69e475fa3efbc8b069",
+          "file": "chat.spec.ts",
+          "line": 13,
+          "column": 1
+        },
+        {
+          "title": "provider form verifies an existing service and keeps tools unverified",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2216,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.773Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dac514d5d837ca37b9e-8f463cf65fcd33deff85",
+          "file": "chat.spec.ts",
+          "line": 72,
+          "column": 1
+        },
+        {
+          "title": "chat sends once, shows incremental plain text and restores saved replies",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2497,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.741Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dac514d5d837ca37b9e-ddf2ec346cc8c6da8ac1",
+          "file": "chat.spec.ts",
+          "line": 104,
+          "column": 1
+        },
+        {
+          "title": "private notes stay separate until explicitly used to steer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1726,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.760Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dac514d5d837ca37b9e-e8f4415b4a9d5f3cbae4",
+          "file": "chat.spec.ts",
+          "line": 147,
+          "column": 1
+        },
+        {
+          "title": "capability cards open matching provider configuration and verification",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 4,
+                  "status": "passed",
+                  "duration": 3037,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.791Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6dac514d5d837ca37b9e-8225b0dc0198c7aa6cc6",
+          "file": "chat.spec.ts",
+          "line": 201,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "collaboration-images.spec.ts",
+      "file": "collaboration-images.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "channel join, keyboard posting, explicit mention and leave",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 1571,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.797Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2607be857f06f6a52064-5c6233a52eedd14babc8",
+          "file": "collaboration-images.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "image gallery progress, saved PNG and repeatable settings",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 6,
+                  "status": "passed",
+                  "duration": 6410,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.805Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2607be857f06f6a52064-fd382b1dc35f3a466d57",
+          "file": "collaboration-images.spec.ts",
+          "line": 44,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "conversation-images.spec.ts",
+      "file": "conversation-images.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "chat returns image progress and saved inline PNG, then restores it after reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 7,
+                  "status": "passed",
+                  "duration": 3090,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.851Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6f242d288a94e23fae27-bf7ae0bd2b90a4cc838b",
+          "file": "conversation-images.spec.ts",
+          "line": 15,
+          "column": 1
+        },
+        {
+          "title": "channel image appears inline and only the requesting member sees Stop",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 8,
+                  "status": "passed",
+                  "duration": 1783,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6f242d288a94e23fae27-41593e6300c1f0714de2",
+          "file": "conversation-images.spec.ts",
+          "line": 57,
+          "column": 1
+        },
+        {
+          "title": "local planning hands off to an image variation without showing model JSON",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 9,
+                  "status": "passed",
+                  "duration": 5097,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.834Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6f242d288a94e23fae27-7a7da9ec77b259f024e8",
+          "file": "conversation-images.spec.ts",
+          "line": 83,
+          "column": 1
+        },
+        {
+          "title": "chat image batch shows each result and completed state after reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 10,
+                  "status": "passed",
+                  "duration": 3158,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6f242d288a94e23fae27-eb0f81d7b5cadf45911e",
+          "file": "conversation-images.spec.ts",
+          "line": 121,
+          "column": 3
+        },
+        {
+          "title": "chat image batch shows each result and cancelled state after reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 11,
+                  "status": "passed",
+                  "duration": 1719,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:56.850Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6f242d288a94e23fae27-f95b91fd3127570861d2",
+          "file": "conversation-images.spec.ts",
+          "line": 121,
+          "column": 3
+        }
+      ]
+    },
+    {
+      "title": "entry.spec.ts",
+      "file": "entry.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "an unavailable service can recover without inventing sign-in readiness",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 800,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:58.624Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a2a3eba492b1b8e90f7d-c371d4214a0e7a9dada2",
+          "file": "entry.spec.ts",
+          "line": 8,
+          "column": 1
+        },
+        {
+          "title": "theme choice restores on reload and system mode follows the browser",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1034,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:58.655Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a2a3eba492b1b8e90f7d-635a9e9b573f69ac8839",
+          "file": "entry.spec.ts",
+          "line": 20,
+          "column": 1
+        },
+        {
+          "title": "both bundles fit mobile width with accessible connection controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 11,
+                  "status": "passed",
+                  "duration": 1208,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:58.935Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a2a3eba492b1b8e90f7d-a048885d32bb9a85efad",
+          "file": "entry.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "live appliance readiness is visible in the real application",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "Enable only with the real development appliance running.",
+                  "location": {
+                    "file": "C:\\src\\hearth\\tests\\browser\\entry.spec.ts",
+                    "line": 51,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 8,
+                  "status": "skipped",
+                  "duration": 133,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.043Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "Enable only with the real development appliance running.",
+                      "location": {
+                        "file": "C:\\src\\hearth\\tests\\browser\\entry.spec.ts",
+                        "line": 51,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "a2a3eba492b1b8e90f7d-f5bd998190ea1f313007",
+          "file": "entry.spec.ts",
+          "line": 50,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "http-consent.spec.ts",
+      "file": "http-consent.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "admin accepts HTTP on a failed LAN card, re-verifies, revokes and starts new addresses unapproved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1705,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.184Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ad0751b15cebcb04df9-5c7e978c9721144ccabc",
+          "file": "http-consent.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "multi-provider.spec.ts",
+      "file": "multi-provider.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "add four same-type servers, keep edit separate, share one server, and add two image providers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 8,
+                  "status": "passed",
+                  "duration": 4369,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.199Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b46e2b469a2d398d0e76-446bdf0d1eed93c9d458",
+          "file": "multi-provider.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "setup.spec.ts",
+      "file": "setup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "installed Windows certificate does not expose app links while browser identity connection fails",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2713,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.434Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cca0b3e1305f7160eea0-ae7e9fc4b0d217fe1bb2",
+          "file": "setup.spec.ts",
+          "line": 31,
+          "column": 1
+        },
+        {
+          "title": "a first failed browser connection is retried before the links become available",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 5,
+                  "status": "passed",
+                  "duration": 1634,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.470Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cca0b3e1305f7160eea0-1287915dcf09da5d279f",
+          "file": "setup.spec.ts",
+          "line": 40,
+          "column": 1
+        },
+        {
+          "title": "new Owner form requires explicit Windows trust and successful browser probes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 417,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-13T16:49:59.711Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cca0b3e1305f7160eea0-8ac28ef269116e842c64",
+          "file": "setup.spec.ts",
+          "line": 48,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-13T16:49:53.346Z",
+    "duration": 11589.547,
+    "expected": 20,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -1,4 +1,8 @@
-# Hearth build preparation
+# hearth build preparation
+
+> Historical preparation record from before implementation. Its no-code statements and first-build sequence describe that date. Use [current build status](BUILD_STATUS.md) and [design coverage](DESIGN_COVERAGE.md) for present behavior; original design/brand inputs remain in `docs/plan/`.
+
+> Historical preparation record from before implementation. Its no-code statements and first-build sequence describe that date. Use [current build status](BUILD_STATUS.md) and [design coverage](DESIGN_COVERAGE.md) for present behavior; original design/brand inputs remain in `docs/plan/`.
 
 Prepared 12 September 2026 against engineering specification 1.2 and visual identity 1.0.
 
@@ -6,11 +10,11 @@ Prepared 12 September 2026 against engineering specification 1.2 and visual iden
 
 ## Product understanding
 
-Hearth, **Agentic Cloud at Home**, turns the household's approved computers into one private assistant. Users work in conversations and projects; Hearth selects available capabilities, coordinates specialists, executes authorized tools and preserves scoped history. Administrators enroll machines and assign jobs centrally. Model files come from an approved local library or NAS through a controlled gateway.
+hearth, **Agentic Cloud at Home**, turns the household's approved computers into one private assistant. Users work in conversations and projects; hearth selects available capabilities, coordinates specialists, executes authorized tools and preserves scoped history. Administrators enroll machines and assign jobs centrally. Model files come from an approved local library or NAS through a controlled gateway.
 
 The defining installation journey is:
 
-1. Install Hearth on a supported first host and explicitly create the farm.
+1. Install hearth on a supported first host and explicitly create the farm.
 2. Establish browser trust, Owner/MFA, recovery material and permitted LAN access.
 3. Connect the first inference provider through a deterministic wizard: this host, an enrolled member, or OpenAI.
 4. Verify an actual model response and a typed management-tool round trip.
@@ -25,13 +29,13 @@ The inspection covers all 30 Markdown documents: the 12 numbered engineering doc
 
 | Source | Build treatment |
 |---|---|
-| [README](../../README.md), [handoff](../../BUILD_HANDOFF.md), numbered design documents and phase plans | Binding product baseline and fixed engineering choices |
-| [Installation and central management](../../11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md) | Binding Create/Join, address-and-port enrollment, managed appliance and central provisioning requirements |
-| [First provider and admin agent](../../12-ADMIN-AGENT-AND-FIRST-PROVIDER.md) | Binding revision 1.2 onboarding, protected management tools, grants and operation lifecycle |
-| [Brand guide](../../brand/BRAND_GUIDE.md), SVG masters and tokens | Implementation source for the existing identity |
-| [Video review](../../VIDEO-REVIEW-IH8XmxiwliQ.md) | Hybrid placement, expert caching and planner/executor/reviewer comparisons remain experiments |
-| Geometry requirements referenced by [P8](../../phases/P8-COLLABORATION-AND-MEDIA.md) and the handoff | Local 3D generation and validated GLB output are required despite their earlier discussion in the video review |
-| [Sources](../../SOURCES.md) | Research pointers; exact upstream versions, APIs, licenses and interoperability must be revalidated in P0 |
+| [README](../plan/README.md), [handoff](../plan/BUILD_HANDOFF.md), numbered design documents and phase plans | Binding product baseline and fixed engineering choices |
+| [Installation and central management](../plan/11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md) | Binding Create/Join, address-and-port enrollment, managed appliance and central provisioning requirements |
+| [First provider and admin agent](../plan/12-ADMIN-AGENT-AND-FIRST-PROVIDER.md) | Binding revision 1.2 onboarding, protected management tools, grants and operation lifecycle |
+| [Original brand guide](../plan/brand/BRAND_GUIDE.md), SVG masters and tokens | Implementation source for the identity at this preparation milestone; current artwork is governed by the active brand guide |
+| [Video review](../plan/VIDEO-REVIEW-IH8XmxiwliQ.md) | Hybrid placement, expert caching and planner/executor/reviewer comparisons remain experiments |
+| Geometry requirements referenced by [P8](../plan/phases/P8-COLLABORATION-AND-MEDIA.md) and the handoff | Local 3D generation and validated GLB output are required despite their earlier discussion in the video review |
+| [Sources](../plan/SOURCES.md) | Research pointers; exact upstream versions, APIs, licenses and interoperability must be revalidated in P0 |
 | Gallery screenshots and prior validation reports | Design evidence, with illustrative machine names and telemetry |
 
 No product feature is considered implemented because its screen appears in the gallery or its behavior appears in a specification example.
@@ -61,7 +65,7 @@ Core invariants are part of the first implementations: new users are Members, di
 
 ## Branding integration
 
-Preserve the arched hearth, single ember, hearthstone and custom lowercase wordmark. Carry the existing warm neutral palette into both applications and installation surfaces. The product name is Hearth; the tagline is exactly **Agentic Cloud at Home**.
+Preserve the arched hearth, single ember, hearthstone and custom lowercase wordmark. Carry the existing warm neutral palette into both applications and installation surfaces. The product name is hearth; the tagline is exactly **Agentic Cloud at Home**.
 
 - Copy trusted vector masters into shared product assets with a checked filename mapping. Use the existing 33 icons and semantic CSS/JSON tokens; derive platform resources from the provided sources.
 - Use System / Light / Dark as product settings. Daylight and Firelight remain the gallery's descriptive theme names. Restore appearance before first paint and persist the user's choice across authorized apps.
@@ -84,7 +88,7 @@ Existing previews show a coherent identity across desktop and mobile. The browse
 | P4 cites A01-A12, while parts of A12 depend on later media work | Track each gate's subscenarios by phase. Prove available setup actions in P4 and the media extension in P8. Keep the complete release gate open until its required evidence exists. |
 | UI states are richer than individual backend enums | Model node state, service lifecycle, deployment readiness, queue activity and policy separately. Derive Busy, Local action required, Pending delivery and effective availability from typed fields and reasons. |
 | Geometry has a contract but no selected backend | Complete the P0 feasibility ADR using current primary sources, actual available hardware, runtime/model license terms, supported inputs and GLB validation. Required local geometry remains in release scope. |
-| Routing/index adapters are upstream-sensitive | Exercise real pinned Switchyard and Graphify entry points behind Hearth adapters. Deterministic routing and PostgreSQL search remain defined failure paths. |
+| Routing/index adapters are upstream-sensitive | Exercise real pinned Switchyard and Graphify entry points behind hearth adapters. Deterministic routing and PostgreSQL search remain defined failure paths. |
 | Admin agent changes its only provider | Persist the management operation before any shutdown/reassignment, preview its impact, and retain deterministic operation status and manual repair. Test this explicitly. |
 | Hardware and external services are deployment inputs | Gather exact inventory, NAS settings, model/license approvals and optional cloud credentials through product setup. Track missing real verification without blocking unrelated software work. |
 
@@ -101,7 +105,7 @@ P0 should produce a runnable foundation and evidence for its risky boundaries. U
 5. **Prove adapter feasibility.** Run bounded real Switchyard/Graphify package probes; record inference/runtime and geometry feasibility. Fixtures must have a separate explicit mode that cannot start as production. Do not require paid calls for this work.
 6. **Close the P0 evidence record.** Verify a fresh checkout can start the development stack, contract fixtures agree in all three languages, the reference appliance runs real services, and dependency decisions are pinned. Record any remaining platform-specific probes individually.
 
-The first useful product milestone then spans P1-P4: trusted Create Hearth, real Owner/Member isolation, permanent capability cards, secure member enrollment, approved package/model staging, one real first-provider/tool round trip, and one authorized admin operation whose observed completion is visible. All three wizard paths must be implemented; an unavailable real provider or machine retains a specific unverified gate.
+The first useful product milestone then spans P1-P4: trusted Create hearth, real Owner/Member isolation, permanent capability cards, secure member enrollment, approved package/model staging, one real first-provider/tool round trip, and one authorized admin operation whose observed completion is visible. All three wizard paths must be implemented; an unavailable real provider or machine retains a specific unverified gate.
 
 ## Delivery order and acceptance
 
@@ -118,7 +122,7 @@ The first useful product milestone then spans P1-P4: trusted Create Hearth, real
 | P8 | Specialist collaboration, image/3D/transcription/speech outputs and corresponding admin setup actions |
 | P9 | Clean installation, supported host/backend matrix, failure recovery, accessibility and evidenced release |
 
-The [release matrix](../../09-VALIDATION-AND-RELEASE.md) contains **61 named scenarios**: 22 end-to-end, 18 security, nine installation/management and 12 first-provider/admin-agent gates. A gate has PASS, FAIL or BLOCKED evidence with an exact reason; its individual test cases may span several phases. All product gates remain unrun in this preparation session.
+The [release matrix](../plan/09-VALIDATION-AND-RELEASE.md) contains **61 named scenarios**: 22 end-to-end, 18 security, nine installation/management and 12 first-provider/admin-agent gates. A gate has PASS, FAIL or BLOCKED evidence with an exact reason; its individual test cases may span several phases. All product gates remain unrun in this preparation session.
 
 Reference release validation needs two independently enrolled physical workers, both NVIDIA and AMD text paths, two Members, an Owner, a restricted workspace, NAS transfer behavior and laptop reconnection. Every advertised installer/backend combination needs its own evidence. Actual media outputs, real provider responses and working management receipts are required for their corresponding gates.
 
@@ -141,6 +145,6 @@ Fresh package checks passed:
 
 These checks establish design-package integrity. They do not replace browser interaction, component accessibility, pixel decoding of every export, application tests or hardware qualification.
 
-Evidence: [package results and original-file hashes](../../evidence/preparation/2026-09-12/inspection.json), [reproducible inspection script](../../evidence/preparation/2026-09-12/inspect_package.py), [local environment observations](../../evidence/preparation/2026-09-12/environment.json).
+Evidence: [package results and original-file hashes](../../evidence/preparation/2026-09-12/inspection.json), [original inspection script](../../evidence/preparation/2026-09-12/inspect_package.py), [local environment observations](../../evidence/preparation/2026-09-12/environment.json). The historical collector expects the pre-build root layout and writes its original evidence file. For the current reorganized checkout, use `uv run python scripts/check_docs.py`; do not regenerate the historical inventory with that collector.
 
 The next concrete build action is to preserve the source snapshot and establish the P0 toolchain/appliance feasibility proof, followed by the shared contracts and real integration stack.

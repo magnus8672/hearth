@@ -1,0 +1,69 @@
+# Standalone LAN head. Always layer over development.yaml through scripts/head.py.
+# !reset removes the development maintenance ports rather than appending to them.
+services:
+  postgres:
+    ports: !reset []
+  api:
+    ports: !reset []
+    environment: &head-environment
+      HEARTH_MODE: production
+      HEARTH_DEVELOPMENT_PROVIDER_ALIASES: '{}'
+      HEARTH_TRUSTED_HOSTS: ${HEARTH_TRUSTED_HOSTS:?}
+      HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
+      HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
+      HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}
+  user-api:
+    environment:
+      <<: *head-environment
+  keycloak:
+    command: ["start", "--http-port=8085"]
+    ports: !reset []
+    environment:
+      KC_HOSTNAME: ${HEARTH_IDENTITY_ORIGIN:?}
+  edge:
+    volumes:
+      - ./Caddyfile.head:/etc/caddy/Caddyfile:ro
+      - ../setup:/srv/setup-assets:ro
+      - ${HEARTH_SETUP_PUBLIC_DIR:?}:/srv/setup-public:ro
+    environment:
+      HEARTH_PUBLIC_HOST: ${HEARTH_PUBLIC_HOST:?}
+      HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
+      HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
+      HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}
+      HEARTH_IDENTITY_AUTHORITY: ${HEARTH_IDENTITY_AUTHORITY:?}
+      HEARTH_IDENTITY_PORT: ${HEARTH_IDENTITY_PORT:?}
+      HEARTH_SETUP_HTTP_PORT: ${HEARTH_SETUP_HTTP_PORT:?}
+    ports: !override
+      - "0.0.0.0:${HEARTH_SETUP_HTTP_PORT:?}:${HEARTH_SETUP_HTTP_PORT:?}"
+      - "0.0.0.0:${HEARTH_ADMIN_PORT:?}:${HEARTH_ADMIN_PORT:?}"
+      - "0.0.0.0:${HEARTH_USER_PORT:?}:${HEARTH_USER_PORT:?}"
+      - "0.0.0.0:${HEARTH_IDENTITY_PORT:?}:${HEARTH_IDENTITY_PORT:?}"
+  # This reference PKI is not used for browser TLS or external providers.
+  # Keep it out of standalone startup until managed-worker issuance is ready.
+  ca-init:
+    profiles: [managed-pki]
+  step-ca:
+    profiles: [managed-pki]
+  head-console:
+    profiles: [setup]
+    image: hearth-control:development
+    pull_policy: never
+    entrypoint: [".venv/bin/python", "scripts/head_console.py"]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    volumes: ["../../scripts:/opt/hearth/scripts:ro"]
+    environment:
+      HEARTH_FARM_ID: ${HEARTH_FARM_ID:?}
+      HEARTH_MIGRATION_DATABASE_URL: postgresql+psycopg://hearth_migrator:${HEARTH_MIGRATION_PASSWORD}@postgres:5432/hearth
+      HEARTH_IDENTITY_INTERNAL_ORIGIN: http://keycloak:8085
+      HEARTH_IDENTITY_BOOTSTRAP_PASSWORD: ${HEARTH_IDENTITY_BOOTSTRAP_PASSWORD:?}
+      HEARTH_ADMIN_CLIENT_SECRET: ${HEARTH_ADMIN_CLIENT_SECRET:?}
+      HEARTH_USER_CLIENT_SECRET: ${HEARTH_USER_CLIENT_SECRET:?}
+      HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
+      HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
+      HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}
+secrets:
+  ca-password:
+    file: ${HEARTH_CA_PASSWORD_FILE:?}

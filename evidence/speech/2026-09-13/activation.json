@@ -1,0 +1,10 @@
+{
+  "model": "kokoro-82m-v1.0-onnx",
+  "features": [
+    "audio.speak",
+    "audio.jobs"
+  ],
+  "speech_ready": true,
+  "other_bindings_preserved": true,
+  "independent_cpu_pool": true
+}

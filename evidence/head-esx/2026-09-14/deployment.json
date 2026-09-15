@@ -1,0 +1,112 @@
+{
+  "checked_at": "2026-09-15T01:43:58.207439+00:00",
+  "host": "10.20.30.10",
+  "project": "hearth-head",
+  "package_payload_hashes_match": true,
+  "owner_created": false,
+  "docker": "29.8.0",
+  "compose": "5.5.1",
+  "docker_enabled_at_boot": true,
+  "public_ports": {
+    "edge": [
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 8443,
+        "published": "8443",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 443,
+        "published": "443",
+        "protocol": "tcp"
+      },
+      {
+        "mode": "ingress",
+        "host_ip": "0.0.0.0",
+        "target": 8445,
+        "published": "8445",
+        "protocol": "tcp"
+      }
+    ]
+  },
+  "containers": [
+    {
+      "service": "api",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "8080/tcp": null
+      }
+    },
+    {
+      "service": "edge",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "2019/tcp": null,
+        "443/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "443"
+          }
+        ],
+        "443/udp": null,
+        "80/tcp": null,
+        "8443/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8443"
+          }
+        ],
+        "8445/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "8445"
+          }
+        ]
+      }
+    },
+    {
+      "service": "keycloak",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "8080/tcp": null,
+        "8443/tcp": null,
+        "9000/tcp": null
+      }
+    },
+    {
+      "service": "postgres",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "5432/tcp": null
+      }
+    },
+    {
+      "service": "reference-tools",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "8080/tcp": null
+      }
+    },
+    {
+      "service": "user-api",
+      "running": true,
+      "restart_policy": "unless-stopped",
+      "ports": {
+        "8080/tcp": null
+      }
+    }
+  ],
+  "private_configuration_permissions": true,
+  "ssh_account": "[redacted deployment detail]",
+  "passwordless_sudo": "[redacted deployment detail]",
+  "os_release": "[redacted deployment detail]",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

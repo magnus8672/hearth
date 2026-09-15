@@ -1,0 +1,18 @@
+ Container hearth-lan-qualification-postgres-1  Running
+................................s...........s...s.............s......... [ 19%]
+......s..ssss.......s..s..s............s........s.....s................s [ 39%]
+....s................................................................... [ 59%]
+........................................................................ [ 78%]
+........................................................................ [ 98%]
+......                                                                   [100%]
+=============================== warnings summary ===============================
+../opt/hearth/.venv/lib/python3.12/site-packages/starlette/testclient.py:53
+  /opt/hearth/.venv/lib/python3.12/site-packages/starlette/testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+../opt/hearth/services/api/src/hearth/transcription_audio.py:3
+  /opt/hearth/services/api/src/hearth/transcription_audio.py:3: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+349 passed, 17 skipped, 2 warnings in 73.67s (0:01:13)

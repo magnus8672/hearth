@@ -23,9 +23,18 @@ def main():
         except httpx.HTTPError:
             time.sleep(2)
     else:
-        raise SystemExit('The appliance is not ready. Run the stack command in DEVELOPMENT.md, then try again.')
+        raise SystemExit('The appliance is not ready. Run the stack command in docs/DEVELOPMENT.md, then try again.')
     configure()
     fetch_root()
+    if (ROOT / '.hearth/image-provider/config.json').exists():
+        from image_runtime import start
+        start()
+    if (ROOT / '.hearth/speech-provider/config.json').exists():
+        from speech_runtime import start as start_speech
+        start_speech(None, None)
+    if (ROOT / '.hearth/transcription-provider/config.json').exists():
+        from transcription_runtime import start as start_transcription
+        start_transcription()
     binary = ROOT / '.hearth/bin/hearth-setup.exe'
     binary.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run([go_executable(), 'build', '-trimpath', '-o', str(binary), './cmd/hearth-setup'], cwd=ROOT / 'worker', check=True)
@@ -36,5 +45,5 @@ if __name__ == '__main__':
     try:
         main()
     except Exception:
-        print('Hearth could not start setup. See DEVELOPMENT.md for the local recovery commands.', file=sys.stderr)
+        print('hearth could not start setup. See docs/DEVELOPMENT.md for the local recovery commands.', file=sys.stderr)
         sys.exit(1)

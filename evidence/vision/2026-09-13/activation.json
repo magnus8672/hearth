@@ -1,0 +1,11 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "features": [
+    "chat",
+    "streaming",
+    "vision"
+  ],
+  "vision_ready": true,
+  "other_capability_bindings_preserved": true,
+  "credential_and_http_consent_unchanged": true
+}

@@ -1,0 +1,132 @@
+{
+  "scope": "Actual LM Studio text specialists and SDXL handoff. Distinct target records share the existing one physical GPU; synthetic OIDC, disposable farm, no second host or LAN listener.",
+  "text": [
+    {
+      "capability": "reason.plan",
+      "prompt": "Plan a small herb garden in three short steps.",
+      "response": "**Assumptions**\n\n1. The garden will be container\u2011based (e.g., pots or raised beds) so it can fit on a balcony, patio, or small yard.\n2. You have at least one sunny spot that receives 6\u20138\u202fhours of direct light per day.\n3. You\u2019re comfortable watering weekly and applying basic fertilizer as needed.\n\n**Three Short Steps**\n\n1. **Choose & Arrange Containers**  \n   - Pick 4\u20136 pots (or a single raised bed) with good drainage.  \n   - Place them in the sunny spot, spacing so each plant gets enough room to grow.\n\n2. **Select Easy\u2011care Herbs & Plant**  \n   - Pick 3\u20134 hardy herbs: basil, mint, parsley, and chives are great starters.  \n   - Fill pots with a light potting mix (\u00bd compost + \u00bd perlite).  \n   - Plant each herb at the recommended depth; water immediately.\n\n3. **Maintain & Harvest**  \n   - Water when top inch of soil feels dry; avoid over\u2011watering.  \n   - Feed once a month with balanced liquid fertilizer.  \n   - Pinch or harvest leaves regularly to encourage bushy growth and fresh flavor.",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "reason.plan",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    },
+    {
+      "capability": "code.explain",
+      "prompt": "Explain this function briefly: def twice(x): return x * 2",
+      "response": "The function `twice` takes a single argument `x`.  \nIt returns the result of multiplying that argument by\u202f2, effectively producing double the input value.  \n\nIn short: `twice(5)` would give `10`, `twice(-3)` would give `-6`, and so on.",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "code.explain",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    },
+    {
+      "capability": "code.implement",
+      "prompt": "Write a Python function to double a number. Keep the reply short.",
+      "response": "```python\ndef double(x: float | int) -> float:\n    \"\"\"\n    Return twice the value of *x*.\n\n    Parameters\n    ----------\n    x : int or float\n        The number to double.\n\n    Returns\n    -------\n    float\n        2 * x\n    \"\"\"\n    return 2 * x\n```\n\n### How to test\n\n```python\nassert double(3) == 6          # integer input\nassert double(4.5) == 9.0      # float input\nassert double(-1) == -2        # negative number\nprint(\"All tests passed.\")\n```\n\nRun the snippet in a Python interpreter or add it to your test suite.",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "code.implement",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    },
+    {
+      "capability": "write.compose",
+      "prompt": "Draft a two sentence invitation to a neighborhood picnic.",
+      "response": "Hey neighbors! Join us this Saturday at 3\u202fp.m. for a sunny picnic in the park\u2014bring your favorite dish or drink, and let\u2019s enjoy good food, great company, and plenty of lawn games together.",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "write.compose",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    },
+    {
+      "capability": "text.summarize",
+      "prompt": "Summarize in one sentence: The library opens at nine. It closes at five. It is closed on Sundays.",
+      "response": "The library opens at 9\u202fa.m., closes at 5\u202fp.m., and remains closed on Sundays.",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "text.summarize",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    },
+    {
+      "capability": "data.extract",
+      "prompt": "Extract city and name as a JSON object: Sam lives in Boston.",
+      "response": "```json\n{\n  \"city\": \"Boston\",\n  \"name\": \"Sam\"\n}\n```\n",
+      "receipt": {
+        "model_id": "openai/gpt-oss-20b",
+        "protocol": "openai.chat.v1",
+        "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+        "provenance": "admission",
+        "capability_id": "data.extract",
+        "provider_name": "Specialist local service",
+        "route_revision": 2,
+        "target_revision": 2
+      }
+    }
+  ],
+  "image": {
+    "schema_version": 1,
+    "request": {
+      "schema_version": 1,
+      "id": "bbe8435a-5686-44b4-b203-e2b64eff5120",
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "prompt": "A small red fox perched beside a rustic stone fireplace, warm glow from embers illuminating its fur, mossy stones surrounding the hearth, subtle shadows enhancing texture.",
+      "negative_prompt": "",
+      "shape": "square",
+      "steps": 20,
+      "seed": 2034956599
+    },
+    "status": "completed",
+    "progress": 20,
+    "reason": null,
+    "sha256": "ca19eb5abf1669c11558d33caa7fc3f5bf4876c15ef56352c54d3e93a8ffa1ba",
+    "planning_model": "openai/gpt-oss-20b",
+    "source_image_id": null,
+    "variation": false,
+    "batch_index": 1,
+    "batch_count": 1
+  },
+  "receipt": {
+    "planner": {
+      "target_id": "27ad4459-1080-440e-b6b9-ee2e83de12f1",
+      "target_revision": 2
+    },
+    "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+    "protocol": "hearth.image.v1",
+    "target_id": "0b07e03f-8f6e-4e0f-9eb1-e9fdf75d9d5b",
+    "provenance": "admission",
+    "capability_id": "image.generate",
+    "provider_name": "Local SDXL test",
+    "route_revision": 2,
+    "target_revision": 2
+  },
+  "completed": true
+}

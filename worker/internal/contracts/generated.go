@@ -77,11 +77,19 @@ type CapabilityAvailability struct {
 	AssignmentState       string   `json:"assignment_state"`
 	LocalState            string   `json:"local_state"`
 	LocalDeploymentIds    []string `json:"local_deployment_ids"`
+	ExternalTargetIds     []string `json:"external_target_ids"`
 	CloudConfigured       bool     `json:"cloud_configured"`
 	CloudAllowedForCaller bool     `json:"cloud_allowed_for_caller"`
 	EffectiveState        string   `json:"effective_state"`
 	Reason                *string  `json:"reason"`
 	AvailableActions      []string `json:"available_actions"`
+}
+
+type CapabilityBinding struct {
+	SchemaVersion int64  `json:"schema_version"`
+	CapabilityId  string `json:"capability_id"`
+	TargetId      string `json:"target_id"`
+	Priority      int64  `json:"priority"`
 }
 
 type CapabilityDefinition struct {
@@ -112,6 +120,20 @@ type CloudAuthorization struct {
 	UserRemainingMinor        int64      `json:"user_remaining_minor"`
 	RequestedReservationMinor int64      `json:"requested_reservation_minor"`
 	InputLocalities           []Locality `json:"input_localities"`
+}
+
+type ConversationImage struct {
+	SchemaVersion int64           `json:"schema_version"`
+	Request       ImageGeneration `json:"request"`
+	Status        string          `json:"status"`
+	Progress      int64           `json:"progress"`
+	Reason        *string         `json:"reason"`
+	Sha256        *string         `json:"sha256"`
+	PlanningModel *string         `json:"planning_model"`
+	SourceImageId *string         `json:"source_image_id"`
+	Variation     bool            `json:"variation"`
+	BatchIndex    int64           `json:"batch_index"`
+	BatchCount    int64           `json:"batch_count"`
 }
 
 type EnrollmentEnvelope struct {
@@ -161,6 +183,18 @@ type EventEnvelope struct {
 	Data             map[string]any `json:"data"`
 }
 
+type ExternalProviderConnection struct {
+	SchemaVersion        int64  `json:"schema_version"`
+	Id                   string `json:"id"`
+	FarmId               string `json:"farm_id"`
+	Name                 string `json:"name"`
+	BaseUrl              string `json:"base_url"`
+	Protocol             string `json:"protocol"`
+	Management           string `json:"management"`
+	LocalityAssurance    string `json:"locality_assurance"`
+	CredentialConfigured bool   `json:"credential_configured"`
+}
+
 type GeometryRequest struct {
 	SchemaVersion      int64   `json:"schema_version"`
 	Prompt             *string `json:"prompt"`
@@ -182,6 +216,77 @@ type Heartbeat struct {
 	ObservedPlanRevision int64                `json:"observed_plan_revision"`
 	ActiveAttemptIds     []string             `json:"active_attempt_ids"`
 	Services             []ServiceObservation `json:"services"`
+}
+
+type ImageGeneration struct {
+	SchemaVersion  int64  `json:"schema_version"`
+	Id             string `json:"id"`
+	Model          string `json:"model"`
+	Prompt         string `json:"prompt"`
+	NegativePrompt string `json:"negative_prompt"`
+	Shape          string `json:"shape"`
+	Steps          int64  `json:"steps"`
+	Seed           int64  `json:"seed"`
+}
+
+type ImagePrompt struct {
+	SchemaVersion  int64  `json:"schema_version"`
+	Prompt         string `json:"prompt"`
+	NegativePrompt string `json:"negative_prompt"`
+	Shape          string `json:"shape"`
+}
+
+type ImagePromptPlan struct {
+	SchemaVersion  int64          `json:"schema_version"`
+	Action         string         `json:"action"`
+	Prompt         *string        `json:"prompt"`
+	NegativePrompt string         `json:"negative_prompt"`
+	Shape          string         `json:"shape"`
+	Question       *string        `json:"question"`
+	Images         *[]ImagePrompt `json:"images"`
+}
+
+type ImageProviderInfo struct {
+	SchemaVersion   int64    `json:"schema_version"`
+	Protocol        string   `json:"protocol"`
+	Model           string   `json:"model"`
+	ModelRevision   string   `json:"model_revision"`
+	ManifestSha256  string   `json:"manifest_sha256"`
+	Shapes          []string `json:"shapes"`
+	Steps           []int64  `json:"steps"`
+	JobCancellation bool     `json:"job_cancellation"`
+	Offline         bool     `json:"offline"`
+}
+
+type ImageReceipt struct {
+	SchemaVersion     int64   `json:"schema_version"`
+	Id                string  `json:"id"`
+	Model             string  `json:"model"`
+	State             string  `json:"state"`
+	Progress          int64   `json:"progress"`
+	Steps             int64   `json:"steps"`
+	Seed              int64   `json:"seed"`
+	Shape             string  `json:"shape"`
+	Width             int64   `json:"width"`
+	Height            int64   `json:"height"`
+	Reason            *string `json:"reason"`
+	Sha256            *string `json:"sha256"`
+	ExecutionReleased bool    `json:"execution_released"`
+	ManifestSha256    string  `json:"manifest_sha256"`
+	CancelRequested   bool    `json:"cancel_requested"`
+}
+
+type InferenceTarget struct {
+	SchemaVersion  int64    `json:"schema_version"`
+	Id             string   `json:"id"`
+	ConnectionId   string   `json:"connection_id"`
+	ResourcePoolId string   `json:"resource_pool_id"`
+	ModelId        string   `json:"model_id"`
+	State          string   `json:"state"`
+	Features       []string `json:"features"`
+	ProbedAt       *string  `json:"probed_at"`
+	VerifiedUntil  *string  `json:"verified_until"`
+	Revision       int64    `json:"revision"`
 }
 
 type JobScope struct {
@@ -241,6 +346,15 @@ type ProviderProbeRequest struct {
 	ExpectedRevision int64   `json:"expected_revision"`
 	MaximumCostMinor int64   `json:"maximum_cost_minor"`
 	PaidProbeGrantId *string `json:"paid_probe_grant_id"`
+}
+
+type ProviderResourcePool struct {
+	SchemaVersion   int64  `json:"schema_version"`
+	Id              string `json:"id"`
+	Name            string `json:"name"`
+	GenerationSlots int64  `json:"generation_slots"`
+	Busy            bool   `json:"busy"`
+	ExecutionState  string `json:"execution_state"`
 }
 
 type RecipeDependency struct {
@@ -315,6 +429,78 @@ type ServiceRecipe struct {
 	SettingsSchema      map[string]any     `json:"settings_schema"`
 	ReadinessProbe      string             `json:"readiness_probe"`
 	Rollback            string             `json:"rollback"`
+}
+
+type SpeechGeneration struct {
+	SchemaVersion int64  `json:"schema_version"`
+	Id            string `json:"id"`
+	Model         string `json:"model"`
+	Voice         string `json:"voice"`
+	Input         string `json:"input"`
+}
+
+type SpeechProviderInfo struct {
+	SchemaVersion     int64    `json:"schema_version"`
+	Protocol          string   `json:"protocol"`
+	Model             string   `json:"model"`
+	ModelRevision     string   `json:"model_revision"`
+	ManifestSha256    string   `json:"manifest_sha256"`
+	Voices            []string `json:"voices"`
+	DefaultVoice      string   `json:"default_voice"`
+	MaximumCharacters int64    `json:"maximum_characters"`
+	SampleRate        int64    `json:"sample_rate"`
+	JobCancellation   bool     `json:"job_cancellation"`
+	Offline           bool     `json:"offline"`
+}
+
+type SpeechReceipt struct {
+	SchemaVersion     int64   `json:"schema_version"`
+	Id                string  `json:"id"`
+	Model             string  `json:"model"`
+	Voice             string  `json:"voice"`
+	InputSha256       string  `json:"input_sha256"`
+	State             string  `json:"state"`
+	Reason            *string `json:"reason"`
+	Sha256            *string `json:"sha256"`
+	Frames            int64   `json:"frames"`
+	SampleRate        int64   `json:"sample_rate"`
+	ExecutionReleased bool    `json:"execution_released"`
+	ManifestSha256    string  `json:"manifest_sha256"`
+	CancelRequested   bool    `json:"cancel_requested"`
+}
+
+type TranscriptionProviderInfo struct {
+	SchemaVersion   int64    `json:"schema_version"`
+	Protocol        string   `json:"protocol"`
+	Model           string   `json:"model"`
+	ModelRevision   string   `json:"model_revision"`
+	ManifestSha256  string   `json:"manifest_sha256"`
+	Languages       []string `json:"languages"`
+	MaximumSeconds  int64    `json:"maximum_seconds"`
+	SampleRate      int64    `json:"sample_rate"`
+	JobCancellation bool     `json:"job_cancellation"`
+	Offline         bool     `json:"offline"`
+}
+
+type TranscriptionReceipt struct {
+	SchemaVersion     int64   `json:"schema_version"`
+	Id                string  `json:"id"`
+	Model             string  `json:"model"`
+	AudioSha256       string  `json:"audio_sha256"`
+	State             string  `json:"state"`
+	Reason            *string `json:"reason"`
+	Text              string  `json:"text"`
+	Language          string  `json:"language"`
+	ExecutionReleased bool    `json:"execution_released"`
+	ManifestSha256    string  `json:"manifest_sha256"`
+	CancelRequested   bool    `json:"cancel_requested"`
+}
+
+type TranscriptionRequest struct {
+	SchemaVersion int64  `json:"schema_version"`
+	Id            string `json:"id"`
+	Model         string `json:"model"`
+	AudioSha256   string `json:"audio_sha256"`
 }
 
 type WorkerCommand struct {

@@ -48,8 +48,23 @@ def bff(databases, monkeypatch):
         users = db.execute(text('SELECT id FROM users WHERE farm_id=:farm'), {'farm': farm}).scalars().all()
     for user in users:
         with scoped_session(app_engine, user, farm) as db:
-            for table in ['outbox', 'messages', 'conversations', 'workspaces']:
+            for table in ['tool_invocations', 'mcp_credentials', 'client_runs', 'client_keys']:
                 db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
+            db.execute(text('UPDATE image_jobs SET batch_run_id=NULL WHERE batch_run_id IS NOT NULL'))
+            db.execute(text('DELETE FROM image_plans'))
+            db.execute(text('DELETE FROM channel_runs'))
+    with scoped_session(app_engine, owner, farm) as db:
+        # Join only this disposable farm's synthetic channels for RLS cleanup.
+        db.execute(text('INSERT INTO channel_memberships(channel_id,farm_id,owner_id) SELECT id,farm_id,:owner FROM channels ON CONFLICT DO NOTHING'), {'owner': owner})
+        db.execute(text('DELETE FROM conversation_images WHERE channel_id IS NOT NULL'))
+        db.execute(text('DELETE FROM channel_messages'))
+    for user in users:
+        with scoped_session(app_engine, user, farm) as db:
+            for table in ['transcription_jobs', 'speech_jobs', 'conversation_images', 'image_jobs', 'channel_memberships', 'side_notes', 'chat_requests', 'chat_runs', 'outbox', 'messages', 'chat_attachments', 'conversations', 'workspaces']:
+                db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
+    with scoped_session(app_engine, owner, farm) as db:
+        for table in ['mcp_servers', 'channels', 'capability_routes', 'capability_bindings', 'inference_targets', 'provider_connections', 'provider_pools']:
+            db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
     with migration.begin() as db:
         for table in ['browser_sessions', 'audit_events', 'role_grants', 'users']:
             db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})

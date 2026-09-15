@@ -1,0 +1,129 @@
+{
+    admin off
+    default_bind 0.0.0.0
+    # IP-address clients often omit SNI. Select this head's certificate in that case.
+    default_sni {$HEARTH_PUBLIC_HOST}
+    skip_install_trust
+    auto_https disable_redirects
+}
+# A credential-free entry page is reachable before clients trust this head.
+# Every path is explicit. No account operations or private state are served here.
+http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Cache-Control no-store
+        Content-Security-Policy "default-src 'none'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self' {$HEARTH_ADMIN_ORIGIN} {$HEARTH_USER_ORIGIN} {$HEARTH_IDENTITY_ORIGIN}; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
+    }
+    @unsafe not method GET HEAD
+    respond @unsafe 405
+    @assets path /setup.css /setup.js /hearth.svg
+    handle @assets {
+        root * /srv/setup-assets
+        file_server
+    }
+    @downloads path /hearth-root.crt /hearth-root.cer /hearth-client-certificates.zip
+    handle @downloads {
+        header Content-Disposition "attachment"
+        root * /srv/setup-public
+        file_server
+    }
+    handle /connection.json {
+        root * /srv/setup-public
+        file_server
+    }
+    handle / {
+        root * /srv/setup-public
+        rewrite * /index.html
+        file_server
+    }
+    respond 404
+}
+(hearth_headers) {
+    tls internal
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy no-referrer
+        X-Frame-Options DENY
+        Content-Security-Policy "default-src 'self'; img-src 'self' data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+    }
+}
+(bff_proxy) {
+    reverse_proxy {args[0]} {
+        header_up -Forwarded
+        header_up -X-User-ID
+        header_up -X-Client-Cert
+        header_up -X-Forwarded-Client-Cert
+        header_up X-Forwarded-Proto https
+    }
+}
+(browser_trust_probe) {
+    # Static, credential-free response used by the local setup browser itself.
+    handle /health/browser {
+        header Content-Type application/json
+        header Access-Control-Allow-Origin *
+        header Cache-Control no-store
+        respond "{\"service\":\"{args[0]}\",\"status\":\"ok\"}" 200
+    }
+}
+{$HEARTH_ADMIN_ORIGIN} {
+    import hearth_headers
+    request_body {
+        max_size 1048576
+    }
+    import browser_trust_probe hearth-admin
+    @api path /api/* /auth/* /health/ready /health/live
+    handle @api {
+        import bff_proxy api:8080
+    }
+    handle {
+        root * /srv/admin
+        try_files {path} /index.html
+        file_server
+    }
+}
+{$HEARTH_USER_ORIGIN} {
+    import hearth_headers
+    header Permissions-Policy "microphone=(self)"
+    @image_upload {
+        method POST
+        path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+    }
+    @ordinary_body {
+        not {
+            method POST
+            path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+        }
+    }
+    request_body @image_upload {
+        max_size 8388608
+    }
+    request_body @ordinary_body {
+        max_size 1048576
+    }
+    import browser_trust_probe hearth-user
+    @api path /api/* /auth/* /health/ready /health/live /v1/* /mcp
+    handle @api {
+        import bff_proxy user-api:8080
+    }
+    handle {
+        root * /srv/user
+        try_files {path} /index.html
+        file_server
+    }
+}
+{$HEARTH_IDENTITY_ORIGIN} {
+    tls internal
+    import browser_trust_probe hearth-identity
+    @identity path /realms/hearth/* /resources/* /robots.txt
+    handle @identity {
+        reverse_proxy keycloak:8085 {
+            header_up -Forwarded
+            header_up X-Forwarded-Proto https
+            header_up X-Forwarded-Host {$HEARTH_IDENTITY_AUTHORITY}
+            header_up X-Forwarded-Port {$HEARTH_IDENTITY_PORT}
+        }
+    }
+    respond 404
+}

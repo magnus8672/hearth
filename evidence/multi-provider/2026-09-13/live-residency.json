@@ -1,0 +1,17 @@
+{
+  "scope": "Real local LM Studio, HTTP/SSE and PostgreSQL through BFF APIs. Disposable farm and explicit OIDC fixtures. One physical GPU only.",
+  "model": "openai/gpt-oss-20b",
+  "loaded_instances_before": [
+    "openai/gpt-oss-20b"
+  ],
+  "loaded_instances_after": [
+    "openai/gpt-oss-20b"
+  ],
+  "probe_completed": true,
+  "routed_reply_completed": true,
+  "request_admission_seconds": 0.031,
+  "time_to_first_output_seconds": 0.578,
+  "automatic_loading_configuration": "not changed or verified by this test; loaded-instance preflight only",
+  "no_observed_load_or_eviction": true,
+  "paid_inference": false
+}

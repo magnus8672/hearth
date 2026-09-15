@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-09-15T01:11:56.428854+00:00",
+  "basis": "Logical file sizes without following reparse points. Hard-linked files may be counted more than once; this is not a reclaimable-space estimate. Top large files include allocated bytes when available.",
+  "workspace_bytes": 66406070246,
+  "appliance_bytes": 47793893039,
+  "toolchains_bytes": 9010167961,
+  "model_weights_bytes": 7427312676,
+  "docker_inside_appliance": {
+    "build_cache_reported_gb": 20.2,
+    "build_cache_reclaimable_reported_gb": 19.88,
+    "images_reported_gb": 28.13,
+    "note": "Image and build-cache layers overlap. These are inside the VM disk, not additional workspace bytes. No prune or deletion performed."
+  },
+  "current_data": "Preserved in the existing developer farm. No data migration or cleanup requested."
+}

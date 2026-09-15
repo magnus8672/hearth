@@ -1,0 +1,20 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "native_tool_probe": [
+    "chat",
+    "streaming",
+    "tools"
+  ],
+  "client_alias": "chat.general",
+  "client_owned_function": "read_project_title",
+  "client_tool_result_consumed": true,
+  "shared_mcp_steps": [
+    "list_tools",
+    "describe_tool",
+    "run_tool"
+  ],
+  "shared_tool_result": 42,
+  "loaded_models_unchanged": true,
+  "synthetic_farm": true,
+  "real_user_data_accessed": false
+}

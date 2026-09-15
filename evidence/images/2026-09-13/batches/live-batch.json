@@ -1,0 +1,94 @@
+{
+  "scope": "Real local GPT-OSS planning and four SDXL renders; synthetic OIDC in a disposable farm. No personal chats modified.",
+  "images": [
+    {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "718a932d-2b1f-443c-831f-e45baf5fce0a",
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "prompt": "Red Jeep Gladiator pickup with visible cargo bed, sleek chrome trim, matte finish, parked on a gravel road under clear blue sky.",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 4266651301
+      },
+      "status": "completed",
+      "progress": 20,
+      "reason": null,
+      "sha256": "e59da71cdbaee171a0424d03a24578a0c2f6d7cee3845fe9e2d5a256d22e281f",
+      "planning_model": "openai/gpt-oss-20b",
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 1,
+      "batch_count": 4
+    },
+    {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "9c3900f7-2388-4edf-a088-133f621c25a3",
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "prompt": "Grey Jeep Gladiator pickup with visible cargo bed, brushed aluminum accents, matte paint, resting beside a riverbank at sunset.",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 99938525
+      },
+      "status": "completed",
+      "progress": 20,
+      "reason": null,
+      "sha256": "263a1a66ab7fe7671ba04f9efa4ffc61337641cbc009896321a2430a8e6de6dd",
+      "planning_model": "openai/gpt-oss-20b",
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 2,
+      "batch_count": 4
+    },
+    {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "a8b0efad-e2bf-4c87-9382-d4fa8022ee42",
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "prompt": "Black Jeep Gladiator pickup with visible cargo bed, glossy finish, subtle chrome detailing, positioned on an urban street with neon lights.",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 3158481465
+      },
+      "status": "completed",
+      "progress": 20,
+      "reason": null,
+      "sha256": "2932be6aca7ac8ada070f735d5c738dc8806f1f0164cdc11b3f5cd2141d33abe",
+      "planning_model": "openai/gpt-oss-20b",
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 3,
+      "batch_count": 4
+    },
+    {
+      "schema_version": 1,
+      "request": {
+        "schema_version": 1,
+        "id": "a5b37725-84bf-4b1d-bd1b-4b37cff69373",
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "prompt": "Army\u2011green Jeep Gladiator pickup with visible cargo bed, matte camouflage paint, rugged off\u2011road tires, parked in a forest clearing at dawn.",
+        "negative_prompt": "",
+        "shape": "square",
+        "steps": 20,
+        "seed": 1453326996
+      },
+      "status": "completed",
+      "progress": 20,
+      "reason": null,
+      "sha256": "84628291d5e1351fd4f68c2ccb21144ff48595abbe40381fe9fee536f80ceedc",
+      "planning_model": "openai/gpt-oss-20b",
+      "source_image_id": null,
+      "variation": false,
+      "batch_index": 4,
+      "batch_count": 4
+    }
+  ],
+  "completed": true
+}

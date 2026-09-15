@@ -1,0 +1,14 @@
+{
+  "scope": "Header-only diagnostic from synthetic conversations in a disposable farm. No private reasoning text was collected.",
+  "model": "openai/gpt-oss-20b",
+  "provider": "Local LM Studio",
+  "observed_rejected_header": "<|channel|>final <|constrain|>JSON",
+  "observed_at": "Channel contextual-image planning before the compatibility change",
+  "change": "Accept exact final JSON/json format labels for the two supported GPT-OSS model identifiers; retain rejection of analysis, tool recipients and unknown formats.",
+  "source": "https://github.com/openai/harmony/blob/main/docs/format.md",
+  "regression": "tests/security/test_inference.py::test_gpt_oss_final_json_format_is_data_without_tool_or_analysis_authority",
+  "live_test_after_change": "1 passed, 12 deselected in 39.59 seconds; final prompt wording repeated the full test successfully in 40.79 seconds",
+  "live_test_scope": "Contextual red Jeep, acknowledgement, blue variation, fresh-session restoration, separate channel scene with real local GPT-OSS and SDXL. OIDC fixtures only.",
+  "automatic_inference_retries": false,
+  "general_provider_format_qualification": false
+}

@@ -21,7 +21,7 @@ FROM library/python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9a
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /opt/hearth
 COPY --from=build /opt/hearth /opt/hearth
-RUN useradd --uid 10001 --create-home hearth
+RUN useradd --uid 10001 --create-home hearth && mkdir -p /var/lib/hearth/vaults && chown 10001:10001 /var/lib/hearth/vaults && chmod 700 /var/lib/hearth/vaults
 USER 10001:10001
 EXPOSE 8080
 CMD [".venv/bin/uvicorn", "hearth.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

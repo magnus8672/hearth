@@ -489,6 +489,14 @@
           "title": "Effective State",
           "type": "string"
         },
+        "external_target_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "External Target Ids",
+          "type": "array"
+        },
         "local_deployment_ids": {
           "items": {
             "format": "uuid",
@@ -523,8 +531,8 @@
           "title": "Reason"
         },
         "schema_version": {
-          "const": 1,
-          "default": 1,
+          "const": 2,
+          "default": 2,
           "title": "Schema Version",
           "type": "integer"
         }
@@ -536,6 +544,40 @@
         "effective_state"
       ],
       "title": "CapabilityAvailability",
+      "type": "object"
+    },
+    "CapabilityBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {
+          "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+          "title": "Capability Id",
+          "type": "string"
+        },
+        "priority": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "target_id": {
+          "format": "uuid",
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "capability_id",
+        "target_id"
+      ],
+      "title": "CapabilityBinding",
       "type": "object"
     },
     "CapabilityDefinition": {
@@ -724,6 +766,116 @@
         "input_localities"
       ],
       "title": "CloudAuthorization",
+      "type": "object"
+    },
+    "ConversationImage": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_count": {
+          "default": 1,
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Batch Count",
+          "type": "integer"
+        },
+        "batch_index": {
+          "default": 1,
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Batch Index",
+          "type": "integer"
+        },
+        "planning_model": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Planning Model"
+        },
+        "progress": {
+          "maximum": 40,
+          "minimum": 0,
+          "title": "Progress",
+          "type": "integer"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "request": {
+          "$ref": "#/$defs/ImageGeneration"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "source_image_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Image Id"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "cancelled",
+            "failed",
+            "interrupted"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "variation": {
+          "default": false,
+          "title": "Variation",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "request",
+        "status",
+        "progress"
+      ],
+      "title": "ConversationImage",
       "type": "object"
     },
     "EnrollmentEnvelope": {
@@ -963,6 +1115,70 @@
       "title": "EventEnvelope",
       "type": "object"
     },
+    "ExternalProviderConnection": {
+      "additionalProperties": false,
+      "properties": {
+        "base_url": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Base Url",
+          "type": "string"
+        },
+        "credential_configured": {
+          "default": false,
+          "title": "Credential Configured",
+          "type": "boolean"
+        },
+        "farm_id": {
+          "format": "uuid",
+          "title": "Farm Id",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "locality_assurance": {
+          "const": "operator_declared_local",
+          "default": "operator_declared_local",
+          "title": "Locality Assurance",
+          "type": "string"
+        },
+        "management": {
+          "const": "external",
+          "default": "external",
+          "title": "Management",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "protocol": {
+          "const": "openai_compatible",
+          "default": "openai_compatible",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "farm_id",
+        "name",
+        "base_url"
+      ],
+      "title": "ExternalProviderConnection",
+      "type": "object"
+    },
     "GeometryRequest": {
       "additionalProperties": false,
       "properties": {
@@ -1109,6 +1325,502 @@
         "observed_plan_revision"
       ],
       "title": "Heartbeat",
+      "type": "object"
+    },
+    "ImageGeneration": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "negative_prompt": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Negative Prompt",
+          "type": "string"
+        },
+        "prompt": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "seed": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "shape": {
+          "default": "square",
+          "enum": [
+            "square",
+            "landscape",
+            "portrait"
+          ],
+          "title": "Shape",
+          "type": "string"
+        },
+        "steps": {
+          "default": 20,
+          "enum": [
+            20,
+            30,
+            40
+          ],
+          "title": "Steps",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "prompt",
+        "seed"
+      ],
+      "title": "ImageGeneration",
+      "type": "object"
+    },
+    "ImagePrompt": {
+      "additionalProperties": false,
+      "properties": {
+        "negative_prompt": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Negative Prompt",
+          "type": "string"
+        },
+        "prompt": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "shape": {
+          "default": "square",
+          "enum": [
+            "square",
+            "landscape",
+            "portrait"
+          ],
+          "title": "Shape",
+          "type": "string"
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "title": "ImagePrompt",
+      "type": "object"
+    },
+    "ImagePromptPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "generate",
+            "clarify"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "images": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/ImagePrompt"
+              },
+              "maxItems": 4,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Images"
+        },
+        "negative_prompt": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Negative Prompt",
+          "type": "string"
+        },
+        "prompt": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "shape": {
+          "default": "square",
+          "enum": [
+            "square",
+            "landscape",
+            "portrait"
+          ],
+          "title": "Shape",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "title": "ImagePromptPlan",
+      "type": "object"
+    },
+    "ImageProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "job_cancellation": {
+          "title": "Job Cancellation",
+          "type": "boolean"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "offline": {
+          "title": "Offline",
+          "type": "boolean"
+        },
+        "protocol": {
+          "const": "hearth.image.v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "shapes": {
+          "items": {
+            "enum": [
+              "square",
+              "landscape",
+              "portrait"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Shapes",
+          "type": "array"
+        },
+        "steps": {
+          "items": {
+            "enum": [
+              20,
+              30,
+              40
+            ],
+            "type": "integer"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "protocol",
+        "model",
+        "model_revision",
+        "manifest_sha256",
+        "shapes",
+        "steps",
+        "job_cancellation",
+        "offline"
+      ],
+      "title": "ImageProviderInfo",
+      "type": "object"
+    },
+    "ImageReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "cancel_requested": {
+          "title": "Cancel Requested",
+          "type": "boolean"
+        },
+        "execution_released": {
+          "title": "Execution Released",
+          "type": "boolean"
+        },
+        "height": {
+          "maximum": 2048,
+          "minimum": 1,
+          "title": "Height",
+          "type": "integer"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "progress": {
+          "maximum": 40,
+          "minimum": 0,
+          "title": "Progress",
+          "type": "integer"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "seed": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "shape": {
+          "enum": [
+            "square",
+            "landscape",
+            "portrait"
+          ],
+          "title": "Shape",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "cancelled",
+            "failed",
+            "interrupted"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "steps": {
+          "enum": [
+            20,
+            30,
+            40
+          ],
+          "title": "Steps",
+          "type": "integer"
+        },
+        "width": {
+          "maximum": 2048,
+          "minimum": 1,
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "state",
+        "progress",
+        "steps",
+        "seed",
+        "shape",
+        "width",
+        "height",
+        "execution_released",
+        "manifest_sha256",
+        "cancel_requested"
+      ],
+      "title": "ImageReceipt",
+      "type": "object"
+    },
+    "InferenceTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "connection_id": {
+          "format": "uuid",
+          "title": "Connection Id",
+          "type": "string"
+        },
+        "features": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+            "type": "string"
+          },
+          "maxItems": 30,
+          "title": "Features",
+          "type": "array"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "model_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "probed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probed At"
+        },
+        "resource_pool_id": {
+          "format": "uuid",
+          "title": "Resource Pool Id",
+          "type": "string"
+        },
+        "revision": {
+          "maximum": 9007199254740991,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "configured",
+            "ready",
+            "failed",
+            "disabled"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "verified_until": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verified Until"
+        }
+      },
+      "required": [
+        "id",
+        "connection_id",
+        "resource_pool_id",
+        "model_id",
+        "state",
+        "revision"
+      ],
+      "title": "InferenceTarget",
       "type": "object"
     },
     "JobScope": {
@@ -1378,7 +2090,8 @@
           "enum": [
             "local_head",
             "joined_member",
-            "openai"
+            "openai",
+            "existing_service"
           ],
           "title": "Path",
           "type": "string"
@@ -1440,8 +2153,8 @@
           "type": "integer"
         },
         "schema_version": {
-          "const": 1,
-          "default": 1,
+          "const": 2,
+          "default": 2,
           "title": "Schema Version",
           "type": "integer"
         }
@@ -1495,6 +2208,55 @@
         "expected_revision"
       ],
       "title": "ProviderProbeRequest",
+      "type": "object"
+    },
+    "ProviderResourcePool": {
+      "additionalProperties": false,
+      "properties": {
+        "busy": {
+          "title": "Busy",
+          "type": "boolean"
+        },
+        "execution_state": {
+          "enum": [
+            "idle",
+            "running",
+            "unknown"
+          ],
+          "title": "Execution State",
+          "type": "string"
+        },
+        "generation_slots": {
+          "const": 1,
+          "default": 1,
+          "title": "Generation Slots",
+          "type": "integer"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "busy",
+        "execution_state"
+      ],
+      "title": "ProviderResourcePool",
       "type": "object"
     },
     "RecipeDependency": {
@@ -1966,6 +2728,435 @@
         "rollback"
       ],
       "title": "ServiceRecipe",
+      "type": "object"
+    },
+    "SpeechGeneration": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "input": {
+          "maxLength": 6000,
+          "minLength": 1,
+          "title": "Input",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "voice": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Voice",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "voice",
+        "input"
+      ],
+      "title": "SpeechGeneration",
+      "type": "object"
+    },
+    "SpeechProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "default_voice": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Default Voice",
+          "type": "string"
+        },
+        "job_cancellation": {
+          "title": "Job Cancellation",
+          "type": "boolean"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "maximum_characters": {
+          "const": 6000,
+          "default": 6000,
+          "title": "Maximum Characters",
+          "type": "integer"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "offline": {
+          "title": "Offline",
+          "type": "boolean"
+        },
+        "protocol": {
+          "const": "hearth.speech.v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "sample_rate": {
+          "const": 24000,
+          "default": 24000,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "voices": {
+          "items": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Voices",
+          "type": "array"
+        }
+      },
+      "required": [
+        "protocol",
+        "model",
+        "model_revision",
+        "manifest_sha256",
+        "voices",
+        "default_voice",
+        "job_cancellation",
+        "offline"
+      ],
+      "title": "SpeechProviderInfo",
+      "type": "object"
+    },
+    "SpeechReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "cancel_requested": {
+          "title": "Cancel Requested",
+          "type": "boolean"
+        },
+        "execution_released": {
+          "title": "Execution Released",
+          "type": "boolean"
+        },
+        "frames": {
+          "default": 0,
+          "maximum": 14400000,
+          "minimum": 0,
+          "title": "Frames",
+          "type": "integer"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "input_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Input Sha256",
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "sample_rate": {
+          "const": 24000,
+          "default": 24000,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "cancelled",
+            "failed",
+            "interrupted"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "voice": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Voice",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "voice",
+        "input_sha256",
+        "state",
+        "execution_released",
+        "manifest_sha256",
+        "cancel_requested"
+      ],
+      "title": "SpeechReceipt",
+      "type": "object"
+    },
+    "TranscriptionProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "job_cancellation": {
+          "title": "Job Cancellation",
+          "type": "boolean"
+        },
+        "languages": {
+          "items": {
+            "const": "en",
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "title": "Languages",
+          "type": "array"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "maximum_seconds": {
+          "const": 120,
+          "default": 120,
+          "title": "Maximum Seconds",
+          "type": "integer"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "offline": {
+          "title": "Offline",
+          "type": "boolean"
+        },
+        "protocol": {
+          "const": "hearth.transcription.v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "sample_rate": {
+          "const": 16000,
+          "default": 16000,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "protocol",
+        "model",
+        "model_revision",
+        "manifest_sha256",
+        "languages",
+        "job_cancellation",
+        "offline"
+      ],
+      "title": "TranscriptionProviderInfo",
+      "type": "object"
+    },
+    "TranscriptionReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "audio_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Audio Sha256",
+          "type": "string"
+        },
+        "cancel_requested": {
+          "title": "Cancel Requested",
+          "type": "boolean"
+        },
+        "execution_released": {
+          "title": "Execution Released",
+          "type": "boolean"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "language": {
+          "const": "en",
+          "default": "en",
+          "title": "Language",
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "state": {
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "cancelled",
+            "failed",
+            "interrupted"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "text": {
+          "default": "",
+          "maxLength": 6000,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "audio_sha256",
+        "state",
+        "execution_released",
+        "manifest_sha256",
+        "cancel_requested"
+      ],
+      "title": "TranscriptionReceipt",
+      "type": "object"
+    },
+    "TranscriptionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "audio_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Audio Sha256",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "audio_sha256"
+      ],
+      "title": "TranscriptionRequest",
       "type": "object"
     },
     "WorkerCommand": {

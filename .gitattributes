@@ -7,3 +7,4 @@
 *.svg text eol=lf
 *.png binary
 *.ico binary
+*.wav binary

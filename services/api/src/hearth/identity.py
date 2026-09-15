@@ -138,7 +138,7 @@ def authenticate(request: Request, mutation=False):
     settings = request.app.state.settings
     raw = request.cookies.get(cookie_name(settings), '')
     if not raw or len(raw) > 200:
-        raise HTTPException(401, 'Sign in to Hearth to continue.')
+        raise HTTPException(401, 'Sign in to hearth to continue.')
     configured(request)
     check_origin(request, mutation)
     with request.app.state.engine.begin() as connection:

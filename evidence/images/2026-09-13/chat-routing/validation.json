@@ -1,0 +1,71 @@
+{
+  "scope": "Deployed HTTPS assets and actual user-api source hashes, unauthenticated media denial, restricted-role provider state, immutable originals and release ledger. No personal user content read or modified.",
+  "https": [
+    {
+      "origin": "https://localhost:8443",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-C3nUrWnG.js",
+        "/assets/index-CUBYOMek.css"
+      ]
+    },
+    {
+      "origin": "https://localhost:8444",
+      "valid_tls": true,
+      "built_assets_match": true,
+      "assets": [
+        "/assets/index-BSc6SHWd.js",
+        "/assets/index-CUBYOMek.css"
+      ]
+    }
+  ],
+  "user_routes_require_signin": true,
+  "identity_tls_valid": true,
+  "migration": "0007",
+  "deployed_source_sha256": {
+    "conversation_media.py": "6fbcde159c9277ab20a4e0ee864662839d21ed9d042e1506e2d0b7108c6f5cfe",
+    "images.py": "01f3375f921491ceff95488e3d7265d8d4523638c5f01be3d5431ac69cd47f66",
+    "chat.py": "79ea13a2fb72dded89f9948ed443dd9d9395c078efca53da165c68fc6599b315",
+    "channels.py": "40e6d815d5909e695f55ca43a2f0374bc5d77f3b577e0747ceea98a4dcdefa20",
+    "contracts.py": "2bc298d0a8c3ea79860eb1e41d228420a1bee68fd2bb1895216ebbd7de1648a7"
+  },
+  "providers": [
+    {
+      "protocol": "hearth.image.v1",
+      "model_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    },
+    {
+      "protocol": "openai.chat.v1",
+      "model_id": "openai/gpt-oss-20b",
+      "state": "ready",
+      "evidence_current": true,
+      "resource_group": "Shared local GPU",
+      "execution_state": "idle"
+    }
+  ],
+  "original_files_unchanged": 119,
+  "release_gates_open": 61,
+  "paid_inference": false,
+  "python_tests": {
+    "windows": {
+      "passed": 121,
+      "opt_in_skipped": 3
+    },
+    "linux": {
+      "passed": 121,
+      "opt_in_skipped": 3
+    }
+  },
+  "shared_contract_fixtures": 148,
+  "browser_tests_passed": 14,
+  "browser_after_preview_sizing": 2,
+  "real_chat_and_channel_sdxl_test_passed": true,
+  "oidc_in_api_tests": "Explicit fixtures in disposable farms; existing Owner/MFA preserved.",
+  "routing_boundary": "Direct English image creation requests. Context-to-prompt semantic planning and image editing remain unfinished.",
+  "lm_studio_probe": "Fresh probe passed; prior intermittent GPT-OSS follow-up header issue remains open."
+}

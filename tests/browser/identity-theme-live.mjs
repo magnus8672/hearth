@@ -24,8 +24,8 @@ function otp(secret) {
 try {
   await page.goto('https://localhost:8443/auth/login');
   await expect(page.getByRole('heading', { name: 'Welcome home.' })).toBeVisible();
-  await expect(page.locator('.hearth-signin-context strong')).toHaveText('Hearth Administration');
-  await expect(page).toHaveTitle('Sign in to Hearth');
+  await expect(page.locator('.hearth-signin-context strong')).toHaveText('hearth Administration');
+  await expect(page).toHaveTitle('Sign in to hearth');
   await expect(page.locator('#kc-header-wrapper')).toHaveCSS('background-image', /hearth-lockup-light/);
   expect((await page.locator('.pf-v5-c-login__main').boundingBox()).width).toBeGreaterThanOrEqual(480);
   await page.screenshot({ path: 'admin-login.png', fullPage: true });
@@ -37,7 +37,7 @@ try {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: 'login-mobile.png', fullPage: true });
   await page.goto('https://localhost:8444/auth/login');
-  await expect(page.locator('.hearth-signin-context strong')).toHaveText('Your Hearth workspace');
+  await expect(page.locator('.hearth-signin-context strong')).toHaveText('Your hearth workspace');
   step = 'browser TLS probes';
   for (const [port, audience] of [[8443, 'admin'], [8444, 'user'], [8445, 'identity']]) {
     const response = await page.evaluate(async port => {
@@ -58,14 +58,14 @@ try {
   await page.goto(authUrl);
   step = 'isolated realm registration form';
   await page.getByRole('link', { name: 'Create account', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Create your Hearth account' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Create your hearth account' })).toBeVisible();
   await page.screenshot({ path: 'registration.png', fullPage: true });
   await page.goto(authUrl);
   step = 'isolated realm password and authenticator form';
   await page.locator('#username').fill(data.username);
   await page.locator('#password').fill(data.password);
   await page.locator('#kc-login').click();
-  await expect(page.getByRole('heading', { name: 'Protect your Hearth account' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Protect your hearth account' })).toBeVisible();
   await page.screenshot({ path: 'authenticator.png', fullPage: true, mask: [page.locator('#kc-totp-secret-qr-code')], maskColor: '#EDE4D8' });
   await page.locator('#mode-manual').click();
   const secret = (await page.locator('#kc-totp-secret-key').innerText()).replace(/\s/g, '');
@@ -73,10 +73,10 @@ try {
   await page.locator('#userLabel').fill('Disposable theme review');
   await page.locator('button[type=submit],input[type=submit]').first().click();
   step = 'isolated realm recovery enrollment';
-  await expect(page.getByRole('heading', { name: 'Save your Hearth recovery codes' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Save your hearth recovery codes' })).toBeVisible();
   await page.screenshot({ path: 'recovery.png', fullPage: true, mask: [page.locator('#kc-recovery-codes-list')], maskColor: '#EDE4D8' });
   await page.locator('input[type=checkbox]').first().check();
-  await page.getByRole('button', { name: 'Continue to Hearth' }).click();
+  await page.getByRole('button', { name: 'Continue to hearth' }).click();
   step = 'isolated realm PKCE exchange';
   await page.waitForURL(url => url.pathname === '/qa-complete');
   const callback = new URL(page.url());

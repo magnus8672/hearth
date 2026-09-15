@@ -1,0 +1,9 @@
+{
+  "scope": "Real remote Qwen, pixel challenge, uploaded synthetic image and restricted-role PostgreSQL/BFF APIs; explicit OIDC fixtures in disposable farm.",
+  "model": "qwen/qwen3.8-27b",
+  "capability": "vision.describe",
+  "finish_reason": "stop",
+  "answer": "- **Left:** a red square\n- **Right:** a blue circle",
+  "pixel_challenge_passed": true,
+  "restored_upload_and_reply": true
+}

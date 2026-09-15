@@ -1,4 +1,4 @@
-"""Personal drafts and the authoritative, currently unassigned capability catalog."""
+"""Personal drafts and capability availability from verified target evidence."""
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, HTTPException, Request
@@ -7,6 +7,7 @@ from sqlalchemy import text
 
 from hearth.database import scoped_session
 from hearth.identity import authenticate
+from hearth.routing import profile, route_snapshot
 
 router = APIRouter()
 
@@ -28,15 +29,28 @@ def setup(request: Request):
     if request.app.state.engine and settings.farm_id:
         with request.app.state.engine.connect() as connection:
             ready = connection.execute(text("SELECT EXISTS(SELECT 1 FROM role_grants WHERE farm_id=:farm AND role='Owner')"), {'farm': settings.farm_id}).scalar_one()
-    return {'owner_created': ready, 'audience': settings.audience, 'provider_ready': False}
+    return {'owner_created': ready, 'audience': settings.audience}
 
 
 @router.get('/api/v1/capabilities', tags=['catalog'])
 def capabilities(request: Request):
-    authenticate(request)
-    with request.app.state.engine.connect() as connection:
-        definitions = connection.execute(text('SELECT definition FROM capabilities ORDER BY id')).scalars().all()
-    return {'items': [dict(item) | {'state': 'unassigned', 'reason': 'No approved provider has been assigned.'} for item in definitions]}
+    principal = authenticate(request)
+    with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        definitions = db.execute(text('SELECT definition FROM capabilities ORDER BY id')).scalars().all()
+        routes = route_snapshot(db)
+        ready = {row['capability_id'] for row in routes if any(target['ready'] for target in row['targets'])}
+        # These capabilities execute in the private SQL knowledge store, not a model server.
+        db.execute(text('SELECT revision FROM memory_settings LIMIT 1'))
+        ready.update({'memory.retrieve', 'memory.index'})
+        assigned = set(db.execute(text('SELECT DISTINCT capability_id FROM capability_bindings')).scalars().all())
+    return {'items': [dict(item) | {
+        'state': 'ready' if item['capability_id'] in ready else ('offline' if item['capability_id'] in assigned else 'unassigned'),
+        'input_modalities': profile(item['capability_id']).get('input_modalities', item['input_modalities']),
+        'output_modalities': profile(item['capability_id']).get('output_modalities', item['output_modalities']),
+        'builtin': profile(item['capability_id']).get('builtin', False),
+        'executable': profile(item['capability_id'])['executable'],
+        'reason': profile(item['capability_id'])['scope'] if item['capability_id'] in ready or not profile(item['capability_id'])['executable'] else ('Its route needs a compatible, freshly verified target in Providers.' if item['capability_id'] in assigned else 'No verified provider has been assigned.')
+    } for item in definitions]}
 
 
 @router.get('/api/v1/workspace', tags=['workspace'])
@@ -45,7 +59,7 @@ def workspace(request: Request):
     principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text('SELECT id,name,locality FROM workspaces')).mappings().one()
-        drafts = db.execute(text('SELECT id,title,revision FROM conversations WHERE deleted_at IS NULL ORDER BY id DESC')).mappings().all()
+        drafts = db.execute(text("SELECT id,title,revision FROM conversations WHERE kind='draft' AND deleted_at IS NULL ORDER BY id DESC")).mappings().all()
         return {'workspace': dict(row), 'drafts': [dict(item) for item in drafts]}
 
 
@@ -54,7 +68,7 @@ def draft(request: Request, draft_id: UUID):
     principal = authenticate(request)
     principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        row = db.execute(text('SELECT c.id,c.title,c.revision,m.content FROM conversations c JOIN messages m ON m.conversation_id=c.id AND m.sequence=1 WHERE c.id=:id AND c.deleted_at IS NULL'), {'id': draft_id}).mappings().one_or_none()
+        row = db.execute(text("SELECT c.id,c.title,c.revision,m.content FROM conversations c JOIN messages m ON m.conversation_id=c.id AND m.sequence=1 WHERE c.id=:id AND c.kind='draft' AND c.deleted_at IS NULL"), {'id': draft_id}).mappings().one_or_none()
         if not row:
             raise HTTPException(404, 'This draft is not available in your workspace.')
         return dict(row)
@@ -66,7 +80,7 @@ def create_draft(request: Request, data: DraftInput):
     principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         workspace_id = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
-        count = db.execute(text('SELECT count(*) FROM conversations WHERE deleted_at IS NULL')).scalar_one()
+        count = db.execute(text("SELECT count(*) FROM conversations WHERE kind='draft' AND deleted_at IS NULL")).scalar_one()
         if count >= 200:
             raise HTTPException(409, 'This test workspace supports 200 saved drafts. Archive a draft to make room.')
         values = {'id': uuid4(), 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace_id,
@@ -81,7 +95,7 @@ def update_draft(request: Request, draft_id: UUID, data: DraftUpdate):
     principal = authenticate(request, mutation=True)
     principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        row = db.execute(text('SELECT revision FROM conversations WHERE id=:id AND deleted_at IS NULL FOR UPDATE'), {'id': draft_id}).one_or_none()
+        row = db.execute(text("SELECT revision FROM conversations WHERE id=:id AND kind='draft' AND deleted_at IS NULL FOR UPDATE"), {'id': draft_id}).one_or_none()
         if not row:
             raise HTTPException(404, 'This draft is not available in your workspace.')
         if row.revision != data.revision:
@@ -96,7 +110,7 @@ def archive_draft(request: Request, draft_id: UUID):
     principal = authenticate(request, mutation=True)
     principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        changed = db.execute(text('UPDATE conversations SET deleted_at=now(),revision=revision+1 WHERE id=:id AND deleted_at IS NULL'), {'id': draft_id}).rowcount
+        changed = db.execute(text("UPDATE conversations SET deleted_at=now(),revision=revision+1 WHERE id=:id AND kind='draft' AND deleted_at IS NULL"), {'id': draft_id}).rowcount
         if not changed:
             raise HTTPException(404, 'This draft is not available in your workspace.')
     return {'archived': True}
@@ -112,5 +126,5 @@ def farm(request: Request):
         farm = db.execute(text('SELECT id,name,created_at FROM farms WHERE id=:id'), {'id': principal.farm_id}).mappings().one()
         members = db.execute(text('SELECT u.id,u.display_name,u.state,array_agg(g.role ORDER BY g.role) AS roles FROM users u LEFT JOIN role_grants g ON g.user_id=u.id WHERE u.farm_id=:farm GROUP BY u.id ORDER BY u.display_name'), {'farm': principal.farm_id}).mappings().all()
     return {'farm': dict(farm), 'members': [dict(item) for item in members],
-            'provider': {'state': 'unassigned', 'cloud_budget_minor': 0, 'default_locality': 'local_only'},
+            'provider': {'cloud_budget_minor': 0, 'default_locality': 'local_only'},
             'enrollment_available': False}

@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "dev:admin": "pnpm --filter @hearth/admin-web dev",
-    "dev:user": "pnpm --filter @hearth/user-web dev"
+    "dev:user": "pnpm --filter @hearth/user-web dev",
+    "dev:website": "python -m http.server 8765 --bind 127.0.0.1 --directory website",
+    "check:website": "node scripts/check_website.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

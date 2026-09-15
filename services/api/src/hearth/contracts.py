@@ -94,10 +94,12 @@ class CapabilityDefinition(WireModel):
 
 
 class CapabilityAvailability(WireModel):
+    schema_version: Literal[2] = 2
     capability_id: Identifier
     assignment_state: Literal["unassigned", "assigned", "disabled"]
     local_state: Literal["unavailable", "warming", "ready", "busy", "offline", "failed"]
     local_deployment_ids: list[UUID] = Field(default_factory=list)
+    external_target_ids: list[UUID] = Field(default_factory=list)
     cloud_configured: StrictBool = False
     cloud_allowed_for_caller: StrictBool = False
     effective_state: Literal["unavailable", "warming", "ready", "busy", "cloud_available"]
@@ -255,8 +257,9 @@ class WorkerCommand(WireModel):
 
 
 class ProviderBootstrap(WireModel):
+    schema_version: Literal[2] = 2
     id: UUID
-    path: Literal["local_head", "joined_member", "openai"]
+    path: Literal["local_head", "joined_member", "openai", "existing_service"]
     readiness: Literal["unconfigured", "configured", "inference_verified", "admin_agent_ready", "failed"]
     node_id: UUID | None = None
     deployment_id: UUID | None = None
@@ -270,6 +273,43 @@ class ProviderProbeRequest(WireModel):
     expected_revision: Positive
     maximum_cost_minor: Nonnegative = 0
     paid_probe_grant_id: UUID | None = None
+
+
+class ExternalProviderConnection(WireModel):
+    id: UUID
+    farm_id: UUID
+    name: Label
+    base_url: Annotated[str, Field(min_length=1, max_length=2048)]
+    protocol: Literal["openai_compatible"] = "openai_compatible"
+    management: Literal["external"] = "external"
+    locality_assurance: Literal["operator_declared_local"] = "operator_declared_local"
+    credential_configured: StrictBool = False
+
+
+class InferenceTarget(WireModel):
+    id: UUID
+    connection_id: UUID
+    resource_pool_id: UUID
+    model_id: Annotated[str, Field(min_length=1, max_length=200)]
+    state: Literal["configured", "ready", "failed", "disabled"]
+    features: list[Identifier] = Field(default_factory=list, max_length=30)
+    probed_at: AwareDatetime | None = None
+    verified_until: AwareDatetime | None = None
+    revision: Positive
+
+
+class CapabilityBinding(WireModel):
+    capability_id: Identifier
+    target_id: UUID
+    priority: Annotated[StrictInt, Field(ge=0, le=100)] = 0
+
+
+class ProviderResourcePool(WireModel):
+    id: UUID
+    name: Label
+    generation_slots: Literal[1] = 1
+    busy: StrictBool
+    execution_state: Literal["idle", "running", "unknown"]
 
 
 class SecureInputReceipt(WireModel):
@@ -365,6 +405,166 @@ class GeometryRequest(WireModel):
         if not self.prompt and not self.input_image_id:
             raise ValueError("geometry requires a supported text or image input")
         return self
+
+
+class ImageGeneration(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    prompt: Annotated[str, Field(min_length=1, max_length=1000)]
+    negative_prompt: Annotated[str, Field(max_length=1000)] = ''
+    shape: Literal['square', 'landscape', 'portrait'] = 'square'
+    steps: Literal[20, 30, 40] = 20
+    seed: Annotated[StrictInt, Field(ge=0, le=4294967295)]
+
+    @field_validator('prompt')
+    @classmethod
+    def nonempty_prompt(cls, value):
+        if not value.strip():
+            raise ValueError('Describe the image you want to make.')
+        return value
+
+
+class ImageReceipt(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    state: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    progress: Annotated[StrictInt, Field(ge=0, le=40)]
+    steps: Literal[20, 30, 40]
+    seed: Annotated[StrictInt, Field(ge=0, le=4294967295)]
+    shape: Literal['square', 'landscape', 'portrait']
+    width: Annotated[StrictInt, Field(ge=1, le=2048)]
+    height: Annotated[StrictInt, Field(ge=1, le=2048)]
+    reason: Annotated[str, Field(max_length=500)] | None = None
+    sha256: Digest | None = None
+    execution_released: StrictBool
+    manifest_sha256: Digest
+    cancel_requested: StrictBool
+
+
+class ConversationImage(WireModel):
+    request: ImageGeneration
+    status: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    progress: Annotated[StrictInt, Field(ge=0, le=40)]
+    reason: Annotated[str, Field(max_length=500)] | None = None
+    sha256: Digest | None = None
+    planning_model: Annotated[str, Field(max_length=200)] | None = None
+    source_image_id: UUID | None = None
+    variation: StrictBool = False
+    batch_index: Annotated[StrictInt, Field(ge=1, le=4)] = 1
+    batch_count: Annotated[StrictInt, Field(ge=1, le=4)] = 1
+
+
+class ImagePrompt(WireModel):
+    prompt: Annotated[str, Field(min_length=1, max_length=1000)]
+    negative_prompt: Annotated[str, Field(max_length=1000)] = ''
+    shape: Literal['square', 'landscape', 'portrait'] = 'square'
+
+    @model_validator(mode='after')
+    def short_description(self):
+        if not self.prompt.strip() or any(len(value.split()) > 60 for value in (self.prompt, self.negative_prompt)):
+            raise ValueError('Image descriptions must fit the short local model profile.')
+        return self
+
+
+class ImagePromptPlan(WireModel):
+    action: Literal['generate', 'clarify']
+    prompt: Annotated[str, Field(min_length=1, max_length=1000)] | None = None
+    negative_prompt: Annotated[str, Field(max_length=1000)] = ''
+    shape: Literal['square', 'landscape', 'portrait'] = 'square'
+    question: Annotated[str, Field(min_length=1, max_length=500)] | None = None
+    images: list[ImagePrompt] | None = Field(default=None, min_length=1, max_length=4)
+
+    @model_validator(mode='after')
+    def coherent_proposal(self):
+        if self.action == 'generate' and (bool(self.prompt and self.prompt.strip()) == bool(self.images) or self.question):
+            raise ValueError('Generation needs either one prompt or an image list, and no question.')
+        if self.images and (self.prompt is not None or self.negative_prompt or self.shape != 'square'):
+            raise ValueError('Batch settings belong to each image.')
+        if self.action == 'clarify' and (self.images is not None or self.prompt is not None or not self.question or not self.question.strip() or self.negative_prompt):
+            raise ValueError('Clarification needs a question and no generation prompt.')
+        if any(len(value.split()) > 60 for value in (self.prompt or '', self.negative_prompt)):
+            raise ValueError('Image descriptions must fit the short local model profile.')
+        return self
+
+    def descriptions(self):
+        return self.images or [ImagePrompt(prompt=self.prompt, negative_prompt=self.negative_prompt, shape=self.shape)]
+
+
+class ImageProviderInfo(WireModel):
+    protocol: Literal['hearth.image.v1']
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=100)]
+    manifest_sha256: Digest
+    shapes: list[Literal['square', 'landscape', 'portrait']] = Field(min_length=1, max_length=3)
+    steps: list[Literal[20, 30, 40]] = Field(min_length=1, max_length=3)
+    job_cancellation: StrictBool
+    offline: StrictBool
+
+
+class TranscriptionRequest(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    audio_sha256: Digest
+
+
+class TranscriptionReceipt(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    audio_sha256: Digest
+    state: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    reason: Annotated[str, Field(max_length=500)] | None = None
+    text: Annotated[str, Field(max_length=6000)] = ''
+    language: Literal['en'] = 'en'
+    execution_released: StrictBool
+    manifest_sha256: Digest
+    cancel_requested: StrictBool
+
+
+class TranscriptionProviderInfo(WireModel):
+    protocol: Literal['hearth.transcription.v1']
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=100)]
+    manifest_sha256: Digest
+    languages: list[Literal['en']] = Field(min_length=1, max_length=1)
+    maximum_seconds: Literal[120] = 120
+    sample_rate: Literal[16000] = 16000
+    job_cancellation: StrictBool
+    offline: StrictBool
+
+
+class SpeechGeneration(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    voice: Annotated[str, Field(min_length=1, max_length=80)]
+    input: Annotated[str, Field(min_length=1, max_length=6000)]
+
+
+class SpeechReceipt(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    voice: Annotated[str, Field(min_length=1, max_length=80)]
+    input_sha256: Digest
+    state: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    reason: Annotated[str, Field(max_length=500)] | None = None
+    sha256: Digest | None = None
+    frames: Annotated[StrictInt, Field(ge=0, le=14400000)] = 0
+    sample_rate: Literal[24000] = 24000
+    execution_released: StrictBool
+    manifest_sha256: Digest
+    cancel_requested: StrictBool
+
+
+class SpeechProviderInfo(WireModel):
+    protocol: Literal['hearth.speech.v1']
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=100)]
+    manifest_sha256: Digest
+    voices: list[Annotated[str, Field(min_length=1, max_length=80)]] = Field(min_length=1, max_length=100)
+    default_voice: Annotated[str, Field(min_length=1, max_length=80)]
+    maximum_characters: Literal[6000] = 6000
+    sample_rate: Literal[24000] = 24000
+    job_cancellation: StrictBool
+    offline: StrictBool
 
 
 class CloudAuthorization(WireModel):

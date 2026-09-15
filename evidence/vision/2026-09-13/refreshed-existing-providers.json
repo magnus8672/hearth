@@ -1,0 +1,22 @@
+{
+  "providers": [
+    {
+      "model": "openai/gpt-oss-20b",
+      "state": "ready",
+      "features": [
+        "chat",
+        "streaming"
+      ],
+      "reason": null
+    },
+    {
+      "model": "stabilityai/stable-diffusion-xl-base-1.0",
+      "state": "ready",
+      "features": [
+        "image.text_to_image",
+        "image.jobs"
+      ],
+      "reason": null
+    }
+  ]
+}

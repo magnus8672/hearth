@@ -1,0 +1,10 @@
+{
+  "internal_network_only": true,
+  "host_ports": false,
+  "read_only_root": true,
+  "host_mounts": false,
+  "all_capabilities_dropped": true,
+  "process_user": "10001:10001",
+  "memory_limit_bytes": 201326592,
+  "observed_usage": "54.53MiB / 192MiB"
+}

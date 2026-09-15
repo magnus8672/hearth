@@ -18,7 +18,7 @@ _ENTRIES = [
 ]
 
 CAPABILITIES = tuple(CapabilityDefinition(
-    capability_id=id, revision=1, display_name=label, description=f"{label} through an approved Hearth deployment.",
+    capability_id=id, revision=1, display_name=label, description=f"{label} through an approved hearth deployment.",
     icon=icon, input_modalities=inputs, output_modalities=outputs, quality_suite=id + ".v1",
     deadline_seconds=900 if outputs[0] in {"image", "geometry", "audio"} else 300,
     cloud_eligible=not id.startswith("memory.") and id != "geometry.generate",

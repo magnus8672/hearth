@@ -20,7 +20,7 @@ function render() {
   byId('browser-panel').hidden = false;
   byId('owner-form').hidden = !data.trusted || !browserReady || data.owner_created;
   byId('complete').hidden = !data.trusted || !browserReady || !data.owner_created;
-  byId('status').textContent = !data.trusted ? 'Start by trusting this Hearth certificate on your Windows account.' : !browserReady ? 'Windows trust is installed. Checking this browser separately.' : data.owner_created ? 'Your Hearth already has an Owner. Browser connections are ready.' : 'Browser trust is ready. Let’s create your account.';
+  byId('status').textContent = !data.trusted ? 'Start by trusting this hearth certificate on your Windows account.' : !browserReady ? 'Windows trust is installed. Checking this browser separately.' : data.owner_created ? 'Your hearth already has an Owner. Browser connections are ready.' : 'Browser trust is ready. Let’s create your account.';
 }
 async function checkBrowser() {
   byId('check-browser').disabled = true;
@@ -43,7 +43,7 @@ async function checkBrowser() {
     return false;
   }));
   browserReady = checks.every(Boolean);
-  byId('browser-status').textContent = browserReady ? 'This browser can securely reach every Hearth address.' : 'This browser could not verify every connection. Check that the appliance is running and review the certificate help below.';
+  byId('browser-status').textContent = browserReady ? 'This browser can securely reach every hearth address.' : 'This browser could not verify every connection. Check that the appliance is running and review the certificate help below.';
   byId('browser-help').open = !browserReady;
   byId('check-browser').disabled = false;
   render();
@@ -66,12 +66,12 @@ byId('owner-form').addEventListener('submit', async event => {
   event.preventDefault(); byId('error').textContent = '';
   if (!browserReady) return;
   if (byId('password').value !== byId('confirm').value) { byId('error').textContent = 'Your passwords do not match.'; return; }
-  byId('create').disabled = true; byId('create').textContent = 'Creating your Hearth…';
+  byId('create').disabled = true; byId('create').textContent = 'Creating your hearth…';
   try {
     await call('owner', { farm_name: byId('farm-name').value, name: byId('name').value, username: byId('username').value, password: byId('password').value });
     setupState.owner_created = true;
     byId('password').value = ''; byId('confirm').value = ''; render();
-  } catch (error) { byId('error').textContent = error.message; byId('create').disabled = false; byId('create').textContent = 'Create my Hearth'; }
+  } catch (error) { byId('error').textContent = error.message; byId('create').disabled = false; byId('create').textContent = 'Create my hearth'; }
 });
 if (!proof) { byId('status').textContent = 'Open setup using Start-Hearth.ps1. This page needs the one-time local setup proof.'; }
 else call('status').then(data => { setupState = data; render(); return checkBrowser(); }).catch(error => { byId('status').textContent = 'Setup is not ready.'; byId('error').textContent = error.message; });

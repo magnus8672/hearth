@@ -34,6 +34,10 @@ services:
     pull_policy: never
     environment: &bff-environment
       HEARTH_MODE: development
+      HEARTH_MEMORY_VAULT_PATH: /var/lib/hearth/vaults
+      # QEMU's host gateway reaches this reference host's loopback LM Studio.
+      # This alias is rejected in production and does not enable LAN plain HTTP.
+      HEARTH_DEVELOPMENT_PROVIDER_ALIASES: '{"http://127.0.0.1:1234/v1":"http://10.0.2.2:1234/v1","http://127.0.0.1:1235/v1":"http://10.0.2.2:1235/v1","http://127.0.0.1:1236/v1":"http://10.0.2.2:1236/v1","http://127.0.0.1:1237/v1":"http://10.0.2.2:1237/v1"}'
       HEARTH_DATABASE_URL: postgresql+psycopg://hearth_app:${HEARTH_APP_PASSWORD}@postgres:5432/hearth
       HEARTH_SESSION_ENCRYPTION_KEY: ${HEARTH_SESSION_ENCRYPTION_KEY:?}
       HEARTH_TRUSTED_HOSTS: '["localhost","127.0.0.1","api"]'
@@ -48,6 +52,8 @@ services:
     tmpfs: [/tmp]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    volumes: ["memory-vaults:/var/lib/hearth/vaults"]
+    networks: [default, tool-reference]
     ports: ["8080:8080"]
     depends_on:
       migrate: {condition: service_completed_successfully}
@@ -55,6 +61,7 @@ services:
   user-api:
     image: hearth-control:development
     pull_policy: never
+    networks: [default, tool-reference]
     environment:
       <<: *bff-environment
       HEARTH_AUDIENCE: user
@@ -62,6 +69,21 @@ services:
     tmpfs: [/tmp]
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    restart: unless-stopped
+  reference-tools:
+    image: hearth-control:development
+    pull_policy: never
+    command: [".venv/bin/uvicorn", "hearth.reference_tools:create_app", "--factory", "--host", "0.0.0.0", "--port", "8096", "--no-access-log"]
+    # No credentials, volumes, host ports or general execution functions.
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 192m
+    cpus: 0.5
+    networks: [tool-reference]
     depends_on:
       migrate: {condition: service_completed_successfully}
     restart: unless-stopped
@@ -137,7 +159,11 @@ services:
 secrets:
   ca-password:
     file: ./.ca-password
+networks:
+  tool-reference:
+    internal: true
 volumes:
+  memory-vaults:
   postgres-data:
   caddy-data:
   step-data:

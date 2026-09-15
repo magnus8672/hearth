@@ -1,0 +1,20 @@
+{
+  "scope": "Real remote LM Studio, restricted-role PostgreSQL and both BFF APIs with explicit OIDC fixtures in a disposable farm. No user conversation modified.",
+  "model": "qwen/qwen3.8-27b",
+  "address": "http://10.20.30.40:1234",
+  "max_output_tokens": 16384,
+  "elapsed_seconds": 22.204,
+  "finish_reason": "stop",
+  "answer_characters": 1526,
+  "answer_chunks": 519,
+  "complete_python_blocks_parsed": 2,
+  "model_code_executed": false,
+  "saved_message_and_model_restored": true,
+  "loaded_before": [
+    "qwen/qwen3.8-27b"
+  ],
+  "loaded_after": [
+    "qwen/qwen3.8-27b"
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

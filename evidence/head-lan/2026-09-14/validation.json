@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-09-15T00:44:04.424655+00:00",
+  "status": "passed",
+  "scope": "Standalone fresh Linux LAN head in a separate Compose project, not physical ESX or existing-farm migration",
+  "python": {
+    "windows": {
+      "passed": 349,
+      "skipped": 17
+    },
+    "linux": {
+      "passed": 349,
+      "skipped": 17
+    }
+  },
+  "ruff": "passed",
+  "network": "network.json",
+  "browser": "browser.json",
+  "restart": "restart.json",
+  "existing_development": {
+    "changed": false,
+    "readiness": [
+      {
+        "origin": "https://localhost:8443",
+        "ready": true,
+        "tls_verified": true
+      },
+      {
+        "origin": "https://localhost:8444",
+        "ready": true,
+        "tls_verified": true
+      }
+    ]
+  },
+  "source_sha256": {
+    "scripts/head.py": "7c34854bab213fef1daeef8e3b0b91bf94ca0b0c957a67f5f1031d9ca0eeccc3",
+    "scripts/head_console.py": "7880951fdad2c40a3d9b32f0ac3144e2515823786f80de2c0696a3a2e3fe01f9",
+    "scripts/configure_identity.py": "69086aecb51dae8b49d3c625f1bc57f3beb867c734739ae9c037aaf46fc55ed6",
+    "deploy/compose/head.yaml": "bf3adfa9a464ba65eb1690eb9217230cd343c59efa7af6f9da94f601b9e4ef26",
+    "deploy/compose/Caddyfile.head": "8855434eadc38acb765515404bb378d8a543ddea5b91fe0948cedeab99b971dd",
+    "deploy/identity/themes/hearth/login/footer.ftl": "774d7184d173b57a7e8b886a1837d965b689ff0766e5e9904611340ea3e05fc0",
+    "tests/security/test_head_configuration.py": "6bcf6235c0533ccb1c9367e932e66f2a15ad85b37cbb0e980d632f6cdb5ac3a4",
+    "tests/integration/test_head_origins.py": "c4418eebc7b3431ac1574aa7e5cdbc296468b3e9d9d30e66d137bf5a92d804f2"
+  },
+  "not_qualified": [
+    "physical ESX VM and external LAN laptop without test tunnel",
+    "existing-farm data and identity-address migration",
+    "full Hermes/OpenClaw/Continue harness acceptance",
+    "signed installer, selected-LAN signup and release gates"
+  ],
+  "release_gates": {
+    "partial": 20,
+    "not_run": 41,
+    "passed": 0
+  }
+}

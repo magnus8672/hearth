@@ -47,9 +47,9 @@ test('a first failed browser connection is retried before the links become avail
 
 test('new Owner form requires explicit Windows trust and successful browser probes', async ({ page }) => {
   await setupPage(page, { trusted: false, owner: false });
-  await expect(page.getByText('This browser can securely reach every Hearth address.')).toBeVisible();
+  await expect(page.getByText('This browser can securely reach every hearth address.')).toBeVisible();
   await expect(page.locator('#owner-form')).toBeHidden();
-  await page.getByRole('button', { name: 'Trust this Hearth certificate' }).click();
-  await expect(page.getByLabel('Hearth name')).toBeVisible();
+  await page.getByRole('button', { name: 'Trust this hearth certificate' }).click();
+  await expect(page.getByLabel('hearth name')).toBeVisible();
   await expect(page.locator('#complete')).toBeHidden();
 });

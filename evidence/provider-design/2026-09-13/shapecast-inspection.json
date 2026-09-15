@@ -1,0 +1,107 @@
+{
+  "inspected_at_utc": "2026-09-13T03:35:20.3158630Z",
+  "scope": "Read-only installation metadata, readable shipped adapter/export source, selected non-secret settings and pack manifests",
+  "application": "Shapecast",
+  "installed_version": "0.3.3",
+  "install_root": "%LOCALAPPDATA%/Shapecast",
+  "pack_root": "%APPDATA%/Shapecast/packs",
+  "sources": [
+    {
+      "path": "core-runtime/resources/shapecast-desktop/gpu-host/shapecast_gpu.py",
+      "bytes": 9513,
+      "sha256": "bc6df44171ac9822917c3069b3f12159aaa3bd2a28201a25ffb822416b690f96"
+    },
+    {
+      "path": "core-runtime/resources/shapecast-desktop/gpu-host/shapecast_image.py",
+      "bytes": 11045,
+      "sha256": "db93b9d489855a3fac00bf7a8858459f9e5769fc4fc8c1f31cfe6f88fe2d07a4"
+    },
+    {
+      "path": "core-runtime/resources/shapecast-desktop/gpu-host/shapecast_repaint.py",
+      "bytes": 6203,
+      "sha256": "decd3079e407317e75e40c5caa7db3483bb9ae22bf8df17e63673b447e52ca6f"
+    },
+    {
+      "path": "core-runtime/resources/shapecast-desktop/gpu-host/shapecast_rig.py",
+      "bytes": 11979,
+      "sha256": "664a0ca0a564f42e62c64ef67270c71e0831fa18cc11d2d3592db273d5f516fe"
+    },
+    {
+      "path": "core-runtime/resources/shapecast-desktop/gpu-host/shapecast_upscale.py",
+      "bytes": 3208,
+      "sha256": "78fe338225d94ba002e3e4dd3f352fca7f68eaa5b2c786e6d4b1ddd9606a7144"
+    },
+    {
+      "path": "core-runtime/resources/server/hunyuan_stages.py",
+      "bytes": 44008,
+      "sha256": "c87231f3444e546a035b1040d3b1ae18e19d5dbfc5d93c843cf7b5b5d0f11cb7"
+    },
+    {
+      "path": "core-runtime/resources/blender/export_pack.py",
+      "bytes": 22710,
+      "sha256": "dda638fa071a18b232f9cb1a2aea149191ab937a22a91b8294347fa5bba3c6d3"
+    },
+    {
+      "path": "core-runtime/resources/blender/postprocess_gameready.py",
+      "bytes": 6130,
+      "sha256": "3436f18ce157280675ee81945c2ddc4b97ac3b012184fe68a5f01f4a3019be1c"
+    },
+    {
+      "path": "core-runtime/resources/shapecast-desktop/NOTICE",
+      "bytes": 5947,
+      "sha256": "0d8e836f6c1ddfabcead8b4e62720bcbd45f8b8862fd1c3d79eb7ee731fc4376"
+    }
+  ],
+  "packs": [
+    {
+      "name": "engine",
+      "version": "0.1.0",
+      "declared_file_count": 39350,
+      "declared_unpacked_bytes": 6087340382,
+      "provides": {
+        "gpu_host_exe": "python/python.exe",
+        "engine_root": "engine"
+      },
+      "manifest_sha256": "3870f815c0c9ed553392e1c19196a5999400097fcfaea764875081822a57042e"
+    },
+    {
+      "name": "image",
+      "version": "0.1.0",
+      "declared_file_count": 23498,
+      "declared_unpacked_bytes": 4719611632,
+      "provides": {
+        "image_host_exe": "python/python.exe"
+      },
+      "manifest_sha256": "cdb13030f9e231b4fa70fd94895d132e7fd6b2821456e1eb194cef3f16b9cf70"
+    },
+    {
+      "name": "models",
+      "version": "0.1.0",
+      "declared_file_count": 119,
+      "declared_unpacked_bytes": 82823752607,
+      "provides": {
+        "models_dir": "models"
+      },
+      "manifest_sha256": "b89840d53548eb92fc0bd1beff09e46de72eeaceb92d078ca950b1b9e612fe4e"
+    },
+    {
+      "name": "rig",
+      "version": "0.1.0",
+      "declared_file_count": 40409,
+      "declared_unpacked_bytes": 17896044887,
+      "provides": {
+        "rig_host_exe": "python/python.exe",
+        "rig_pack_root": "rig-pack"
+      },
+      "manifest_sha256": "4a6ea85162d9932d9e89b1237a481422599bbd172e4fca7d2a3d7fe8196ebb27"
+    }
+  ],
+  "limitations": [
+    "No model generation, download, benchmark or runtime qualification",
+    "No full installed-file hash verification or signature qualification",
+    "No decompilation of the compiled orchestration core",
+    "No inspection of activation data or user-generated project content",
+    "No changes to Shapecast or host runtime configuration"
+  ],
+  "hearth_status": "Design proposal only; no provider connected and no release gate closed"
+}

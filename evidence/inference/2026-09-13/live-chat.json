@@ -1,0 +1,15 @@
+{
+  "scope": "Real LM Studio HTTP/SSE and PostgreSQL through both BFF APIs; explicit OIDC fixtures in a disposable farm. No real user account or personal content used.",
+  "model": "openai/gpt-oss-20b",
+  "url": "http://127.0.0.1:1234",
+  "probe": [
+    "chat",
+    "streaming"
+  ],
+  "completed_turns": 2,
+  "answer_text_chunks": 13,
+  "followup_answer": "The code word is **ember**.",
+  "fresh_session_restores_messages": true,
+  "tools_enabled": false,
+  "paid_inference": false
+}

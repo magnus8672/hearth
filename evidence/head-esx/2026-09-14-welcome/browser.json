@@ -1,0 +1,65 @@
+[
+  {
+    "browser": "chromium",
+    "checks": [
+      "Workspace · Connection not verified",
+      "Administration · Connection not verified",
+      "Sign-in · Connection not verified"
+    ],
+    "https": {
+      "error": "page.goto: net::ERR_CERT_AUTHORITY_INVALID at https://10.20.30.10:8443/health/browser"
+    },
+    "download": "hearth-root.crt",
+    "overflow": false,
+    "errors": [],
+    "requests": [
+      {
+        "url": "https://10.20.30.10/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10:8445/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10:8443/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10:8443/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10:8445/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      },
+      {
+        "url": "https://10.20.30.10:8443/health/browser",
+        "error": {
+          "errorText": "net::ERR_CERT_AUTHORITY_INVALID"
+        }
+      }
+    ],
+    "certificate_bypass": false
+  },
+  {
+    "browser": "firefox",
+    "launch_error": "browserType.launch: spawn UNKNOWN"
+  }
+]
