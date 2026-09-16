@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-09-16T03:28:31.847317+00:00",
+  "user_confirmation": "Connected successfully",
+  "configured_profile": "default",
+  "selected_model_alias": "auto",
+  "base_url": "https://10.20.30.10/v1",
+  "certificate_verification_enabled": true,
+  "keyed_models_status": 200,
+  "model_aliases": [
+    "auto",
+    "chat.general",
+    "code.implement"
+  ],
+  "live_desktop_probes": [
+    {
+      "profile": "default",
+      "ok": true,
+      "reachable": true,
+      "model_aliases": [
+        "auto",
+        "chat.general",
+        "code.implement"
+      ]
+    },
+    {
+      "profile": "hearth",
+      "ok": true,
+      "reachable": true,
+      "model_aliases": [
+        "auto",
+        "chat.general",
+        "code.implement"
+      ]
+    }
+  ],
+  "credential_values_recorded": false,
+  "separate_hearth_profile_model_changed": false,
+  "scope": "Authenticated capability discovery and user-confirmed Desktop connection. No inference or local/shared tool round trip was run.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -1,0 +1,61 @@
+{
+  "checked_at": "2026-09-16T03:26:12.541666+00:00",
+  "scope": "Actual running Hermes Desktop Python backends, authenticated through their existing local session transport; no hearth API key supplied to probes.",
+  "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1",
+  "certificate_verification_enabled": true,
+  "normal_public_roots_preserved": true,
+  "system_environment_changed": false,
+  "hearth_server_changed": false,
+  "initial_diagnosis": "Default backend had no SSL_CERT_FILE and its live onboarding probe returned unreachable. The hearth backend had the profile CA and the same live probe returned reachable. Default CA was hot-applied before this final validation run.",
+  "backends": [
+    {
+      "profile": "default",
+      "before": {
+        "ok": true,
+        "reachable": true,
+        "message": "",
+        "models": []
+      },
+      "after": {
+        "ok": true,
+        "reachable": true,
+        "message": "",
+        "models": []
+      },
+      "keyless_authenticated_endpoint_check": {
+        "ok": false,
+        "reachable": true,
+        "message": "The endpoint rejected the API key.",
+        "models": []
+      },
+      "live_backend_ca_loaded": true,
+      "other_env_values_unchanged": true,
+      "model_configuration_unchanged": true
+    },
+    {
+      "profile": "hearth",
+      "before": {
+        "ok": true,
+        "reachable": true,
+        "message": "",
+        "models": []
+      },
+      "after": {
+        "ok": true,
+        "reachable": true,
+        "message": "",
+        "models": []
+      },
+      "keyless_authenticated_endpoint_check": {
+        "ok": false,
+        "reachable": true,
+        "message": "The endpoint rejected the API key.",
+        "models": []
+      },
+      "live_backend_ca_loaded": true,
+      "other_env_values_unchanged": true,
+      "model_configuration_unchanged": true
+    }
+  ],
+  "remaining": "User retries Connect with their key; full agent conversation remains unqualified."
+}
