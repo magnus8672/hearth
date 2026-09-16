@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-09-16T03:15:03.037685+00:00",
+  "profile": "hearth",
+  "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1",
+  "certificate_source": "Existing pinned SSH connection to operator@10.20.30.10",
+  "bundle_keeps_certifi_public_roots": true,
+  "certificate_verification": true,
+  "before": "Hermes httpx default failed with CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate; Windows urllib succeeded.",
+  "after": {
+    "browser_health": 200,
+    "models_without_key": 401
+  },
+  "other_profile_env_values_unchanged": true,
+  "system_environment_changed": false,
+  "api_key_read_or_changed": false,
+  "remaining": "Running Hermes backend must reload environment; authenticated UI connection still needs retry.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -2,24 +2,24 @@
 
 Implemented 14 September 2026 with migration `0020`. hearth now owns a shared MCP gateway and serves a capability-based Chat Completions API. Register upstream tools once in Administration. Private chat and external MCP clients use the same catalog, credentials, approval decisions and invocation receipts.
 
-## Try it on the prepared head
+## Try it on the active VM head
 
-1. Open [Administration, Providers](https://localhost:8443/#providers). On the resident model you want to use, select **Verify tool calling**. The probe requires an actual native function call and a second reply that consumes its result. Plain chat verification does not enable tools.
-2. Open [Administration, Shared tools](https://localhost:8443/#tools). Register an existing Streamable HTTP MCP endpoint, including its path. The bundled reference service is `http://reference-tools:8096/mcp`. Name it `hearth reference tools`, leave credentials optional, accept HTTP for this internal connection and confirm the local-service declaration.
+1. Open [Administration, Providers](https://10.20.30.10:8443/#providers). On the resident model you want to use, select **Verify tool calling**. The probe requires an actual native function call and a second reply that consumes its result. Plain chat verification does not enable tools.
+2. Open [Administration, Shared tools](https://10.20.30.10:8443/#tools). Register an existing Streamable HTTP MCP endpoint, including its path. The bundled reference service is `http://reference-tools:8096/mcp`. Name it `hearth reference tools`, leave credentials optional, accept HTTP for this internal connection and confirm the local-service declaration.
 3. Select **Register and discover**, then review `calculate` and `current_time`. Approve them as **Read only**, choose the intended capabilities, and choose owner-only or all members. Newly discovered or changed schemas are disabled until reviewed.
 4. In private chat, select a capability assigned to the verified target and ask: “Use the shared calculator to multiply 137 by 29.” A tool-capable model can discover the operation, inspect its schema, execute it and consume the returned result. Its reply retains the actual model identity; tool activity appears alongside the reply.
-5. Open [Workspace, Client connections](https://localhost:8444/#clients), create a named key with the required capability scopes, and save the key when shown. Enable tool access if the client uses its own functions or hearth MCP.
+5. Open [Workspace, Client connections](https://10.20.30.10/#clients), create a named key with the required capability scopes, and save the key when shown. Enable tool access if the client uses its own functions or hearth MCP.
 
-| Client setting | Prepared development value |
+| Client setting | Active VM value |
 |---|---|
-| API base URL | `https://localhost:8444/v1` |
+| API base URL | `https://10.20.30.10/v1` |
 | Protocol | Chat Completions |
 | Credential | The user's hearth API key, sent as `Authorization: Bearer ...` |
 | Automatic model | `auto` |
 | Coding model | `code.implement` |
-| Shared MCP endpoint | `https://localhost:8444/mcp`, Streamable HTTP, same Bearer key |
+| Shared MCP endpoint | `https://10.20.30.10/mcp`, Streamable HTTP, same Bearer key |
 
-The development appliance forwards these ports to the laptop's loopback only. For a standalone LAN/ESX VM, use [head VM setup](../operations/HEAD_VM_SETUP.md): it binds the public edge to `0.0.0.0` and configures the VM's advertised address consistently across HTTPS, client metadata, sign-in and browser links. Use that address in place of `localhost` in the examples below. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
+The active [ESX head](../operations/ESX_HEAD.md) binds its public edge to `0.0.0.0`; use the saved VM address for HTTPS, clients and sign-in. The retired laptop appliance's loopback URLs do not reach this farm. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
 
 ## Three tools, regardless of catalog size
 
@@ -70,7 +70,7 @@ schema: v1
 models:
   - name: hearth coding
     provider: openai
-    apiBase: https://localhost:8444/v1
+    apiBase: https://10.20.30.10/v1
     apiKey: ${{ secrets.HEARTH_API_KEY }}
     model: code.implement
     roles: [chat, edit, apply]
@@ -86,7 +86,7 @@ For OpenClaw, merge a custom `hearth` provider into the existing config and choo
   "models": {
     "providers": {
       "hearth": {
-        "baseUrl": "https://localhost:8444/v1",
+        "baseUrl": "https://10.20.30.10/v1",
         "apiKey": "${HEARTH_API_KEY}",
         "api": "openai-completions",
         "models": [
@@ -100,6 +100,16 @@ For OpenClaw, merge a custom `hearth` provider into the existing config and choo
 ```
 
 For Hermes, run `hermes model` and configure a custom compatible endpoint using the same base URL, key and alias. Select Chat Completions when choosing API mode. See [Hermes provider setup](https://hermes-agent.nousresearch.com/docs/integrations/providers) and [model configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models). Its full agent prompts require more context than the small qualification prompts; validate the configured model context before a large repository session.
+
+### Hermes Desktop certificate trust
+
+The inspected Hermes Desktop 0.17.0 installation probes custom endpoints through a Python `httpx.AsyncClient`. Its generic **Could not reach .../v1/models** message also covers certificate validation failures. On this Windows laptop, Python's Windows-backed default SSL context trusted the head, but Hermes's HTTPX/certifi default failed with `CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate`. This happens before the API key reaches hearth.
+
+For a private CA, supply a CA bundle through `SSL_CERT_FILE` in the selected Hermes profile's `.env`. [HTTPX honors this variable](https://www.python-httpx.org/environment_variables/#ssl_cert_file), including the Desktop onboarding probe. Use the installed Hermes Python environment's existing `certifi` public roots plus the matching public hearth root in the bundle so other HTTPS services keep working. Obtain the hearth root through trusted VM access and verify its fingerprint; do not use an unchecked HTTP download as authority. Preserve existing custom CA settings when extending an already configured client.
+
+The laptop's **hearth** profile now has `SSL_CERT_FILE` pointing at its `certificates/hearth-ca-bundle.pem`, beside the profile's `.env`. The default profile, API credentials and system-wide environment were not changed. The original profile environment was backed up beside it. Fully quit and reopen Hermes after this change so its Python backend reloads the profile environment, then select **Local / custom endpoint**, enter `https://10.20.30.10/v1` and the existing hearth key. Do not remove `/v1` or disable TLS verification.
+
+[Transport evidence](../../evidence/client-api/2026-09-15/hermes-trust.json) records verified TLS using that environment: `/health/browser` returns 200 and `/v1/models` without a key correctly returns 401. This proves transport and the authentication boundary, not successful keyed discovery or a complete Hermes agent conversation. Those remain pending the Desktop retry.
 
 Start a client test by asking for a short reply, then a local file read in a disposable project, then a shared calculator call through MCP. Inspect the actual route header and local tool approval. Changing the capability's target in hearth should not require changing the client model alias.
 
