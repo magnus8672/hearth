@@ -19,7 +19,7 @@ from sqlalchemy import text
 from hearth import routing
 from hearth.client_keys import bearer, key_current
 from hearth.database import scoped_session
-from hearth.inference import ProviderError, chat_stream
+from hearth.inference import ContextLimitError, ProviderError, chat_stream
 from hearth.provider_health import record_failure
 from hearth.providers import claim_pool, credential_for, release_pool, target_record, transport_settings
 from hearth.tool_schemas import NAME, valid_schema
@@ -47,6 +47,7 @@ class Completion(BaseModel):
     user: str | None = Field(default=None, max_length=200)
     presence_penalty: float | None = Field(default=None, ge=-2, le=2)
     frequency_penalty: float | None = Field(default=None, ge=-2, le=2)
+    reasoning_effort: Literal['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] | None = None
 
     @model_validator(mode='after')
     def supported(self):
@@ -74,7 +75,7 @@ class Completion(BaseModel):
             if function['name'] in names or len(function.get('description', '')) > 8000:
                 raise ValueError('Duplicate tool or oversized description.')
             names.add(function['name'])
-            function['parameters'] = valid_schema(function.get('parameters', {}))
+            function['parameters'] = valid_schema(function.get('parameters', {}), caller_owned=True)
         if self.tool_choice not in (None, 'auto', 'none', 'required'):
             if not isinstance(self.tool_choice, dict) or self.tool_choice.get('type') != 'function' or set(self.tool_choice) != {'type', 'function'} or set(self.tool_choice['function']) != {'name'} or self.tool_choice['function']['name'] not in names:
                 raise ValueError('Choose a function declared in this request.')
@@ -180,7 +181,7 @@ def produce(engine, settings, client, data, run_id, target, context, emit, disco
     principal = client.principal
     problem, finished, revoked = None, False, False
     last_check = 0
-    parameters = {key: getattr(data, key) for key in ('temperature', 'top_p', 'stop', 'seed', 'parallel_tool_calls', 'response_format', 'presence_penalty', 'frequency_penalty') if getattr(data, key) is not None}
+    parameters = {key: getattr(data, key) for key in ('temperature', 'top_p', 'stop', 'seed', 'parallel_tool_calls', 'response_format', 'presence_penalty', 'frequency_penalty', 'reasoning_effort') if getattr(data, key) is not None}
     parameters['stream_options'] = {'include_usage': True}
     maximum = data.max_completion_tokens or data.max_tokens or settings.chat_max_output_tokens
     transport = transport_settings(target, settings).model_copy(update={'chat_max_output_tokens': min(maximum, settings.chat_max_output_tokens)})
@@ -189,7 +190,8 @@ def produce(engine, settings, client, data, run_id, target, context, emit, disco
             if not key_current(db, principal, client.key_id):
                 raise ProviderError('The client key was revoked before dispatch.', provider_fault=False)
         for kind, value in chat_stream(target['base_url'], credential_for(target, settings), target['model_id'], context, transport,
-                                       tools=data.tools, tool_choice=data.tool_choice, parameters=parameters, include_reasoning=True):
+                                       tools=data.tools, tool_choice=data.tool_choice, parameters=parameters, include_reasoning=True,
+                                       caller_owned_tools=True):
             if time.monotonic()-last_check >= .5 or kind in {'done', 'tool_calls'}:
                 with scoped_session(engine, principal.id, principal.farm_id) as db:
                     current = target_record(db, target['id'])
@@ -219,12 +221,20 @@ def produce(engine, settings, client, data, run_id, target, context, emit, disco
             # An unavailable database leaves the existing lease to expire.
             problem = ProviderError('The response receipt could not be saved.', uncertain=True, provider_fault=False)
         if problem:
-            emit('error', str(problem))
+            emit('error', problem)
         emit('end', None)
 
 
 def error_body(message, code='invalid_request'):
     return {'error': {'message': message, 'type': 'hearth_error', 'param': None, 'code': code}}
+
+
+def generation_error(problem):
+    if isinstance(problem, ContextLimitError):
+        body = error_body(str(problem), 'context_length_exceeded')
+        body['error'].update(type='invalid_request_error', status_code=400)
+        return body, 400
+    return error_body(str(problem), 'generation_failed'), 502
 
 
 @router.post('/v1/chat/completions', tags=['clients'])
@@ -284,7 +294,7 @@ def completion(request: Request, data: Completion):
                     return
                 if kind == 'error':
                     finish = None
-                    yield 'data: '+json.dumps(error_body(value, 'generation_failed'))+'\n\n'
+                    yield 'data: '+json.dumps(generation_error(value)[0])+'\n\n'
                 elif kind == 'done':
                     finish = value
                 elif kind == 'usage':
@@ -313,7 +323,8 @@ def completion(request: Request, data: Completion):
         elif kind == 'error':
             failure = value
     if failure or not finish:
-        return JSONResponse(error_body(failure or 'The response did not complete.', 'generation_failed'), status_code=502, headers=headers)
+        body, status = generation_error(failure or 'The response did not complete.')
+        return JSONResponse(body, status_code=status, headers=headers)
     message = {'role': 'assistant', 'content': answer or None}
     if calls:
         message['tool_calls'] = calls

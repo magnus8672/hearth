@@ -9,7 +9,7 @@ from hearth.inference import ProviderError
 NAME = re.compile(r'^[A-Za-z0-9_-]{1,128}$')
 
 
-def valid_schema(schema):
+def valid_schema(schema, *, caller_owned=False):
     schema = resolve_local_schema(schema)
     if not isinstance(schema, dict) or schema.get('type') != 'object':
         raise ValueError('A tool input schema must describe an object.')
@@ -21,8 +21,11 @@ def valid_schema(schema):
         if depth > 24:
             raise ValueError('The tool schema is too deeply nested.')
         if isinstance(value, dict):
-            # No external retrieval, recursion or unbounded regex evaluation.
-            if any(key in value for key in ('$ref', '$dynamicRef', '$recursiveRef', 'pattern', 'patternProperties')):
+            # Caller tools only travel through the head. Their caller validates
+            # arguments before execution, including any regular expressions.
+            # Head-executed tools retain the stricter no-regex policy.
+            forbidden = ('$ref', '$dynamicRef', '$recursiveRef') + (() if caller_owned else ('pattern', 'patternProperties'))
+            if any(key in value for key in forbidden):
                 raise ValueError('References and regular expressions are not supported in tool schemas yet.')
             pending.extend((item, depth+1) for item in value.values())
         elif isinstance(value, list):
@@ -77,8 +80,9 @@ def validate_arguments(arguments, schema):
 
 
 class ToolCalls:
-    def __init__(self, tools):
+    def __init__(self, tools, *, caller_owned=False):
         self.definitions = {item['function']['name']: item['function']['parameters'] for item in tools or []}
+        self.caller_owned = caller_owned
         self.items = {}
         self.size = 0
 
@@ -117,5 +121,13 @@ class ToolCalls:
             if not NAME.fullmatch(item['id']) or function['name'] not in self.definitions:
                 raise ValueError()
             arguments = json.loads(function['arguments'])
-            validate_arguments(arguments, self.definitions[function['name']])
+            if self.caller_owned:
+                # Do not evaluate caller schemas on the head. In particular,
+                # regexes can be expensive and tool execution belongs to the
+                # local harness. Still enforce declared names, complete JSON
+                # objects and the same wire/argument size limits.
+                if not isinstance(arguments, dict) or len(json.dumps(arguments, allow_nan=False).encode()) > 65536:
+                    raise ValueError('Tool arguments must be an object of at most 64 KiB.')
+            else:
+                validate_arguments(arguments, self.definitions[function['name']])
         return items

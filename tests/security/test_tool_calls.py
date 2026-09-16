@@ -5,7 +5,7 @@ import pytest
 from hearth.client_api import Completion
 from hearth.config import Settings
 from hearth.inference import ProviderError, chat_stream
-from hearth.tool_schemas import valid_schema, validate_arguments
+from hearth.tool_schemas import ToolCalls, valid_schema, validate_arguments
 from pydantic import ValidationError
 
 from tests.security.test_inference import event, transport
@@ -65,3 +65,40 @@ def test_local_schema_references_are_inlined_without_external_or_recursive_resol
         schema['$defs']['Location']['properties']['nested'] = {'$ref': pointer}
         with pytest.raises(ValueError):
             valid_schema(schema)
+
+
+def test_client_reasoning_and_regex_schemas_do_not_relax_head_execution(monkeypatch):
+    schema = {'type': 'object', 'properties': {'value': {'type': 'string', 'pattern': '^(a+)+$'}}}
+    tool = {'type': 'function', 'function': {'name': 'client_check', 'parameters': schema}}
+    data = Completion.model_validate({'model': 'auto', 'messages': [{'role': 'user', 'content': 'hello'}],
+                                      'reasoning_effort': 'medium', 'tools': [tool]})
+    assert data.reasoning_effort == 'medium'
+    assert data.tools[0]['function']['parameters'] == schema
+    with pytest.raises(ValueError, match='regular expressions'):
+        valid_schema(schema)
+    for effort in ('unlimited', 5, True):
+        with pytest.raises(ValidationError):
+            Completion.model_validate({'model': 'auto', 'messages': [{'role': 'user', 'content': 'hello'}], 'reasoning_effort': effort})
+
+    def must_not_evaluate(*args, **kwargs):
+        raise AssertionError('Caller-owned schemas must not run against returned arguments on the head.')
+    monkeypatch.setattr('hearth.tool_schemas.validate_arguments', must_not_evaluate)
+    calls = ToolCalls([tool], caller_owned=True)
+    calls.feed([{'index': 0, 'id': 'test_call', 'function': {'name': 'client_check', 'arguments': json.dumps({'value': 'a'*10000+'!'})}}])
+    assert calls.complete()[0]['function']['name'] == 'client_check'
+
+
+@pytest.mark.parametrize('name,arguments', [('undeclared', '{}'), ('add', '[]'), ('add', '{'), ('add', '{"a":NaN}')])
+def test_caller_owned_tools_still_enforce_wire_shape_and_declared_names(name, arguments):
+    calls = ToolCalls(TOOLS, caller_owned=True)
+    calls.feed([{'index': 0, 'id': 'test_call', 'function': {'name': name, 'arguments': arguments}}])
+    with pytest.raises(ValueError):
+        calls.complete()
+
+
+def test_caller_schema_keeps_external_recursive_size_and_depth_boundaries():
+    for schema in ({'type': 'object', '$ref': 'https://example.test/schema'},
+                   {'type': 'object', '$dynamicRef': '#'},
+                   {'type': 'object', 'description': 'x'*32768}):
+        with pytest.raises(ValueError):
+            valid_schema(schema, caller_owned=True)

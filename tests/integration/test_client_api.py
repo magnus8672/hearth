@@ -57,7 +57,7 @@ def test_models_are_authorized_aliases_and_streams_preserve_local_tool_roundtrip
                 yield 'usage', {'prompt_tokens': 10, 'completion_tokens': 12, 'total_tokens': 22}
                 yield 'done', 'tool_calls'
         monkeypatch.setattr(client_api, 'chat_stream', stream)
-        payload = {'model': 'auto', 'messages': [{'role': 'system', 'content': 'Use local tools when necessary.'}, {'role': 'user', 'content': 'Write a python script for my project.'}], 'tools': [function], 'stream': True, 'stream_options': {'include_usage': True}}
+        payload = {'model': 'auto', 'messages': [{'role': 'system', 'content': 'Use local tools when necessary.'}, {'role': 'user', 'content': 'Write a python script for my project.'}], 'tools': [function], 'stream': True, 'stream_options': {'include_usage': True}, 'reasoning_effort': 'medium'}
         response = user.post('/v1/chat/completions', json=payload, headers=auth)
         assert response.status_code == 200, response.text
         assert response.headers['x-hearth-capability'] == 'code.implement'
@@ -67,6 +67,8 @@ def test_models_are_authorized_aliases_and_streams_preserve_local_tool_roundtrip
         assert events[-1]['usage']['total_tokens'] == 22
         assert response.text.endswith('data: [DONE]\n\n')
         assert calls[0][1]['tools'] == [function] and calls[0][2] != saved['key']
+        assert calls[0][1]['parameters']['reasoning_effort'] == 'medium'
+        assert calls[0][1]['caller_owned_tools'] is True
         with scoped_session(app, owner, settings.farm_id) as db:
             assert db.execute(text('SELECT count(*) FROM tool_invocations')).scalar_one() == 0
             assert db.execute(text('SELECT count(*) FROM messages')).scalar_one() == 0
@@ -144,3 +146,21 @@ def test_failed_completion_receipt_terminates_with_an_error(bff, monkeypatch, st
         assert response.status_code == (200 if streaming else 502)
         assert 'receipt could not be saved' in response.text
         assert '[DONE]' not in response.text
+
+
+@pytest.mark.parametrize('streaming', [False, True])
+def test_context_rejection_releases_pool_and_preserves_qualification(bff, monkeypatch, streaming):
+    factory, settings, app, migration, subject = bff
+    with factory('admin') as admin, factory() as user:
+        settings, app, target, owner = prepared(bff, monkeypatch, admin, user)
+        saved = key(user, settings)
+        def too_large(*args, **kwargs):
+            raise client_api.ContextLimitError(28074, 8192)
+        monkeypatch.setattr(client_api, 'chat_stream', too_large)
+        response = user.post('/v1/chat/completions', headers={'Authorization': 'Bearer '+saved['key']}, json={'model': 'chat.general', 'messages': [{'role': 'user', 'content': 'hello'}], 'stream': streaming})
+        assert response.status_code == (200 if streaming else 400)
+        assert 'context_length_exceeded' in response.text and '28,074' in response.text
+        assert '[DONE]' not in response.text
+        with scoped_session(app, owner, settings.farm_id) as db:
+            assert db.execute(text('SELECT state FROM inference_targets')).scalar_one() == 'ready'
+            assert db.execute(text('SELECT active_run_id FROM provider_pools')).scalar_one() is None

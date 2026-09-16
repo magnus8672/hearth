@@ -17,6 +17,38 @@ class ProviderError(Exception):
         super().__init__(message)
 
 
+class ContextLimitError(ProviderError):
+    def __init__(self, requested=None, available=None):
+        counts = f' ({requested:,} tokens requested; {available:,} available)' if requested and available else ''
+        super().__init__('The request exceeds the model\'s loaded context window'+counts+
+                         '. Increase its context length in the model server, or reduce the client\'s prompt and tools.',
+                         provider_fault=False)
+
+
+def stream_error(event):
+    """Translate known rejection metadata without returning provider text."""
+    problem = event.get('error')
+    # LM Studio wraps an engine JSON error inside its own message string.
+    for _ in range(2):
+        if isinstance(problem, dict):
+            if problem.get('type') in ('exceed_context_size_error', 'context_length_exceeded') or problem.get('code') == 'context_length_exceeded':
+                requested, available = problem.get('n_prompt_tokens'), problem.get('n_ctx')
+                if not all(type(value) is int and 0 < value <= 1_000_000_000 for value in (requested, available)):
+                    requested = available = None
+                return ContextLimitError(requested, available)
+            message = problem.get('message')
+        else:
+            message = problem
+        if not isinstance(message, str) or '{' not in message:
+            break
+        try:
+            nested = json.loads(message[message.index('{'):])
+            problem = nested.get('error', nested) if isinstance(nested, dict) else None
+        except (ValueError, RecursionError):
+            break
+    return ProviderError('The model server reported a generation error. Check its logs.', uncertain=True)
+
+
 class AnswerPrefix:
     """Narrow GPT-OSS interoperability profile for leaked leading final headers.
 
@@ -180,7 +212,7 @@ def require_loaded_model(base_url, credential, model_id, settings):
 
 
 def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_tokens=None, include_reasoning=False,
-                tools=None, tool_choice=None, parameters=None):
+                tools=None, tool_choice=None, parameters=None, caller_owned_tools=False):
     """Yield answer text, optional separate reasoning, heartbeats and completion.
 
     Reasoning fields and tool calls never become executable input or UI HTML.
@@ -197,7 +229,7 @@ def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_t
     if parameters:
         payload.update(parameters)
     from hearth.tool_schemas import ToolCalls
-    calls = ToolCalls(tools)
+    calls = ToolCalls(tools, caller_owned=caller_owned_tools)
     if tools:
         payload.update(tools=tools, tool_choice=tool_choice or 'auto')
     finished = None
@@ -241,6 +273,12 @@ def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_t
                         yield ('done', finished)
                         return
                     event = json.loads(data)
+                    if event.get('error'):
+                        problem = stream_error(event)
+                        if saw_answer or calls.items or finished:
+                            # A late error cannot prove execution never began.
+                            problem.uncertain = True
+                        raise problem
                     if event.get('model') and event['model'] != model_id:
                         raise ProviderError('The server answered with a different model.', uncertain=True)
                     choices = event.get('choices', [])

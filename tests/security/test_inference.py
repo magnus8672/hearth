@@ -5,7 +5,14 @@ import httpx
 import pytest
 from hearth import inference
 from hearth.config import Settings
-from hearth.inference import ProviderError, chat_stream, endpoint, list_models, normalize_url
+from hearth.inference import (
+    ContextLimitError,
+    ProviderError,
+    chat_stream,
+    endpoint,
+    list_models,
+    normalize_url,
+)
 
 
 @pytest.mark.parametrize('url', ['http://user:secret@localhost:1234', 'file:///tmp/key', 'http://localhost:1234/v1?key=secret', 'https://localhost/other', 'https://localhost/#x', 'http://localhost\\@other', 'http://localhost:99999'])
@@ -174,3 +181,24 @@ def test_gpt_oss_final_json_format_is_data_without_tool_or_analysis_authority():
             inference.AnswerPrefix('openai/gpt-oss-20b').feed('<|channel|>' + header + '<|message|>not an answer')
     source = '<|channel|>final <|constrain|>JSON<|message|>{}'
     assert inference.AnswerPrefix('other-model').feed(source) == source
+
+
+def test_lmstudio_context_rejection_is_actionable_and_preserves_provider_qualification(monkeypatch):
+    failure = {'error': 'Engine protocol predict request returned 400: '+json.dumps({'error': {
+        'code': 400, 'type': 'exceed_context_size_error', 'message': 'DO NOT ECHO PRIVATE PROVIDER TEXT',
+        'n_prompt_tokens': 28074, 'n_ctx': 8192}})}
+    wire = 'data: '+json.dumps(failure)+'\n\n'
+    transport(monkeypatch, wire)
+    with pytest.raises(ContextLimitError) as caught:
+        list(chat_stream('unused', '', 'fixture', [], Settings(mode='test')))
+    assert '28,074' in str(caught.value) and '8,192' in str(caught.value)
+    assert 'PRIVATE' not in str(caught.value)
+    assert not caught.value.uncertain and not caught.value.provider_fault
+    transport(monkeypatch, event({'content': 'partial'})+wire)
+    with pytest.raises(ContextLimitError) as caught:
+        list(chat_stream('unused', '', 'fixture', [], Settings(mode='test')))
+    assert caught.value.uncertain
+    transport(monkeypatch, 'data: '+json.dumps({'error': {'message': 'PRIVATE UNKNOWN ERROR'}})+'\n\n')
+    with pytest.raises(ProviderError) as caught:
+        list(chat_stream('unused', '', 'fixture', [], Settings(mode='test')))
+    assert 'PRIVATE' not in str(caught.value) and caught.value.uncertain

@@ -1,0 +1,92 @@
+{
+  "checked_at": "2026-09-16T03:59:04.984615+00:00",
+  "host": "10.20.30.10",
+  "deployment": "Existing hearth-head api and user-api containers rebuilt and replaced; accounts, certificates, private configuration and database volumes preserved.",
+  "deployed_source_hashes": {
+    "services/api/src/hearth/client_api.py": "1ad2b46cbf9126c8c6afd4e93de8f113fca3a3c385733c3da1eb60dbfeb2f001",
+    "services/api/src/hearth/inference.py": "36313a1fa5b8058791d64748a93d47f308ce6b11073b9f42f3889c990274e956",
+    "services/api/src/hearth/tool_schemas.py": "84a137a46001a29e2c3bbdc643226ceaea5997d7e7a11f4b68821ccc848a99fb"
+  },
+  "tls_verified": true,
+  "hermes": {
+    "desktop_version": "0.17.0",
+    "source_revision": "f293e7206b4ddd66042329442c6afebc19a8808d",
+    "profile": "default",
+    "gateway_model_switch": {
+      "provider": "hearth",
+      "model": "auto",
+      "passed": true
+    },
+    "saved_key_discovery_http_status": 200,
+    "blank_editor_test": "Rejected because Hermes sends no Authorization header; re-entering the same saved key passes.",
+    "native_tools_in_observed_request": 37,
+    "accepted_compatibility_changes": [
+      "reasoning_effort",
+      "bounded caller-owned regex schemas"
+    ],
+    "full_agent_status": "Blocked by model context capacity; full Hermes local-tool and shared-MCP acceptance not established.",
+    "provider_context_tokens": 8192,
+    "first_observed_prompt_tokens": 28074,
+    "model_reload_performed": false,
+    "remaining_title_warning": "Auxiliary title generation requests unsupported JSON-schema response_format."
+  },
+  "native_tool_qualification": {
+    "provider": "model-host",
+    "model": "qwen/qwen3.8-27b",
+    "state": "ready",
+    "features": [
+      "chat",
+      "streaming",
+      "tools"
+    ],
+    "real_call_and_result": true
+  },
+  "small_real_client_check": {
+    "checked_at": "2026-09-16T03:55:31.392229+00:00",
+    "host": "10.20.30.10",
+    "tls_verified": true,
+    "chat": {
+      "http_status": 200,
+      "route": "chat.general",
+      "model": "qwen/qwen3.8-27b",
+      "reply": "Two plus two is four."
+    },
+    "caller_tool_roundtrip": {
+      "http_status": 200,
+      "route": "code.implement",
+      "model": "qwen/qwen3.8-27b",
+      "tool": "read_local_check",
+      "regex_schema_accepted": true,
+      "arguments_validated_by_caller": true,
+      "canary_matched": true
+    }
+  },
+  "live_context_error_and_recovery": {
+    "http_status": 400,
+    "error": {
+      "message": "The request exceeds the model's loaded context window (28,111 tokens requested; 8,192 available). Increase its context length in the model server, or reduce the client's prompt and tools.",
+      "type": "invalid_request_error",
+      "param": null,
+      "code": "context_length_exceeded",
+      "status_code": 400
+    },
+    "model": "qwen/qwen3.8-27b",
+    "next_short_request": {
+      "http_status": 200,
+      "reply": "connection works."
+    },
+    "models_after_context_rejection": [
+      "auto",
+      "chat.general",
+      "code.implement"
+    ]
+  },
+  "tests": {
+    "vm_tool_and_transport_cases_passed": 53,
+    "vm_client_api_integration_cases_passed": 7,
+    "integration_database": "Unique temporary database in the existing VM PostgreSQL instance, migrated separately and removed after tests. Live farm database not used by fixtures.",
+    "new_farm_started": false
+  },
+  "release_gate_changes": false,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}
