@@ -1,6 +1,8 @@
 # Building hearth
 
-For a standalone head reachable from other machines, use [head VM setup](operations/HEAD_VM_SETUP.md). For independent speech/transcription installation, model preparation and boot services, use [audio VM setup](operations/AUDIO_VM_SETUP.md). The local development commands below remain available.
+**Active deployment and runtime testing use the ESX VM at 10.20.30.10**, maintained through `operator` SSH and sudo in `/opt/hearth`. Follow [VM operations](operations/ESX_HEAD.md). The laptop remains the source/Git and browser/client workstation. Do not start its QEMU appliance, local head or hearth-managed providers. Preserve its old farm data. The appliance/startup commands below are historical reference and do not override this test-host decision. Offline source generation, lint and documentation checks remain available locally; runtime and integration checks must target the VM with live data protected.
+
+For a standalone head reachable from other machines, use [head VM setup](operations/HEAD_VM_SETUP.md). For independent speech/transcription installation, model preparation and boot services, use [audio VM setup](operations/AUDIO_VM_SETUP.md).
 
 The head now serves a [shared MCP gateway and capability-based client API](implementation/SHARED_TOOLS_AND_CLIENT_API.md). Compose includes an isolated reference MCP service. Register tools centrally and connect local agents with capability aliases. Managed tool packaging, filesystem sandboxes and full external harness qualification remain open.
 

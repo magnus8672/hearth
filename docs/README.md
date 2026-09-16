@@ -2,11 +2,13 @@
 
 Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The audit compares the complete design package with the current source and recorded validation as of 13 September 2026. Thirteen of fourteen capability profiles have executable implementations; none of the 61 full release gates is closed.
 
+The active head and runtime test target is **10.20.30.10**. Use [VM operations](operations/ESX_HEAD.md) and [testing](TESTING.md). The laptop head and QEMU appliance are retired; their data remains preserved.
+
 | Need | Document |
 |---|---|
 | Preview or serve the project website | [Static website](WEBSITE.md) |
 | Review product coverage and remaining work | [Design coverage table](implementation/DESIGN_COVERAGE.md) |
-| Try the prepared local build | [Local testing](TESTING.md) |
+| Test the active VM build | [Testing](TESTING.md) |
 | Connect model servers on other machines | [LAN provider testing](implementation/LAN_PROVIDER_TESTING.md) |
 | Add multiple servers and preserve resident models | [Multiple providers and residency](implementation/MULTI_PROVIDER_RESIDENCY.md) |
 | Connect a trusted LAN service without certificates | [External HTTP provider approval](implementation/EXTERNAL_HTTP_PROVIDERS.md) |

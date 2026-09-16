@@ -1,5 +1,7 @@
 # Current ESX head
 
+This is the active head and runtime test host. The user retired laptop-hosted hearth on 15 September 2026. Use the laptop for source editing, Git and browser/client access; preserve its old farm files without restarting its QEMU appliance or local hearth-managed providers. Do not create another test farm. Test changes here with existing VM data protected, and adapt destructive integration fixtures to isolated test storage before running them.
+
 The user's fresh head VM is `10.20.30.10`, with the deployment package at `/opt/hearth`. It runs Ubuntu 26.04.1 on VMware with 24 vCPUs, approximately 60 GiB usable RAM and a 98 GiB root filesystem. Docker Engine 29.8.0 and Compose 5.5.1 were installed from Docker's signed Ubuntu repository and Docker is enabled at boot.
 
 Use the existing SSH agent key as **operator** for future maintenance. Passwordless sudo is configured and verified. The matching public key was copied from root's authorized keys, without replacing any existing operator keys. Root SSH access was preserved. The package and private farm configuration remain root-owned; use sudo for setup commands.
@@ -22,6 +24,7 @@ The console prompts for the username, display name, farm name and password. Then
 
 | Purpose | URL |
 |---|---|
+| Welcome and certificate download | `http://10.20.30.10` |
 | Workspace | `https://10.20.30.10` |
 | Administration | `https://10.20.30.10:8443` |
 | Identity | `https://10.20.30.10:8445` |
@@ -29,6 +32,8 @@ The console prompts for the username, display name, farm name and password. Then
 | MCP | `https://10.20.30.10/mcp` |
 
 The saved base URL is the workspace origin above. The edge listens on 0.0.0.0. The VM certificate's IP identity is 10.20.30.10. Its root is separate from the laptop development farm's root and must be trusted separately. The public certificate package is `/opt/hearth/.hearth/head/hearth-client-certificates.zip`; local copies are under `dist/hearth-esx-certificates/` and `dist/hearth-esx-client-certificates.zip`. Compare the exported root fingerprint over SSH before importing it.
+
+The HTTP welcome page serves public trust downloads and connection checks; account and application operations remain on HTTPS. Windows validates the VM chain, but the user's last reported Zen `SEC_ERROR_BAD_SIGNATURE` remains unresolved. Do not treat service startup or an HTTP download as successful browser trust.
 
 ## Maintenance
 

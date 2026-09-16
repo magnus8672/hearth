@@ -1,4 +1,20 @@
-# Try hearth locally
+# Testing hearth
+
+## Active test host
+
+All deployment and runtime testing now targets **10.20.30.10**. The laptop is used for source editing, Git and browser/client access. Do not start `Start-Hearth.ps1`, the local QEMU appliance or local hearth-managed providers. The old farm data is retained.
+
+- Begin at [Welcome and certificate download](http://10.20.30.10).
+- Use [Workspace](https://10.20.30.10) and [Administration](https://10.20.30.10:8443).
+- Maintain the deployment through `ssh operator@10.20.30.10`, then `/opt/hearth` and sudo as needed.
+- Register resident providers by addresses reachable from the VM. Laptop loopback and the retired QEMU host bridge are not VM provider addresses.
+- Preserve live accounts, conversations, certificates and provider settings. Do not run reset/first-Owner fixtures against the farm, and do not create another farm for tests. Adapt integration fixtures to isolated storage on the VM before running them.
+
+See [current VM operations and limits](operations/ESX_HEAD.md). Historical localhost receipts do not establish that a feature or provider is configured on this fresh VM. Browser certificate onboarding remains a separate unresolved check in the [build ledger](implementation/BUILD_STATUS.md).
+
+## Retired laptop reference
+
+The remaining sections record the former laptop configuration and feature exercises. Their localhost URLs, launcher commands and installed-model assumptions are historical; use the active VM guidance above for current work.
 
 This build supports private chat, side notes, steering, shared channels, local image generation, saved Read aloud recordings and reviewed microphone/WAV transcripts. The prepared configuration uses LM Studio's `openai/gpt-oss-20b` and the separate SDXL image provider. Keep LM Studio running; the launcher starts the image, CPU speech and CPU transcription providers when their local configurations exist. The SDXL files have been downloaded and verified on the prepared machine. Existing Owner, authenticator and conversations are preserved. Provider health must still pass a current check.
 
