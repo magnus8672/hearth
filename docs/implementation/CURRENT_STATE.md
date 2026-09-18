@@ -6,7 +6,7 @@ Observed 18 September 2026 through read-only SSH, operational database metadata,
 
 | Machine | Responsibility | Observed configuration |
 |---|---|---|
-| Head, `10.20.30.10` | Existing ESXi VM; SSH `operator`; `/opt/hearth`; Compose `hearth-head` | Six running containers: admin API, user API, PostgreSQL, Keycloak, Caddy edge and reference MCP tools. Database at `0026`; both public API readiness checks pass with TLS validation. |
+| Head, `10.20.30.10` | Existing ESXi VM; SSH `operator`; `/opt/hearth`; Compose `hearth-head` | Six running containers: admin API, user API, PostgreSQL, Keycloak, Caddy edge and reference MCP tools. Database at `0027`; both public API readiness checks pass with TLS validation. |
 [Historical deployment inventory removed for repository privacy.]
 | model-host, `10.20.30.30` | User-operated LM Studio on the source/client workstation | `qwen/qwen3.8-27b`, Q4_K_M, loaded context [redacted capacity] tokens; one loaded LLM instance. The downloaded Nomic embedding model is not loaded. |
 
@@ -58,3 +58,5 @@ The initial review checked operational metadata, not personal messages, credenti
 The local tree was clean at the review. Its cached `origin/main` matched `d9ce334`; the read-only GitHub SSH check failed with `Permission denied (publickey)`, so remote branch freshness and current CI results were not verified. The docs cleanup does not change SSH credentials.
 
 Automatic enrollment/mTLS, full NodePlan provisioning, signed distribution, protected administrative agent workflows, live Switchyard routing, cloud gateway/budgets, universal scheduling, semantic Graphify extraction, complete deletion/restore and broad hardware/quality qualification remain open. The [release ledger](RELEASE_GATES.md) retains **20 partial, 41 not run, zero fully passed**. Required local 3D and P8/A12 remain in scope; the bounded TRELLIS implementation supplies evidence without closing those gates.
+
+The channel-attachment deployment on 18 September advanced the database to `0027`; both HTTPS readiness checks passed. A fresh metadata read during that deployment found the Vision target in `failed` state with `chat`, `streaming` and `tools`, but no `vision` feature. No new provider probe was run. See the [channel attachment ledger](BUILD_STATUS.md#channel-image-attachments-and-composer-focus--18-september).

@@ -37,7 +37,7 @@ def test_real_postgresql_role_and_private_partitions(databases):
     conversations = [uuid4(), uuid4()]
     with migration.begin() as connection:
         assert int(connection.execute(text("SHOW server_version_num")).scalar_one()) >= 180000
-        assert connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one() == "0026"
+        assert connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one() == "0027"
         connection.execute(text("INSERT INTO farms (id,name) VALUES (:id,'RLS fixture')"), {"id": farm})
         for user in users:
             connection.execute(text("INSERT INTO users (id,farm_id,issuer,subject,display_name) VALUES (:id,:farm,'fixture',:subject,'Test member')"),

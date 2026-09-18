@@ -50,7 +50,7 @@ https://localhost:8444 {
     header Permissions-Policy "microphone=(self)"
     @image_upload {
         method POST
-        path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+        path_regexp "^/api/v1/(chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
     }
     @geometry_upload {
         method POST
@@ -59,7 +59,7 @@ https://localhost:8444 {
     @ordinary_body {
         not {
             method POST
-            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions))$"
+            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
         }
     }
     request_body @image_upload {

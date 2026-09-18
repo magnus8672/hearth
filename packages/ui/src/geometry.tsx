@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Workspace } from './workspace';
 import { api, mutation, type Identity } from './api';
-import { geometryReference, prepareGeometryReference } from './geometry-reference';
+import { geometryReference, geometryReferenceUrl, prepareGeometryReference } from './geometry-reference';
 import { GeometrySettings, SavedGeometrySettings, tuningDefaults, type TuningProfile, type TuningValues } from './geometry-settings';
 const Preview = lazy(() => import('./geometry-preview'));
 type Target = { id: string; name: string; model_id: string; state: string; profile: { resolutions?: number[]; tuning?: TuningProfile | null } };
@@ -45,9 +45,8 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
   useEffect(() => {
     if (!source) { setSourceLoading(false); return; }
     const controller = new AbortController(); let disposed = false;
-    const [kind, id] = source.split('/');
     setFile(null); setError(''); setSourceLoading(true);
-    fetch(`/api/v1/${kind === 'conversation' ? 'conversation-images' : 'images'}/${id}/image`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
+    fetch(geometryReferenceUrl(source), { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
       .then(async response => {
         if (!response.ok) throw new Error('The selected image is no longer available to you. Choose another reference.');
         return prepareGeometryReference(await response.blob());

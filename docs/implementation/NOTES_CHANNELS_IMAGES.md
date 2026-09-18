@@ -10,6 +10,16 @@ Current update: [provider qualification](PROVIDER_LIFECYCLE.md) no longer expire
 
 13 September 2026. This slice adds the user's requested keyboard workflow, side notes, steering and joined channels, plus the first local image generation path. It closes no phase or release gate. All 61 gates, required local geometry and A12's P8 media cases remain in scope.
 
+## Shared image attachments and composer focus — 18 September 2026
+
+Channels accept pasted, attached or dropped still PNG/JPEG/WebP images, up to four per message and 8 MiB per input. Image-only posts are supported. The shared decoder applies orientation, strips metadata, flattens transparency and stores a JPEG at no more than 1600 pixels per edge. Draft uploads remain visible only to their uploader; sending publishes them atomically with the message to current channel members. Unsent attachments can be removed or recovered after reopening the channel; leaving deletes the sender's unused uploads. Saved message images remain in shared history, and membership is checked again on every no-store image download. Storage is bounded to 1000 images/128 MiB per uploader within currently joined channels; saved image deletion and general quota management remain future work.
+
+A new `@hearth` mention uses verified Vision when it includes images or its recent shared context contains images (at most four latest image references within the existing 20-message/16,000-text-byte window). Explicit text-to-image requests without newly attached pictures keep the existing image queue. Unavailable or unpermitted Vision saves the human post and reports a visible failure; it never substitutes a text-only answer that cannot see the pixels. Unsent/private images are never included. Vision qualification and capacity remain separate from channel image sharing.
+
+Published attachments offer **Generate model** to members allowed to generate geometry. This opens the private geometry form with an authorized reference copy; naming, provider selection and explicit submission still precede the existing fair GPU queue. Navigation alone creates no job. Enter sends a channel message while keeping the composer focused; failed sends keep the draft, images and retry identity.
+
+Migration `0027` adds forced-RLS channel attachments with separate draft/published read boundaries, owner-only draft mutations and a composite message/channel/farm/author foreign key. The private-chat attachment table is unchanged. See the [current build ledger](BUILD_STATUS.md) for validation and deployment results.
+
 ## Responsive workspace and shared image wording — 18 September 2026
 
 The current workspace fills wide displays. Private chat, channels, image settings and model settings have persistent collapse controls and horizontal drag/keyboard dividers; private notes can dock on the right or below the conversation. Preferences are local to this browser and account. Below 800 pixels, panes stack and horizontal dividers disappear. This is pane docking, not arbitrary floating windows. Expanded 3D previews span the gallery and support vertical resizing, including the actual WebGL viewport.

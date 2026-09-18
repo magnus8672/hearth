@@ -11,7 +11,7 @@ from hearth.contracts import ErrorDetail, ErrorResponse
 def request_body_limit(path, method, default=1_048_576):
     if path == "/api/v1/geometry" and method == "POST":
         return 12_100_000
-    if method == 'POST' and re.fullmatch(r'/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)', path):
+    if method == 'POST' and re.fullmatch(r'/api/v1/(chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)', path):
         return 8_388_608
     return default
 

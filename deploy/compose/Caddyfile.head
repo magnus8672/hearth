@@ -90,7 +90,7 @@ http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {
     header Permissions-Policy "microphone=(self)"
     @image_upload {
         method POST
-        path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+        path_regexp "^/api/v1/(chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
     }
     @geometry_upload {
         method POST
@@ -99,7 +99,7 @@ http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {
     @ordinary_body {
         not {
             method POST
-            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions))$"
+            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
         }
     }
     request_body @image_upload {

@@ -67,7 +67,7 @@ def bff(databases, monkeypatch):
         db.execute(text('DELETE FROM channel_messages'))
     for user in users:
         with scoped_session(app_engine, user, farm) as db:
-            for table in ['geometry_jobs', 'transcription_jobs', 'speech_jobs', 'conversation_images', 'image_jobs', 'channel_memberships', 'side_notes', 'chat_requests', 'chat_runs', 'outbox', 'messages', 'chat_attachments', 'conversations', 'workspaces']:
+            for table in ['geometry_jobs', 'transcription_jobs', 'speech_jobs', 'conversation_images', 'image_jobs', 'channel_attachments', 'channel_memberships', 'side_notes', 'chat_requests', 'chat_runs', 'outbox', 'messages', 'chat_attachments', 'conversations', 'workspaces']:
                 db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
     with scoped_session(app_engine, owner, farm) as db:
         for table in ['mcp_servers', 'channels', 'capability_routes', 'capability_bindings', 'inference_targets', 'provider_connections', 'provider_pools']:

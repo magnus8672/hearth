@@ -5,10 +5,10 @@ import time
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import text
 
-from hearth import conversation_media, image_planning, routing
+from hearth import channel_attachments, conversation_media, image_planning, routing, vision
 from hearth.chat import identity_current, member, session_current
 from hearth.database import scoped_session
 from hearth.inference import ProviderError, chat_stream
@@ -16,6 +16,7 @@ from hearth.provider_health import record_failure
 from hearth.providers import claim_pool, credential_for, release_pool, target_record, transport_settings
 
 router = APIRouter()
+router.include_router(channel_attachments.router)
 MENTION = re.compile(r'(?<![\w@])@hearth(?![\w-]|\.[\w])', re.IGNORECASE)
 
 
@@ -27,7 +28,16 @@ class CreateChannel(BaseModel):
 class ChannelPost(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     request_id: UUID
-    content: str = Field(min_length=1, max_length=4000)
+    content: str = Field(default='', max_length=4000)
+    attachment_ids: list[UUID] = Field(default_factory=list, max_length=4)
+
+    @model_validator(mode='after')
+    def valid_message(self):
+        if not self.content and not self.attachment_ids:
+            raise ValueError('Write a message or attach an image.')
+        if len(set(self.attachment_ids)) != len(self.attachment_ids):
+            raise ValueError('Attach each image only once per message.')
+        return self
 
 
 def is_joined(db, channel_id):
@@ -83,6 +93,7 @@ def leave(request: Request, channel_id: UUID):
         # authorizes channel-message writes. The executor still drains its job.
         db.execute(text("UPDATE channel_messages SET status='cancelled',reason='The person who requested this reply left the channel.' WHERE channel_id=:id AND author_id=:owner AND status='running'"), {'id': channel_id, 'owner': principal.id})
         db.execute(text("UPDATE conversation_images SET status='cancelled',reason='The person who requested this image left the channel.' WHERE channel_id=:id AND owner_id=:owner AND status IN ('queued','running')"), {'id': channel_id, 'owner': principal.id})
+        db.execute(text('DELETE FROM channel_attachments WHERE channel_id=:id AND message_id IS NULL'), {'id': channel_id})
         db.execute(text('DELETE FROM channel_memberships WHERE channel_id=:id'), {'id': channel_id})
     return {'joined': False}
 
@@ -101,7 +112,7 @@ def read_channel(request: Request, channel_id: UUID):
             if item['generation_phase'] != 'image_handoff':
                 release_pool(db, item['resource_pool_id'], item['request_id'], uncertain=True)
         rows = db.execute(text('SELECT id,sequence,role,display_name,content,status,reason,created_at,author_id,request_id,generation_phase,model_id FROM channel_messages WHERE channel_id=:id ORDER BY sequence DESC LIMIT 100'), {'id': channel_id}).mappings().all()
-        return result | {'messages': [dict(row) | conversation_media.published(db, row['id']) | {'can_stop': row['role'] == 'assistant' and row['status'] == 'running' and row['author_id'] == principal.id} for row in reversed(rows)]}
+        return result | {'unused_attachments': channel_attachments.metadata(db, channel_id, owner_id=principal.id), 'messages': [dict(row) | conversation_media.published(db, row['id']) | {'attachments': channel_attachments.metadata(db, channel_id, message_id=row['id']), 'can_stop': row['role'] == 'assistant' and row['status'] == 'running' and row['author_id'] == principal.id} for row in reversed(rows)]}
 
 
 @router.post('/api/v1/channels/{channel_id}/runs/{run_id}/stop', tags=['channels'])
@@ -126,7 +137,8 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
         room(db, channel_id, lock=True)
         existing = db.execute(text("SELECT id,author_id,content FROM channel_messages WHERE channel_id=:channel AND request_id=:request AND role='user'"), {'channel': channel_id, 'request': data.request_id}).mappings().one_or_none()
         if existing:
-            if existing['author_id'] != principal.id or existing['content'] != data.content:
+            saved_ids = [row['id'] for row in channel_attachments.metadata(db, channel_id, message_id=existing['id'])]
+            if existing['author_id'] != principal.id or existing['content'] != data.content or saved_ids != data.attachment_ids:
                 raise HTTPException(409, 'This message identifier was already used.')
             return {'id': existing['id'], 'saved': True}
         seq = db.execute(text('SELECT COALESCE(max(sequence),0)+1 FROM channel_messages WHERE channel_id=:id'), {'id': channel_id}).scalar_one()
@@ -137,30 +149,48 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
         values = {'id': message_id, 'channel': channel_id, 'farm': principal.farm_id, 'owner': principal.id,
                   'name': name[:200], 'sequence': seq, 'content': data.content, 'request': data.request_id}
         db.execute(text("INSERT INTO channel_messages(id,channel_id,farm_id,author_id,display_name,sequence,role,content,status,request_id) VALUES(:id,:channel,:farm,:owner,:name,:sequence,'user',:content,'completed',:request)"), values)
+        channel_attachments.publish(db, channel_id, principal.id, message_id, data.attachment_ids)
         if MENTION.search(data.content):
             request_text = MENTION.sub('', data.content).strip(' ,:')
             reference = conversation_media.recent_image(db, channel_id=channel_id)
             prompt, needs_plan = conversation_media.intent(request_text, reference, awaiting_description=conversation_media.awaiting_description(db, channel_id=channel_id))
+            # An explicitly attached picture is a vision input, never silently
+            # discarded in favor of text-to-image generation.
+            if data.attachment_ids:
+                prompt, needs_plan = None, False
             planned_image, route_problem = None, None
             if needs_plan:
                 try:
                     planned_image = image_planning.candidate(db)
                 except HTTPException as exc:
                     route_problem = str(exc.detail)
-            rows = db.execute(text("SELECT role,display_name,content FROM channel_messages WHERE channel_id=:id AND status='completed' ORDER BY sequence DESC LIMIT 20"), {'id': channel_id}).mappings().all()
+            rows = db.execute(text("SELECT id,role,display_name,content FROM channel_messages WHERE channel_id=:id AND status='completed' ORDER BY sequence DESC LIMIT 20"), {'id': channel_id}).mappings().all()
             # Each human speaker remains data within a user message. A display
             # name or message can never choose an OIDC identity or tool role.
-            budget = 0
+            budget, image_count = 0, 0
             for row in rows:
                 content = row['content'] if row['role'] == 'assistant' else json.dumps({'speaker': row['display_name'], 'message': row['content']}, ensure_ascii=False)
                 budget += len(content.encode('utf-8'))
                 if budget > 16000:
                     break
+                has_pictures = db.execute(text('SELECT EXISTS(SELECT 1 FROM channel_attachments WHERE message_id=:id)'), {'id': row['id']}).scalar_one()
+                if has_pictures:
+                    if not prompt and not needs_plan and image_count < 4:
+                        selected_images = db.execute(text('SELECT image FROM channel_attachments WHERE message_id=:id ORDER BY position LIMIT :maximum'), {'id': row['id'], 'maximum': 4 - image_count}).scalars().all()
+                        content = [{'type': 'text', 'text': content}, *[vision.image_part(bytes(raw)) for raw in selected_images]]
+                        image_count += len(selected_images)
+                    else:
+                        content += '\n[Images attached; their pixels are not included in this request.]'
                 context.insert(0, {'role': row['role'], 'content': content})
-            capability = 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
-            target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
+            capability = 'vision.describe' if image_count else 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
+            try:
+                target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
+            except HTTPException as exc:
+                if capability != 'vision.describe':
+                    raise
+                target, route_problem = None, str(exc.detail)
             assistant_id = uuid4()
-            reason = None if target and context else f'No verified {"image" if prompt else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
+            reason = None if target and context else f'No verified {"vision" if image_count else "image" if prompt else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
             if route_problem:
                 reason = route_problem + ' Your message is saved.'
             if not context:

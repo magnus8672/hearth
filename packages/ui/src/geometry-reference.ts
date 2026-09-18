@@ -1,7 +1,14 @@
 /** Only saved hearth image IDs can become reference URLs. Never follow model URLs. */
 export function geometryReference(hash: string): string {
+  const channel = /^#geometry\/channel\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.exec(hash);
+  if (channel) return `channel/${channel[1]}/${channel[2]}`;
   const match = /^#geometry\/(?:(gallery|conversation)\/)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.exec(hash);
   return match ? `${match[1] || 'gallery'}/${match[2]}` : '';
+}
+
+export function geometryReferenceUrl(source: string): string {
+  const [kind, id, attachment] = source.split('/');
+  return kind === 'channel' ? `/api/v1/channels/${id}/attachments/${attachment}` : `/api/v1/${kind === 'conversation' ? 'conversation-images' : 'images'}/${id}/image`;
 }
 
 export async function prepareGeometryReference(blob: Blob): Promise<File> {

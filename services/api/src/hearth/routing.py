@@ -42,7 +42,7 @@ def profile(capability):
     if capability == 'vision.describe':
         return {'protocol': 'openai.chat.v1', 'executable': True, 'features': ['chat', 'streaming', 'vision'],
                 'input_modalities': ['text', 'image'], 'output_modalities': ['text'],
-                'scope': 'Private chat image attachments with an actual image-reading probe. Image editing and channel uploads are not enabled.'}
+                'scope': 'Private chat and joined-channel image attachments with an actual image-reading probe. Image editing is not enabled.'}
     if capability in TEXT:
         return {'protocol': 'openai.chat.v1', 'executable': True, 'features': ['chat', 'streaming'],
                 'input_modalities': ['text'], 'output_modalities': ['text'],
