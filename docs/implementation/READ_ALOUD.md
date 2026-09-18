@@ -1,14 +1,16 @@
 # hearth Read aloud
 
+> Current status, 18 September: Read aloud is implemented, but no speech provider is registered in the active farm. The prepared Kokoro process and real synthesis below describe the retired development reference. Configure a supported provider before using these controls. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Implemented 13 September 2026. Completed private assistant replies now have a **Read aloud** control. It sends that saved reply's text to the assigned `audio.speak` provider, saves a validated WAV with the reply, and records the speech model and stock voice. Reloading or replaying that audio does not generate another job. Existing text, vision and image routes keep their assignments.
 
 ## Try the prepared build
 
-Refresh [your workspace](https://localhost:8444), open a private conversation, and click **Read aloud** beneath a completed reply. The local CPU provider prepares the recording. Playback starts if the browser permits it; otherwise press Play on the audio controls. Pause/seek/volume use native controls, **Stop playback** rewinds, and **Save WAV** downloads the private recording. Starting another recording pauses audio already playing in this page. A saved recording stays paused after reload.
+Refresh [your workspace](https://hearth.example.invalid), open a private conversation, and click **Read aloud** beneath a completed reply. The local CPU provider prepares the recording. Playback starts if the browser permits it; otherwise press Play on the audio controls. Pause/seek/volume use native controls, **Stop playback** rewinds, and **Save WAV** downloads the private recording. Starting another recording pauses audio already playing in this page. A saved recording stays paused after reload.
 
 **Stop generating speech** is separate from playback. It requests cancellation, waits for the currently synthesizing segment to finish, and retains the resource reservation until the provider confirms release. Text generation can continue on an independent GPU pool during CPU speech.
 
-The prepared provider is `kokoro-82m-v1.0-onnx` with the stock `af_heart` voice. It is loaded once at startup on the CPU. No text-model load, unload or swap is part of Read aloud. Administration supports multiple speech servers and ordered many-to-many capability assignments using the same connection, revision, HTTP-consent and resource controls as other providers. The [activation receipt](../../evidence/speech/2026-09-13/activation.json) records the prepared farm change.
+The historically prepared provider was `kokoro-82m-v1.0-onnx` with the stock `af_heart` voice. It is loaded once at startup on the CPU. No text-model load, unload or swap is part of Read aloud. Administration supports multiple speech servers and ordered many-to-many capability assignments using the same connection, revision, HTTP-consent and resource controls as other providers. The [activation receipt](../../evidence/speech/2026-09-13/activation.json) records the prepared farm change.
 
 ## Implementation and boundaries
 
@@ -26,4 +28,4 @@ The [real Read aloud test](../../evidence/speech/2026-09-13/live-read-aloud.json
 
 Regressions cover authorization, CSRF, cross-owner/conversation isolation, immutable input/identity, idempotency, cancellation/drain, independent pools, session revocation, manifest mismatch, unknown execution, restart without replay, unsupported/silent/truncated audio, receipt substitution and body limits. Browser tests play a valid WAV, stop/rewind it, reload without a second synthesis, cancel generation, and register two independent speech servers. Desktop/mobile screenshots were inspected. See [deployment and qualification](../../evidence/speech/2026-09-13/validation.json) for exact counts and hashes.
 
-This is private-chat Read aloud. Microphone capture, transcription, shared-channel speech, streaming audio, voice selection/cloning, speech-aware Markdown cleanup, general retention/deletion and production managed-worker packaging remain unfinished. The current raw reply text may include code or Markdown punctuation in spoken output. There are ten executable capability profiles and four assignment-only profiles. All 61 full release gates remain open.
+This is private-chat Read aloud. Reviewed microphone/WAV transcription is now implemented separately. Shared-channel speech, streaming audio, voice selection/cloning, speech-aware Markdown cleanup, general retention/deletion and production managed-worker packaging remain unfinished. The current raw reply text may include code or Markdown punctuation in spoken output. All fourteen profiles now have bounded implementations; provider availability is separate. All 61 full release gates remain open.

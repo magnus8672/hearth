@@ -1,5 +1,7 @@
 # hearth reply streaming and model identity
 
+> Current status, 18 September: reply behavior remains implemented. Historical GPT-OSS/Qwen concurrency was later qualified for a bounded case. All fourteen profiles now exist, while current configuration has one Qwen LLM and separate Fooocus/TRELLIS media services. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Updated 13 September 2026.
 
 The user successfully routed a greeting to local GPT-OSS and a coding task to Qwen on another machine. The coding reply stopped after 53 visible characters. Its saved execution receipt reported `finish_reason=length`, with no API error. The transport requested only 768 completion tokens, leaving too little room for a reasoning model's answer.

@@ -1,11 +1,12 @@
 # hearth documentation
 
-Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The original 13 September audit is updated with later implementation evidence. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
+Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The coverage table was reconciled on 18 September against source, feature evidence and read-only live metadata. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
 
 The active head and runtime test target is **10.20.30.10**. Use [VM operations](operations/ESX_HEAD.md) and [testing](TESTING.md). The laptop head and QEMU appliance are retired; their data remains preserved.
 
 | Need | Document |
 |---|---|
+| See the actual head, worker, model and enabled routes | [Current farm snapshot](implementation/CURRENT_STATE.md) |
 | Register people, approve accounts and grant individual capabilities | [Signup and account approval](implementation/ACCOUNT_APPROVAL.md) |
 | Control installed worker services and queue GPU image jobs | [Managed Linux workers](implementation/MANAGED_WORKERS.md) |
 | Preview or serve the project website | [Static website](WEBSITE.md) |

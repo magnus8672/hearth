@@ -1,5 +1,7 @@
 # image batches and capability navigation
 
+> Current status, 18 September: ordered capability routing, native managed service adoption and private TRELLIS image-to-3D now exist. The batch evidence below retains its original SDXL/GPT-OSS scope. Full enrollment, image editing and general specialist orchestration remain open. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 > Milestone record. [Capability routing](CAPABILITY_ROUTING.md) subsequently added ordered assignments and text specialist dispatch for the capability cards. General semantic routing and missing modality adapters remain open. See [design coverage](DESIGN_COVERAGE.md).
 
 13 September 2026. This build addresses two user-observed gaps: plural image requests falling through to text-only replies, and capability cards lacking a path to their provider controls.
@@ -28,4 +30,4 @@ Capabilities whose adapters are unfinished offer **View requirements**. Their de
 - Visual review confirms four separate pickups with cargo beds. Grey, black and green match their prompts. The red-prompt image came out blue; all four artifacts and exact prompts/seeds are retained. Batch completion proves routing, execution and persistence, not exact color or model fidelity. There are no silent retries to select a better-looking acceptance example.
 - [Deployed validation](../../evidence/images/2026-09-13/batches/validation.json) checks HTTPS, deployed assets/API hashes, migration 0009, provider readiness, 119 unchanged original inputs and 61 open release gates.
 
-Image editing, generalized capability routing, native remote worker enrollment, managed signed runtimes, local 3D and the remaining A12/P8 acceptance requirements remain unfinished.
+Image editing, general specialist orchestration, automatic worker enrollment and full package provisioning remain unfinished. Ordered routing, signed adoption of installed Linux services and private local image-to-3D were subsequently implemented. Full A12/P8 acceptance remains open.

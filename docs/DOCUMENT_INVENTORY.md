@@ -1,107 +1,99 @@
 # Documentation inventory
 
-Reviewed 13 September 2026. The pre-move inventory contained 84 Markdown paths representing 55 distinct file contents. All 55 documents were reviewed; 29 redundant paths matched existing baseline documents. The source package includes 30 Markdown files and 89 supporting assets, preserved unchanged under `plan/`.
+Updated 18 September 2026. This index separates active guides, dated feature evidence and preserved historical records. Start with [the documentation index](README.md), [current farm state](implementation/CURRENT_STATE.md), [coverage](implementation/DESIGN_COVERAGE.md) and [build status](implementation/BUILD_STATUS.md).
 
-The [coverage audit](implementation/DESIGN_COVERAGE.md) maps these requirements to code and recorded evidence. Older milestone reports retain their historical scope with pointers to the current state. External source URLs were not re-researched during this repository audit.
+There are 56 Markdown documents outside the baseline/archive directories. The immutable `docs/plan/` package has 119 files, including 30 Markdown documents, twelve numbered engineering designs, ten phase plans and fourteen rendered diagrams. Original snapshot hashes remain the preservation authority. Counts describe inventory, not acceptance coverage.
 
-## Original specification and reference package (30)
+Feature reports retain their dated evidence and fixture boundaries. Their current-status notes and the farm snapshot resolve superseded topology, URL, adapter and availability claims. A historical model/provider test does not prove it is registered today. The website presents the finished-product vision by design.
 
-| Document | Role in this audit |
+## Guides
+
+| Document | Location |
 |---|---|
-| [Architecture and decisions](plan/01-ARCHITECTURE.md) | Farm boundaries, component roles, resource admission and latency targets. |
-| [Discovery, enrollment, and worker lifecycle](plan/02-DISCOVERY-AND-WORKERS.md) | Address-only join, untrusted discovery, enrollment, leases, revocation and node lifecycle. |
-| [NAS, model catalog, and artifact delivery](plan/03-NAS-AND-MODELS.md) | NAS/local model library, signed catalog, bounded staging, cache and artifacts. |
-| [Security, identity, RBAC, and trust](plan/04-SECURITY-AND-RBAC.md) | Threat model, identity, farm/workspace roles, RLS, isolation and locality. |
-| [Agent runtime, routing, cloud fallback, and shared tools](plan/05-RUNTIME-ROUTING-AND-TOOLS.md) | Durable broker, specialist delegation, Switchyard, MCP and OpenAI gateway. |
-| [Conversation history, Obsidian vaults, Graphify, and retrieval](plan/06-MEMORY-AND-KNOWLEDGE.md) | Vault projection, assertions, Graphify, source-cited retrieval and deletion. |
-| [User and administrator interfaces](plan/07-INTERFACES.md) | User/admin navigation, assignment and setup flows, memory/media and accessibility. |
-| [Data and API contracts](plan/08-DATA-AND-API-CONTRACTS.md) | Typed entities, endpoints, events, worker transport, grants and turn ordering. |
-| [Validation, quality, and release gates](plan/09-VALIDATION-AND-RELEASE.md) | All 61 acceptance scenarios, quality/hardware/load tests and release outputs. |
-| [Deployment and operations](plan/10-OPERATIONS.md) | Install/update, recovery, failures, observability and scheduling. |
-| [Installation and central node management](plan/11-INSTALLATION-AND-CENTRAL-MANAGEMENT.md) | Binding Create/Join, managed appliance, pairing, NodePlans and provisioning. |
-| [First inference provider and the hearth admin agent](plan/12-ADMIN-AGENT-AND-FIRST-PROVIDER.md) | Binding three-path bootstrap, protected agent, approvals, secrets and operation lifecycle. |
-| [hearth visual identity](plan/brand/BRAND_GUIDE.md) | Original v1.0 identity; historical, superseded by active brand 1.2. |
-| [Build handoff](plan/BUILD_HANDOFF.md) | Fixed stack, completion definition and implementation authority; retains local 3D. |
-| [Build status ledger](plan/BUILD_STATUS.md) | Historical all-planned ledger from the source package. |
-| [Rendered diagram gallery](plan/diagrams/README.md) | Original source-diagram gallery; all fourteen SVGs retained. |
-| [Specification validation](plan/DOCUMENT_CHECKS.md) | Historical specification-only integrity checks, not product acceptance. |
-| [P0: foundation and integration contracts](plan/phases/P0-FOUNDATION.md) | Foundation contracts, real upstream probes and appliance prerequisites. |
-| [P1: identity, RBAC, and separate application shells](plan/phases/P1-IDENTITY-AND-SHELLS.md) | Real identity, roles, separate apps and secure setup acceptance. |
-| [P2: discovery, secure pairing, and node lifecycle](plan/phases/P2-DISCOVERY-AND-ENROLLMENT.md) | Minimal member install, pairing, inventory and returning-node acceptance. |
-| [P3: secure NAS library and model staging](plan/phases/P3-NAS-AND-CATALOG.md) | Gateway/catalog/recipe preparation and verified resumable transfer. |
-| [P4: first inference provider, local models, and the admin agent](plan/phases/P4-LOCAL-INFERENCE.md) | Managed inference, all first-provider paths and useful protected admin actions. |
-| [P5: Switchyard routing, capability coverage, and OpenAI overflow](plan/phases/P5-ROUTING-AND-CLOUD.md) | Selection, policy-controlled cloud and optional client compatibility API. |
-| [P6: shared MCP toolbox](plan/phases/P6-SHARED-TOOLS.md) | Real isolated MCP servers/tools and scoped side-effect handling. |
-| [P7: shared conversation history and topic memory](plan/phases/P7-CONVERSATION-MEMORY.md) | Vaults, retrieval, Graphify, correction and complete deletion. |
-| [P8: specialist collaboration and multimodal output](plan/phases/P8-COLLABORATION-AND-MEDIA.md) | Brokered specialists and actual image/3D/transcription/speech outputs. |
-| [P9: hardening, packaging, recovery, and release](plan/phases/P9-HARDENING-AND-RELEASE.md) | Signed packaging, clean hosts, recovery and the full release matrix. |
-| [hearth: a private, distributed AI farm](plan/README.md) | Original design navigation, phase overview and binding product requirements. |
-| [Sources and upstream boundaries](plan/SOURCES.md) | Dated upstream references and integration boundaries; not refreshed by this audit. |
-| [Video review: hybrid local inference and staged specialist work](plan/VIDEO-REVIEW-IH8XmxiwliQ.md) | Optional hybrid/expert-cache and staged-work experiments; later binding 3D references distinguished. |
+| [hearth implementation guidance](AGENT_GUIDANCE.md) | `AGENT_GUIDANCE.md` |
+| [Developing hearth](DEVELOPMENT.md) | `DEVELOPMENT.md` |
+| [Documentation inventory](DOCUMENT_INVENTORY.md) | `DOCUMENT_INVENTORY.md` |
+| [hearth documentation](README.md) | `README.md` |
+| [Testing the active hearth farm](TESTING.md) | `TESTING.md` |
+| [hearth project website](WEBSITE.md) | `WEBSITE.md` |
 
-## Architecture decisions (6)
+## Architecture decisions
 
-| Document | Role in this audit |
+| Document | Location |
 |---|---|
-| [ADR 0001: control stack and upstream boundaries](adr/0001-foundation-and-upstream-adapters.md) | Actual pinned Switchyard/Graphify APIs and bounded foundation qualification. |
-| [ADR 0002: appliance, trust and native execution boundaries](adr/0002-installation-trust-and-native-boundaries.md) | OS targets, accelerated appliance, helper and crypto/origin boundaries. |
-| [ADR 0003: local geometry pipeline](adr/0003-local-geometry-pipeline.md) | TripoSR qualification candidate and required GLB validation; no real mesh yet. |
-| [ADR 0004: First testable identity and private workspace slice](adr/0004-first-testable-identity-slice.md) | Implemented local BFF/setup/identity behavior and remaining P1 differences. |
-| [ADR 0005: Reference WHPX guest CPU compatibility](adr/0005-whpx-shadow-stack-compatibility.md) | Reference guest CPU workaround and unresolved production reliability. |
-| [ADR 0006: managed runtimes and existing inference services](adr/0006-managed-and-external-providers.md) | Accepted existing-service extension, resource pools, TLS and replaceable media stages. |
+| [ADR 0001: control stack and upstream boundaries](adr/0001-foundation-and-upstream-adapters.md) | `adr/0001-foundation-and-upstream-adapters.md` |
+| [ADR 0002: appliance, trust and native execution boundaries](adr/0002-installation-trust-and-native-boundaries.md) | `adr/0002-installation-trust-and-native-boundaries.md` |
+| [ADR 0003: local geometry pipeline](adr/0003-local-geometry-pipeline.md) | `adr/0003-local-geometry-pipeline.md` |
+| [ADR 0004: First testable identity and private workspace slice](adr/0004-first-testable-identity-slice.md) | `adr/0004-first-testable-identity-slice.md` |
+| [ADR 0005: Reference WHPX guest CPU compatibility](adr/0005-whpx-shadow-stack-compatibility.md) | `adr/0005-whpx-shadow-stack-compatibility.md` |
+| [ADR 0006: managed runtimes and existing inference services](adr/0006-managed-and-external-providers.md) | `adr/0006-managed-and-external-providers.md` |
 
-## Implementation milestones and evidence ledgers (13)
+## Implementation and evidence ledgers
 
-| Document | Role in this audit |
+| Document | Location |
 |---|---|
-| [Visual identity 1.1: the lowercase hearth](implementation/BRAND_REVISION_1_1.md) | Historical lowercase-h mark revision, superseded by integrated lockup 1.2. |
-| [visual identity 1.2: one integrated hearth wordmark](implementation/BRAND_REVISION_1_2.md) | Current fireplace h + earth lockup and lowercase naming rule. |
-| [hearth build preparation](implementation/BUILD_PREPARATION.md) | Historical complete-package inspection and pre-build sequencing. |
-| [hearth implementation ledger](implementation/BUILD_STATUS.md) | Current implementation/evidence status, reconciled to the routing milestone. |
-| [Capability routing and external LAN providers](implementation/CAPABILITY_ROUTING.md) | Current ordered routes, retargeting, receipts, connector and qualification limits. |
-| [contextual image planning](implementation/CONTEXTUAL_IMAGE_PLANNING.md) | Scoped prompt preparation, description variations and durable image handoff. |
-| [images inside conversations](implementation/CONVERSATION_IMAGES.md) | Original direct chat/channel image dispatch and scoped publication milestone. |
-| [existing local providers and private chat](implementation/EXISTING_PROVIDER_CHAT.md) | Original LM Studio/external provider and durable private chat milestone. |
-| [image batches and capability navigation](implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md) | Bounded plural images, partial cancellation and capability destinations. |
-| [hearth provider network test](implementation/LAN_PROVIDER_TESTING.md) | Portable connector setup, trust, assignments and real multi-host test procedure. |
-| [notes, shared channels and local images](implementation/NOTES_CHANNELS_IMAGES.md) | Keyboard, private notes, steering, joined channels and first SDXL milestone. |
-| [Release gates](implementation/RELEASE_GATES.md) | Current exact gate states; 16 partial, 45 not run, zero passed. |
-| [Local Shapecast orchestration inspection](implementation/SHAPECAST_INSPECTION.md) | Read-only pack/stage observations; not a hearth integration or quality claim. |
+| [Signup, approval and capability access](implementation/ACCOUNT_APPROVAL.md) | `implementation/ACCOUNT_APPROVAL.md` |
+| [Visual identity 1.1: the lowercase hearth](implementation/BRAND_REVISION_1_1.md) | `implementation/BRAND_REVISION_1_1.md` |
+| [visual identity 1.2: one integrated hearth wordmark](implementation/BRAND_REVISION_1_2.md) | `implementation/BRAND_REVISION_1_2.md` |
+| [hearth build preparation](implementation/BUILD_PREPARATION.md) | `implementation/BUILD_PREPARATION.md` |
+| [hearth implementation ledger](implementation/BUILD_STATUS.md) | `implementation/BUILD_STATUS.md` |
+| [Capability routing and external LAN providers](implementation/CAPABILITY_ROUTING.md) | `implementation/CAPABILITY_ROUTING.md` |
+| [contextual image planning](implementation/CONTEXTUAL_IMAGE_PLANNING.md) | `implementation/CONTEXTUAL_IMAGE_PLANNING.md` |
+| [images inside conversations](implementation/CONVERSATION_IMAGES.md) | `implementation/CONVERSATION_IMAGES.md` |
+| [Current farm snapshot](implementation/CURRENT_STATE.md) | `implementation/CURRENT_STATE.md` |
+| [hearth design coverage](implementation/DESIGN_COVERAGE.md) | `implementation/DESIGN_COVERAGE.md` |
+| [existing local providers and private chat](implementation/EXISTING_PROVIDER_CHAT.md) | `implementation/EXISTING_PROVIDER_CHAT.md` |
+| [Direct HTTP for existing LAN providers](implementation/EXTERNAL_HTTP_PROVIDERS.md) | `implementation/EXTERNAL_HTTP_PROVIDERS.md` |
+| [Head address and certificate settings](implementation/HEAD_ADDRESS_SETTINGS.md) | `implementation/HEAD_ADDRESS_SETTINGS.md` |
+| [image batches and capability navigation](implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md) | `implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md` |
+| [Delete generated images](implementation/IMAGE_DELETION.md) | `implementation/IMAGE_DELETION.md` |
+| [Image settings and 4K output](implementation/IMAGE_OPTIONS.md) | `implementation/IMAGE_OPTIONS.md` |
+| [hearth provider network test](implementation/LAN_PROVIDER_TESTING.md) | `implementation/LAN_PROVIDER_TESTING.md` |
+| [Local image-to-3D generation](implementation/LOCAL_GEOMETRY.md) | `implementation/LOCAL_GEOMETRY.md` |
+| [Managed Linux services and GPU queues](implementation/MANAGED_WORKERS.md) | `implementation/MANAGED_WORKERS.md` |
+| [Multiple provider instances and resident specialists](implementation/MULTI_PROVIDER_RESIDENCY.md) | `implementation/MULTI_PROVIDER_RESIDENCY.md` |
+| [notes, shared channels and local images](implementation/NOTES_CHANNELS_IMAGES.md) | `implementation/NOTES_CHANNELS_IMAGES.md` |
+| [Private memory and Obsidian vaults](implementation/PRIVATE_MEMORY.md) | `implementation/PRIVATE_MEMORY.md` |
+| [Lasting provider qualification](implementation/PROVIDER_LIFECYCLE.md) | `implementation/PROVIDER_LIFECYCLE.md` |
+| [hearth Read aloud](implementation/READ_ALOUD.md) | `implementation/READ_ALOUD.md` |
+| [Release gates](implementation/RELEASE_GATES.md) | `implementation/RELEASE_GATES.md` |
+| [hearth reply streaming and model identity](implementation/REPLY_STREAMING_AND_IDENTITY.md) | `implementation/REPLY_STREAMING_AND_IDENTITY.md` |
+| [Local Shapecast orchestration inspection](implementation/SHAPECAST_INSPECTION.md) | `implementation/SHAPECAST_INSPECTION.md` |
+| [Shared tools and client connections](implementation/SHARED_TOOLS_AND_CLIENT_API.md) | `implementation/SHARED_TOOLS_AND_CLIENT_API.md` |
+| [One sign-in across hearth](implementation/SINGLE_SIGN_ON.md) | `implementation/SINGLE_SIGN_ON.md` |
+| [hearth local speech feasibility](implementation/SPEECH_FEASIBILITY.md) | `implementation/SPEECH_FEASIBILITY.md` |
+| [Thinking previews in private chat](implementation/THINKING_PREVIEW.md) | `implementation/THINKING_PREVIEW.md` |
+| [hearth microphone and transcription](implementation/TRANSCRIPTION.md) | `implementation/TRANSCRIPTION.md` |
+| [hearth vision and concurrent resident models](implementation/VISION_AND_CONCURRENT_FARM.md) | `implementation/VISION_AND_CONCURRENT_FARM.md` |
 
-## Current guides (6)
+## Operations
 
-| Document | Role in this audit |
+| Document | Location |
 |---|---|
-| [hearth implementation guidance](AGENT_GUIDANCE.md) | Active repository implementation, security, brand and verification instructions. |
-| [hearth visual identity](brand/BRAND_GUIDE.md) | Current v1.2 logo, lowercase copy, tokens, iconography and accessibility rules. |
-| [Building hearth](DEVELOPMENT.md) | Build/check/maintenance commands, environment boundaries and recovery. |
-| [hearth sign-in theme](operations/IDENTITY.md) | Branded Keycloak resources, packaging and isolated appearance qualification. |
-| [hearth image provider](runtimes/IMAGE_PROVIDER.md) | Experimental SDXL environment, model closure, typed jobs and lifecycle limits. |
-| [Try hearth locally](TESTING.md) | Prepared local user test procedure and current supported feature limits. |
+| [CPU audio providers on a VM](operations/AUDIO_VM_SETUP.md) | `operations/AUDIO_VM_SETUP.md` |
+| [Current ESX head](operations/ESX_HEAD.md) | `operations/ESX_HEAD.md` |
+| [Fooocus on media-worker](operations/FOOOCUS_PROVIDER.md) | `operations/FOOOCUS_PROVIDER.md` |
+| [Git repository](operations/GIT_REPOSITORY.md) | `operations/GIT_REPOSITORY.md` |
+| [Run the hearth head on a LAN VM](operations/HEAD_VM_SETUP.md) | `operations/HEAD_VM_SETUP.md` |
+| [hearth sign-in theme](operations/IDENTITY.md) | `operations/IDENTITY.md` |
+| [Set up a fresh hearth VM from the ZIP](operations/VM_PACKAGE.md) | `operations/VM_PACKAGE.md` |
 
-Subsequent audio additions include [microphone/transcription](implementation/TRANSCRIPTION.md) and [its runtime guide](runtimes/TRANSCRIPTION_PROVIDER.md), outside the historical sweep count.
+## Runtime and brand guides
 
-## Reorganization
-
-Subsequent additions include [Read aloud](implementation/READ_ALOUD.md) and [the CPU speech runtime](runtimes/SPEECH_PROVIDER.md). These report the implemented private-speech slice and do not change the original sweep's document count.
-
-| Original location | Current location / treatment |
+| Document | Location |
 |---|---|
-| `DEVELOPMENT.md` | [Development guide](DEVELOPMENT.md) |
-| `TESTING.md` | [Local testing](TESTING.md) |
-| `AGENTS.md` content | [Repository guidance](AGENT_GUIDANCE.md); root file retained as an automatic-discovery pointer |
-| `brand/BRAND_GUIDE.md` | [Current brand guide](brand/BRAND_GUIDE.md) |
-| `deploy/identity/README.md` | [Identity operations](operations/IDENTITY.md) |
-| `runtimes/image/README.md` | [Image provider guide](runtimes/IMAGE_PROVIDER.md) |
-| Root numbered designs, handoff, planning status, document checks, sources, video review, `phases/` and `diagrams/` | Moved 42 files, including 14 SVGs, to [the duplicate archive](archive/root-package/README.md). Canonical links use `plan/` |
-| Root `README.md` | Small current documentation pointer; complete original retained at [plan/README.md](plan/README.md) |
-| Brand SVG/CSS/PNG sources and gallery, runtime/configuration manifests, generated API schemas, evidence | Remain at their code/asset paths; these are build inputs or test records, not relocated prose guides |
+| [hearth visual identity](brand/BRAND_GUIDE.md) | `brand/BRAND_GUIDE.md` |
+| [hearth image provider](runtimes/IMAGE_PROVIDER.md) | `runtimes/IMAGE_PROVIDER.md` |
+| [hearth development speech provider](runtimes/SPEECH_PROVIDER.md) | `runtimes/SPEECH_PROVIDER.md` |
+| [hearth CPU transcription provider](runtimes/TRANSCRIPTION_PROVIDER.md) | `runtimes/TRANSCRIPTION_PROVIDER.md` |
 
-New navigation/audit documents are this inventory, [docs/README](README.md), [design coverage](implementation/DESIGN_COVERAGE.md) and the [archive note](archive/root-package/README.md). They are outputs of the sweep rather than inputs counted among the 55 reviewed documents.
+## Preserved history
 
-All 48 moves are recorded with source paths and pre-move SHA-256 digests in [reorganization.json](../evidence/documentation/2026-09-13/reorganization.json). Duplicate removal was blocked by automatic approval review, so the duplicate documents were archived without deletion. The 119-file immutable baseline remains the preservation authority. Moved Markdown links were rebased; executable assets and historical test evidence retain their original locations.
+- [Original design package](plan/README.md): unchanged requirements, phase exits, original brand and source references. Its planned/no-code statements describe 12 September, not the current application.
+- [Root-package archive](archive/root-package/README.md): relocated duplicates from the initial document reorganization; use canonical `plan/` links for baseline requirements.
+- [Pre-refresh build ledger](archive/status-2026-09-18/BUILD_STATUS_PRE_REFRESH.md) and [coverage audit](archive/status-2026-09-18/DESIGN_COVERAGE_PRE_REFRESH.md): retain all earlier milestone prose, requirement mappings and test counts, including superseded status statements.
+- [Pre-refresh development](archive/status-2026-09-18/DEVELOPMENT_PRE_REFRESH.md) and [testing](archive/status-2026-09-18/TESTING_PRE_REFRESH.md): retain retired laptop commands solely to interpret historical evidence. They are not operating instructions for the active farm.
 
-## Provider lifecycle and VM audio setup
+Executable assets, generated contracts, runtime manifests and curated evidence remain beside code/assets. Model weights, binaries, certificates and generated connector ZIPs are ignored outputs, not source-document downloads. Build connectors using the [LAN guide](implementation/LAN_PROVIDER_TESTING.md).
 
-- [Provider lifecycle](implementation/PROVIDER_LIFECYCLE.md): persistent qualification, startup connection checks and error invalidation.
-- [Audio VM setup](operations/AUDIO_VM_SETUP.md): Ubuntu systemd services, pinned model downloads, credentials, HTTPS and migration boundaries.
+Run `python scripts/check_docs.py` for local links, fences, placement and original snapshot hashes. It does not fetch external URLs, check heading anchors or qualify product behavior. See [18 September validation](../evidence/documentation/2026-09-18/validation.json).

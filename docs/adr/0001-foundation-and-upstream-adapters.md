@@ -1,5 +1,7 @@
 # ADR 0001: control stack and upstream boundaries
 
+> Status reconciliation, 18 September 2026: Historical foundation decision. Live dispatch currently uses hearth's deterministic routing, not Switchyard. Graphify supports offline explicit-link export; semantic extraction remains open. Use [current coverage](../implementation/DESIGN_COVERAGE.md) and [the farm snapshot](../implementation/CURRENT_STATE.md) for present status.
+
 > This ADR records the initial foundation contract counts. The current schema bundle has 39 models, 40 definitions and 156 shared fixtures; see [current build status](../implementation/BUILD_STATUS.md). The Switchyard library remains a separately tested adapter, not the live provider-dispatch selector.
 
 Status: accepted for the development foundation, 12 September 2026.

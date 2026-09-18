@@ -1,6 +1,6 @@
 # Fooocus on media-worker
 
-Update, 18 September 2026: media-worker now runs the [native service worker](../implementation/MANAGED_WORKERS.md). `hearth-worker.service` owns desired state and Fooocus's independent boot startup is disabled. Fooocus remains the selected resident service and the gallery queue is enabled. Use Administration → Workers to pause, drain, unload or restart it. The original provider address, approved HTTP policy, model, credentials and capability bindings are unchanged. The historical installation details below describe the initial external-service setup.
+Update, 18 September 2026: media-worker now runs the [native service worker](../implementation/MANAGED_WORKERS.md). `hearth-worker.service` owns desired state and Fooocus's independent boot startup is disabled. Fooocus and TRELLIS are both approved services in explicit shared-GPU mode, with the gallery queue enabled. The last requested service remains selected; the 18 September read-only snapshot found TRELLIS selected and Fooocus stopped. Use Administration → Workers to pause, drain, unload or restart it. The original provider address, approved HTTP policy, model, credentials and capability bindings are unchanged. The historical installation details below describe the initial external-service setup.
 
 Prepared 17 September 2026 at the user's request. media-worker is the external image machine at `10.20.30.20`; the hearth head remains `10.20.30.10`. The user subsequently registered and assigned the provider through Administration. The [advanced settings update](../implementation/IMAGE_OPTIONS.md) requalified that existing target and preserved its assignments. The registration instructions below remain useful for another installation; do not add a duplicate to this farm.
 
@@ -25,13 +25,13 @@ From Windows PowerShell, copy the key directly to the clipboard and paste it int
 ssh operator@10.20.30.20 "cat /var/lib/hearth-fooocus/controller.key" | Set-Clipboard
 ```
 
-Use the same resource group for future image/3D services sharing this GPU. Separate physical GPUs should have separate groups. hearth cannot reserve VRAM against applications used outside its scheduler.
+TRELLIS already uses this same resource group. Keep any additional services sharing this GPU in that group. Separate physical GPUs should have separate groups. hearth cannot reserve VRAM against applications used outside its scheduler.
 
-## What is running
+## Installed runtime and original setup
 
-- Fooocus 2.5.5 in `/opt/Fooocus-main`, using its existing `fooocus_env` Python 3.12 environment and Juggernaut XL v8 safetensors checkpoint. No replacement model or 3D stack was downloaded.
+- Fooocus 2.5.5 in `/opt/Fooocus-main`, using its existing `fooocus_env` Python 3.12 environment and Juggernaut XL v8 safetensors checkpoint. The original Fooocus setup did not download a replacement checkpoint. TRELLIS was subsequently installed separately; see [local geometry](../implementation/LOCAL_GEOMETRY.md).
 [Historical deployment inventory removed for repository privacy.]
-- The `fooocus.service` systemd unit runs as `operator`, starts on boot and restarts on failure. The existing account now has a validated passwordless sudo rule in `/etc/sudoers.d/90-hearth-operator`. Subsequent maintenance uses this account; existing SSH keys were preserved.
+- The `fooocus.service` systemd unit runs as `operator`, is selected by the native worker and restarts on failure; its independent boot startup is disabled. The existing account now has a validated passwordless sudo rule in `/etc/sudoers.d/90-hearth-operator`. Subsequent maintenance uses this account; existing SSH keys were preserved.
 - The adapter at `/opt/hearth-fooocus` exposes the existing `hearth.image.v1` job contract on `0.0.0.0:1235`. Its private configuration, model/source inventory, key and jobs live under `/var/lib/hearth-fooocus` (directory mode 0700, key 0600).
 - The graphical Fooocus UI listens at `127.0.0.1:7865`. It shares the worker/model with the adapter, so it is not a second inference process. From another computer use `ssh -L 7865:127.0.0.1:7865 operator@10.20.30.20`, then open `http://127.0.0.1:7865` while that SSH session remains connected.
 - The existing ComfyUI Desktop process and its files were left running and unchanged. There is no farm-wide capacity coordination for jobs launched directly in either graphical UI.
@@ -46,11 +46,12 @@ The existing durable image-job store provides bounded admission, duplicate-ID ha
 
 ## Maintain and reproduce
 
+For this adopted worker, use **Administration → Workers** to pause/drain and select or retry a service. Inspect status/logs through SSH; do not manually restart Fooocus while TRELLIS owns the GPU. Changes to approved files require the [signed recipe update workflow](../implementation/MANAGED_WORKERS.md). The direct install/start commands below reproduce the original external setup on an unadopted machine, not routine control of media-worker.
+
 ```sh
 ssh operator@10.20.30.20
 sudo systemctl status fooocus
 sudo journalctl -u fooocus -n 80 --no-pager
-sudo systemctl restart fooocus
 ```
 
 Source files deployed in `/opt/hearth-fooocus` are `hearth_image.py`, `fooocus_bridge.py` and `prepare_fooocus.py` from `runtimes/image`, plus `hearth/contracts.py`, `hearth/image_settings.py` and `hearth/__init__.py` from `services/api/src`. The [service template](../../runtimes/image/fooocus.service) captures this machine's paths. This is a prepared external-install adapter, not a general GPU/bootstrap installer or signed enrolled worker.
@@ -81,6 +82,6 @@ Do not regenerate the inventory merely to suppress an unexplained integrity erro
 
 [Live evidence](../../evidence/images/2026-09-17-fooocus/live.json) records a request through the real head API container's image transport without registering a farm provider: authenticated LAN connectivity, missing-key/Origin/body-limit rejection, busy admission, cancellation after sampling began, confirmed release, then a successful 1024×768 render in 7.4 seconds. The transport validated the PNG digest and dimensions. A separate 1024×1024 render took 12.05 seconds. These are single-run observations, not benchmarks. The actual image was visually inspected.
 
-The initial eleven focused runtime/adapter/transport tests passed in a disposable process on the existing head VM, with no database or extra farm. The graphical UI returned HTTP 200, service restart retained receipts, and the unit is enabled for boot; a physical reboot has not been tested. The user subsequently registered and assigned the provider.
+Historical initial qualification: eleven focused runtime/adapter/transport tests passed in a disposable process on the existing head VM, with no database or extra farm. The graphical UI returned HTTP 200, service restart retained receipts, and the unit was then enabled for boot. Worker adoption later disabled its independent boot startup; full physical reboot acceptance remains open. The user subsequently registered and assigned the provider.
 
-The [advanced-options evidence](../../evidence/images/2026-09-17-options/live.json) adds real 3840 × 2160 output in 13.22 seconds, 4096 × 4096 output in 23.01 seconds and cancellation during finishing with confirmed capacity release. The square PNG was 21.6 MB, exceeding the old artifact cap; the current head/runtime allow 64 MiB. The reviewed inventory digest is `ea873178e294a4b350cbe2f6e215f34bcb1b238ab41124bb1ae6b4304e6d4397`. Fifty-five VM tests and two deployed-bundle browser fixtures pass. See [qualification boundaries](../implementation/IMAGE_OPTIONS.md#observed-validation). No 3D stack was installed or qualified, and none of the 61 full release gates changes status.
+The [advanced-options evidence](../../evidence/images/2026-09-17-options/live.json) adds real 3840 × 2160 output in 13.22 seconds, 4096 × 4096 output in 23.01 seconds and cancellation during finishing with confirmed capacity release. The square PNG was 21.6 MB, exceeding the old artifact cap; the current head/runtime allow 64 MiB. The reviewed inventory digest is `ea873178e294a4b350cbe2f6e215f34bcb1b238ab41124bb1ae6b4304e6d4397`. Fifty-five VM tests and two deployed-bundle browser fixtures pass. See [qualification boundaries](../implementation/IMAGE_OPTIONS.md#observed-validation). That image-options milestone did not install 3D. Subsequent [TRELLIS qualification](../implementation/LOCAL_GEOMETRY.md) covers actual meshes and worker switching; none of the 61 full release gates is closed.

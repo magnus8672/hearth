@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { Workspace } from './workspace';
 import { api, mutation, type Identity } from './api';
 import { geometryReference, prepareGeometryReference } from './geometry-reference';
 const Preview = lazy(() => import('./geometry-preview'));
@@ -66,7 +67,7 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
   }
   return <><div className="info-banner"><p>Your image and model stay on your farm. Use a clear picture of one object. The unseen sides are inferred, and the result may need cleanup in a 3D editor.</p></div>
     {error && <p className="error-notice" role="alert">{error}</p>}
-    <div className="geometry-layout"><section className="panel"><h2>Give an image a new dimension.</h2><form className="image-form" onSubmit={event => { event.preventDefault(); void generate(); }}>
+    <Workspace name="geometry" owner={identity.id} leftLabel="model settings"><section className="panel"><h2>Give an image a new dimension.</h2><form className="image-form" onSubmit={event => { event.preventDefault(); void generate(); }}>
       <label>3D model provider<select value={targetId} onChange={event => setTarget(event.target.value)} required><option value="">Choose a verified provider</option>{targets.map(item => <option key={item.id} value={item.id} disabled={item.state !== 'ready'}>{item.name} · {item.model_id}</option>)}</select></label>
       {!targets.length && <p className="small-copy">Ask your administrator to connect and verify a geometry provider.</p>}
       <label>Reference image<input key={file?.name || 'unselected'} type="file" accept="image/png,image/jpeg,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} disabled={busy || sourceLoading} /></label>
@@ -80,12 +81,12 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
       <button className="primary-button" disabled={busy || sourceLoading || !file || !target || waiting >= 8}>{busy ? 'Adding to queue…' : 'Create 3D model'}</button>
     </form></section><section><div className="section-heading"><h2>Your models</h2><span>{waiting ? `${waiting} waiting or running` : 'Private to you'}</span></div>
       {!jobs.length && <div className="panel"><p>Your finished models will appear here.</p></div>}
-      {jobs.map(job => <article className="panel geometry-card" key={job.id}><div className="section-heading"><strong>{job.request.model}</strong><span>{job.status}</span></div><p className="small-copy">Detail {job.request.resolution} · seed {job.request.seed}</p>
+      <div className="geometry-gallery">{jobs.map(job => <article className={`panel geometry-card ${preview === job.id ? 'preview-open' : ''}`} key={job.id}><div className="section-heading"><strong>{job.request.model}</strong><span>{job.status}</span></div><p className="small-copy">Detail {job.request.resolution} · seed {job.request.seed}</p>
         {job.reason && <p role="status">{job.reason}</p>}{job.status === 'running' && <p role="status">Building your model. This can take several minutes.</p>}
         {job.metadata && <p>{job.metadata.triangles.toLocaleString()} triangles · {job.metadata.textures} textures · {(job.metadata.bytes / 1024 / 1024).toFixed(1)} MB</p>}
         {preview === job.id && job.status === 'completed' && <Suspense fallback={<p>Opening preview…</p>}><Preview id={job.id} /></Suspense>}
         <div className="target-actions">{job.status === 'completed' && <><button className="quiet-button" onClick={() => setPreview(preview === job.id ? '' : job.id)}>{preview === job.id ? 'Close preview' : 'Preview 3D'}</button><a className="quiet-button button-link" href={`/api/v1/geometry/${job.id}/model`} download>Save GLB</a></>}
           {['queued', 'running'].includes(job.status) ? <button className="quiet-button" disabled={job.cancel_requested} onClick={() => void action(job, false)}>{job.cancel_requested ? 'Stopping…' : 'Cancel'}</button> : <button className="quiet-button" onClick={() => void action(job, true)}>Delete model</button>}</div>
-      </article>)}
-    </section></div></>;
+      </article>)}</div>
+    </section></Workspace></>;
 }

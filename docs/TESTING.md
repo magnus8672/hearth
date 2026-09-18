@@ -1,132 +1,51 @@
-# Testing hearth
+# Testing the active hearth farm
 
-## Managed workers and queued images
+Updated 18 September 2026. Use the existing ESXi head at `10.20.30.10`; the workstation's old head and QEMU appliance remain retired. [Current state](implementation/CURRENT_STATE.md) distinguishes implemented features, saved assignments and observed readiness.
 
-Open Administration → Workers to inspect media-worker. Pause its queue, submit two pictures from Images, then resume. One picture should render while the other waits. Cancelling the waiting picture should leave the active render alone. While idle, select **Unload and pause**, observe the service stop, select Fooocus again, wait for ready and resume. Keep the resident policy for normal operation; shared mode is for deliberately alternating approved services on one GPU. media-worker currently has one adopted service. See [worker behavior, installation, evidence and limitations](implementation/MANAGED_WORKERS.md).
+## Access and data boundaries
 
-## Active test host
+Use [Welcome](http://hearth.example.invalid), [Workspace](https://hearth.example.invalid) and [Administration](https://hearth.example.invalid:8443). SSH maintenance uses `operator@10.20.30.10`, `/opt/hearth`, and `operator@10.20.30.20` for media-worker.
 
-All deployment and runtime testing now targets **10.20.30.10**. The laptop is used for source editing, Git and browser/client access. Do not start `Start-Hearth.ps1`, the local QEMU appliance or local hearth-managed providers. The old farm data is retained.
+Preserve accounts, MFA, certificates, provider configuration and personal content. Use synthetic content for manual checks and isolated VM storage for automated fixtures. Never run reset/first-Owner fixtures against the live farm, start retired local services or create another farm. Read [development verification](DEVELOPMENT.md) before using old test scripts.
 
-- Begin at [Welcome and certificate download](http://hearth.example.invalid).
-- Use [Workspace](https://hearth.example.invalid) and [Administration](https://hearth.example.invalid:8443).
-- Maintain the deployment through `ssh operator@10.20.30.10`, then `/opt/hearth` and sudo as needed.
-- Register resident providers by addresses reachable from the VM. Laptop loopback and the retired QEMU host bridge are not VM provider addresses.
-- Preserve live accounts, conversations, certificates and provider settings. Do not run reset/first-Owner fixtures against the farm, and do not create another farm for tests. Adapt integration fixtures to isolated storage on the VM before running them.
+These are procedures, not claims that the documentation refresh reran them. Use accounts with the required grants. Probes and generation perform real work; inspect the pool and selected service first.
 
-See [current VM operations and limits](operations/ESX_HEAD.md). Historical localhost receipts do not establish that a feature or provider is configured on this fresh VM. Browser certificate onboarding remains a separate unresolved check in the [build ledger](implementation/BUILD_STATUS.md).
+## Accounts, SSO and private content
 
-## Retired laptop reference
+New registration completes password, authenticator and recovery-code enrollment, then reaches a pending workspace with zero permissions. **People** grants access explicitly. **Check access** re-enters sign-in and can reuse MFA SSO. Access changes invalidate old sessions, API keys and execution authority. Test revocation with synthetic accounts; the editor protects the acting account and Owners.
 
-The remaining sections record the former laptop configuration and feature exercises. Their localhost URLs, launcher commands and installed-model assumptions are historical; use the active VM guidance above for current work.
+Switching applications should reuse MFA while preserving separate BFF sessions and permissions. Use separate browser profiles for different people. See [approval](implementation/ACCOUNT_APPROVAL.md) and [SSO](implementation/SINGLE_SIGN_ON.md).
 
-This build supports private chat, side notes, steering, shared channels, local image generation, saved Read aloud recordings and reviewed microphone/WAV transcripts. The prepared configuration uses LM Studio's `openai/gpt-oss-20b` and the separate SDXL image provider. Keep LM Studio running; the launcher starts the image, CPU speech and CPU transcription providers when their local configurations exist. The SDXL files have been downloaded and verified on the prepared machine. Existing Owner, authenticator and conversations are preserved. Provider health must still pass a current check.
+Private drafts save without inference. Check persistence and stale edits in two tabs. Memory supports editable notes, source-linked recall, corrections, exclusion, export and reviewed Markdown import. Check a synthetic preference in a fresh chat, correct it and ask again. Continuous Obsidian sync and complete historical deletion remain unfinished.
 
-Run commands from the repository root, `C:\src\hearth`, rather than from this documentation folder. See [design coverage](implementation/DESIGN_COVERAGE.md) for the complete feature and qualification limits.
+## Text and vision
 
-## Try the new chat
+Qwen on model-host serves General chat and Coding. Other text profiles currently lack dedicated bindings. Automatic intent routing can use general chat for an unassigned specialist; explicit selection requires an eligible route. Test streaming, refresh, model labels, Enter/Shift+Enter, side notes, thinking, stop and steer.
 
-1. Refresh [your workspace](https://localhost:8444) and open **Private chat**.
-2. Press **Enter** to send; **Shift+Enter** inserts a new line. Ask a follow-up, then refresh. Replies arrive incrementally and the conversation stays saved.
-3. Open [Administration](https://localhost:8443), then **Providers**, to see the connection, model, shared resource group and verified features. Verification no longer expires hourly. The head checks saved connections automatically at startup; use Verify again after a provider error or configuration change. See [provider lifecycle](implementation/PROVIDER_LIFECYCLE.md).
-4. To try another local service, enter its URL and exact model identifier. Use the same resource group for models sharing a GPU. Network servers accept verified HTTPS or saved per-connection administrator consent for private LAN HTTP. This machine's loopback providers use the development appliance's explicit host bridge.
+Text stop prevents publication while the upstream request drains. Do not release a busy/unknown pool just because the browser stopped receiving output. Qualification no longer expires hourly; configuration changes and actual provider failures invalidate it. Startup connection checks are read-only.
 
-In Administration, each capability card opens its assignment and matching provider controls. **Give each capability a home** saves an ordered list of models; **Edit connection** moves a target while preserving assignments and requiring fresh verification. All fourteen assignments are initially pointed at the existing services. Seven text capabilities, image generation, private image understanding, Read aloud and English transcription can run; memory and 3D adapters remain pending. Use **Attach image**, paste or drop a still PNG/JPEG/WebP into a private chat, then ask about it. Automatic routes pictures and their follow-ups to the verified Vision assignment. The prepared remote Qwen target supports this. See [vision testing and limits](implementation/VISION_AND_CONCURRENT_FARM.md).
+Vision is assigned to Qwen but lacks saved pixel-probe qualification in the current snapshot. After an administrator's **Verify vision** probe succeeds, test private image upload/paste/drop, follow-up context and isolation. See [vision](implementation/VISION_AND_CONCURRENT_FARM.md).
 
-Use **Reply with** in Private chat to test a specific text specialist. Automatic routing also recognizes direct planning, coding, writing, summarization and extraction requests. In channels, include `@hearth`. For providers on other machines, use approved direct HTTP, verified HTTPS or the optional portable connector and follow the [LAN setup and test guide](implementation/LAN_PROVIDER_TESTING.md). The packages are in `dist/connectors`; existing model servers can stay on loopback.
+## Images and channels
 
-**For later** saves private side notes while a response runs. Send a note later, dismiss it with ×, or choose **Steer with this**. Typing a new message during a response also offers **Steer response**. The new direction is saved immediately and starts when the previous backend request finishes. **Return to composer** withdraws it from the queue.
+Fooocus on media-worker serves images. Gallery controls include shapes, styles, seed, guidance, sharpness, 20/30/40/60 passes and native/2K/4K output. Larger output is AI upscaling. With synthetic images check progress, cancellation, dimensions, reload, **Use settings**, download and deletion.
 
-**Stop response** stops visible output while LM Studio finishes processing. You can continue the same conversation afterward; partial replies remain visible but are excluded from the next model context. An interrupted connection keeps the resource group occupied until you check the server and confirm it is idle in Providers. The observed GPT-OSS final JSON header is now handled; other unsupported channel formats still stop the request with a clear error.
+Chat supports direct/contextual images and batches of up to four. Variations use descriptions rather than editing original pixels. Joined channels require a new human `@hearth` mention for inference and use channel-only context. Channel images remain shared history. Private gallery deletion removes head-side PNG copies and leaves a chat placeholder; provider files and backups have separate retention.
 
-## Microphone and transcription
+## Worker queue and 3D
 
-Below the private message composer, choose **Record voice**, allow microphone access, speak and click **Stop recording**. Play the preview if needed, then **Transcribe recording**. You can also **Upload WAV**. Review/edit the transcript, choose **Use in message**, then send or steer using the normal composer. Text is never sent automatically. Cancellation, discard and draft dismissal are available. The microphone stops on navigation and after two minutes.
+media-worker has **two** approved services, Fooocus and TRELLIS, sharing `media-worker GPU`. Explicit shared mode selects a gallery job's service after the previous process/cgroup releases. The last service stays selected between jobs. Qwen uses the independent `text-pool` pool.
 
-The first CPU Whisper profile recognizes English and accepts 16-bit PCM WAV recordings up to two minutes and 8 MiB. MP3/M4A/WebM and other languages are not enabled yet. In Administration, **Verify transcription** refreshes the known-recording check if needed. See [transcription behavior and limits](implementation/TRANSCRIPTION.md).
+When idle and without interrupting another user, pause the queue, submit synthetic gallery jobs, then resume. Check one active GPU job and waiting-job cancellation. Restore the prior pause/policy state afterward. Only private image/geometry galleries have this durable fair queue; other capabilities retain their existing admission/busy behavior.
 
-## Read aloud
+In **3D models**, upload a still image or use **Make a model** on a gallery/chat/channel image. Handoff previews a reference copy without changing the original or starting inference. Submit Standard (512) or Detailed (1024), then check preview, GLB download and cancellation. A channel reference produces a private model. Delete only the synthetic result. Independent editor import, broad quality, chat-to-3D and sustained multi-user mixed-load qualification remain open. See [workers](implementation/MANAGED_WORKERS.md) and [geometry](implementation/LOCAL_GEOMETRY.md).
 
-Open a completed private assistant reply and click **Read aloud**. The separate CPU Kokoro provider makes and saves a recording with its model/voice label. Press Play if browser autoplay is blocked; native controls provide pause, seek and volume. **Stop playback** rewinds, **Save WAV** downloads, and reloading keeps the recording without generating it again. **Stop generating speech** cancels pending synthesis and waits for the current segment to finish. GPU chat can run independently while speech is being prepared.
+## Audio and clients
 
-The first voice is `af_heart`; replies are limited to 6,000 characters with a clear error for longer text. Microphone/WAV transcription is available separately; Markdown-aware speech cleanup is not included yet. If the speech probe expires, open Administration, select Providers and click **Verify speech**. See [Read aloud behavior and limits](implementation/READ_ALOUD.md).
+Speech/transcription are implemented but have no registered providers here. The [audio installer](operations/AUDIO_VM_SETUP.md) targets Ubuntu 24.04/Python 3.12; adaptation for the head's Ubuntu 26.04 host is separate work. After installation, registration and verification, test saved Read aloud WAVs and reviewed English microphone/PCM-WAV drafts. Transcription never automatically sends a chat turn.
 
-## Shared channels and images
+External clients use `https://hearth.example.invalid/v1`, scoped keys and ready aliases such as `auto` or `code.implement`. MCP is `https://hearth.example.invalid/mcp`. Keep TLS validation enabled. Loaded context is currently [redacted capacity] tokens, superseding the historical Hermes 8,192-token observation. Full Hermes/local-tool/shared-MCP acceptance remains open. See [client integrations](implementation/SHARED_TOOLS_AND_CLIENT_API.md).
 
-- **Several images:** try “Generate four images of Jeep Gladiator pickups, one each in red, grey, black and army-green.” In your existing image conversation, “make 4 different jeep gladiators in red grey black and army-green please” also works. “Generate the images of each please” uses the earlier discussion. Up to four images render one at a time, with individual progress and downloads. Stop preserves completed pictures and cancels the rest. See [batch behavior and evidence](implementation/IMAGE_BATCHES_AND_CAPABILITY_NAVIGATION.md).
-- **Images in chat:** in Private chat, try “Make an image of a little red fox asleep beside a glowing stone fireplace, warm storybook illustration.” It should show progress and return the picture in that conversation. Click it for full size or **Save PNG** to download. Refreshing preserves it, and it also appears in your private Images gallery. **Stop response** and side-note steering work while it renders.
-- In a channel, try “@hearth draw a tiny wooden spaceship above a pine forest.” Joined members can see the image inline. The requester can stop it. Channel images stay in channel history and do not appear in anyone's private gallery.
-- **Channels:** create a room or join one. Joining reveals its shared history to that farm member. Ordinary messages are for people; include **@hearth** to request an assistant reply using recent channel context. Try a second Member in a private browser window. Private notes and chats never become channel context. These first rooms are open for any member of the farm to join.
-- **Images:** describe a picture, choose a shape and create it. The local SDXL provider handles progress and actual job-scoped cancellation. Completed PNGs, seeds and settings stay in your private gallery. **Save PNG** downloads the image; **Use settings** restores its description and seed. Keep prompts short, around 60 words or fewer.
-- Both model connections use **Shared local GPU**, so hearth admits one generation at a time across chat and images. If evidence expires, use **Verify chat** or **Verify images** in Administration. Image verification renders a small test picture.
+## Evidence
 
-The optional image process starts with the launcher once installed, or directly with `uv run python scripts/image_runtime.py start`. It binds only to `127.0.0.1:1235`; users interact through hearth. See [the new feature boundaries](implementation/NOTES_CHANNELS_IMAGES.md). Image editing, 3D generation, tools and the administration agent remain unfinished.
-
-**Context and variations:** describe a scene in chat, then ask “Please draw what we just discussed.” After the image arrives, try “Make it blue instead.” hearth uses the local chat model to prepare a short prompt before handing it to SDXL. If details are missing, it can ask a question before rendering. In channels, include `@hearth`. Variations generate a new picture from the earlier description; they do not preserve or edit the original pixels. SDXL can miss individual details such as a requested color. See [contextual image behavior and evidence](implementation/CONTEXTUAL_IMAGE_PLANNING.md).
-
-## Start
-
-Open PowerShell in the repository root and run:
-
-```powershell
-.\Start-Hearth.ps1
-```
-
-Keep the setup console open. It opens a native, loopback-only setup session in your default browser. The session expires after 30 minutes; rerun the command if it expires. The prepared appliance is already installed in this checkout. Startup after a reboot may take a minute.
-
-1. Click **Trust this hearth certificate** after reviewing the displayed fingerprint. This explicit action adds the appliance's local CA to **your Windows user's** trusted roots. Applications using that trust store can then trust certificates issued by this CA. The launcher itself does not install browser trust.
-   The setup page then checks Administration, Workspace and Sign-in from this browser. It retries a first failed connection and only offers the app links after all three HTTPS checks succeed. Windows certificate installation and browser readiness are shown separately.
-2. Create your hearth name, Owner name, username and password. Passwords need at least 14 characters. Use a fresh username; ordinary registration can never claim Owner.
-3. Open **Administration** and sign in. Have your TOTP authenticator ready. Complete authenticator setup and save the one-use recovery codes somewhere safe.
-4. You should see your name, the farm overview and 14 catalog capabilities. A connected, verified chat model makes general chat available.
-
-Use these exact addresses after trust and setup:
-
-- [Administration](https://localhost:8443)
-- [Your workspace](https://localhost:8444)
-
-The hearth sign-in service is on `https://localhost:8445`. The redirect to that separate origin is expected; its page names the application you are entering. Your existing hearth username, password and authenticator work there.
-
-Zen/Firefox may need another connection after importing a Windows root. If the first visit reports `SEC_ERROR_UNKNOWN_ISSUER`, return to setup and use **Check browser connections**. If needed, fully quit/reopen the browser and rerun the launcher. Persistent warnings have a browser-specific certificate import guide and a download of this hearth's public root in setup. Do not add a website exception. This build binds to host loopback, so these URLs are for this machine, not another LAN device.
-
-## What to test
-
-| Try | Expected result |
-|---|---|
-| Open your workspace after signing into Administration | A separate sign-in. The admin cookie does not authenticate the user application. |
-| Open Private drafts, create a title and some text, then Save | A saved confirmation and a new entry in Your drafts. |
-| Refresh, reopen the draft, edit and save | Your text survives refresh and the edit persists. |
-| Edit the same draft in two tabs | A stale save is rejected with a conflict message rather than silently overwriting a newer revision. |
-| Change appearance | Daylight, Firelight and System persist independently per application origin. |
-| Open Capabilities | Fourteen definitions from PostgreSQL. Seven text profiles, image generation, private vision, speech and transcription require fresh compatible probes; unimplemented profiles remain unavailable even when an intended assignment is saved. |
-| Register in a private browser window from the user sign-in page | A Member account, authenticator/recovery enrollment, and its own empty personal workspace. Email is optional. |
-| Open Administration with that Member | A clear access message and a link back to its workspace. Farm inspection is denied. |
-| Sign out, then refresh an old application tab | That application's old session is no longer usable. |
-
-The two applications keep separate sessions. Sign out of each when testing separate people in the same browser, or use a private window. If an authenticator code has just been used, wait for its next code before another sign-in. Keycloak rejects reuse.
-
-Drafts are personal, local-only records. Saving does not send their content to an assistant. Archive removes a draft from the active list; an archive recovery UI is not included yet. Signed managed installation, worker enrollment, tools, image editing, 3D, shared-workspace permissions, role editing and user API keys remain future milestones.
-
-## Stop and resume
-
-```powershell
-uv run --group appliance python scripts/appliance.py down
-.\Start-Hearth.ps1
-```
-
-The guest reserves 8 GiB RAM while running. Its disk, accounts, certificates and drafts persist in ignored `.hearth/`. Keep that folder. Do not remove it to restart the product.
-
-If startup reports a service failure, use the recovery commands in [DEVELOPMENT.md](DEVELOPMENT.md). The reference VM currently needs a documented guest CPU compatibility setting; the installer and long-running release reliability gates remain open. See [ADR 0005](adr/0005-whpx-shadow-stack-compatibility.md).
-
-To remove only this test CA from your Windows user trust store after testing:
-
-```powershell
-$hearthTestCert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new((Resolve-Path -LiteralPath '.hearth/certificates/edge-root.crt').Path)
-Remove-Item -LiteralPath ('Cert:\CurrentUser\Root\' + $hearthTestCert.Thumbprint)
-```
-
-That removes browser trust, not your hearth data. Future visits will require trusting the certificate again.
-
-## Private memory
-
-Open **Memory** in your workspace to save/edit notes, search and correct history, pause recall, and download/import an Obsidian vault. Try a named preference in a fresh chat, edit it, then ask again in another fresh chat. The reply lists its memory sources. Complete instructions and current limitations are in [private memory](implementation/PRIVATE_MEMORY.md).
+The [ledger](implementation/BUILD_STATUS.md) links exact recorded checks. The documentation review checked readiness and metadata, not these workflows. All 61 release gates remain open. [Old localhost procedures](archive/status-2026-09-18/TESTING_PRE_REFRESH.md) are historical evidence only.

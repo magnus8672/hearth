@@ -4,20 +4,20 @@ Implemented 14 September 2026 with migration `0020`. hearth now owns a shared MC
 
 ## Try it on the active VM head
 
-1. Open [Administration, Providers](https://10.20.30.10:8443/#providers). On the resident model you want to use, select **Verify tool calling**. The probe requires an actual native function call and a second reply that consumes its result. Plain chat verification does not enable tools.
-2. Open [Administration, Shared tools](https://10.20.30.10:8443/#tools). Register an existing Streamable HTTP MCP endpoint, including its path. The bundled reference service is `http://reference-tools:8096/mcp`. Name it `hearth reference tools`, leave credentials optional, accept HTTP for this internal connection and confirm the local-service declaration.
+1. Open [Administration, Providers](https://hearth.example.invalid:8443/#providers). On the resident model you want to use, select **Verify tool calling**. The probe requires an actual native function call and a second reply that consumes its result. Plain chat verification does not enable tools.
+2. Open [Administration, Shared tools](https://hearth.example.invalid:8443/#tools). Register an existing Streamable HTTP MCP endpoint, including its path. The bundled reference service is `http://reference-tools:8096/mcp`. Name it `hearth reference tools`, leave credentials optional, accept HTTP for this internal connection and confirm the local-service declaration.
 3. Select **Register and discover**, then review `calculate` and `current_time`. Approve them as **Read only**, choose the intended capabilities, and choose owner-only or all members. Newly discovered or changed schemas are disabled until reviewed.
 4. In private chat, select a capability assigned to the verified target and ask: “Use the shared calculator to multiply 137 by 29.” A tool-capable model can discover the operation, inspect its schema, execute it and consume the returned result. Its reply retains the actual model identity; tool activity appears alongside the reply.
-5. Open [Workspace, Client connections](https://10.20.30.10/#clients), create a named key with the required capability scopes, and save the key when shown. Enable tool access if the client uses its own functions or hearth MCP.
+5. Open [Workspace, Client connections](https://hearth.example.invalid/#clients), create a named key with the required capability scopes, and save the key when shown. Enable tool access if the client uses its own functions or hearth MCP.
 
 | Client setting | Active VM value |
 |---|---|
-| API base URL | `https://10.20.30.10/v1` |
+| API base URL | `https://hearth.example.invalid/v1` |
 | Protocol | Chat Completions |
 | Credential | The user's hearth API key, sent as `Authorization: Bearer ...` |
 | Automatic model | `auto` |
 | Coding model | `code.implement` |
-| Shared MCP endpoint | `https://10.20.30.10/mcp`, Streamable HTTP, same Bearer key |
+| Shared MCP endpoint | `https://hearth.example.invalid/mcp`, Streamable HTTP, same Bearer key |
 
 The active [ESX head](../operations/ESX_HEAD.md) binds its public edge to `0.0.0.0`; use the saved VM address for HTTPS, clients and sign-in. The retired laptop appliance's loopback URLs do not reach this farm. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
 
@@ -59,7 +59,7 @@ External harnesses send their own function schemas and execute returned calls on
 
 ## Client configuration examples
 
-These settings follow the clients' current documentation. The live protocol and model tests are recorded separately; Hermes, OpenClaw and Continue themselves have not yet been exercised end to end against this build. Set context limits to the capacity of every target eligible for the selected capability.
+These settings follow the clients' current documentation. The live protocol and model tests are recorded separately; Hermes discovery and small real client exchanges have evidence below; full Hermes, OpenClaw and Continue workflows remain unqualified. Set context limits to the capacity of every target eligible for the selected capability.
 
 For Continue, add a model to its private `config.yaml`, using a secret from its supported secret configuration. Explicit `tool_use` enables Agent mode for the capability alias. This example uses the [Continue configuration reference](https://docs.continue.dev/reference):
 
@@ -70,7 +70,7 @@ schema: v1
 models:
   - name: hearth coding
     provider: openai
-    apiBase: https://10.20.30.10/v1
+    apiBase: https://hearth.example.invalid/v1
     apiKey: ${{ secrets.HEARTH_API_KEY }}
     model: code.implement
     roles: [chat, edit, apply]
@@ -86,7 +86,7 @@ For OpenClaw, merge a custom `hearth` provider into the existing config and choo
   "models": {
     "providers": {
       "hearth": {
-        "baseUrl": "https://10.20.30.10/v1",
+        "baseUrl": "https://hearth.example.invalid/v1",
         "apiKey": "${HEARTH_API_KEY}",
         "api": "openai-completions",
         "models": [
@@ -109,7 +109,7 @@ For a private CA, supply a CA bundle through `SSL_CERT_FILE` in the selected Her
 
 Hermes Desktop can have multiple Python backends running at once. Configuring only the named **hearth** profile was insufficient here: that backend loaded its CA and passed its own onboarding probe, while the **default** backend still reproduced the user's exact unreachable error. Check every backend involved in setup, not just a separately launched Python test.
 
-Both the laptop's default and **hearth** profile `.env` files now point `SSL_CERT_FILE` at `certificates/hearth-ca-bundle.pem` under the main Hermes home directory. The bundle is independent of either profile's lifetime. The changes were applied through each running backend's authenticated environment-setting API, so both processes picked them up without another restart. Both environment files were backed up first; model settings, API credentials and system-wide environment were preserved. For manual file edits on a new installation, fully quit and reopen Hermes to reload its environment, then select **Local / custom endpoint**, enter `https://10.20.30.10/v1` and the existing hearth key. Do not remove `/v1` or disable TLS verification.
+Both the laptop's default and **hearth** profile `.env` files now point `SSL_CERT_FILE` at `certificates/hearth-ca-bundle.pem` under the main Hermes home directory. The bundle is independent of either profile's lifetime. The changes were applied through each running backend's authenticated environment-setting API, so both processes picked them up without another restart. Both environment files were backed up first; model settings, API credentials and system-wide environment were preserved. For manual file edits on a new installation, fully quit and reopen Hermes to reload its environment, then select **Local / custom endpoint**, enter `https://hearth.example.invalid/v1` and the existing hearth key. Do not remove `/v1` or disable TLS verification.
 
 [Initial transport evidence](../../evidence/client-api/2026-09-15/hermes-trust.json) records verified TLS from a separate Python process: `/health/browser` returns 200 and `/v1/models` without a key correctly returns 401. The [running-backend follow-up](../../evidence/client-api/2026-09-15/hermes-desktop-backends.json) verifies the actual Desktop onboarding and custom-endpoint probes in both processes: the network connection succeeds and the stricter probe correctly rejects a missing key.
 
@@ -125,7 +125,7 @@ Provider definitions are profile-scoped. This installation's endpoint is saved u
 
 The main Hermes request carries `reasoning_effort` and 37 native tool definitions, including regex constraints. The client API now accepts that bounded request shape. model-host's resident Qwen passes the native function-call/result probe and is qualified for tools. A short authenticated client request returns a real reply, and a separate client-owned function round trip reads a synthetic local file and consumes its contents through the VM. These checks use the existing key and preserve TLS validation.
 
-Full Hermes inference is still blocked by loaded context capacity: LM Studio reports **28,074 prompt tokens against an 8,192-token context** for the captured request. Set the loaded model's context to at least 32,768, preferably 65,536 if the machine can accommodate it, then retest; reduce Hermes's prompt/tools if a larger context cannot fit. Allow room for replies and growing history. hearth does not automatically reload or swap the model. A Hermes context estimate alone does not increase LM Studio's loaded context.
+Historical 15 September failure: full Hermes inference was blocked by loaded context capacity: LM Studio reports **28,074 prompt tokens against an 8,192-token context** for the captured request. The 18 September read-only inventory now reports [redacted capacity] loaded tokens. The old 8,192-token setting is superseded; a full Hermes session must still be retested with room for reply/history growth. Reduce client context/tools or deliberately configure capacity if a new request exceeds it. Allow room for replies and growing history. hearth does not automatically reload or swap the model. A Hermes context estimate alone does not increase LM Studio's loaded context.
 
 The transport now recognizes LM Studio's explicit pre-generation context rejection inside SSE, returns safe token counts and a `context_length_exceeded` error, releases the request's pool and preserves provider qualification. Non-streaming requests receive HTTP 400; streams carry the same error code and status metadata without a success terminator. Unknown failures or errors after partial output keep their conservative uncertain-execution handling. Provider text and request contents are not echoed into these errors.
 

@@ -1,5 +1,7 @@
 # images inside conversations
 
+> Current status, 18 September: these conversation-image behaviors remain implemented with Fooocus on media-worker. Private image/geometry galleries now have a durable queue; conversation image batches retain their original admission behavior. Saved images can open the separate 3D form. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 > Milestone record. Text turns now also use the configured [specialist routes](CAPABILITY_ROUTING.md); the original general-chat-only statement below describes this earlier image-dispatch slice. See [design coverage](DESIGN_COVERAGE.md) for the current scope.
 
 13 September 2026. Direct requests such as “Make an image of a fox beside a fireplace” now select the verified `image.generate` provider and return a saved PNG inside the same conversation. `@hearth draw a fox` does the same in a joined channel. No text model is needed for this image action. Ordinary text turns continue using `chat.general`.
@@ -12,7 +14,7 @@ Private **Stop response**, typed steering, and **Steer with this** from a side n
 
 This initial action dispatcher recognizes explicit English image creation requests with make/create/generate/render/draw/paint/illustrate and common polite forms. It retains requested media/style and recognizes square/landscape/portrait before the image noun. Default settings are square, 20 steps and a newly saved seed. It does not execute instructions inside model output, a historical message, quoted text or a code block. Asking how image generation works, or explicitly saying not to generate, does not invoke the image provider. Unsupported or ambiguous phrasing can remain a text turn; this is not a general semantic planner.
 
-The direct path uses a concrete description. [Contextual image planning](CONTEXTUAL_IMAGE_PLANNING.md) now resolves requests such as “draw what we just discussed” and makes new variations from previous descriptions. Multilingual intent classification, edits of existing pixels, image understanding, arbitrary model tool calls and required 3D remain unfinished. The next text turn receives the generation description with an explicit note that image pixels are absent; this does not qualify a vision model. The image tokenizer still rejects an oversized prompt instead of silently truncating it.
+The direct path uses a concrete description. [Contextual image planning](CONTEXTUAL_IMAGE_PLANNING.md) now resolves requests such as “draw what we just discussed” and makes new variations from previous descriptions. Multilingual intent classification and pixel editing remain unfinished. Private vision, the bounded native tool loop and a separate TRELLIS image-to-3D workflow were subsequently implemented; they do not turn this description-based image path into pixel-aware editing. The next text turn receives the generation description with an explicit note that image pixels are absent; this does not qualify a vision model. The image tokenizer still rejects an oversized prompt instead of silently truncating it.
 
 ## Persistence and authorization
 

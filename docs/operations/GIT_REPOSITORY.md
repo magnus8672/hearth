@@ -2,6 +2,10 @@
 
 The shared repository is [magnus8672/hearth](https://github.com/magnus8672/hearth), with SSH remote `git@github.com:magnus8672/hearth.git` and primary branch `main`.
 
+## Current verification
+
+The 18 September review found a clean local tree at `d9ce334` and matching cached `origin/main`. A read-only `git ls-remote origin HEAD` failed with `Permission denied (publickey)`. Remote branch freshness and current CI results were not verified. Existing SSH configuration was not changed; a later authenticated remote check is needed before claiming synchronization. See [the dated farm/source snapshot](../implementation/CURRENT_STATE.md).
+
 ## What belongs in Git
 
 Keep application and runtime source, scripts, migrations, generated API contracts, dependency lockfiles, branding assets, documentation and deliberately selected validation evidence. The original design snapshot under `docs/plan/` remains immutable. Small screenshots and synthetic media used as evidence are intentional repository inputs.

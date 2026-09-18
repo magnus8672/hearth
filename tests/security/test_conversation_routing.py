@@ -5,6 +5,9 @@ from hearth.conversation_media import image_prompt, image_shape
 
 @pytest.mark.parametrize('content', [
     'Make an image of a fox beside a fireplace',
+    '@hearth make us an image of a fox beside a fireplace please',
+    'Could you draw us a fox beside a fireplace',
+    'Create an image for us of a fox beside a fireplace',
     'Could you please generate me a picture of a fox beside a fireplace',
     'Draw me a fox beside a fireplace',
     'I would like an image of a fox beside a fireplace',
@@ -28,6 +31,8 @@ def test_requested_medium_style_and_orientation_are_preserved():
     'Explain the prompt "Make an image of a fox"', '```Make an image of a fox```',
     '> Draw a fox', 'I have an image to discuss', 'Draw a conclusion from these results',
     'Could you write code to generate an image?', 'What would happen if I asked you to draw a fox?',
+    'Make us an image prompt for a fox', 'Do not make us an image of a fox',
+    '> @hearth make us an image of a fox', 'Explain how to make us an image',
     'Create an image prompt for a fox', 'Make an image generator with Python',
     'Make an image of a fox, but do not actually generate it, just explain the process',
 ])

@@ -5,13 +5,13 @@
       "gate": "E01",
       "scenario": "First boot and LAN signup",
       "status": "partial",
-      "note": "Local native Owner provisioning and real HTTPS Member signup/MFA pass. A standalone Linux LAN profile also passes real Owner/MFA sign-in, public origins and verified IP TLS on a disposable farm. Selected-LAN signup policy, physical ESX/other-system trust and signed installer remain pending."
+      "note": "Local Owner/MFA and historical LAN signup pass. The active ESXi head now has real temporary-account registration/MFA/pending-access/approval/SSO evidence (accounts/2026-09-18). Selected-LAN policies, wider trust qualification and the signed installer remain pending."
     },
     {
       "gate": "E02",
       "scenario": "Start a new worker",
       "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "note": "Full automatic start/enrollment scenario not run. A signed Linux worker now adopts existing Fooocus/TRELLIS services on media-worker; this does not implement address-only enrollment or mTLS."
     },
     {
       "gate": "E03",
@@ -113,7 +113,7 @@
       "gate": "E19",
       "scenario": "Media workflow",
       "status": "partial",
-      "note": "Real local SDXL images, private/chat/channel artifacts, contextual prompt planning, bounded image batches, description-based variations, provenance, digest/PNG validation and scoped cancellation pass. Required local 3D, transcription and speech in the same authorized session remain pending."
+      "note": "Real SDXL/Fooocus images, contextual planning/batches, private vision, CPU speech/transcription and TRELLIS textured GLBs have bounded evidence. GLB cancellation/reuse and image-to-model handoff pass. Full combined media workflow, independent editor import, broad quality and sustained mixed load remain pending."
     },
     {
       "gate": "E20",
@@ -227,7 +227,7 @@
       "gate": "S16",
       "scenario": "User promotes self via role API",
       "status": "partial",
-      "note": "Public login provisioning grants only Member; real Members cannot inspect the admin farm. Role-editing APIs and promotion attack acceptance remain pending."
+      "note": "New signup grants no roles or permissions. People approval APIs enforce current role/revision, protect Owners and the acting account, and fence sessions/keys/execution on revocation; focused authorization tests pass (accounts/2026-09-18). Full promotion-attack and custom-role/group lifecycle acceptance remain open."
     },
     {
       "gate": "S17",
@@ -263,7 +263,7 @@
       "gate": "C04",
       "scenario": "Correct service for assigned job",
       "status": "not_run",
-      "note": "Requires later product implementation and end-to-end validation."
+      "note": "Full assignment-driven provisioning scenario not run. Signed service selection and real Fooocus/TRELLIS switching work for already installed approved services; automatic dependency/package installation remains open."
     },
     {
       "gate": "C05",
@@ -281,7 +281,7 @@
       "gate": "C07",
       "scenario": "Untrusted provisioning input",
       "status": "partial",
-      "note": "Python signature/digest checks and revision policy pass; native installer and provisioning still pending."
+      "note": "Python signature/digest primitives and native Go signed-recipe/file checks have evidence, including service tampering and stop/readiness fences. Full untrusted NodePlan/package provisioning and native installer acceptance remain pending."
     },
     {
       "gate": "C08",
@@ -365,7 +365,8 @@
       "gate": "A12",
       "scenario": "Useful setup and growth before optional services",
       "status": "not_run",
-      "note": "Manual local chat/image provider assignment works without NAS/MCP setup. Agent-driven service addition, member installation/pairing/assignment and supported media/3D expansion are not implemented; the full P4 and P8 gate remains open."
+      "note": "Manual provider assignment and bounded image/geometry services work without NAS/MCP prerequisites. Protected admin-agent setup, address-only member enrollment and agent-driven expansion remain unimplemented. The full P4/P8 gate, including required local 3D workflow qualification, remains open."
     }
-  ]
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
 }

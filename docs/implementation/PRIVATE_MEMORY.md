@@ -1,5 +1,7 @@
 # Private memory and Obsidian vaults
 
+> Current status, 18 September: private memory executes on the active ESXi head. The historical laptop-to-VM migration discussion below is not an instruction to migrate the running farm. Semantic extraction, continuous Obsidian sync and full restore/deletion acceptance remain open. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Implemented 13 September 2026. Migration `0018` adds an owner-scoped knowledge store, editable notes, original-preserving message corrections, source-linked recall, and a durable Markdown/JSONL projection. This is a first P7 slice. No full release gate is closed.
 
 ## Try it

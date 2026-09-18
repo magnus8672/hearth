@@ -31,7 +31,7 @@ Fooocus advertises larger outputs only when its upscaler file is installed. The 
 
 Migration `0022` raises the head's gallery and conversation PNG bounds from 16 MiB to 64 MiB and permits 60-step conversation progress. The transport enforces exact requested dimensions, digest and PNG decoding, plus the same byte cap and a 60-second transfer bound. The existing generation deadline remains 15 minutes. Account and stored-image byte totals were unchanged by migration.
 
-Checkpoint paths, LoRAs, samplers, schedulers, refiner selection, image editing and arbitrary dimensions are not exposed in this profile. Existing wildcard/path directives remain rejected. This change adds gallery controls; it does not add natural-language resolution/style planning to chat. Local 3D and the full release gates remain open.
+Checkpoint paths, LoRAs, samplers, schedulers, refiner selection, image editing and arbitrary dimensions are not exposed in this profile. Existing wildcard/path directives remain rejected. This change adds gallery controls; it does not add natural-language resolution/style planning to chat. Local image-to-3D is covered by [TRELLIS](LOCAL_GEOMETRY.md); all full release gates remain open.
 
 ## Observed validation
 

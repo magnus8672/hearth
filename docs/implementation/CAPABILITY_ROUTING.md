@@ -1,10 +1,12 @@
 # Capability routing and external LAN providers
 
+> Current status, 18 September: all fourteen bounded profiles are implemented. The initial assignment matrix below records the 13 September milestone, not the active farm. Live dispatch remains deterministic; Switchyard is not on its request path. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Implemented 13 September 2026. This slice separates the fourteen capability assignments from provider registration and makes the existing text and image transports usable through those assignments. It preserves the fixed control-plane, identity, privacy and resource-pool boundaries in ADR 0006.
 
 ## Available behavior
 
-Administration has a revisioned assignment editor for every capability, including cards whose adapters are pending. An assignment contains up to eight distinct targets in explicit order. An empty saved assignment stays disconnected after provider verification. Concurrent edits return a conflict. Mutations require current admin-audience authorization and CSRF protection, and farm RLS protects the underlying records.
+Administration has a revisioned assignment editor for every capability, including the profiles that were assignment-only at this milestone. All fourteen profiles now have bounded implementations. An assignment contains up to eight distinct targets in explicit order. An empty saved assignment stays disconnected after provider verification. Concurrent edits return a conflict. Mutations require current admin-audience authorization and CSRF protection, and farm RLS protects the underlying records.
 
 Conversation and the six text specialists use verified OpenAI-compatible chat targets. Direct English requests select planning, code explanation, coding, writing, summarization or extraction. The workspace also has an explicit text-specialist selector, preserved through durable steering. Only the current human request selects an intent; quoted conversation history and model output cannot select a server or authority. A legacy farm with no specialist assignment retains general chat. Once a specialist is assigned, an unavailable route fails closed instead of silently switching to general chat.
 
@@ -14,7 +16,7 @@ Before dispatch, targets must match the adapter, verified features, evidence lif
 
 Editing a connection preserves its target ID and capability assignments while invalidating previous evidence. It can change the server URL, model, protocol, resource group, key and per-connection certificate trust. Busy/uncertain groups cannot be moved. Shared credentials and trust cannot be silently replaced through one of several models. New executions record the capability, route revision, target revision, provider and model identity. Later connection edits do not rewrite that receipt. Legacy receipts are explicitly labeled as values copied from the current target during migration, because historical revisions cannot be reconstructed.
 
-## Current assignment matrix
+## Historical initial assignment matrix
 
 | Capabilities | Initial provider | Executable scope |
 |---|---|---|
@@ -23,7 +25,7 @@ Editing a connection preserves its target ID and capability assignments while in
 | Vision, transcription, speech, memory retrieval, memory indexing | Intended LM Studio target | Assignment only; required adapters/probes pending |
 | 3D generation | Intended image target | Assignment only; geometry adapter and mesh qualification pending |
 
-The last two rows are deliberately not ready. Text transport evidence is not vision, speech, retrieval or mesh evidence. Specialist task quality also remains separate from a successful text transport probe. Required local 3D and P8/A12 have not been removed from scope.
+At that milestone the last two rows were deliberately not ready; the current adapters and availability are documented in the snapshot above. Text transport evidence is not vision, speech, retrieval or mesh evidence. Specialist task quality also remains separate from a successful text transport probe. Required local 3D and P8/A12 have not been removed from scope.
 
 ## Native connector
 

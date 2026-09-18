@@ -1,5 +1,7 @@
 # contextual image planning
 
+> Current status, 18 September: contextual image planning remains bounded prompt preparation. Shared tools and separate TRELLIS image-to-3D now exist; image editing and general specialist orchestration remain open. Historical SDXL/GPT-OSS measurements below are not today's provider inventory. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 13 September 2026. hearth can now resolve an image request from the current conversation and make a variation from an earlier image description. The existing direct image path still works without a text model. This milestone does not qualify a general agent, arbitrary tools, image editing or local 3D.
 
 ## Try it

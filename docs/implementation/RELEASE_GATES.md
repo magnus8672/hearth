@@ -1,13 +1,13 @@
 # Release gates
 
-The [shared tools milestone](SHARED_TOOLS_AND_CLIENT_API.md) adds partial E10/S11 evidence. See its [validation record](../../evidence/tools/2026-09-14/validation.json). The current totals are 20 partial, 41 not run and zero fully passed.
+Reconciled 18 September 2026. The 61 binding scenarios retain their meaning in [the validation plan](../plan/09-VALIDATION-AND-RELEASE.md). Totals remain **20 partial, 41 not run, zero fully passed**. No status was promoted during this documentation update.
 
-The 61 binding gates retain their original meaning in [the validation plan](../plan/09-VALIDATION-AND-RELEASE.md). None is fully passed. Foundation, local identity, chat and image checks provide only the partial evidence described below. Current browser and restart records are in [identity evidence](../../evidence/identity/2026-09-12).
+Notes now account for [account approval](ACCOUNT_APPROVAL.md), [managed services](MANAGED_WORKERS.md) and [actual local geometry](LOCAL_GEOMETRY.md). A not-run full scenario can have narrower implementation evidence without becoming a completed gate. See [current coverage](DESIGN_COVERAGE.md), [the evidence ledger](BUILD_STATUS.md) and the matching [machine-readable ledger](release-gates.json).
 
 | Gate | Scenario | Status | Evidence or remaining work |
 |---|---|---|---|
-| E01 | First boot and LAN signup | Partial evidence | Local native Owner provisioning and real HTTPS Member signup/MFA pass. A standalone Linux LAN profile also passes real Owner/MFA sign-in, public origins and verified IP TLS on a disposable farm. Selected-LAN signup policy, physical ESX/other-system trust and signed installer remain pending. |
-| E02 | Start a new worker | Not run | Requires later product implementation and end-to-end validation. |
+| E01 | First boot and LAN signup | Partial evidence | Local Owner/MFA and historical LAN signup pass. The active ESXi head now has real temporary-account registration/MFA/pending-access/approval/SSO evidence (accounts/2026-09-18). Selected-LAN policies, wider trust qualification and the signed installer remain pending. |
+| E02 | Start a new worker | Not run | Full automatic start/enrollment scenario not run. A signed Linux worker now adopts existing Fooocus/TRELLIS services on media-worker; this does not implement address-only enrollment or mTLS. |
 | E03 | Pair and assign coding | Not run | Requires later product implementation and end-to-end validation. |
 | E04 | Restart/change DHCP address | Not run | Requires later product implementation and end-to-end validation. |
 | E05 | NAS model transfer interruption | Not run | Requires later product implementation and end-to-end validation. |
@@ -24,7 +24,7 @@ The 61 binding gates retain their original meaning in [the validation plan](../p
 | E16 | Worker loss mid-task | Not run | Requires later product implementation and end-to-end validation. |
 | E17 | Controller restart | Partial evidence | One normal guest poweroff/start preserved accounts, draft content/revisions and certificates. In-flight task recovery and abrupt controller-loss behavior remain pending. |
 | E18 | NAS/internet unavailable | Not run | Requires later product implementation and end-to-end validation. |
-| E19 | Media workflow | Partial evidence | Real local SDXL images, private/chat/channel artifacts, contextual prompt planning, bounded image batches, description-based variations, provenance, digest/PNG validation and scoped cancellation pass. Required local 3D, transcription and speech in the same authorized session remain pending. |
+| E19 | Media workflow | Partial evidence | Real SDXL/Fooocus images, contextual planning/batches, private vision, CPU speech/transcription and TRELLIS textured GLBs have bounded evidence. GLB cancellation/reuse and image-to-model handoff pass. Full combined media workflow, independent editor import, broad quality and sustained mixed load remain pending. |
 | E20 | Backup restoration | Not run | Requires later product implementation and end-to-end validation. |
 | E21 | Install/update/uninstall | Not run | Requires later product implementation and end-to-end validation. |
 | E22 | Budget race | Not run | Requires later product implementation and end-to-end validation. |
@@ -43,16 +43,16 @@ The 61 binding gates retain their original meaning in [the validation plan](../p
 | S13 | Concurrent deletion and index write | Not run | Requires later product implementation and end-to-end validation. |
 | S14 | Copied node certificate | Not run | Requires later product implementation and end-to-end validation. |
 | S15 | Unknown paid-call outcome/retry | Not run | Requires later product implementation and end-to-end validation. |
-| S16 | User promotes self via role API | Partial evidence | Public login provisioning grants only Member; real Members cannot inspect the admin farm. Role-editing APIs and promotion attack acceptance remain pending. |
+| S16 | User promotes self via role API | Partial evidence | New signup grants no roles or permissions. People approval APIs enforce current role/revision, protect Owners and the acting account, and fence sessions/keys/execution on revocation; focused authorization tests pass (accounts/2026-09-18). Full promotion-attack and custom-role/group lifecycle acceptance remain open. |
 | S17 | Cloud access through Graphify ambient env | Not run | Requires later product implementation and end-to-end validation. |
 | S18 | IPv6 or alternate admin route bypass | Not run | Requires later product implementation and end-to-end validation. |
 | C01 | First node creates hearth | Partial evidence | Local accelerated stack, console-bound Owner setup, MFA and private drafts work; the user completed Windows trust and reached Administration in Zen. Signed installer, other-system trust and sustained VM reliability remain pending. |
 | C02 | Member needs only head address/port | Not run | Requires later product implementation and end-to-end validation. |
 | C03 | All normal settings managed centrally | Not run | Requires later product implementation and end-to-end validation. |
-| C04 | Correct service for assigned job | Not run | Requires later product implementation and end-to-end validation. |
+| C04 | Correct service for assigned job | Not run | Full assignment-driven provisioning scenario not run. Signed service selection and real Fooocus/TRELLIS switching work for already installed approved services; automatic dependency/package installation remains open. |
 | C05 | Pairing proof/envelope integrity | Partial evidence | Go/Python JWE interoperability and narrow tamper cases pass; full enrollment lifecycle pending. |
 | C06 | Rogue head or anonymous endpoint | Not run | Requires later product implementation and end-to-end validation. |
-| C07 | Untrusted provisioning input | Partial evidence | Python signature/digest checks and revision policy pass; native installer and provisioning still pending. |
+| C07 | Untrusted provisioning input | Partial evidence | Python signature/digest primitives and native Go signed-recipe/file checks have evidence, including service tampering and stop/readiness fences. Full untrusted NodePlan/package provisioning and native installer acceptance remain pending. |
 | C08 | Setup and browser-origin isolation | Partial evidence | Exact-origin BFFs, one-use callback state, PKCE, audience-bound cookies, CSRF, setup proof/Host/Origin checks and logout rejection pass. Browser setup now verifies all three HTTPS origins independently of OS trust. Production helper, LAN/IPv6/alternate routes and complete lifecycle matrix remain pending. |
 | C09 | Recovery and single control head | Not run | Requires later product implementation and end-to-end validation. |
 | A01 | First provider on hearth itself | Not run | Requires later product implementation and end-to-end validation. |
@@ -66,6 +66,4 @@ The 61 binding gates retain their original meaning in [the validation plan](../p
 | A09 | Plans and bounded routine grants | Partial evidence | Grant scope, expiry, revocation, hash and current revision checks pass; durable Apply and execution pending. |
 | A10 | Idempotent durable operations | Not run | Requires later product implementation and end-to-end validation. |
 | A11 | Agent changes its own provider | Not run | Requires later product implementation and end-to-end validation. |
-| A12 | Useful setup and growth before optional services | Not run | Manual local chat/image provider assignment works without NAS/MCP setup. Agent-driven service addition, member installation/pairing/assignment and supported media/3D expansion are not implemented; the full P4 and P8 gate remains open. |
-
-A12 is split across text/tool orchestration in P4 and required media, including local 3D, in P8. Neither part substitutes for the other. The full gate remains open.
+| A12 | Useful setup and growth before optional services | Not run | Manual provider assignment and bounded image/geometry services work without NAS/MCP prerequisites. Protected admin-agent setup, address-only member enrollment and agent-driven expansion remain unimplemented. The full P4/P8 gate, including required local 3D workflow qualification, remains open. |

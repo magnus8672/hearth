@@ -1,5 +1,7 @@
 # notes, shared channels and local images
 
+> Current status, 18 September: the active image provider is Fooocus on media-worker. Qwen runs independently on model-host; image and geometry services share media-worker's managed GPU. Hourly evidence expiry and the prepared laptop topology below are historical. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Current update: [provider qualification](PROVIDER_LIFECYCLE.md) no longer expires after one hour. The hourly behavior described in this historical milestone has been superseded.
 
 > Milestone record. [Capability routing](CAPABILITY_ROUTING.md) subsequently implemented route preferences, connection editing and the optional native TLS connector. Their earlier pending status below is historical. See [design coverage](DESIGN_COVERAGE.md) for current limits.
@@ -8,9 +10,19 @@ Current update: [provider qualification](PROVIDER_LIFECYCLE.md) no longer expire
 
 13 September 2026. This slice adds the user's requested keyboard workflow, side notes, steering and joined channels, plus the first local image generation path. It closes no phase or release gate. All 61 gates, required local geometry and A12's P8 media cases remain in scope.
 
+## Responsive workspace and shared image wording — 18 September 2026
+
+The current workspace fills wide displays. Private chat, channels, image settings and model settings have persistent collapse controls and horizontal drag/keyboard dividers; private notes can dock on the right or below the conversation. Preferences are local to this browser and account. Below 800 pixels, panes stack and horizontal dividers disappear. This is pane docking, not arbitrary floating windows. Expanded 3D previews span the gallery and support vertical resizing, including the actual WebGL viewport.
+
+Private and channel transcripts open at the newest message and follow replies and media growth while already at the bottom. Scrolling back pauses following; **Jump to latest** restores it. Sending a message also returns to the latest content.
+
+Direct creation requests now accept both “me” and “us,” including `@hearth make us an image of a ford F150 please`. Channel requests still require an explicit mention and use the shared capability router. Quotes, negation and requests for prompts remain text; contextual images and bounded plural requests retain local planning. Existing qualification, permissions, resource availability and joined-channel publication rules apply. This does not add automatic worker service switching or a channel job queue.
+
+See [workspace validation](../../evidence/workspace/2026-09-18/validation.json) for source checks, isolated VM backend tests and browser fixtures. Provider rendering and real member identity are distinct from these fixture results.
+
 ## Try it
 
-Refresh the [workspace](https://localhost:8444). **Private chat** now sends on Enter and inserts a new line with Shift+Enter. Composition/IME events do not send. **For later** stores private notes independently of chat turns; save while the model works, use a note in the composer, send it, steer with it, or dismiss it. Accepted note sends consume the note atomically. Failed admission preserves it.
+Refresh the [workspace](https://hearth.example.invalid). **Private chat** now sends on Enter and inserts a new line with Shift+Enter. Composition/IME events do not send. **For later** stores private notes independently of chat turns; save while the model works, use a note in the composer, send it, steer with it, or dismiss it. Accepted note sends consume the note atomically. Failed admission preserves it.
 
 Typing a new direction while a reply runs changes the send action to **Steer response**. hearth saves the direction and stops accepting old answer text. With the current OpenAI-compatible adapter, the upstream request must finish before the replacement starts. This is a visible interruption and durable steering queue, not a claim that LM Studio's GPU computation stops instantly. **Return to composer** withdraws a queued message. A changed/revoked session or unknown prior execution blocks dispatch instead of replaying work.
 

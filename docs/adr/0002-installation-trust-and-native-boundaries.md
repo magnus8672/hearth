@@ -1,5 +1,7 @@
 # ADR 0002: appliance, trust and native execution boundaries
 
+> Status reconciliation, 18 September 2026: Architecture decision with historical foundation evidence. The active head now runs on ESXi, with MFA/SSO, pending signup and per-user grants. The full installer/helper, managed enrollment and release host matrix remain open. Use [current coverage](../implementation/DESIGN_COVERAGE.md) and [the farm snapshot](../implementation/CURRENT_STATE.md) for present status.
+
 > Historical foundation decisions and then-current qualification are retained below. Real local BFF/Owner/MFA setup subsequently shipped; production supervisor, managed enrollment and the wider host/trust matrix remain open. See [current coverage](../implementation/DESIGN_COVERAGE.md).
 
 Status: accepted architecture; development qualification is partial, 12 September 2026.

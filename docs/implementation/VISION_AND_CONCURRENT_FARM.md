@@ -1,14 +1,16 @@
 # hearth vision and concurrent resident models
 
+> Current status, 18 September: private vision is implemented, but the active Qwen target lacks saved vision verification. Run the explicit pixel probe before treating its Vision binding as eligible. Audio, memory and geometry implementations now also exist; their deployment status is separate. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Implemented 13 September 2026. Private chat can now send actual image pixels to a separately verified vision model. Automatic routing selects `vision.describe` when a turn or its retained history contains uploaded images. Normal text chats continue using their existing conversation/coding routes.
 
 ## Try it locally
 
-Open [your workspace](https://localhost:8444), refresh, and start a private chat. Use **Attach image**, paste a picture, or drop a PNG, JPEG or WebP onto the composer. Ask what is in the picture and press Enter. Pictures alone use a short description request. Follow-up questions in that conversation retain the pictures; the response names the model that actually ran.
+Open [your workspace](https://hearth.example.invalid), refresh, and start a private chat. Use **Attach image**, paste a picture, or drop a PNG, JPEG or WebP onto the composer. Ask what is in the picture and press Enter. Pictures alone use a short description request. Follow-up questions in that conversation retain the pictures; the response names the model that actually ran.
 
-Administration has **Verify vision** on compatible text servers. That probe reads six fresh random digits from an image; its text prompt never contains the answer. A plain chat probe or advertised vision feature does not qualify the route. Assign a successfully verified model under Capabilities > Vision > Configure. Re-verifying an already qualified vision server checks both chat and vision. As before, evidence expires after an hour and must be refreshed.
+Administration has **Verify vision** on compatible text servers. That probe reads six fresh random digits from an image; its text prompt never contains the answer. A plain chat probe or advertised vision feature does not qualify the route. Assign a successfully verified model under Capabilities > Vision > Configure. Re-verifying an already qualified vision server checks both chat and vision. Successful evidence no longer expires hourly; see [provider lifecycle](PROVIDER_LIFECYCLE.md).
 
-The prepared farm uses the existing remote `qwen/qwen3.8-27b` target for both coding and vision. Its saved HTTP consent, credentials and shared resource pool are preserved. All other capability bindings are preserved. GPT-OSS continues to handle local text conversation. The [activation receipt](../../evidence/vision/2026-09-13/activation.json) records whether this setup completed successfully.
+The historical development farm used the existing remote `qwen/qwen3.8-27b` target for both coding and vision. Its saved HTTP consent, credentials and shared resource pool are preserved. All other capability bindings are preserved. GPT-OSS continues to handle local text conversation. The [activation receipt](../../evidence/vision/2026-09-13/activation.json) records whether this setup completed successfully.
 
 ## Privacy and bounded inputs
 
@@ -31,8 +33,8 @@ The first concurrency attempt used a more demanding coding prompt and failed; a 
 
 ## Boundaries and next work
 
-There are now nine executable capability profiles and five assignment-only profiles. Vision is private image understanding; uploaded-image editing, inpainting, image-aware generation, channel uploads and document/PDF ingestion are not implemented. In an image conversation, Automatic keeps follow-ups on Vision; use a new conversation for image generation or explicit text-specialist selection for text-only work. The existing short text-history limit still applies, and provider-native context limits can reject larger requests.
+This milestone originally delivered nine executable profiles; all fourteen now have bounded implementations. Vision is private image understanding; uploaded-image editing, inpainting, image-aware generation, channel uploads and document/PDF ingestion are not implemented. In an image conversation, Automatic keeps follow-ups on Vision; use a new conversation for image generation or explicit text-specialist selection for text-only work. The existing short text-history limit still applies, and provider-native context limits can reject larger requests.
 
-Audio transcription/speech, memory retrieval/indexing and geometry generation still require actual adapters and qualification. Managed node enrollment and runtime placement remain separate unfinished work. No release gate was closed by this slice.
+Audio, private memory and geometry adapters were subsequently implemented; active-farm assignments and remaining quality qualification are tracked separately. Managed node enrollment and runtime placement remain separate unfinished work. No release gate was closed by this slice.
 
-The next audio step now has a [measured offline CPU speech probe](SPEECH_FEASIBILITY.md) using existing Kokoro files. It produced a playable sample without downloading models or displacing GPT-OSS; provider registration, playback controls and transcription remain unfinished.
+The next audio step now has a [measured offline CPU speech probe](SPEECH_FEASIBILITY.md) using existing Kokoro files. It produced a playable sample without downloading models or displacing GPT-OSS; provider registration, playback and transcription were subsequently implemented. No audio provider is registered on today's farm.

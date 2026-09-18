@@ -28,7 +28,8 @@ export default function GeometryPreview({ id }: { id: string }) {
     light.position.set(3, 5, 4); scene.add(light);
     const resize = new ResizeObserver(() => {
       const width = element.clientWidth;
-      renderer.setSize(width, 360, false); camera.aspect = width / 360; camera.updateProjectionMatrix();
+      const height = element.clientHeight;
+      renderer.setSize(width, height, false); camera.aspect = width / Math.max(height, 1); camera.updateProjectionMatrix();
     }); resize.observe(element);
     const manager = new THREE.LoadingManager();
     manager.onError = () => { if (!disposed) setError('A model texture could not be loaded. Download the GLB to inspect it in your editor.'); };
@@ -58,5 +59,5 @@ export default function GeometryPreview({ id }: { id: string }) {
     renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
     return () => { disposed = true; abort.abort(); resize.disconnect(); renderer.setAnimationLoop(null); controls.dispose(); clean(scene); renderer.dispose(); renderer.domElement.remove(); };
   }, [id]);
-  return <><div ref={host} className="geometry-preview" role="img" aria-label="Interactive preview of your generated 3D model" />{error && <p role="alert">{error}</p>}<p className="small-copy">Drag to orbit · scroll to zoom · right-drag to pan. Download the GLB for use in your 3D editor.</p></>;
+  return <><div ref={host} className="geometry-preview" role="img" aria-label="Interactive preview of your generated 3D model" />{error && <p role="alert">{error}</p>}<p className="small-copy">Drag to orbit · scroll to zoom · right-drag to pan · drag the lower edge to resize. Download the GLB for use in your 3D editor.</p></>;
 }

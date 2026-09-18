@@ -1,5 +1,7 @@
 # Set up a fresh hearth VM from the ZIP
 
+Package evidence in this guide describes the 14 September build. The active farm and later features are tracked in [current state](../implementation/CURRENT_STATE.md). Generated ZIPs are ignored outputs; rebuild from the intended source revision and qualify that package before treating older archive contents or sizes as current. Do not use fresh-farm setup to reset the running head.
+
 This package creates a **new farm**. The existing laptop farm, its accounts, chats, memory and provider settings remain on the laptop. The ZIP contains the head application, built browser apps, branded identity theme, database migrations, setup console and optional CPU audio installer. No laptop credentials, farm data, virtual disks, model weights or development environments are included.
 
 This is an **online setup package** for Linux x86-64. First startup downloads pinned container images and builds locked server dependencies. Node, pnpm, QEMU, Go and the laptop's Python environment are not required on the VM. This is a development deployment package, not the future signed/offline appliance installer.
@@ -81,4 +83,4 @@ Docker restart policies resume services at VM boot. Re-running `up` rebuilds/app
 
 Back up `.hearth/head/config.json` together with the Compose project's PostgreSQL, Caddy and memory-vault volumes. The default project is `hearth-head`. Configuration contains the farm identity and encryption keys needed for recovery. Restoring only the application ZIP does not restore a farm. Keep the current laptop farm separately; this package neither exports nor changes it.
 
-This package is for a fresh farm. Existing-farm migration, signed distribution, full ESX qualification and all external agent/harness combinations remain separate work. Image editing, local 3D and the rest of the unfinished roadmap are not added by packaging.
+This package is for a fresh farm. Existing-farm migration, signed distribution, full ESX qualification and all external agent/harness combinations remain separate work. Packaging itself does not qualify media or other product features. Local TRELLIS image-to-3D was implemented after this package milestone; see [its separate evidence](../implementation/LOCAL_GEOMETRY.md). Image editing remains unfinished.

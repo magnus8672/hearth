@@ -11,6 +11,7 @@ from uuid import uuid4
 import pytest
 from hearth import chat, identity, image_transport
 from hearth.database import scoped_session
+from hearth.policy import USER_PERMISSIONS
 from PIL import Image
 from sqlalchemy import text
 
@@ -174,7 +175,8 @@ def test_image_turn_cancellation_and_durable_steering_fence_shared_capacity(bff,
         assert admin.get('/api/v1/providers').json()['items'][0]['execution_state'] == ('unknown' if ending == 'unknown' else 'idle')
 
 
-def test_channel_image_is_shared_only_with_joined_members_not_private_gallery(bff, monkeypatch):
+@pytest.mark.parametrize('content', ['Make an image of a fox, @hearth', '@hearth make us an image of a ford F150 please'])
+def test_channel_image_is_shared_only_with_joined_members_not_private_gallery(bff, monkeypatch, content):
     factory, settings, app, migration, subject = setup(bff, monkeypatch)
     calls = []
     artifact = fixture_images(monkeypatch, calls)
@@ -187,7 +189,7 @@ def test_channel_image_is_shared_only_with_joined_members_not_private_gallery(bf
         path = '/api/v1/channels/' + first.post('/api/v1/channels', headers=h1, json={'name': 'Image workshop'}).json()['id']
         assert first.post(path + '/messages', headers=h1, json={'request_id': str(uuid4()), 'content': 'Make an image of a fox'}).status_code == 201
         assert len(calls) == 1  # No new mention, no generation.
-        data = {'request_id': str(uuid4()), 'content': 'Make an image of a fox, @hearth'}
+        data = {'request_id': str(uuid4()), 'content': content}
         assert first.post(path + '/messages', headers=h1, json=data).status_code == 201
         result = channel_finished(first, path)
         assert result['messages'][-1]['image']['status'] == 'completed', result
@@ -204,6 +206,10 @@ def test_channel_image_is_shared_only_with_joined_members_not_private_gallery(bf
             {'active': True, 'sub': subject if data.get('token') == 'EXPLICIT PROVIDER FIXTURE' else second_subject, 'iss': config.issuer}
             if endpoint == 'token/introspect' else {'id_token': 'FIXTURE', 'access_token': 'SECOND', 'refresh_token': 'FIXTURE', 'expires_in': 300})
         signin(second)
+        # This changed OIDC subject is a new pending account under migration 0025.
+        # Approve the synthetic member explicitly before testing channel membership.
+        with migration.begin() as db:
+            db.execute(text("UPDATE users SET state='active',access_permissions=CAST(:permissions AS text[]) WHERE farm_id=:farm AND subject=:subject"), {'permissions': list(USER_PERMISSIONS), 'farm': settings.farm_id, 'subject': second_subject})
         h2 = csrf(second, settings.user_origin)
         assert second.get(source).status_code == 404
         second_id = second.get('/api/v1/session').json()['id']

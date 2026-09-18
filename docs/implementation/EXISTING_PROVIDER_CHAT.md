@@ -1,5 +1,7 @@
 # existing local providers and private chat
 
+> Current status, 18 September: Qwen on model-host supplies the active text routes. Native shared tools, reasoning previews, media and private memory have since been implemented. The original GPT-OSS and host-bridge observations below retain their milestone scope. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+
 Current update: [provider qualification](PROVIDER_LIFECYCLE.md) no longer expires after one hour. The hourly behavior described in this historical milestone has been superseded.
 
 > Milestone record. [Capability routing](CAPABILITY_ROUTING.md) subsequently added connection editing, ordered per-capability assignments, explicit specialist selection and a native TLS connector. Pending statements about those items below describe the earlier slice. See [design coverage](DESIGN_COVERAGE.md) for current limits.

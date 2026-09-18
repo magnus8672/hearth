@@ -1,5 +1,7 @@
 # ADR 0006: managed runtimes and existing inference services
 
+> Status reconciliation, 18 September 2026: Direction retained; implementation now includes all fourteen bounded profiles and signed Linux adoption of installed Fooocus/TRELLIS services. Automatic enrollment, full provisioning and live Switchyard remain open. The proposed sequence and dated additions below preserve design/milestone context. Use [current coverage](../implementation/DESIGN_COVERAGE.md) and [the farm snapshot](../implementation/CURRENT_STATE.md) for present status.
+
 Status: accepted direction, updated 13 September 2026. Existing-provider chat, ordered capability routing, one image job provider and an optional native TLS connector are implemented in the development reference. Managed lifecycle, general orchestration and missing modality adapters remain open. See [current routing evidence](../implementation/CAPABILITY_ROUTING.md) and [the coverage audit](../implementation/DESIGN_COVERAGE.md). The design sections below distinguish the broader target from this implemented subset.
 
 ## Context and direction
@@ -107,9 +109,9 @@ The [local Shapecast inspection](../implementation/SHAPECAST_INSPECTION.md) supp
 
 Use manifests for independently installable models and their complete dependency closures: source/version/digest, license notices, required settings, formats, supported hardware, measured resource profiles and feature/quality evidence. Reuse weights when authorized and verified; do not copy an entire model bundle just to enable one stage. Fixed model names or unexplained automatic resolution reductions should not become hearth's selection policy. Persist requested and effective settings and obtain the required user choice before falling outside an agreed quality profile.
 
-[ADR 0003](0003-local-geometry-pipeline.md) remains a narrow TripoSR qualification candidate, not a chosen production quality default. Evaluate eligible alternatives on the same references before choosing advertised presets. Keep actual GLB validation, source/model/recipe provenance, access controls and independent import checks regardless of backend. Shapecast's bundled adapters are observations, not hearth qualifications, and its application code has not been copied into this repository.
+[ADR 0003](0003-local-geometry-pipeline.md) records the original TripoSR candidate; the deployed selection is now [TRELLIS.2](../implementation/LOCAL_GEOMETRY.md). Evaluate eligible alternatives on the same references before choosing advertised presets. Keep actual GLB validation, source/model/recipe provenance, access controls and independent import checks regardless of backend. Shapecast's bundled adapters are observations, not hearth qualifications, and its application code has not been copied into this repository.
 
-## Proposed implementation sequence
+## Historical proposed implementation sequence
 
 1. Add an `existing_service` bootstrap path and explicit provider-connection, target, binding and resource-pool records. Extend capability availability to represent verified external targets without fake local deployment IDs. Version the wire contracts, regenerate Go/TypeScript/OpenAPI artifacts and add migration/RLS coverage when implementing this change.
 2. Build the Administrator flow: connect service, select model, run bounded probes, review verified features, bind capabilities. Support a first real streamed workspace response through a qualified OpenAI-compatible adapter before expanding runtime installation. A successful chat probe must be useful even when the model fails admin-tool qualification.

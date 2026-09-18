@@ -2,23 +2,27 @@
 
 This development build lets one hearth route work among existing model servers. Model applications stay under their owners' control. A provider is an address and model; a capability assignment is an ordered list of those models. A resource group describes one shared GPU. Different capabilities can share a model, and a capability can have several independently hosted choices.
 
-The preferred test topology keeps different specialist models resident on separate machines at the same time, then routes requests to their hosting machines. Give independent GPUs separate resource groups and deliberately group services sharing hardware. Multiple models on one machine are optional. The current shared-GPU local setup is integration evidence only; [multi-server onboarding, residency and concurrent dispatch](DESIGN_COVERAGE.md#same-type-provider-registration-and-resident-models) still need joint qualification. Record loaded models before and after probes and routed work because a compatible endpoint alone does not establish resident-only behavior.
+The preferred test topology keeps different specialist models resident on separate machines at the same time, then routes requests to their hosting machines. Give independent GPUs separate resource groups and deliberately group services sharing hardware. Multiple models on one machine are optional. media-worker deliberately shares its GPU between image and geometry services; [multi-server onboarding, residency and concurrent dispatch](DESIGN_COVERAGE.md#same-type-provider-registration-and-resident-models) still need joint qualification. Record loaded models before and after probes and routed work because a compatible endpoint alone does not establish resident-only behavior.
 
-Built packages in this source checkout: [Windows x64](../../dist/connectors/hearth-connector-windows-amd64.zip), [Linux x64](../../dist/connectors/hearth-connector-linux-amd64.zip), [Linux ARM64](../../dist/connectors/hearth-connector-linux-arm64.zip), [macOS Apple Silicon](../../dist/connectors/hearth-connector-darwin-arm64.zip), [macOS Intel](../../dist/connectors/hearth-connector-darwin-amd64.zip). The accompanying `dist/connectors/manifest.json` records their hashes.
+## Build the optional connector packages
+
+Connector ZIPs are generated, ignored artifacts, not downloads included in this source checkout. With Python and the Go toolchain available to [the builder](../../scripts/build_connectors.py), run from the repository root:
+
+```powershell
+python scripts/build_connectors.py
+```
+
+Outputs are `dist/connectors/hearth-connector-<os>-<architecture>.zip` for `windows-amd64`, `linux-amd64`, `linux-arm64`, `darwin-arm64` and `darwin-amd64`, plus `dist/connectors/manifest.json` with hashes. They are unsigned development packages. Cross-compilation does not qualify execution on every platform. Building does not start a listener or enroll a worker. Existing approved HTTP providers do not need this connector.
 
 ## What can run now
 
-Conversation, planning, code explanation, coding, writing, summarization and data extraction accept text and produce text through OpenAI-compatible chat completions. They can all use the current LM Studio model or different servers. Coding does not run commands or write files. Extraction does not grant database access. A streaming probe proves the transport, not specialist task quality, tools or artifact support.
+See [the dated farm snapshot](CURRENT_STATE.md) for actual assignments. All fourteen bounded profiles are implemented; configuration and feature verification still determine availability.
 
-Image generation uses the hearth image job protocol, including progress, scoped cancellation and PNG validation. The current SDXL provider serves it. Contextual image planning uses the planning assignment, releases that model's resource group, then admits the image model. Single images and batches retain their existing cancellation and privacy behavior.
-
-Vision now supports private uploads, inline image context and an actual pixel-reading verification probe. Use **Verify vision** on a compatible server, then assign it to Vision. The remote Qwen model passed this check. See [vision and concurrency](VISION_AND_CONCURRENT_FARM.md).
-
-Speech output now uses registered `hearth.speech.v1` providers, validated WAV artifacts and confirmed cancellation. The prepared Kokoro instance runs on a separate CPU pool; Read aloud saves its audio on private assistant replies. Multiple speech servers use the same connection and assignment controls. See [Read aloud](READ_ALOUD.md) and [the developer runtime](../runtimes/SPEECH_PROVIDER.md); the current live speech qualification covers one local CPU process, not a physical LAN speech deployment.
-
-English PCM WAV transcription now uses `hearth.transcription.v1`, independent provider registration and a known-recording word-error probe. Private microphone input produces a reviewed transcript draft. See [transcription](TRANSCRIPTION.md); the current live profile is one local CPU service.
-
-3D, memory indexing and memory retrieval have editable intended assignments and explicit required profiles; their invocation adapters are still pending. Pointing one at a text or image server preserves the intended topology but does not mark it ready. A text model cannot stand in for a memory store, audio decoder or mesh generator.
+- Seven text profiles use compatible chat transports. Chat and Coding currently use model-host Qwen. Tool calling requires its separate native call/result probe; text profiles alone do not execute commands or grant filesystem/database access.
+- Fooocus on media-worker supplies image jobs. TRELLIS supplies image-to-3D and validated GLBs over a separate protocol. They explicitly share one managed GPU; see [workers](MANAGED_WORKERS.md) and [geometry](LOCAL_GEOMETRY.md).
+- Private vision requires a pixel-reading probe. The active Qwen assignment currently lacks that saved feature even though the model advertises vision.
+- Speech and English transcription have historical real CPU evidence but no registered providers here. See [audio setup](../operations/AUDIO_VM_SETUP.md).
+- Memory indexing/retrieval are built-in private head functions. Semantic knowledge workers remain future work.
 
 ## Direct HTTP with an existing service
 

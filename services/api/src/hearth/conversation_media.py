@@ -14,16 +14,16 @@ from sqlalchemy import text
 from hearth.contracts import ConversationImage, ImageGeneration
 
 PREFIX = r"(?:(?:hey|hi|hello)[, !]+)?(?:@?hearth[, :!]+)?(?:please\s+)?(?:(?:(?:can|could|would|will) you|I(?:'d| would) like you to|I want you to)\s+)?(?:please\s+)?"
-SUBJECT = r"(?:an?\s+|some\s+)?(?P<style>(?:(?:new|beautiful|photorealistic|realistic|square|landscape|portrait)\s+)*)(?P<medium>image|picture|photo|photograph|illustration|painting|drawing|artwork|logo)\b(?!\s+(?:prompt|generator|generation|tool|server|endpoint|API|tutorial|caption|description|metadata|analysis|classifier|viewer|editor|button|pipeline|workflow|model|request|dataset|recognition)\b)(?:\s+for me)?(?:\s+(?:of|showing|depicting))?\s*[:,]?\s*(?P<description>.*)"
-CREATE = re.compile(r'^' + PREFIX + r'(?:make|create|generate|render)\s+(?:me\s+)?' + SUBJECT + '$', re.I | re.S)
-DRAW = re.compile(r'^' + PREFIX + r'(?P<verb>draw|paint|illustrate)\s+(?:me\s+)?(?P<description>.+)$', re.I | re.S)
+SUBJECT = r"(?:an?\s+|some\s+)?(?P<style>(?:(?:new|beautiful|photorealistic|realistic|square|landscape|portrait)\s+)*)(?P<medium>image|picture|photo|photograph|illustration|painting|drawing|artwork|logo)\b(?!\s+(?:prompt|generator|generation|tool|server|endpoint|API|tutorial|caption|description|metadata|analysis|classifier|viewer|editor|button|pipeline|workflow|model|request|dataset|recognition)\b)(?:\s+for (?:me|us))?(?:\s+(?:of|showing|depicting))?\s*[:,]?\s*(?P<description>.*)"
+CREATE = re.compile(r'^' + PREFIX + r'(?:make|create|generate|render)\s+(?:(?:me|us)\s+)?' + SUBJECT + '$', re.I | re.S)
+DRAW = re.compile(r'^' + PREFIX + r'(?P<verb>draw|paint|illustrate)\s+(?:(?:me|us)\s+)?(?P<description>.+)$', re.I | re.S)
 WANT = re.compile(r"^(?:I(?:'d| would) (?:like|love)|I want|(?:Could|Can) I have)\s+" + SUBJECT + '$', re.I | re.S)
 NEGATED = re.compile(r"\b(?:do not|don't|don’t|without)\s+(?:actually\s+)?(?:generate|create|draw|render|make|paint)\b", re.I)
 REFERENCE = re.compile(r'\b(?:it|that|this|above|previous|earlier|same)\b|\b(?:we|you|I) (?:just )?(?:discussed|described|mentioned|talked about)\b', re.I)
 VARIATION = re.compile(r'^' + PREFIX + r'(?:make|render|draw|create|generate|paint|turn|change)\s+(?:it|that|this|another(?: one)?|a new (?:one|version)|a variation|the (?:image|picture|photo))\b.+$', re.I | re.S)
 COUNT = r'(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|a dozen)'
-PLURAL = re.compile(r'^' + PREFIX + r'(?:ok(?:ay)?[, ]+)?(?:make|create|generate|render|draw|paint|illustrate)\s+(?:me\s+)?(?:(?:the|some|a few|' + COUNT + r')\s+)?(?:different\s+)?(?:images|pictures|photos|photographs|illustrations|paintings|drawings|renders|variations)\b(?!\s+(?:prompts?|generators?|tools?|descriptions?|captions?)\b).*$', re.I | re.S)
-COUNTED = re.compile(r'^' + PREFIX + r'(?:make|create|generate|render|draw|paint|illustrate)\s+(?:me\s+)?(?P<count>' + COUNT + r')\s+(?:different\s+)?(?P<subject>.+)$', re.I | re.S)
+PLURAL = re.compile(r'^' + PREFIX + r'(?:ok(?:ay)?[, ]+)?(?:make|create|generate|render|draw|paint|illustrate)\s+(?:(?:me|us)\s+)?(?:(?:the|some|a few|' + COUNT + r')\s+)?(?:different\s+)?(?:images|pictures|photos|photographs|illustrations|paintings|drawings|renders|variations)\b(?!\s+(?:prompts?|generators?|tools?|descriptions?|captions?)\b).*$', re.I | re.S)
+COUNTED = re.compile(r'^' + PREFIX + r'(?:make|create|generate|render|draw|paint|illustrate)\s+(?:(?:me|us)\s+)?(?P<count>' + COUNT + r')\s+(?:different\s+)?(?P<subject>.+)$', re.I | re.S)
 
 
 def image_limit(content):

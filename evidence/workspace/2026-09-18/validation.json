@@ -1,0 +1,125 @@
+{
+  "recorded_at": "2026-09-18T14:42:19.409314+00:00",
+  "source_baseline": "d9ce334",
+  "scope": "Responsive workspace, transcript following and shared image wording; documentation reconciliation included in the same change set.",
+  "source_checks": {
+    "typescript": "passed",
+    "production_bundles": "passed; existing lazy Three.js chunk size warning remains",
+    "diff_whitespace": "passed",
+    "python_lint": "passed on VM for changed module and regression tests"
+  },
+  "backend": {
+    "host": "10.20.30.10",
+    "storage": "temporary isolated database in existing PostgreSQL; removed after tests",
+    "application_role": "hearth_app, separate from hearth_migrator; RLS retained",
+    "result": {
+      "passed": 73,
+      "deselected": 1
+    },
+    "files": [
+      "tests/security/test_conversation_routing.py",
+      "tests/security/test_image_planning.py",
+      "tests/integration/test_conversation_images.py",
+      "tests/integration/test_channels.py"
+    ],
+    "fixtures": "Synthetic OIDC and image transport; no live member content or provider inference used. Explicit approval added for synthetic second member to match migration 0025."
+  },
+  "browser": {
+    "origin": "https://hearth.example.invalid",
+    "bundles": "actual deployed bundles; API response fixtures",
+    "passed": 10,
+    "skipped": 1,
+    "failed": 0,
+    "viewports": [
+      390,
+      768,
+      1366,
+      1920,
+      3840
+    ],
+    "cases": [
+      {
+        "name": "geometry upload, private preview, cancellation and deletion",
+        "status": "expected"
+      },
+      {
+        "name": "upload errors preserve HTTP meaning and keep the selected file",
+        "status": "expected"
+      },
+      {
+        "name": "live edge admits geometry upload envelopes while retaining other limits",
+        "status": "skipped"
+      },
+      {
+        "name": "chat: open at bottom, follow large replies, preserve scrollback and switch",
+        "status": "expected"
+      },
+      {
+        "name": "channels: open at bottom, follow large replies, preserve scrollback and switch",
+        "status": "expected"
+      },
+      {
+        "name": "wide panes resize, collapse, dock and persist without losing notes",
+        "status": "expected"
+      },
+      {
+        "name": "layouts at 390px have no horizontal overflow",
+        "status": "expected"
+      },
+      {
+        "name": "layouts at 768px have no horizontal overflow",
+        "status": "expected"
+      },
+      {
+        "name": "layouts at 1366px have no horizontal overflow",
+        "status": "expected"
+      },
+      {
+        "name": "layouts at 1920px have no horizontal overflow",
+        "status": "expected"
+      },
+      {
+        "name": "layouts at 3840px have no horizontal overflow",
+        "status": "expected"
+      }
+    ],
+    "predeployment": "8 new cases also passed with compiled assets supplied to the browser on the VM origin, light theme; deployed run used dark theme",
+    "three_d": "Synthetic GLB verifies expanded preview, pointer height resize and canvas dimensions; this is not model quality acceptance"
+  },
+  "deployment": {
+    "host": "10.20.30.10",
+    "path": "/opt/hearth",
+    "project": "hearth-head",
+    "backup": "/opt/hearth/.hearth/before-responsive-workspace-20260918T144022Z",
+    "services_recreated": [
+      "api",
+      "user-api"
+    ],
+    "other_services": "preserved",
+    "active_requests_before_restart": 0,
+    "database_migration": "0025 unchanged",
+    "workspace_https_readiness": "ready",
+    "admin_https_readiness": "ready",
+    "served_index_comparison": "User and admin HTML match local production builds byte for byte",
+    "worker_after_deployment": "ready; TRELLIS selected and ready, unchanged",
+    "documentation": "Updated guides/evidence copied to head. Documentation checker passed in the Git source checkout; the deployed package has no .git directory.",
+    "tls": "Certificate chain verified; Windows curl used best-effort revocation for the private CA without a revocation endpoint",
+    "deployed_intent_probe": [
+      "a ford F150",
+      false
+    ],
+    "sha256": {
+      "services/api/src/hearth/conversation_media.py": "3bff14af6e7ba57fb7dc4380b5b97fa0dc7833d3164323e58542e38100002c8d",
+      "apps/user-web/dist/index.html": "842152f22169ab747095d968d3a13dac2126c5e8cda76224de5384ddec8d823b",
+      "apps/admin-web/dist/index.html": "ea0874e62a58f0b3ba089a13dd60526f018711d59005257a25047e6fc082674f"
+    }
+  },
+  "limits": [
+    "Only private notes have right/below docking; panes do not float freely.",
+    "Browser layout preferences are local to the account on that browser.",
+    "Chat/channel image requests still require a ready, idle image service; durable shared-GPU switching remains a private gallery capability.",
+    "No real GPU render or real-account login was performed for this patch.",
+    "Release gate statuses remain unchanged."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

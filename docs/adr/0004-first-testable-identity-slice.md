@@ -1,5 +1,7 @@
 # ADR 0004: First testable identity and private workspace slice
 
+> Status reconciliation, 18 September 2026: Historical first identity slice. Account approval/People, scoped client keys and cross-application MFA SSO are now implemented. Broader recovery, step-up, custom/workspace roles and full acceptance remain open. Use [current coverage](../implementation/DESIGN_COVERAGE.md) and [the farm snapshot](../implementation/CURRENT_STATE.md) for present status.
+
 Status: implemented for the local development reference, not a completed P1 release gate.
 
 17 September 2026 amendment: [single sign-on](../implementation/SINGLE_SIGN_ON.md) reuses the authenticated Keycloak session across the two BFF clients. Separate audiences and current role checks remain; routine navigation no longer forces password/OTP again. Explicit sign-out ends the shared identity session.

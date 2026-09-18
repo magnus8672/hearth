@@ -19,6 +19,9 @@ from hearth.inference import ProviderError
     ('ok generate the images of each please', None, True),
     ('make 4 different jeep gladiators in red grey black and army-green please', {'prompt': 'Jeep'}, True),
     ('Generate four images of different trucks', None, True),
+    ('@hearth make us four images of different trucks', None, True),
+    ('Make us an image of that', None, True),
+    ('Make us 4 bullet points about trucks', {'prompt': 'Jeep'}, False),
     ('Make 4 bullet points about trucks', {'prompt': 'Jeep'}, False),
     ('Do not generate the images', {'prompt': 'Jeep'}, False),
     ('Generate images prompts for me', None, False),
@@ -57,6 +60,9 @@ def test_duplicate_keys_and_trailing_instructions_are_rejected():
 def test_batch_bounds_and_closed_item_settings():
     from fastapi import HTTPException
     assert image_limit('Make 4 different trucks') == 4
+    assert image_limit('@hearth make us four images of trucks') == 4
+    with pytest.raises(HTTPException):
+        image_limit('@hearth make us five images of trucks')
     assert image_limit('Generate the images of each please') == 4
     assert image_limit('Make it blue') == 1
     with pytest.raises(HTTPException):
