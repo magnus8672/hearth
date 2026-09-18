@@ -4,6 +4,12 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## OBJ downloads and preview lighting — 18 September
+
+Completed models now offer OBJ ZIP downloads containing mesh, materials and textures, converted locally from the stored GLB. Export preserves world transforms, provided normals, UV orientation and material assignments; base-color pixels are unchanged. Roughness/metallic maps use MTL extensions whose support varies by editor. The preview has 26 face/edge/corner presets, six face shortcuts, continuous direction controls, key brightness, ambient fill and reset. Lighting does not alter stored or downloaded models.
+
+Three passing source tests cover transformed/mirrored geometry, material groups and lighting vectors. Ten deployed-bundle browser cases passed, with one existing opt-in edge case skipped. Checks convert actual TRELLIS/Hunyuan qualification GLBs, reparse OBJ/MTL, compare triangle counts and texture pixels, verify UV conversion, observe top/bottom lighting changes, exercise corner presets/reset, preserve phone-width layout and report denied downloads. This is synthetic-session browser qualification using real artifacts, not a live authenticated user or external-editor acceptance claim. Static UI/source deployment completed with backups and both HTTPS readiness checks passing; no API restart, database migration, provider update or inference was needed. TypeScript and both production builds passed. See [behavior and bounds](LOCAL_GEOMETRY.md) and [evidence](../../evidence/geometry/2026-09-18/export-lighting-validation.json). Release gates remain unchanged.
+
 ## Geometry tuning controls — 18 September
 
 The geometry page now exposes 10 TRELLIS and 20 Hunyuan controls in Generation, Mesh and Texture groups, initialized from generated contract defaults. Members can reset defaults, keep separate values while switching providers, and inspect the exact saved settings on each model card. Both engines offer geometry-only output. Typed settings survive the existing fair queue and must match provider receipts; unsupported profiles and invalid values fail explicitly. Legacy requests remain compatible. No database migration or scheduler policy change was needed.

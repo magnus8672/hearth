@@ -446,3 +446,9 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .geometry-settings dl { margin: 0; font-size: .85rem; max-width: 36rem; }
 .geometry-settings dl > div { display: flex; justify-content: space-between; gap: .75rem; padding: .25rem 0; }
 .geometry-settings dd { margin: 0; }
+.geometry-lighting { min-width: 0; margin: 1rem 0; padding: 1rem; border: 1px solid var(--hearth-border); border-radius: 12px; }
+.geometry-lighting-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 1rem; margin: 1rem 0; }
+.geometry-lighting-controls label { display: grid; gap: .5rem; min-width: 0; }
+.geometry-lighting select { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--hearth-border); border-radius: 8px; background: var(--hearth-background); color: var(--hearth-text); font: inherit; }
+.geometry-lighting input[type="range"] { width: 100%; padding: 0; accent-color: var(--hearth-accent); }
+.geometry-lighting [aria-pressed="true"] { outline: 2px solid currentColor; }

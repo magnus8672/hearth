@@ -14,6 +14,14 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
   const [resolution, setResolution] = useState(512); const [seed, setSeed] = useState('');
   const [tuning, setTuning] = useState<Record<TuningProfile, TuningValues>>(() => ({ 'trellis-v1': tuningDefaults('trellis-v1'), 'hunyuan-v1': tuningDefaults('hunyuan-v1') }));
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [preview, setPreview] = useState('');
+  const [exporting, setExporting] = useState('');
+  async function exportObj(job: Job) {
+    if (exporting) return;
+    setExporting(job.id); setError('');
+    try { const { downloadObj } = await import('./geometry-obj'); await downloadObj(job.id, job.name); }
+    catch (reason) { setError((reason as Error).message || 'OBJ export failed. You can still download the GLB.'); }
+    finally { setExporting(''); }
+  }
   const [source, setSource] = useState(() => geometryReference(window.location.hash));
   const [sourceLoading, setSourceLoading] = useState(false); const [referenceUrl, setReferenceUrl] = useState('');
   const target = targets.find(item => item.id === targetId);
@@ -109,8 +117,9 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
         {job.reason && <p role="status">{job.reason}</p>}{job.status === 'running' && <p role="status">Building your model. This can take several minutes.</p>}
         {job.metadata && <p>{job.metadata.triangles.toLocaleString()} triangles · {job.metadata.textures} textures · {(job.metadata.bytes / 1024 / 1024).toFixed(1)} MB</p>}
         {preview === job.id && job.status === 'completed' && <Suspense fallback={<p>Opening preview…</p>}><Preview id={job.id} /></Suspense>}
-        <div className="target-actions">{job.status === 'completed' && <><button className="quiet-button" onClick={() => setPreview(preview === job.id ? '' : job.id)}>{preview === job.id ? 'Close preview' : 'Preview 3D'}</button><a className="quiet-button button-link" href={`/api/v1/geometry/${job.id}/model`} download>Save GLB</a></>}
+        <div className="target-actions">{job.status === 'completed' && <><button className="quiet-button" onClick={() => setPreview(preview === job.id ? '' : job.id)}>{preview === job.id ? 'Close preview' : 'Preview 3D'}</button><a className="quiet-button button-link" href={`/api/v1/geometry/${job.id}/model`} download>Save GLB</a><button className="quiet-button" disabled={!!exporting} onClick={() => void exportObj(job)}>{exporting === job.id ? 'Preparing OBJ…' : 'Save OBJ ZIP'}</button></>}
           {['queued', 'running'].includes(job.status) ? <button className="quiet-button" disabled={job.cancel_requested} onClick={() => void action(job, false)}>{job.cancel_requested ? 'Stopping…' : 'Cancel'}</button> : <button className="quiet-button" onClick={() => void action(job, true)}>Delete model</button>}</div>
+        {job.status === 'completed' && <p className="small-copy">OBJ ZIP includes the mesh, materials and textures. Extract them together. GLB retains the original PBR materials.</p>}
       </article>)}</div>
     </section></Workspace></>;
 }
