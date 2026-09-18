@@ -5,13 +5,17 @@ services:
     ports: !reset []
   api:
     ports: !reset []
-    environment: &head-environment
-      HEARTH_MODE: production
-      HEARTH_DEVELOPMENT_PROVIDER_ALIASES: '{}'
-      HEARTH_TRUSTED_HOSTS: ${HEARTH_TRUSTED_HOSTS:?}
-      HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
-      HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
-      HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}
+    volumes:
+      - ${HEARTH_CONTROL_DIR:?}:/run/hearth-control:ro
+    environment:
+      <<: &head-environment
+        HEARTH_MODE: production
+        HEARTH_DEVELOPMENT_PROVIDER_ALIASES: '{}'
+        HEARTH_TRUSTED_HOSTS: ${HEARTH_TRUSTED_HOSTS:?}
+        HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
+        HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
+        HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}
+      HEARTH_HEAD_CONTROL_SOCKET: /run/hearth-control/control.sock
   user-api:
     environment:
       <<: *head-environment
@@ -27,6 +31,7 @@ services:
       - ${HEARTH_SETUP_PUBLIC_DIR:?}:/srv/setup-public:ro
     environment:
       HEARTH_PUBLIC_HOST: ${HEARTH_PUBLIC_HOST:?}
+      HEARTH_DEFAULT_SNI: ${HEARTH_DEFAULT_SNI:?}
       HEARTH_ADMIN_ORIGIN: ${HEARTH_ADMIN_ORIGIN:?}
       HEARTH_USER_ORIGIN: ${HEARTH_USER_ORIGIN:?}
       HEARTH_IDENTITY_ORIGIN: ${HEARTH_IDENTITY_ORIGIN:?}

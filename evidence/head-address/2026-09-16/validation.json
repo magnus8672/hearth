@@ -1,0 +1,96 @@
+{
+  "status": {
+    "base_url": "https://hearth.example.invalid",
+    "admin_url": "https://hearth.example.invalid:8443",
+    "identity_url": "https://hearth.example.invalid:8445",
+    "welcome_url": "http://hearth.example.invalid",
+    "revision": "98f366bff270580e4a6f911543e905ddb8afd60b4607754419438bb8482e734f",
+    "operation": {
+      "operation_id": "f7ba5eed-a649-442d-b29b-9d8b46693d12",
+      "state": "succeeded",
+      "message": "Address and public certificate package updated. Sign in at the new address.",
+      "target": {
+        "base_url": "https://hearth.example.invalid",
+        "admin_url": "https://hearth.example.invalid:8443",
+        "identity_url": "https://hearth.example.invalid:8445",
+        "welcome_url": "http://hearth.example.invalid"
+      },
+      "updated_at": "2026-09-16T04:28:25.625402+00:00"
+    },
+    "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1"
+  },
+  "live_table_observations": {
+    "users": {
+      "unchanged_since_snapshot": true,
+      "before_count": 1,
+      "current_count": 1
+    },
+    "role_grants": {
+      "unchanged_since_snapshot": true,
+      "before_count": 2,
+      "current_count": 2
+    },
+    "workspaces": {
+      "unchanged_since_snapshot": true,
+      "before_count": 1,
+      "current_count": 1
+    },
+    "conversations": {
+      "unchanged_since_snapshot": false,
+      "before_count": 0,
+      "current_count": 3
+    },
+    "messages": {
+      "unchanged_since_snapshot": false,
+      "before_count": 0,
+      "current_count": 10
+    },
+    "client_keys": {
+      "unchanged_since_snapshot": true,
+      "before_count": 3,
+      "current_count": 3
+    },
+    "provider_connections": {
+      "unchanged_since_snapshot": true,
+      "before_count": 1,
+      "current_count": 1
+    },
+    "capability_bindings": {
+      "unchanged_since_snapshot": true,
+      "before_count": 3,
+      "current_count": 3
+    }
+  },
+  "farm_credentials_preserved": true,
+  "root_preserved": true,
+  "test_cases_passed": 67,
+  "browser_full_signin": "Pending user MFA; isolated identity migration tests pass",
+  "certificate_package": {
+    "schema_version": 1,
+    "base_url": "https://hearth.example.invalid",
+    "admin_url": "https://hearth.example.invalid:8443",
+    "identity_url": "https://hearth.example.invalid:8445",
+    "api_base_url": "https://hearth.example.invalid/v1",
+    "mcp_url": "https://hearth.example.invalid/mcp",
+    "server_name": "hearth.example.invalid",
+    "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1",
+    "server_sha256": "e7fa6ae6878085506c83b949ce4e02566b6f789e0f7d099014cfb79f777f8dd1",
+    "private_keys_included": false,
+    "dns_san_verified": true
+  },
+  "checked_at": "2026-09-18T00:57:27.271837+00:00",
+  "live_checks": {
+    "https://hearth.example.invalid/health/ready": 200,
+    "https://hearth.example.invalid:8443/health/ready": 200,
+    "https://hearth.example.invalid:8445/realms/hearth/.well-known/openid-configuration": 200,
+    "https://hearth.example.invalid/auth/login": "New DNS identity and callback URLs",
+    "https://hearth.example.invalid:8443/auth/login": "New DNS identity and callback URLs",
+    "https://10.20.30.10": "https://hearth.example.invalid/",
+    "https://10.20.30.10:8443": "https://hearth.example.invalid:8443/",
+    "http://10.20.30.10": "http://hearth.example.invalid/",
+    "existing_client_key_at_new_url": 200
+  },
+  "tls_verification": true,
+  "root_store_changes": false,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

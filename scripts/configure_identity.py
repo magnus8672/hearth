@@ -124,6 +124,53 @@ def configure_branding():
     print('hearth sign-in branding applied. Existing accounts and authentication settings preserved.')
 
 
+def address_authority(values, data):
+    """Host-side check immediately before accepting maintenance from the admin BFF."""
+    engine = make_engine(values['HEARTH_MIGRATION_DATABASE_URL'])
+    try:
+        with engine.connect() as db:
+            allowed = db.execute(text("SELECT EXISTS(SELECT 1 FROM users u JOIN role_grants g ON g.user_id=u.id AND g.farm_id=u.farm_id WHERE u.id=:actor AND u.farm_id=:farm AND u.state='active' AND g.role IN ('Owner','FarmAdmin'))"),
+                                 {'actor': UUID(data['actor_id']), 'farm': UUID(values['HEARTH_FARM_ID'])}).scalar_one()
+            if not allowed:
+                raise ValueError('An active Owner or FarmAdmin must approve the address change.')
+    finally:
+        engine.dispose()
+
+
+def change_address(values, data):
+    """Change URL bindings only, retaining accounts, subject IDs, roles and client secrets."""
+    old_issuer = data['old_issuer']
+    parsed = urlsplit(old_issuer)
+    if parsed.scheme != 'https' or not parsed.hostname or parsed.path != '/realms/hearth' or parsed.query or parsed.fragment or parsed.username or parsed.password:
+        raise ValueError('Invalid previous identity address.')
+    with admin_client(values) as client:
+        for audience in ('ADMIN', 'USER'):
+            client_id = 'hearth-' + audience.lower()
+            clients = client.get('/admin/realms/hearth/clients', params={'clientId': client_id})
+            clients.raise_for_status()
+            if len(clients.json()) != 1:
+                raise ValueError('The existing identity clients must be configured before changing address.')
+            item = clients.json()[0]
+            origin = values[f'HEARTH_{audience}_ORIGIN']
+            attributes = item.get('attributes', {}) | {'post.logout.redirect.uris': origin+'/*'}
+            client.put('/admin/realms/hearth/clients/'+item['id'], json={
+                'rootUrl': origin, 'baseUrl': origin+'/', 'redirectUris': [origin+'/auth/callback'],
+                'webOrigins': [], 'attributes': attributes}).raise_for_status()
+    engine = make_engine(values['HEARTH_MIGRATION_DATABASE_URL'])
+    try:
+        with engine.begin() as db:
+            db.execute(text('UPDATE users SET issuer=:new WHERE farm_id=:farm AND issuer=:old'),
+                       {'new': values['HEARTH_IDENTITY_ORIGIN']+'/realms/hearth', 'old': old_issuer, 'farm': UUID(values['HEARTH_FARM_ID'])})
+            db.execute(text('DELETE FROM browser_sessions WHERE farm_id=:farm'), {'farm': UUID(values['HEARTH_FARM_ID'])})
+            db.execute(text('DELETE FROM login_attempts'))
+            db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'head.address_identity_updated',CAST(:metadata AS jsonb))"),
+                       {'farm': UUID(values['HEARTH_FARM_ID']), 'actor': UUID(data['actor_id']),
+                        'metadata': json.dumps({'operation_id': str(UUID(data['operation_id'])), 'previous_issuer': old_issuer, 'issuer': values['HEARTH_IDENTITY_ORIGIN']+'/realms/hearth'})})
+    finally:
+        engine.dispose()
+    print('Existing account bindings and sign-in addresses updated; browser sessions ended.')
+
+
 def configure_mfa_flow(client, realm_path):
     """Password plus OTP/recovery; missing second factors force OTP enrollment.
 

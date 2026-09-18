@@ -139,10 +139,58 @@ def compose_context(state):
     public_directory = state / 'public-setup'
     public_directory.mkdir(exist_ok=True, mode=0o755)
     public_directory.chmod(0o755)
+    # Only the admin BFF receives this Unix socket directory, never Docker or PKI keys.
+    control_directory = state / 'control'
+    control_directory.mkdir(exist_ok=True, mode=0o755)
+    write_aliases(state, values)
+    default_sni = values['HEARTH_PUBLIC_HOST']
+    # Preserve old IP bookmarks from clients that omit SNI. DNS clients send
+    # their hostname and still select its newly issued certificate normally.
+    try:
+        ipaddress.ip_address(default_sni)
+    except ValueError:
+        for origins in reversed(json.loads(values.get('HEARTH_PREVIOUS_ENDPOINTS', '[]'))):
+            candidate = urlsplit(origins[0]).hostname
+            try:
+                ipaddress.ip_address(candidate)
+                default_sni = candidate
+                break
+            except ValueError:
+                pass
     environment.update(values, HEARTH_CA_PASSWORD_FILE=str(ca_path),
+                       HEARTH_CONTROL_DIR=str(control_directory),
+                       HEARTH_DEFAULT_SNI=default_sni,
                        HEARTH_SETUP_HTTP_PORT=str(setup_port),
                        HEARTH_SETUP_PUBLIC_DIR=str(public_directory))
     return command, environment
+
+
+def write_aliases(state, values):
+    """Old bookmarks get a fresh sign-in; never forward credentials or callback codes."""
+    previous = json.loads(values.get('HEARTH_PREVIOUS_ENDPOINTS', '[]'))
+    blocks = []
+    current = {values[f'HEARTH_{audience}_ORIGIN'] for audience in ('ADMIN', 'USER', 'IDENTITY')}
+    current.add(setup_url(values))
+    for origins in previous[-4:]:
+        parsed = [urlsplit(origin) for origin in origins]
+        if len(parsed) != 3 or len({item.hostname for item in parsed}) != 1:
+            raise ValueError('Invalid previous head addresses.')
+        checked = endpoints(parsed[0].hostname, [item.port or 443 for item in parsed])
+        if origins != [checked[f'HEARTH_{audience}_ORIGIN'] for audience in ('ADMIN', 'USER', 'IDENTITY')]:
+            raise ValueError('Invalid previous head addresses.')
+        welcome = setup_url(checked)
+        if welcome not in current and setup_http_port(checked) == setup_http_port(values):
+            blocks.append(welcome + ' {\n @unsafe not method GET HEAD\n respond @unsafe 405\n redir ' + setup_url(values) + '/ 303\n}\n')
+            current.add(welcome)
+        for audience, origin in zip(('ADMIN', 'USER', 'IDENTITY'), origins, strict=True):
+            if origin in current or (urlsplit(origin).port or 443) != int(values[f'HEARTH_{audience}_PORT']):
+                continue
+            # A safe navigation to the new root, not an open redirect or forwarded POST.
+            blocks.append(origin + ' {\n tls internal\n @unsafe not method GET HEAD\n respond @unsafe 405\n redir ' + values[f'HEARTH_{audience}_ORIGIN'] + '/ 303\n}\n')
+            current.add(origin)
+    path = state / 'public-setup/Caddyfile.aliases'
+    path.write_text('\n'.join(blocks), encoding='utf-8')
+    path.chmod(0o644)
 
 
 def setup_http_port(values):
@@ -295,6 +343,7 @@ def main():
     actions.add_parser('status')
     actions.add_parser('export-ca')
     actions.add_parser('export-certificates')
+    actions.add_parser('install-control')
     args = parser.parse_args()
     state = args.state.resolve()
     try:
@@ -309,6 +358,10 @@ def main():
             return 0
         values = load(state)
         require_compose()
+        if args.action == 'install-control':
+            from head_control import install
+            install(state)
+            return 0
         if args.action == 'up':
             if any(not (ROOT / f'apps/{app}-web/dist/index.html').is_file() for app in ('admin', 'user')):
                 raise ValueError('Build both browser bundles with pnpm build before starting the head.')
@@ -318,6 +371,9 @@ def main():
             # Caddy's administration endpoint is disabled; refresh bind mounts by recreation.
             compose(state, 'up', '-d', '--no-deps', '--force-recreate', 'edge')
             export_certificates(state)
+            if Path('/run/systemd/system').is_dir() and os.geteuid() == 0:
+                from head_control import install
+                install(state)
             show_urls(values)
             print('First startup: run python3 scripts/head.py owner to create the Owner account locally.')
         elif args.action == 'owner':

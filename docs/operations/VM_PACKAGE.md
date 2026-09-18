@@ -34,7 +34,7 @@ Choose an unused directory for this fresh farm. Do not unpack it over an existin
 python3 scripts/head.py configure --base-url https://hearth.home.arpa
 ```
 
-The head listens on **0.0.0.0**. The chosen name or IP drives the TLS certificate and browser, sign-in, client API and MCP URLs. Admin/sign-in use ports 8443/8445 by default. To choose all three, use `--ports ADMIN WORKSPACE IDENTITY` with three distinct ports; the middle one must match your base URL. Do not change the saved URL after creating accounts: identity-address migration is not implemented yet.
+The head listens on **0.0.0.0**. The chosen name or IP drives the TLS certificate and browser, sign-in, client API and MCP URLs. Admin/sign-in use ports 8443/8445 by default. To choose all three, use `--ports ADMIN WORKSPACE IDENTITY` with three distinct ports; the middle one must match your base URL. After creating accounts, use [Administration address settings](../implementation/HEAD_ADDRESS_SETTINGS.md) to change the URL and rebuild certificates. Do not edit the private configuration by hand.
 
 First startup can take several minutes while Docker builds the server, applies migrations, configures identity and issues certificates. The Owner console prompts for a username, display name, farm name and hidden password. In the browser, enroll an authenticator and save your recovery codes. The next users who register receive Member access.
 

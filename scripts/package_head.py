@@ -16,7 +16,7 @@ FILES = (
     'deploy/compose/Caddyfile.development', 'deploy/compose/Caddyfile.head',
     'deploy/compose/init-databases.sh', 'deploy/compose/init-ca.sh',
     'deploy/compose/images.lock.json',
-    'scripts/head.py', 'scripts/head_console.py', 'scripts/configure_identity.py',
+    'scripts/head.py', 'scripts/head_console.py', 'scripts/head_control.py', 'scripts/configure_identity.py',
     'scripts/setup_audio_vm.py', 'scripts/qualify_audio_vm.py',
     'runtimes/speech/hearth_speech.py', 'runtimes/speech/model-manifest.json',
     'runtimes/speech/pyproject.toml', 'runtimes/speech/uv.lock',

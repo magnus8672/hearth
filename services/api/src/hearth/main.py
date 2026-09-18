@@ -18,6 +18,7 @@ from hearth.client_keys import router as client_keys_router
 from hearth.config import Settings, get_settings
 from hearth.contracts import ErrorDetail, ErrorResponse
 from hearth.database import make_engine, verify_application_role
+from hearth.head_settings import router as head_settings_router
 from hearth.identity import router as identity_router
 from hearth.images import router as images_router
 from hearth.inference import ProviderError
@@ -129,6 +130,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(identity_router)
     app.include_router(workspace_router)
+    app.include_router(head_settings_router)
     app.include_router(providers_router)
     app.include_router(routing_router)
     app.include_router(chat_router)

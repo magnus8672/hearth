@@ -1,6 +1,50 @@
 {
   "components": {
     "schemas": {
+      "AddressApply": {
+        "additionalProperties": false,
+        "properties": {
+          "base_url": {
+            "maxLength": 300,
+            "minLength": 8,
+            "title": "Base Url",
+            "type": "string"
+          },
+          "expected_revision": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Expected Revision",
+            "type": "string"
+          },
+          "operation_id": {
+            "format": "uuid",
+            "title": "Operation Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base_url",
+          "expected_revision",
+          "operation_id"
+        ],
+        "title": "AddressApply",
+        "type": "object"
+      },
+      "AddressPreview": {
+        "additionalProperties": false,
+        "properties": {
+          "base_url": {
+            "maxLength": 300,
+            "minLength": 8,
+            "title": "Base Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base_url"
+        ],
+        "title": "AddressPreview",
+        "type": "object"
+      },
       "AdminApplyRequest": {
         "additionalProperties": false,
         "properties": {
@@ -5963,6 +6007,122 @@
           }
         },
         "summary": "Farm",
+        "tags": [
+          "administration"
+        ]
+      }
+    },
+    "/api/v1/head/apply": {
+      "post": {
+        "operationId": "apply_api_v1_head_apply_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressApply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Apply",
+        "tags": [
+          "administration"
+        ]
+      }
+    },
+    "/api/v1/head/certificates": {
+      "get": {
+        "operationId": "certificates_api_v1_head_certificates_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Certificates",
+        "tags": [
+          "administration"
+        ]
+      }
+    },
+    "/api/v1/head/preview": {
+      "post": {
+        "operationId": "preview_api_v1_head_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressPreview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview",
+        "tags": [
+          "administration"
+        ]
+      }
+    },
+    "/api/v1/head/settings": {
+      "get": {
+        "operationId": "settings_api_v1_head_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Settings",
         "tags": [
           "administration"
         ]

@@ -9,7 +9,7 @@ from uuid import UUID
 from hearth.contracts import AdminChangeSet, AdminExecutionGrant, CloudAuthorization, Locality
 
 PERMISSIONS = {
-    "farm.inspect", "node.enroll", "node.revoke", "node.assign", "node.operate",
+    "farm.inspect", "farm.configure", "node.enroll", "node.revoke", "node.assign", "node.operate",
     "model.approve", "package.approve", "storage.configure", "tool.approve",
     "provider.configure", "budget.configure", "role.grant", "recovery.configure",
     "audit.read", "conversation.own", "artifact.own", "memory.own", "api_key.own",

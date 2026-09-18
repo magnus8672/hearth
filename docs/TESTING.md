@@ -4,8 +4,8 @@
 
 All deployment and runtime testing now targets **10.20.30.10**. The laptop is used for source editing, Git and browser/client access. Do not start `Start-Hearth.ps1`, the local QEMU appliance or local hearth-managed providers. The old farm data is retained.
 
-- Begin at [Welcome and certificate download](http://10.20.30.10).
-- Use [Workspace](https://10.20.30.10) and [Administration](https://10.20.30.10:8443).
+- Begin at [Welcome and certificate download](http://hearth.example.invalid).
+- Use [Workspace](https://hearth.example.invalid) and [Administration](https://hearth.example.invalid:8443).
 - Maintain the deployment through `ssh operator@10.20.30.10`, then `/opt/hearth` and sudo as needed.
 - Register resident providers by addresses reachable from the VM. Laptop loopback and the retired QEMU host bridge are not VM provider addresses.
 - Preserve live accounts, conversations, certificates and provider settings. Do not run reset/first-Owner fixtures against the farm, and do not create another farm for tests. Adapt integration fixtures to isolated storage on the VM before running them.

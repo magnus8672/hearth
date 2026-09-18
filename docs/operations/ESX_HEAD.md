@@ -24,16 +24,16 @@ The console prompts for the username, display name, farm name and password. Then
 
 | Purpose | URL |
 |---|---|
-| Welcome and certificate download | `http://10.20.30.10` |
-| Workspace | `https://10.20.30.10` |
-| Administration | `https://10.20.30.10:8443` |
-| Identity | `https://10.20.30.10:8445` |
-| Client API | `https://10.20.30.10/v1` |
-| MCP | `https://10.20.30.10/mcp` |
+| Welcome and certificate download | `http://hearth.example.invalid` |
+| Workspace | `https://hearth.example.invalid` |
+| Administration | `https://hearth.example.invalid:8443` |
+| Identity | `https://hearth.example.invalid:8445` |
+| Client API | `https://hearth.example.invalid/v1` |
+| MCP | `https://hearth.example.invalid/mcp` |
 
-The saved base URL is the workspace origin above. The edge listens on 0.0.0.0. The VM certificate's IP identity is 10.20.30.10. Its root is separate from the laptop development farm's root and must be trusted separately. The public certificate package is `/opt/hearth/.hearth/head/hearth-client-certificates.zip`; local copies are under `dist/hearth-esx-certificates/` and `dist/hearth-esx-client-certificates.zip`. Compare the exported root fingerprint over SSH before importing it.
+The saved base URL is the workspace origin above. The edge listens on 0.0.0.0. The current server certificate names `hearth.example.invalid`, whose DNS A record is `10.20.30.10`. The hostname migration preserved the existing trust root. Its root is separate from the laptop development farm's root and must be trusted separately. The public certificate package is `/opt/hearth/.hearth/head/hearth-client-certificates.zip`; local copies are under `dist/hearth-esx-certificates/` and `dist/hearth-esx-client-certificates.zip`. Compare the exported root fingerprint over SSH before importing it.
 
-The HTTP welcome page serves public trust downloads and connection checks; account and application operations remain on HTTPS. Windows validates the VM chain, but the user's last reported Zen `SEC_ERROR_BAD_SIGNATURE` remains unresolved. Do not treat service startup or an HTTP download as successful browser trust.
+The HTTP welcome page serves public trust downloads and connection checks; account and application operations remain on HTTPS. The 16 September migration passes certificate-verified HTTPS and the in-app browser reaches workspace, admin welcome and branded sign-in without a trust bypass. Full real MFA sign-in in Zen remains a user acceptance check. Use [Administration address settings](../implementation/HEAD_ADDRESS_SETTINGS.md) for further URL changes and certificate-package downloads.
 
 ## Maintenance
 

@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # same-machine gateway. Never accept transport aliases from browser input.
     development_provider_aliases: dict[str, str] = Field(default_factory=dict)
     memory_vault_path: str | None = None
+    head_control_socket: str | None = None
     # Reasoning models spend the completion budget on both reasoning and answers.
     chat_max_output_tokens: int = Field(default=16384, ge=256, le=65536)
     chat_timeout_seconds: int = Field(default=900, ge=30, le=3600)

@@ -7,16 +7,23 @@ import sys
 import time
 
 import httpx
-from configure_identity import admin_client, configure, create_owner, owner_created
+from configure_identity import (
+    address_authority,
+    admin_client,
+    change_address,
+    configure,
+    create_owner,
+    owner_created,
+)
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['configure', 'owner', 'status'])
+    parser.add_argument('action', choices=['configure', 'owner', 'status', 'address-check', 'address-apply'])
     args = parser.parse_args()
     values = dict(os.environ)
     try:
-        if args.action == 'configure':
+        if args.action in ('configure', 'address-apply'):
             # Production Keycloak builds its optimized runtime on first boot.
             for attempt in range(90):
                 try:
@@ -26,7 +33,12 @@ def main():
                     if attempt == 89:
                         raise
                     time.sleep(2)
-            configure(values)
+            if args.action == 'address-apply':
+                change_address(values, json.loads(sys.stdin.read(4096)))
+            else:
+                configure(values)
+        elif args.action == 'address-check':
+            address_authority(values, json.loads(sys.stdin.read(4096)))
         elif args.action == 'owner':
             create_owner(json.loads(sys.stdin.read(16384)), values)
             print('Owner created. Sign in to enroll your second factor and save recovery codes.')

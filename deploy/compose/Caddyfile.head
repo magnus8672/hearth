@@ -2,10 +2,12 @@
     admin off
     default_bind 0.0.0.0
     # IP-address clients often omit SNI. Select this head's certificate in that case.
-    default_sni {$HEARTH_PUBLIC_HOST}
+    default_sni {$HEARTH_DEFAULT_SNI}
     skip_install_trust
     auto_https disable_redirects
 }
+# Generated only by the local supervisor from validated previous HTTPS origins.
+import /srv/setup-public/Caddyfile.aliases
 # A credential-free entry page is reachable before clients trust this head.
 # Every path is explicit. No account operations or private state are served here.
 http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {

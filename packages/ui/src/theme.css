@@ -348,3 +348,11 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 @media (max-width: 900px) { .tool-columns { grid-template-columns: minmax(0, 1fr); } .connection-details { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 
 .tool-form input:not([type=checkbox]), .tool-form select, .tool-form textarea, .key-reveal textarea { min-width:0; padding:12px; border:1px solid var(--hearth-border); border-radius:9px; color:var(--hearth-text); background:var(--hearth-background); font:inherit; }
+
+.head-settings { max-width: 64rem; }
+.head-settings form { display: grid; gap: 1rem; margin-block: 2rem; }
+.head-addresses { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); gap: .75rem 1rem; }
+.head-addresses dd { margin: 0; overflow-wrap: anywhere; }
+.head-fingerprint { overflow-wrap: anywhere; }
+.head-preview { border-top: 1px solid var(--hearth-border); padding-top: 1.5rem; }
+@media (max-width: 600px) { .head-addresses { grid-template-columns: 1fr; } }

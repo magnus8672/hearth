@@ -21,6 +21,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Play and save spoken replies | [Read aloud](implementation/READ_ALOUD.md) |
 | Install speech/transcription in an Ubuntu VM | [Audio VM setup](operations/AUDIO_VM_SETUP.md) |
 | Run the head on a LAN or ESX VM | [Head VM setup](operations/HEAD_VM_SETUP.md) |
+| Change an existing head's URL and rebuild certificates | [Head address settings](implementation/HEAD_ADDRESS_SETTINGS.md) |
 | Copy just the fresh-farm deployment package | [VM ZIP setup](operations/VM_PACKAGE.md) |
 | Maintain the user's deployed VM at 10.20.30.10 | [Current ESX head](operations/ESX_HEAD.md) |
 | Understand lasting verification and startup checks | [Provider lifecycle](implementation/PROVIDER_LIFECYCLE.md) |
