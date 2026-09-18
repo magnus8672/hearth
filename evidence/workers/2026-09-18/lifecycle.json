@@ -1,0 +1,30 @@
+{
+  "host": "10.20.30.20",
+  "head": "10.20.30.10",
+  "transport": "outbound verified HTTPS with scoped operator credential",
+  "stopped": {
+    "state": "stopped",
+    "reason": "",
+    "desired": null,
+    "ready": null,
+    "revision": 3,
+    "observed": 3,
+    "online": true
+  },
+  "restored": {
+    "state": "ready",
+    "reason": "",
+    "desired": "fooocus",
+    "ready": "fooocus",
+    "revision": 4,
+    "observed": 4,
+    "online": true
+  },
+  "unload_seconds": 5.36,
+  "start_seconds": 17.64,
+  "gpu_memory_before_mib": 8328,
+  "gpu_memory_after_unload_mib": 651,
+  "note": "Resident service restored; admission paused for isolated live queue qualification.",
+  "admission_resumed_after_qualification": true,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

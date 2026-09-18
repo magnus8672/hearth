@@ -4632,6 +4632,48 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "WorkerChange": {
+        "additionalProperties": false,
+        "properties": {
+          "desired_service": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_-]{0,39}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desired Service"
+          },
+          "paused": {
+            "title": "Paused",
+            "type": "boolean"
+          },
+          "policy": {
+            "enum": [
+              "resident",
+              "shared"
+            ],
+            "title": "Policy",
+            "type": "string"
+          },
+          "revision": {
+            "maximum": 9007199254740990.0,
+            "minimum": 1.0,
+            "title": "Revision",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "revision",
+          "paused",
+          "policy"
+        ],
+        "title": "WorkerChange",
+        "type": "object"
+      },
       "WorkerCommand": {
         "additionalProperties": false,
         "properties": {
@@ -4695,6 +4737,79 @@
           "expires_at"
         ],
         "title": "WorkerCommand",
+        "type": "object"
+      },
+      "WorkerReport": {
+        "additionalProperties": false,
+        "properties": {
+          "boot_id": {
+            "format": "uuid",
+            "title": "Boot Id",
+            "type": "string"
+          },
+          "observed_revision": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Observed Revision",
+            "type": "integer"
+          },
+          "ready_service": {
+            "anyOf": [
+              {
+                "pattern": "^[a-z][a-z0-9_-]{0,39}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ready Service"
+          },
+          "reason": {
+            "default": "",
+            "enum": [
+              "",
+              "service_starting",
+              "service_not_ready",
+              "recipe_mismatch",
+              "stop_failed",
+              "start_failed",
+              "health_failed",
+              "head_unavailable"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "recipe_digest": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Recipe Digest",
+            "type": "string"
+          },
+          "sequence": {
+            "maximum": 9007199254740991.0,
+            "minimum": 1.0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "stopped",
+              "starting",
+              "ready",
+              "failed"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "boot_id",
+          "sequence",
+          "recipe_digest",
+          "observed_revision",
+          "state"
+        ],
+        "title": "WorkerReport",
         "type": "object"
       }
     },
@@ -7920,6 +8035,127 @@
         "summary": "Discover",
         "tags": [
           "tools"
+        ]
+      }
+    },
+    "/api/v1/worker-control/{worker_id}/poll": {
+      "post": {
+        "operationId": "poll_api_v1_worker_control__worker_id__poll_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "worker_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Worker Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkerReport"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Poll",
+        "tags": [
+          "workers"
+        ]
+      }
+    },
+    "/api/v1/workers": {
+      "get": {
+        "operationId": "listing_api_v1_workers_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Listing",
+        "tags": [
+          "workers"
+        ]
+      }
+    },
+    "/api/v1/workers/{worker_id}": {
+      "put": {
+        "operationId": "change_api_v1_workers__worker_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "worker_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Worker Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkerChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Change",
+        "tags": [
+          "workers"
         ]
       }
     },

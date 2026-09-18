@@ -32,6 +32,7 @@ from hearth.speech import router as speech_router
 from hearth.toolbox import router as toolbox_router
 from hearth.transcription import router as transcription_router
 from hearth.vision import router as vision_router
+from hearth.workers import router as workers_router
 from hearth.workspace import router as workspace_router
 
 logger = logging.getLogger("hearth")
@@ -52,6 +53,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             from hearth.provider_health import StartupChecks
             checks = StartupChecks(engine, settings)
         vaults = None
+        queue = None
+        if engine is not None and settings.farm_id and settings.audience == 'user':
+            from hearth.image_queue import ImageQueue
+            queue = ImageQueue(engine, settings, app.state.inference_executor)
         if engine is not None and settings.farm_id and settings.memory_vault_path and settings.audience == 'admin' and settings.mode != 'test':
             from hearth.memory_vault import VaultProjector
             vaults = VaultProjector(engine, settings)
@@ -62,6 +67,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             yield
         if vaults:
             vaults.close()
+        if queue:
+            queue.close()
         if checks:
             checks.close()
         app.state.inference_executor.shutdown(wait=True)
@@ -130,6 +137,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.include_router(identity_router)
     app.include_router(workspace_router)
+    app.include_router(workers_router)
     app.include_router(head_settings_router)
     app.include_router(providers_router)
     app.include_router(routing_router)

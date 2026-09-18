@@ -1174,6 +1174,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/worker-control/{worker_id}/poll": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Poll */
+        post: operations["poll_api_v1_worker_control__worker_id__poll_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listing */
+        get: operations["listing_api_v1_workers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/workers/{worker_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change */
+        put: operations["change_api_v1_workers__worker_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/workspace": {
         parameters: {
             query?: never;
@@ -3398,6 +3449,20 @@ export interface components {
             /** Error Type */
             type: string;
         };
+        /** WorkerChange */
+        WorkerChange: {
+            /** Desired Service */
+            desired_service?: string | null;
+            /** Paused */
+            paused: boolean;
+            /**
+             * Policy
+             * @enum {string}
+             */
+            policy: "resident" | "shared";
+            /** Revision */
+            revision: number;
+        };
         /** WorkerCommand */
         WorkerCommand: {
             /**
@@ -3435,6 +3500,33 @@ export interface components {
              * @constant
              */
             schema_version: 1;
+        };
+        /** WorkerReport */
+        WorkerReport: {
+            /**
+             * Boot Id
+             * Format: uuid
+             */
+            boot_id: string;
+            /** Observed Revision */
+            observed_revision: number;
+            /** Ready Service */
+            ready_service?: string | null;
+            /**
+             * Reason
+             * @default
+             * @enum {string}
+             */
+            reason: "" | "service_starting" | "service_not_ready" | "recipe_mismatch" | "stop_failed" | "start_failed" | "health_failed" | "head_unavailable";
+            /** Recipe Digest */
+            recipe_digest: string;
+            /** Sequence */
+            sequence: number;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "stopped" | "starting" | "ready" | "failed";
         };
     };
     responses: never;
@@ -5878,6 +5970,96 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["Revision"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    poll_api_v1_worker_control__worker_id__poll_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worker_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkerReport"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listing_api_v1_workers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    change_api_v1_workers__worker_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worker_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkerChange"];
             };
         };
         responses: {

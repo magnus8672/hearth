@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "checks": [
+    "user: HTTPS, API readiness, worker and queue bundle",
+    "admin: HTTPS, API readiness, worker and queue bundle"
+  ],
+  "worker": {
+    "worker": "media-worker",
+    "online": true,
+    "state": "ready",
+    "desired": "fooocus",
+    "ready_service": "fooocus",
+    "paused": false,
+    "observed_current": true,
+    "execution_state": "idle",
+    "qualified": true,
+    "migration": "0023"
+  },
+  "host": {
+    "native_worker_rss_kib": 12492,
+    "worker_enabled": "enabled",
+    "fooocus_independent_boot": "disabled"
+  },
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -1,5 +1,9 @@
 # Testing hearth
 
+## Managed workers and queued images
+
+Open Administration → Workers to inspect media-worker. Pause its queue, submit two pictures from Images, then resume. One picture should render while the other waits. Cancelling the waiting picture should leave the active render alone. While idle, select **Unload and pause**, observe the service stop, select Fooocus again, wait for ready and resume. Keep the resident policy for normal operation; shared mode is for deliberately alternating approved services on one GPU. media-worker currently has one adopted service. See [worker behavior, installation, evidence and limitations](implementation/MANAGED_WORKERS.md).
+
 ## Active test host
 
 All deployment and runtime testing now targets **10.20.30.10**. The laptop is used for source editing, Git and browser/client access. Do not start `Start-Hearth.ps1`, the local QEMU appliance or local hearth-managed providers. The old farm data is retained.

@@ -196,6 +196,8 @@ def create_target(engine, settings, principal, data):
         if not pool:
             pool = uuid4()
             db.execute(text('INSERT INTO provider_pools(id,farm_id,name) VALUES(:id,:farm,:name)'), {'id': pool, 'farm': principal.farm_id, 'name': resource_pool})
+        from hearth.workers import require_binding
+        require_binding(db, connection_id, pool)
         target = uuid4()
         db.execute(text('INSERT INTO inference_targets(id,farm_id,connection_id,resource_pool_id,model_id,protocol,residency_policy) VALUES(:id,:farm,:connection,:pool,:model,:protocol,:residency)'),
             {'id': target, 'farm': principal.farm_id, 'connection': connection_id, 'pool': pool, 'model': data.model_id, 'protocol': data.protocol, 'residency': data.residency_policy})
@@ -204,9 +206,12 @@ def create_target(engine, settings, principal, data):
     return {'id': target, 'revision': 1, 'state': 'configured'}
 
 
-def claim_pool(db, row, run_id, owner_id):
+def claim_pool(db, row, run_id, owner_id, *, preparing=False):
     if row['active_run_id']:
         raise HTTPException(409, 'This resource group is occupied or awaiting confirmation that its model is idle.')
+    if not preparing:
+        from hearth.workers import require_available
+        require_available(db, row)
     db.execute(text("UPDATE provider_pools SET active_run_id=:run,active_owner_id=:owner,execution_state='running',lease_until=now()+interval '240 seconds' WHERE id=:pool"),
         {'run': run_id, 'owner': owner_id, 'pool': row['resource_pool_id']})
 
@@ -396,6 +401,9 @@ def retarget(request: Request, target_id: UUID, data: RetargetProvider):
         pool_id = pool['id'] if pool else uuid4()
         if not pool:
             db.execute(text('INSERT INTO provider_pools(id,farm_id,name) VALUES(:id,:farm,:name)'), {'id': pool_id, 'farm': principal.farm_id, 'name': resource_pool})
+        from hearth.workers import require_binding
+        require_binding(db, connection_id, pool_id)
+        require_binding(db, current['connection_id'], pool_id)
         db.execute(text("UPDATE inference_targets SET connection_id=:connection,resource_pool_id=:pool,model_id=:model,protocol=:protocol,residency_policy=:residency,revision=revision+1,state='configured',features='[]',profile='{}',verified_until=NULL,probed_at=NULL,reason='Connection changed. Verify before dispatch.' WHERE id=:id"), {'id': target_id, 'connection': connection_id, 'pool': pool_id, 'model': data.model_id, 'protocol': data.protocol, 'residency': data.residency_policy})
         db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'provider.retargeted',jsonb_build_object('target_id',CAST(:id AS text)))"), {'farm': principal.farm_id, 'actor': principal.id, 'id': str(target_id)})
     return {'id': target_id, 'revision': data.revision+1, 'state': 'configured'}

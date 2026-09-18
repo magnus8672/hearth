@@ -48,7 +48,7 @@ def bff(databases, monkeypatch):
         users = db.execute(text('SELECT id FROM users WHERE farm_id=:farm'), {'farm': farm}).scalars().all()
     for user in users:
         with scoped_session(app_engine, user, farm) as db:
-            for table in ['tool_invocations', 'mcp_credentials', 'client_runs', 'client_keys']:
+            for table in ['image_queue', 'managed_workers', 'tool_invocations', 'mcp_credentials', 'client_runs', 'client_keys']:
                 db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
             db.execute(text('UPDATE image_jobs SET batch_run_id=NULL WHERE batch_run_id IS NOT NULL'))
             db.execute(text('DELETE FROM image_plans'))

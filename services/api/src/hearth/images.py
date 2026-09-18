@@ -7,14 +7,14 @@ from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import text
 
-from hearth import conversation_media, image_transport
+from hearth import conversation_media, image_queue, image_transport
 from hearth.chat import identity_current, member, session_current
 from hearth.contracts import ImageGeneration
 from hearth.database import scoped_session
 from hearth.image_settings import validate_settings
 from hearth.inference import ProviderError
 from hearth.provider_health import record_failure
-from hearth.providers import claim_pool, credential_for, release_pool, target_record, transport_settings
+from hearth.providers import credential_for, release_pool, target_record, transport_settings
 
 router = APIRouter()
 
@@ -26,7 +26,7 @@ class CreateImage(BaseModel):
 
 
 def reconcile(db):
-    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
+    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM image_queue q WHERE q.id=j.id AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
     reconciled = set()
     for row in rows:
         execution = row['batch_run_id'] or row['id']
@@ -62,7 +62,7 @@ def images(request: Request):
 @router.post('/api/v1/images', tags=['images'], status_code=202)
 def generate(request: Request, data: CreateImage):
     principal = member(request, mutation=True)
-    engine, settings = request.app.state.engine, request.app.state.settings
+    engine = request.app.state.engine
     payload = data.request.model_dump(mode='json')
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         workspace = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
@@ -85,22 +85,24 @@ def generate(request: Request, data: CreateImage):
             validate_settings(data.request, row['profile'])
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
-        claim_pool(db, row, data.request.id, principal.id)
-        db.execute(text('INSERT INTO image_jobs(id,farm_id,owner_id,workspace_id,target_id,request,session_hash,authorization_version) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:session,:version)'),
+        db.execute(text("INSERT INTO image_jobs(id,farm_id,owner_id,workspace_id,target_id,request,session_hash,authorization_version,status) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:session,:version,'queued')"),
             {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': row['id'], 'request': json.dumps(payload), 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
-    request.app.state.inference_executor.submit(execute, engine, settings, principal, row, data.request)
-    return {'id': data.request.id, 'status': 'running'}
+        image_queue.enqueue(db, principal, row, data.request.id)
+    return {'id': data.request.id, 'status': 'queued'}
 
 
 @router.post('/api/v1/images/{job_id}/cancel', tags=['images'])
 def cancel(request: Request, job_id: UUID):
     principal = member(request, mutation=True)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        queued = db.execute(text('SELECT state FROM image_queue WHERE id=:id AND owner_id=:owner FOR UPDATE'), {'id': job_id, 'owner': principal.id}).scalar_one_or_none()
         row = db.execute(text('SELECT status FROM image_jobs WHERE id=:id FOR UPDATE'), {'id': job_id}).scalar_one_or_none()
         if row is None:
             raise HTTPException(404, 'This image is not available in your workspace.')
         if row in {'queued', 'running'}:
             db.execute(text('UPDATE image_jobs SET cancel_requested=true WHERE id=:id'), {'id': job_id})
+            if queued == 'queued':
+                image_queue.finish_waiting(db, job_id, 'cancelled', 'Removed from the queue.')
     return {'cancel_requested': row in {'queued', 'running'}}
 
 

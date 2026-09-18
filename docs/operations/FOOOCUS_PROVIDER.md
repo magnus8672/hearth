@@ -1,5 +1,7 @@
 # Fooocus on media-worker
 
+Update, 18 September 2026: media-worker now runs the [native service worker](../implementation/MANAGED_WORKERS.md). `hearth-worker.service` owns desired state and Fooocus's independent boot startup is disabled. Fooocus remains the selected resident service and the gallery queue is enabled. Use Administration → Workers to pause, drain, unload or restart it. The original provider address, approved HTTP policy, model, credentials and capability bindings are unchanged. The historical installation details below describe the initial external-service setup.
+
 Prepared 17 September 2026 at the user's request. media-worker is the external image machine at `10.20.30.20`; the hearth head remains `10.20.30.10`. The user subsequently registered and assigned the provider through Administration. The [advanced settings update](../implementation/IMAGE_OPTIONS.md) requalified that existing target and preserved its assignments. The registration instructions below remain useful for another installation; do not add a duplicate to this farm.
 
 ## Register through Administration

@@ -2,17 +2,30 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/signal"
 	"runtime"
+	"syscall"
 
 	"hearth.local/worker/internal/host"
+	"hearth.local/worker/internal/manager"
 )
 
 func main() {
+	if len(os.Args) == 3 && os.Args[1] == "serve" {
+		ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer cancel()
+		if err := manager.Run(ctx, os.Args[2]); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "Usage: hearth-worker doctor | version")
+		fmt.Fprintln(os.Stderr, "Usage: hearth-worker doctor | version | serve /absolute/config.json")
 		os.Exit(2)
 	}
 	switch os.Args[1] {

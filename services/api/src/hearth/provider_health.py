@@ -52,7 +52,7 @@ def prepare_startup(engine, settings):
     """Fence idle, qualified targets before serving the admin application."""
     with scoped_session(engine, SYSTEM, settings.farm_id) as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:farm,0))'), {'farm': str(settings.farm_id)})
-        pending = db.execute(text("SELECT id,revision FROM inference_targets WHERE "
+        pending = db.execute(text("SELECT id,revision FROM inference_targets WHERE NOT EXISTS(SELECT 1 FROM managed_workers w WHERE w.pool_id=inference_targets.resource_pool_id) AND "
                                "(state='ready' OR (state='configured' AND reason=:reason)) AND jsonb_array_length(features)>0"),
                           {'reason': STARTUP}).all()
         for target_id, revision in pending:

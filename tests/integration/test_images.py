@@ -40,7 +40,7 @@ def wait_image(user, timeout=5):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         job = user.get('/api/v1/images').json()['items'][0]
-        if job['status'] != 'running':
+        if job['status'] not in {'queued', 'running'}:
             return job
         time.sleep(.02)
     raise AssertionError('Image job did not settle')

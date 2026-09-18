@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "head": "10.20.30.10",
+  "worker": "10.20.30.20",
+  "isolated_vm_tests": {
+    "passed": 69,
+    "skipped": 3
+  },
+  "native_go_tests": {
+    "passed": 4,
+    "execution_host": "10.20.30.10"
+  },
+  "browser_fixtures": {
+    "passed": 4,
+    "target": "deployed TLS bundles",
+    "api": "explicit fixtures"
+  },
+  "live_gpu_queue": {
+    "passed": 1,
+    "completed_pngs": 2,
+    "width": 1024,
+    "height": 1024,
+    "cancelled_before_dispatch": 1,
+    "concurrent_running_max": 1,
+    "elapsed_seconds": 34.35,
+    "storage": "temporary PostgreSQL database, removed after test"
+  },
+  "shared_contract_cases": 188,
+  "typecheck": "passed",
+  "build": "passed",
+  "unqualified": [
+    "real multi-engine switching",
+    "3D adapter and preview",
+    "automatic enrollment and mutual TLS",
+    "package provisioning",
+    "universal capability queue",
+    "multi-physical-worker stress and failure recovery"
+  ],
+  "release_gates_changed": false,
+  "cancellation_during_readiness": "passed",
+  "documentation": "114 Markdown files, 986 local links and 119 original snapshot hashes pass",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}
