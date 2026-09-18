@@ -36,7 +36,7 @@ def execute_batch(engine, settings, principal, plan, target, jobs):
                     state, reason, uncertain = 'interrupted', 'A batch item was already started. It will not be replayed.', True
                     break
                 db.execute(text("UPDATE image_jobs SET status='running' WHERE id=:id"), {'id': job.id})
-                db.execute(text("UPDATE conversation_images SET status='running' WHERE id=:id AND status='queued'"), {'id': job.id})
+                db.execute(text("UPDATE conversation_images SET status='running',reason=NULL WHERE id=:id AND status='queued'"), {'id': job.id})
             outcome = images.execute(engine, settings, principal, target, job)
             if outcome is None:
                 state, reason, uncertain = 'interrupted', 'An image execution changed. Check the provider before trying again.', True

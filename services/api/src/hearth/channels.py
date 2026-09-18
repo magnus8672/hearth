@@ -94,7 +94,7 @@ def read_channel(request: Request, channel_id: UUID):
         result = room(db, channel_id)
         # Any current participant may reconcile public output after a lost
         # execution, but cannot replay another user's prompt or clear its pool.
-        stale = db.execute(text("SELECT m.id,m.request_id,t.resource_pool_id,m.generation_phase FROM channel_messages m JOIN inference_targets t ON t.id=m.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE m.channel_id=:id AND m.status='running' AND ((m.generation_phase<>'image_handoff' AND (p.active_run_id IS DISTINCT FROM m.request_id OR p.lease_until<now())) OR (m.generation_phase='image_handoff' AND m.phase_changed_at<now()-interval '60 seconds'))"), {'id': channel_id}).mappings().all()
+        stale = db.execute(text("SELECT m.id,m.request_id,t.resource_pool_id,m.generation_phase FROM channel_messages m JOIN inference_targets t ON t.id=m.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE m.channel_id=:id AND m.status='running' AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=m.request_id AND q.state='queued') AND ((m.generation_phase<>'image_handoff' AND (p.active_run_id IS DISTINCT FROM m.request_id OR p.lease_until<now())) OR (m.generation_phase='image_handoff' AND m.phase_changed_at<now()-interval '60 seconds'))"), {'id': channel_id}).mappings().all()
         for item in stale:
             conversation_media.interrupt(db, item['request_id'], 'Image generation was interrupted. Check the provider before retrying.')
             db.execute(text("UPDATE channel_messages SET status='interrupted',reason='Execution was interrupted. Check the model server before asking again.' WHERE id=:id AND status='running'"), {'id': item['id']})
@@ -158,14 +158,14 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
                     break
                 context.insert(0, {'role': row['role'], 'content': content})
             capability = 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
-            target = None if route_problem else routing.select(db, capability)
+            target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
             assistant_id = uuid4()
             reason = None if target and context else f'No verified {"image" if prompt else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
             if route_problem:
                 reason = route_problem + ' Your message is saved.'
             if not context:
                 target = None
-            if target:
+            if target and capability != 'image.generate':
                 claim_pool(db, target, data.request_id, principal.id)
             db.execute(text("INSERT INTO channel_messages(id,channel_id,farm_id,author_id,display_name,sequence,role,content,status,request_id,target_id,reason,model_id) VALUES(:id,:channel,:farm,:owner,'hearth',:sequence+1,'assistant','',:status,:request,:target,:reason,:model)"), values | {'id': assistant_id, 'status': 'running' if target else 'failed', 'target': target['id'] if target else None, 'reason': reason, 'model': target['model_id'] if target else None})
             if target:
@@ -178,7 +178,7 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
                 if not prompt and not needs_plan:
                     context = routing.context_for(capability, context)
         db.execute(text('UPDATE channels SET revision=revision+1 WHERE id=:id'), {'id': channel_id})
-    if target:
+    if target and target['protocol'] != 'hearth.image.v1':
         request.app.state.inference_executor.submit(execute, engine, settings, principal, data.request_id, target, context)
     return {'id': message_id, 'saved': True, 'assistant_requested': assistant_id is not None}
 

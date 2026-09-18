@@ -26,7 +26,7 @@ class CreateImage(BaseModel):
 
 
 def reconcile(db):
-    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=j.id AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
+    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=COALESCE(j.batch_run_id,j.id) AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
     reconciled = set()
     for row in rows:
         execution = row['batch_run_id'] or row['id']

@@ -82,7 +82,7 @@ def identity_current(engine, settings, principal, session_hash):
 
 def reconcile(db, chat_id):
     # Expiration diagnoses lost execution; it never grants permission to replay.
-    rows = db.execute(text("SELECT r.id,r.assistant_message_id,t.resource_pool_id,p.active_run_id,p.lease_until,m.generation_phase FROM chat_runs r JOIN messages m ON m.id=r.assistant_message_id JOIN inference_targets t ON t.id=r.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE r.conversation_id=:chat AND r.status='running' AND ((r.tool_phase AND r.tool_phase_at<now()-interval '16 minutes') OR (NOT r.tool_phase AND (m.generation_phase<>'image_handoff' AND (p.active_run_id IS DISTINCT FROM r.id OR p.lease_until<now()))) OR (m.generation_phase='image_handoff' AND m.phase_changed_at<now()-interval '60 seconds')) FOR UPDATE OF r"), {'chat': chat_id}).mappings().all()
+    rows = db.execute(text("SELECT r.id,r.assistant_message_id,t.resource_pool_id,p.active_run_id,p.lease_until,m.generation_phase FROM chat_runs r JOIN messages m ON m.id=r.assistant_message_id JOIN inference_targets t ON t.id=r.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE r.conversation_id=:chat AND r.status='running' AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=r.id AND q.state='queued') AND ((r.tool_phase AND r.tool_phase_at<now()-interval '16 minutes') OR (NOT r.tool_phase AND (m.generation_phase<>'image_handoff' AND (p.active_run_id IS DISTINCT FROM r.id OR p.lease_until<now()))) OR (m.generation_phase='image_handoff' AND m.phase_changed_at<now()-interval '60 seconds')) FOR UPDATE OF r"), {'chat': chat_id}).mappings().all()
     for row in rows:
         conversation_media.interrupt(db, row['id'], 'Image generation was interrupted. Check the provider before retrying.')
         db.execute(text("UPDATE chat_runs SET status='interrupted',reason='Execution was interrupted. Check the model server before starting a new conversation.',finished_at=now() WHERE id=:id"), {'id': row['id']})
@@ -313,10 +313,11 @@ def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, fro
         if use_vision:
             capability = 'vision.describe'
         context = vision.with_images(db, chat_id, context, use_vision)
-        target = routing.select(db, capability)
+        target = routing.select(db, capability, queued=capability == 'image.generate')
         if target is None:
             raise HTTPException(409, f'No verified model for {capability} is idle. Check its route in Administration, or wait for the current job.')
-        claim_pool(db, target, data.request_id, principal.id)
+        if capability != 'image.generate':
+            claim_pool(db, target, data.request_id, principal.id)
         if not from_queue:
             consume_note(db, data)
         user_message, assistant_message = uuid4(), uuid4()
@@ -339,13 +340,13 @@ def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, fro
         db.execute(text("INSERT INTO outbox(id,farm_id,owner_id,aggregate_id,aggregate_version,event_type,payload) VALUES(gen_random_uuid(),:farm,:owner,:id,1,'chat.turn.accepted',CAST(:payload AS jsonb))"), {'farm': principal.farm_id, 'owner': principal.id, 'id': data.request_id, 'payload': json.dumps({'run_id': str(data.request_id), 'target_id': str(target['id'])})})
         if from_queue:
             db.execute(text("UPDATE chat_requests SET state='dispatched',reason=NULL WHERE id=:id"), {'id': data.request_id})
-    return {'id': data.request_id, 'status': 'running'}, (target, context)
+    return {'id': data.request_id, 'status': 'running'}, None if prompt else (target, context)
 
 
 def dispatch_pending(engine, settings, principal, chat_id):
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         pending = db.execute(text("SELECT * FROM chat_requests WHERE conversation_id=:id AND state='queued'"), {'id': chat_id}).mappings().one_or_none()
-        if not pending:
+        if not pending or db.execute(text("SELECT id FROM chat_runs WHERE conversation_id=:id AND status='running'"), {'id': chat_id}).first():
             return
         row = conversation(db, chat_id)
     try:

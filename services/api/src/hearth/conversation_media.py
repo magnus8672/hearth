@@ -137,7 +137,7 @@ def image_shape(content):
     return 'square'
 
 
-def admit(db, principal, session_hash, target, run_id, prompt, *, shape='square', negative_prompt='', planning_model=None, source_image_id=None, message_id=None, channel_message_id=None, channel_id=None, batch_run_id=None, batch_index=1, batch_count=1):
+def admit(db, principal, session_hash, target, run_id, prompt, *, shape='square', negative_prompt='', planning_model=None, source_image_id=None, message_id=None, channel_message_id=None, channel_id=None, batch_run_id=None, batch_index=1, batch_count=1, enqueue=True):
     workspace = db.execute(text('SELECT id FROM workspaces')).scalar_one()
     # Serialize the quota without taking workspace/target locks in opposite order
     # to the standalone image endpoint. The target pool is already locked.
@@ -156,6 +156,11 @@ def admit(db, principal, session_hash, target, run_id, prompt, *, shape='square'
     if batch_run_id:
         db.execute(text("UPDATE image_jobs SET batch_run_id=:parent,status='queued' WHERE id=:id"), {'id': run_id, 'parent': batch_run_id})
         db.execute(text("UPDATE conversation_images SET batch_run_id=:parent,batch_index=:position,batch_count=:count,status='queued' WHERE id=:id"), {'id': run_id, 'parent': batch_run_id, 'position': batch_index, 'count': batch_count})
+    db.execute(text("UPDATE image_jobs SET status='queued',reason='Waiting in the shared GPU queue.' WHERE id=:id"), {'id': run_id})
+    db.execute(text("UPDATE conversation_images SET status='queued',reason='Waiting in the shared GPU queue.' WHERE id=:id"), {'id': run_id})
+    if enqueue:
+        from hearth.image_queue import enqueue as enqueue_job
+        enqueue_job(db, principal, target, run_id)
     table = 'channel_messages' if channel_id else 'messages'
     db.execute(text(f"UPDATE {table} SET generation_phase='image_rendering',phase_changed_at=now(),content='' WHERE id=:id"), {'id': channel_message_id or message_id})
     return data
@@ -198,7 +203,7 @@ def finish(db, run_id, state, reason, metadata, artifact):
     """Commit the run, its message, and any published PNG together."""
     values = {'id': run_id, 'status': state, 'reason': reason, 'sha': metadata.get('sha256') if metadata else None,
               'image': artifact if state == 'completed' else None}
-    db.execute(text("UPDATE conversation_images SET status=:status,reason=:reason,sha256=:sha,image=:image WHERE id=:id AND status='running'"), values)
+    db.execute(text("UPDATE conversation_images SET status=:status,reason=:reason,sha256=:sha,image=:image WHERE id=:id AND status IN ('queued','running')"), values)
     if db.execute(text('SELECT batch_run_id FROM image_jobs WHERE id=:id'), {'id': run_id}).scalar_one_or_none():
         return  # The batch coordinator settles its parent after all children.
     caption = 'Generated image (description only; image pixels are not included in the text model context): ' + (db.execute(text("SELECT request->>'prompt' FROM image_jobs WHERE id=:id"), {'id': run_id}).scalar_one()) if state == 'completed' else ''

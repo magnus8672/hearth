@@ -77,12 +77,12 @@ def candidates(db, capability):
     return [row['id'] for row in rows if readiness(capability, row)[0]]
 
 
-def select(db, capability, *, tools=False):
+def select(db, capability, *, tools=False, queued=False):
     require_capability(db, capability)
     for target_id in candidates(db, capability):
-        item = target_record(db, target_id, lock=True, idle_only=True)
+        item = target_record(db, target_id, lock=True, idle_only=not queued)
         # Recheck under the same row locks used by disable, retarget and probes.
-        if item and readiness(capability, item)[0] and not item['active_run_id'] and (not tools or 'tools' in item['features']):
+        if item and readiness(capability, item)[0] and (queued or not item['active_run_id']) and (not tools or 'tools' in item['features']):
             return item
     return None
 

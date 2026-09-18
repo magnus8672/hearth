@@ -1,0 +1,108 @@
+{
+  "recorded_at": "2026-09-18T15:07:01.613698+00:00",
+  "source_baseline": "556ae67",
+  "scope": "Shared GPU queue for private-chat and channel images, direct requests and locally planned batches.",
+  "backend": {
+    "host": "10.20.30.10",
+    "passed": 126,
+    "failed": 0,
+    "opt_in_live_tests_deselected": 3,
+    "storage": "Temporary isolated PostgreSQL database on the existing VM, removed after testing; separate app/migration roles and forced RLS.",
+    "fixtures": "Synthetic OIDC, worker heartbeat, image and geometry transports. No actual member content used.",
+    "new_cases": [
+      "test_two_members_geometry_gallery_and_conversation_share_switching_and_fairness[False-private]",
+      "test_two_members_geometry_gallery_and_conversation_share_switching_and_fairness[False-channel]",
+      "test_two_members_geometry_gallery_and_conversation_share_switching_and_fairness[True-private]",
+      "test_two_members_geometry_gallery_and_conversation_share_switching_and_fairness[True-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[stop-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[stop-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[session-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[session-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[expire-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[expire-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[revoke-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[revoke-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[worker_failed-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[worker_failed-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[resident-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[resident-channel]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[restart-private]",
+      "test_waiting_conversation_settles_visibly_without_rendering_or_replay[restart-channel]",
+      "test_cancel_waiting_batch_behind_paused_gallery_preserves_other_work[private-stop]",
+      "test_cancel_waiting_batch_behind_paused_gallery_preserves_other_work[private-steer]",
+      "test_cancel_waiting_batch_behind_paused_gallery_preserves_other_work[channel-stop]",
+      "test_cancel_waiting_batch_behind_paused_gallery_preserves_other_work[channel-leave]",
+      "test_undispatched_conversation_resumes_once_after_bff_restart[private]",
+      "test_undispatched_conversation_resumes_once_after_bff_restart[channel]"
+    ]
+  },
+  "browser": {
+    "origin": "https://hearth.example.invalid",
+    "bundles": "Actual deployed bundles with API response fixtures",
+    "passed": 12,
+    "skipped": 1,
+    "failed": 0,
+    "checks": [
+      "Private and shared queue/preparation/failure visibility and stop control",
+      "Responsive workspace and scroll following regressions",
+      "Geometry upload/error UI regressions"
+    ]
+  },
+  "source_checks": {
+    "typescript": "passed",
+    "production_bundles": "passed; existing lazy Three.js chunk-size warning",
+    "ruff_changed_python": "passed on VM",
+    "diff_whitespace": "passed"
+  },
+  "deployment": {
+    "host": "10.20.30.10",
+    "root": "/opt/hearth",
+    "project": "hearth-head",
+    "backup": "/opt/hearth/.hearth/before-conversation-queue-20260918T150444Z",
+    "active_requests_before_restart": 0,
+    "services_recreated": [
+      "api",
+      "user-api"
+    ],
+    "migration": "0025 unchanged",
+    "https_user_api": "ready",
+    "https_admin_api": "ready",
+    "worker_configuration": "Shared GPU policy preserved; no manual service change for deployment",
+    "served_bundle_checks": "Both HTTPS index documents matched the local production builds byte for byte; running API imports confirmed queued admission and maintenance code",
+    "sha256": {
+      "services/api/src/hearth/image_queue.py": "21386b0ab7247eea6d93535469dbc1b5925c312e68c35dc518a1d2cbd66fff55",
+      "services/api/src/hearth/conversation_media.py": "a8ee3ffd9cbb4726cb64dd591605b8b3d1551494fda18ebe25cf0c03b607fb9c",
+      "services/api/src/hearth/image_planning.py": "50783e590313c62a17a33d642c511176af8f613f47574c4bd8fdc7f206664246",
+      "services/api/src/hearth/chat.py": "d5c134273738fd65c5efe87f96038d925bf8fbbb02730add254e1501de044066",
+      "services/api/src/hearth/channels.py": "be05be3a74ccb73e907dafd77585148df2bdeb12f419a0921fa903970a9123fb",
+      "apps/user-web/dist/index.html": "53e3b6ad7f915c7d41dccf4a1e350ed13431359b4cdc40b26467bf6a944c186b",
+      "apps/admin-web/dist/index.html": "ca066e235d107b0668ef4738cd334fb310feaa44aafed3a33f3221b3a70acb93"
+    }
+  },
+  "live_observation": {
+    "scope": "Read-only metadata for a naturally occurring shared-channel request after deployment. No live synthetic messages were submitted and no user prompt or image content was read.",
+    "created_at": "2026-09-18T15:06:15.748204Z",
+    "finished_at": "2026-09-18T15:06:43.953310Z",
+    "queue_state": "finished",
+    "image_job_status": "completed",
+    "channel_publication_status": "completed",
+    "channel_image_artifact_saved": true,
+    "worker_before": "ready; shared policy; TRELLIS selected and ready",
+    "worker_after": "ready; Fooocus selected and ready; revision 21 observed at revision 21"
+  },
+  "behavior": [
+    "Queue admission does not require an idle media GPU or already selected image service.",
+    "Planned batches release text capacity before queuing and retain one GPU reservation for their bounded children.",
+    "Cross-owner fairness spans geometry, gallery and conversations.",
+    "Waiting jobs survive BFF restart; claimed/dispatched work is never replayed after lost execution.",
+    "Cancellation and expired access settle waiting messages even behind paused work; private steering is scheduled without browser polling."
+  ],
+  "limits": [
+    "Mixed-owner contention, private chat, cancellation and failure cases used isolated fixtures. A real shared-channel generation and worker transition were observed separately through metadata, as recorded above.",
+    "Text planning still requires its separately qualified text target to be available.",
+    "Resident-only worker policy still rejects requests requiring a different service with an explicit reason.",
+    "Text, audio and client API requests are outside this media queue.",
+    "Release-gate statuses remain unchanged."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

@@ -16,7 +16,7 @@ from hearth.contracts import ImagePromptPlan
 from hearth.database import scoped_session
 from hearth.inference import ProviderError, chat_stream
 from hearth.provider_health import record_failure
-from hearth.providers import claim_pool, credential_for, release_pool, target_record, transport_settings
+from hearth.providers import credential_for, release_pool, target_record, transport_settings
 
 INSTRUCTIONS = '''You prepare a short prompt for a local text-to-image model.
 The user has requested a new image. Resolve their latest request from the supplied
@@ -56,9 +56,8 @@ def candidate(db):
     ids = routing.candidates(db, 'image.generate')
     for target_id in ids:
         row = target_record(db, target_id)
-        if not row['active_run_id']:
-            return row
-    raise HTTPException(409, 'No verified image model is idle. Check Providers or wait for its current job.')
+        return row
+    raise HTTPException(409, 'No verified image model is assigned. Check the Images route in Administration.')
 
 
 def admit(db, principal, session_hash, run_id, planner, image_target, context, request_text, reference, *, message_id, chat_id=None, channel_id=None):
@@ -208,7 +207,7 @@ def execute(engine, settings, principal, plan, target):
 
 
 def handoff(engine, settings, principal, plan, planner, proposal):
-    from hearth import images
+    from hearth import image_queue
     from hearth.chat import identity_current, session_current
     try:
         identity_ok = identity_current(engine, settings, principal, plan['session_hash'])
@@ -224,14 +223,14 @@ def handoff(engine, settings, principal, plan, planner, proposal):
                 raise HTTPException(409, 'The image model changed during planning. Verify it before asking again.')
             if not db.execute(text("SELECT target_id FROM capability_bindings WHERE capability_id='image.generate' AND target_id=:id"), {'id': image_target['id']}).first():
                 raise HTTPException(409, 'This image capability was unassigned during planning.')
-            claim_pool(db, image_target, plan['id'], principal.id)
             descriptions = proposal.descriptions()
             jobs = []
             for index, description in enumerate(descriptions, 1):
                 jobs.append(conversation_media.admit(db, principal, plan['session_hash'], image_target, plan['id'] if index == 1 else uuid4(), description.prompt,
                     shape=description.shape, negative_prompt=description.negative_prompt, planning_model=planner['model_id'], source_image_id=plan['source_image_id'],
                     message_id=plan['message_id'] if not plan['channel_id'] else None, channel_message_id=plan['message_id'] if plan['channel_id'] else None, channel_id=plan['channel_id'],
-                    batch_run_id=plan['id'] if len(descriptions) > 1 else None, batch_index=index, batch_count=len(descriptions)))
+                    batch_run_id=plan['id'] if len(descriptions) > 1 else None, batch_index=index, batch_count=len(descriptions), enqueue=False))
+            image_queue.enqueue(db, principal, image_target, plan['id'])
             runs = 'channel_runs' if plan['channel_id'] else 'chat_runs'
             execution_receipt = routing.receipt(db, 'image.generate', image_target)
             execution_receipt['planner'] = {'target_id': str(plan['planning_target_id']), 'target_revision': plan['planning_revision']}
@@ -248,8 +247,4 @@ def handoff(engine, settings, principal, plan, planner, proposal):
             if row == 'handoff':
                 terminal(db, plan, 'failed', reason)
         return
-    if len(jobs) == 1:
-        images.execute(engine, settings, principal, image_target, jobs[0])
-    else:
-        from hearth.image_batches import execute_batch
-        execute_batch(engine, settings, principal, plan, image_target, jobs)
+    # The durable GPU queue owns preparation and rendering after this commit.

@@ -4,7 +4,7 @@ import path from 'node:path';
 const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
 const messages = () => Array.from({ length: 45 }, (_, i) => ({ id: `m${i}`, role: i % 2 ? 'assistant' : 'user', display_name: 'Member', content: `Message ${i}: ` + 'A saved conversation with enough history to scroll. '.repeat(8), status: 'completed', reason: null }));
 async function fixture(page: Page) {
-  const state = { messages: messages() };
+  const state = { messages: messages(), runs: [] as Record<string, unknown>[] };
   // Optional predeployment check of compiled assets in the browser, on the VM origin.
   if (process.env.HEARTH_BROWSER_LOCAL_BUILD === '1') await page.route(origin + '/**', async route => {
     const pathname = new URL(route.request().url()).pathname;
@@ -17,7 +17,7 @@ async function fixture(page: Page) {
     const url = new URL(route.request().url()).pathname;
     if (url === '/api/v1/session') return route.fulfill({ json: { id: 'layout-fixture', display_name: 'Layout reviewer', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: origin + ':8443' } });
     if (url === '/api/v1/chats') return route.fulfill({ json: { items: [{ id: 'first', title: 'Long conversation', revision: 1 }, { id: 'second', title: 'Other conversation', revision: 1 }] } });
-    if (/\/chats\/(first|second)$/.test(url)) return route.fulfill({ json: { id: url.split('/').at(-1), title: 'Long conversation', revision: 1, messages: state.messages, runs: [] } });
+    if (/\/chats\/(first|second)$/.test(url)) return route.fulfill({ json: { id: url.split('/').at(-1), title: 'Long conversation', revision: 1, messages: state.messages, runs: state.runs } });
     if (url.endsWith('/channels')) return route.fulfill({ json: { items: [{ id: 'room', name: 'Workshop', joined: true }] } });
     if (url.endsWith('/channels/room')) return route.fulfill({ json: { id: 'room', name: 'Workshop', revision: 1, messages: state.messages } });
     if (/\/geometry\/\d+\/model$/.test(url)) {
@@ -33,6 +33,27 @@ async function fixture(page: Page) {
 async function bottom(page: Page, expected = true) {
   await expect.poll(() => page.locator('.chat-transcript').evaluate(element => element.scrollHeight - element.scrollTop - element.clientHeight < 5)).toBe(expected);
 }
+
+for (const scope of ['chat', 'channels']) test(`${scope}: queued GPU work and failures are visible and stoppable`, async ({ page }) => {
+  const state = await fixture(page);
+  const picture = { request: { id: 'queued-image', model: 'fooocus/fixture', prompt: 'A fox', shape: 'square', steps: 20, seed: 1 }, status: 'queued', progress: 0, reason: 'The GPU queue is paused. Your request is saved.' };
+  const message = { ...state.messages[1], id: 'queued-reply', role: 'assistant', content: '', status: 'running', images: [picture], image: picture, can_stop: true, request_id: 'queued-image' };
+  state.messages = [message];
+  state.runs = [{ id: 'queued-image', assistant_message_id: message.id, status: 'running', protocol: 'hearth.image.v1', capability_id: 'image.generate', cancel_requested: false }];
+  await page.goto(origin + '/#' + scope);
+  await page.getByRole('button', { name: scope === 'chat' ? 'Long conversation' : '# Workshop' }).click();
+  await expect(page.getByText('Waiting in the GPU queue…', { exact: true })).toBeVisible();
+  await expect(page.getByText(picture.reason, { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Stop response', exact: true })).toBeVisible();
+  picture.reason = 'Preparing the selected GPU service…';
+  await expect(page.getByText(picture.reason, { exact: true })).toBeVisible();
+  picture.status = 'running'; picture.reason = ''; picture.progress = 5;
+  await expect(page.getByRole('progressbar', { name: 'Image generation progress' })).toHaveAttribute('value', '5');
+  picture.status = 'failed'; picture.reason = 'The GPU worker needs attention. Check Workers in Administration before retrying.';
+  message.status = 'failed'; state.runs[0].status = 'failed';
+  await expect(page.getByText('Image needs attention', { exact: true })).toBeVisible();
+  await expect(page.getByText(picture.reason, { exact: true })).toBeVisible();
+});
 
 for (const route of ['chat', 'channels']) test(`${route}: open at bottom, follow large replies, preserve scrollback and switch`, async ({ page }) => {
   const state = await fixture(page);

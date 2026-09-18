@@ -4,6 +4,14 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0025**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Shared GPU queue for conversations — 18 September
+
+Private-chat and shared-channel image generation now joins the durable gallery/geometry queue. Direct images and planned batches wait for capacity, follow owner fairness, and use the worker’s approved shared-GPU service switching. Queue state is visible in the conversation. Cancellation, steering, channel departure, lost access, expiry and lost-execution recovery settle the associated messages as well as the jobs. Undispatched work survives restart; dispatched work is never blindly replayed. No database migration or release gate status change was needed.
+
+Validation passed 126 isolated VM backend cases and 12 deployed-bundle browser cases. A real channel request created at 15:06:15 UTC completed at 15:06:43 UTC with its shared image saved, after media-worker changed from TRELLIS to Fooocus and reported worker revision 21 ready. This live observation used metadata only; mixed-owner contention and failure cases used fixtures.
+
+See [implementation and bounds](MANAGED_WORKERS.md#conversation-queue-integration--18-september-2026) and [validation](../../evidence/conversation-queue/2026-09-18/validation.json). The earlier gallery-only limitation in the responsive-workspace evidence is superseded by this change.
+
 ## Responsive workspace and channel routing — 18 September
 
 The wide-screen workspace cap is removed. Main work panes have saved sizing/collapse controls, private notes dock right or below, galleries use available columns, and expanded 3D previews resize their WebGL canvas. Private/shared transcripts follow the latest content on entry and while reading at the bottom, with scrollback and an explicit return control.

@@ -16,7 +16,7 @@ The current workspace fills wide displays. Private chat, channels, image setting
 
 Private and channel transcripts open at the newest message and follow replies and media growth while already at the bottom. Scrolling back pauses following; **Jump to latest** restores it. Sending a message also returns to the latest content.
 
-Direct creation requests now accept both “me” and “us,” including `@hearth make us an image of a ford F150 please`. Channel requests still require an explicit mention and use the shared capability router. Quotes, negation and requests for prompts remain text; contextual images and bounded plural requests retain local planning. Existing qualification, permissions, resource availability and joined-channel publication rules apply. This does not add automatic worker service switching or a channel job queue.
+Direct creation requests now accept both “me” and “us,” including `@hearth make us an image of a ford F150 please`. Channel requests still require an explicit mention and use the shared capability router. Quotes, negation and requests for prompts remain text; contextual images and bounded plural requests retain local planning. Existing qualification, permissions, resource availability and joined-channel publication rules apply. A subsequent [conversation queue integration](MANAGED_WORKERS.md#conversation-queue-integration--18-september-2026) now queues images from private chat and channels and performs service switching under the worker’s approved shared policy.
 
 See [workspace validation](../../evidence/workspace/2026-09-18/validation.json) for source checks, isolated VM backend tests and browser fixtures. Provider rendering and real member identity are distinct from these fixture results.
 

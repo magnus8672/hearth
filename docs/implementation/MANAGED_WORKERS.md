@@ -20,9 +20,19 @@ PostgreSQL migration `0023` adds content-free queue metadata and operator-adopte
 
 Queued requests survive head restarts. A claimed or dispatched request is never automatically replayed. Lost execution holds the existing pool reservation; expiration diagnoses interruption, not proof that GPU work stopped. The provider's confirmed cancellation/release receipt or the existing explicit recovery workflow releases execution capacity. Queued cancellation is immediate; running cancellation waits for the provider. Idempotent requests retain their original IDs and deletion tombstones.
 
-The durable queue covers **private image and geometry galleries**. Chat/channel image batches, text, speech, transcription and client API requests still use their existing busy/admission behavior. All existing callers respect an adopted worker's pause, freshness and service readiness before taking its pool. Moving a managed provider to an unrelated group is rejected. This is not yet a universal task scheduler.
+The durable queue covers **private image and geometry galleries plus private-chat and channel image requests**, including locally planned images and batches. Chat and channel image requests now wait behind gallery/model jobs and use the same approved shared-GPU service switching. Text, speech, transcription and client API requests still use their existing busy/admission behavior. All existing callers respect an adopted worker's pause, freshness and service readiness before taking its pool. Moving a managed provider to an unrelated group is rejected. This is not yet a universal task scheduler.
 
 Each worker controls one resource group with up to sixteen approved service definitions. A service may back multiple model targets on its registered provider connection. The worker does not assume Fooocus internals: its local recipe names an exact unit, approved file hashes, an authenticated loopback health endpoint, and an expected response field. Future model drivers can use the same lifecycle boundary with their own typed job/artifact protocols.
+
+## Conversation queue integration — 18 September 2026
+
+Direct image requests enter the queue immediately. Contextual and plural requests first use the text planner, release its capacity, then enqueue their bounded rendering work. A batch occupies one queue position and one fenced GPU reservation for up to four sequential images. Queue limits and fairness apply across gallery, private-chat and channel callers together.
+
+Conversation images display saved waiting, paused/offline, preparing, rendering and terminal failure states. Readers do not confuse waiting work with lost execution. Stopping or steering a queued private request, stopping a channel request, leaving its channel, losing permission/session access, or reaching the 30-minute expiry prevents later rendering. A cancelled batch behind another waiting job is settled without waiting for that job. Private steering continues after cancellation even if the browser leaves the chat page.
+
+Undispatched conversation images survive BFF restarts. Lost starting/dispatched work is marked interrupted and retains an uncertain resource reservation; it is never replayed automatically. Completed batch images remain saved. Existing channel membership checks and private-image ownership still govern publication.
+
+See [conversation queue validation](../../evidence/conversation-queue/2026-09-18/validation.json). This extends the existing queue; it does not add a database migration or permit service switching in resident-only mode.
 
 ## Control and trust
 
