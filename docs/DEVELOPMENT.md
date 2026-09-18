@@ -4,7 +4,7 @@ Updated 18 September 2026. Start with [repository guidance](AGENT_GUIDANCE.md), 
 
 ## Active environment
 
-Edit source and use Git on this workstation. Run head/application integration work on the existing ESXi VM at `10.20.30.10`, SSH user `operator`, checkout `/opt/hearth`, Compose project `hearth-head`. media-worker (`10.20.30.20`, also `operator`) hosts the approved Fooocus and TRELLIS services. The workstation's independent LM Studio at `10.20.30.30:1234` supplies Qwen inference.
+Edit source and use Git on this workstation. Run head/application integration work on the existing ESXi VM at `10.20.30.10`, SSH user `operator`, checkout `/opt/hearth`, Compose project `hearth-head`. media-worker (`10.20.30.20`, also `operator`) hosts the approved Fooocus, TRELLIS and Hunyuan3D 2.0 services. The workstation's independent LM Studio at `10.20.30.30:1234` supplies Qwen inference.
 
 Do not start `Start-Hearth.ps1`, `scripts/start_local.py`, the retired QEMU appliance, or local hearth-managed providers. Preserve the old farm data. Existing accounts, MFA, certificates, configuration and user content on the live farm must survive maintenance. Do not create an additional farm for tests.
 
@@ -59,7 +59,7 @@ ssh operator@10.20.30.10 "cd /opt/hearth && sudo python3 scripts/head.py status"
 
 Follow [ESXi operations](operations/ESX_HEAD.md). On the VM, `sudo python3 scripts/head.py up` rebuilds services and applies migrations; it is a maintenance operation. Preserve private configuration, encryption keys, trust and named volumes, with a backup before migration work. The [fresh-head](operations/HEAD_VM_SETUP.md) and [ZIP](operations/VM_PACKAGE.md) guides do not describe resetting or restoring this farm.
 
-Worker updates require pause/drain, reviewed inventories and signed recipes; see [workers](implementation/MANAGED_WORKERS.md) and [geometry](implementation/LOCAL_GEOMETRY.md). Do not independently start Fooocus and TRELLIS on their shared GPU. External LM Studio loading policy stays under the user's control.
+Worker updates require pause/drain, reviewed inventories and signed recipes; see [workers](implementation/MANAGED_WORKERS.md) and [geometry](implementation/LOCAL_GEOMETRY.md). Do not independently start Fooocus, TRELLIS or Hunyuan on their shared GPU. External LM Studio loading policy stays under the user's control.
 
 ## Optional connector packages
 

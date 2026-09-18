@@ -1,0 +1,213 @@
+{
+  "recorded_at": "2026-09-18T16:20:49.641846+00:00",
+  "status": "passed",
+  "scope": "Original Hunyuan3D 2.0 shape/paint on media-worker, shared worker lifecycle, fair mixed-media queues and deployed geometry UI. No member content used.",
+  "hosts": {
+    "head": "10.20.30.10",
+    "worker": "10.20.30.20",
+    "gpu": "[redacted deployment detail]",
+    "vram_mib": "[redacted deployment detail]"
+  },
+  "pins": {
+    "source_revision": "f8db63096c8282cb27354314d896feba5ba6ff8a",
+    "model_revision": "9cd649ba6913f7a852e3286bad86bfa9a2d83dcf",
+    "model": "hunyuan3d/2.0",
+    "resolutions": [
+      512
+    ],
+    "inventory_files": 29,
+    "inventory_bytes": 14610902837
+  },
+  "tests": {
+    "backend_vm": {
+      "passed": 133,
+      "deselected_live": 3,
+      "storage": "Isolated temporary PostgreSQL database on the existing head; dropped afterward"
+    },
+    "after_descendant_reaping": {
+      "passed": 3
+    },
+    "after_geometry_route_allowlist_fix": {
+      "passed": 37
+    },
+    "linux_worker_manager": {
+      "passed": 5
+    },
+    "deployed_browser": {
+      "passed": 7,
+      "skipped_opt_in_edge_case": 1
+    },
+    "actual_glb_browser": {
+      "passed": 1,
+      "synthetic_session": true,
+      "actual_qualification_artifact": true,
+      "visual_inspection": "Textured cube rendered; no browser or GLTF errors"
+    },
+    "typescript": "passed",
+    "production_builds": "passed",
+    "changed_python_lint": "passed"
+  },
+  "physical_jobs": [
+    {
+      "id": "e665dc51-3175-42c5-b387-1269d36ce70f",
+      "state": "completed",
+      "released": 1,
+      "digest": "5a0b2de2625f72767cae7d1df7778c76a28aba63b64324c5e198120806bcf2ae",
+      "triangles": 50000,
+      "textures": 1,
+      "bytes": 3624356,
+      "format": "glb",
+      "sha256": "5a0b2de2625f72767cae7d1df7778c76a28aba63b64324c5e198120806bcf2ae",
+      "started_at": "2026-09-18T16:09:36+00:00",
+      "elapsed_approx_seconds": 230,
+      "input_removed": true,
+      "intermediates_removed": true
+    },
+    {
+      "id": "2fe5c052-129c-46b7-b833-88f93781949e",
+      "state": "cancelled",
+      "released": 1,
+      "digest": null,
+      "input_removed": true,
+      "intermediates_removed": true
+    }
+  ],
+  "cancellation": {
+    "requested_after_seconds": 50,
+    "completed_seconds": 51.11,
+    "execution_released": true,
+    "artifact_returned": false,
+    "surviving_runner_processes": 0,
+    "whole_gpu_after_mib": 651
+  },
+  "gpu_sampling": {
+    "interval_seconds": 2,
+    "whole_device_peak_mib": 7740,
+    "includes_other_desktop_processes": true,
+    "window_utc": [
+      "2026-09-18T16:09:36Z",
+      "2026-09-18T16:13:28Z"
+    ]
+  },
+  "live_switches": [
+    {
+      "service": "trellis",
+      "revision": 50,
+      "state": "ready",
+      "active_run": null,
+      "units": [
+        "Id=hearth-trellis.service",
+        "ActiveState=active",
+        "SubState=running",
+        "",
+        "Id=fooocus.service",
+        "ActiveState=inactive",
+        "SubState=dead",
+        "",
+        "Id=hearth-hunyuan.service",
+        "ActiveState=inactive",
+        "SubState=dead"
+      ]
+    },
+    {
+      "service": "fooocus",
+      "revision": 51,
+      "state": "ready",
+      "active_run": null,
+      "units": [
+        "Id=hearth-trellis.service",
+        "ActiveState=inactive",
+        "SubState=dead",
+        "",
+        "Id=fooocus.service",
+        "ActiveState=active",
+        "SubState=running",
+        "",
+        "Id=hearth-hunyuan.service",
+        "ActiveState=inactive",
+        "SubState=dead"
+      ]
+    },
+    {
+      "service": "hunyuan",
+      "revision": 52,
+      "state": "ready",
+      "active_run": null,
+      "units": [
+        "Id=hearth-trellis.service",
+        "ActiveState=inactive",
+        "SubState=dead",
+        "",
+        "Id=fooocus.service",
+        "ActiveState=inactive",
+        "SubState=dead",
+        "",
+        "Id=hearth-hunyuan.service",
+        "ActiveState=active",
+        "SubState=running"
+      ]
+    }
+  ],
+  "final_worker": {
+    "id": "014ddc1c-f0c6-4574-8fc5-2e6ba2aa6cdc",
+    "pool_id": "98c9da2d-20e0-4675-a1e8-7a9d63e8aba9",
+    "revision": 53,
+    "observed_revision": 53,
+    "paused": false,
+    "desired_service": "hunyuan",
+    "ready_service": "hunyuan",
+    "state": "ready",
+    "reason": "",
+    "services": {
+      "fooocus": {
+        "name": "Fooocus",
+        "connection_id": "4d74ce31-e540-48f9-9ece-b8a44d60d2e8"
+      },
+      "hunyuan": {
+        "name": "Hunyuan3D 2.0",
+        "connection_id": "8a701bd0-7628-4c19-a24c-4fe3ec3ca2c7"
+      },
+      "trellis": {
+        "name": "TRELLIS 3D",
+        "connection_id": "0d60c7cb-a0d6-4005-9093-b0ee3b3afe98"
+      }
+    },
+    "pool_name": "media-worker GPU",
+    "active_run_id": null,
+    "seen_at": "2026-09-18T16:20:10.024483+00:00"
+  },
+  "geometry_bindings": [
+    {
+      "target_id": "c1d90da2-6425-410e-bac7-0d322db7d232",
+      "priority": 1,
+      "model_id": "trellis2/q8"
+    },
+    {
+      "target_id": "5674d090-e695-469c-b540-079f7fdfef70",
+      "priority": 0,
+      "model_id": "hunyuan3d/2.0"
+    }
+  ],
+  "deployment": {
+    "migration": "0026",
+    "static_backup": "/opt/hearth/.hearth/before-hunyuan-20260918T160421Z",
+    "api_backup": "/opt/hearth/.hearth/before-hunyuan-route-20260918T161847Z",
+    "api_restart": "Both APIs recreated after zero queued/running application jobs were confirmed before and after image build",
+    "public_user_https_ready": true,
+    "public_admin_https_ready": true,
+    "trellis_default_preserved": true
+  },
+  "separate_observation": {
+    "provider": "model-host LM Studio",
+    "state": "failed",
+    "reason": "The model server reported a generation error. Check its logs.",
+    "configuration_changed": false
+  },
+  "limits": [
+    "One generated cube is a transport/artifact qualification, not a quality benchmark or latency guarantee.",
+    "A fresh second-host install and sustained multi-user physical workload remain unqualified.",
+    "The original 2.0 profile supports 512 only and uses sequential CUDA stages; no 2.1 or turbo substitution.",
+    "Release gates remain 20 partial, 41 not run, zero fully passed."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

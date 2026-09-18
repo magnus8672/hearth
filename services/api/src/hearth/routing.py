@@ -183,7 +183,7 @@ def assign(request: Request, capability_id: str, data: SetRoute):
 
 def assign_route(engine, principal, capability_id, data):
     principal.require('provider.configure')
-    if capability_id not in TEXT and capability_id not in PENDING and capability_id not in {'image.generate', 'vision.describe', 'audio.speak', 'audio.transcribe', 'memory.retrieve', 'memory.index'}:
+    if capability_id not in TEXT and capability_id not in PENDING and capability_id not in {'image.generate', 'geometry.generate', 'vision.describe', 'audio.speak', 'audio.transcribe', 'memory.retrieve', 'memory.index'}:
         raise HTTPException(404, 'Unknown capability.')
     if profile(capability_id).get('builtin'):
         raise HTTPException(409, 'Memory is provided by the private knowledge store on this hearth. Manage it in your workspace Memory page.')

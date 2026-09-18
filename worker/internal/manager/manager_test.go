@@ -18,9 +18,38 @@ type fakeDriver struct {
 }
 
 func (d *fakeDriver) Start(_ context.Context, s Service) error {
+	for unit, live := range d.live {
+		if unit != s.Unit && live {
+			return fmt.Errorf("replacement started before %s stopped", unit)
+		}
+	}
 	d.live[s.Unit] = true
 	d.starts++
 	return nil
+}
+
+func TestThreeBackendSwitchingDrainsEveryOtherService(t *testing.T) {
+	c, d := fixture(t)
+	c.recipe.Services["hunyuan"] = Service{Unit: "hunyuan.service", Files: c.recipe.Services["trellis"].Files}
+	for i, desired := range []string{"hunyuan", "trellis", "fooocus", "hunyuan"} {
+		if err := c.Accept(Command{Revision: int64(i + 1), DesiredService: &desired, LeaseSeconds: 15}); err != nil {
+			t.Fatal(err)
+		}
+		c.Reconcile(context.Background())
+		r := c.Snapshot()
+		if r.State != "ready" || r.ReadyService == nil || *r.ReadyService != desired || d.starts != i+1 {
+			t.Fatalf("three-way switch failed: %+v", r)
+		}
+	}
+	// Even an unexpected second live service must drain before another starts.
+	d.live["trellis.service"] = true
+	d.stopFails = true
+	desired := "fooocus"
+	_ = c.Accept(Command{Revision: 5, DesiredService: &desired, LeaseSeconds: 15})
+	c.Reconcile(context.Background())
+	if c.Snapshot().Reason != "stop_failed" || d.starts != 4 {
+		t.Fatal("started over another backend's unreleased cgroup")
+	}
 }
 func (d *fakeDriver) Stop(_ context.Context, s Service) error {
 	d.stops++

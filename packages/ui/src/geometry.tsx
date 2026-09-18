@@ -16,6 +16,10 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
   const [sourceLoading, setSourceLoading] = useState(false); const [referenceUrl, setReferenceUrl] = useState('');
   const target = targets.find(item => item.id === targetId);
   const waiting = jobs.filter(item => ['queued', 'running'].includes(item.status)).length;
+  useEffect(() => {
+    const supported = target?.profile.resolutions || [512];
+    if (!supported.includes(resolution)) setResolution(supported[0]);
+  }, [target, resolution]);
   async function refresh() { const result = await api<{ items: Job[] }>('/api/v1/geometry'); setJobs(result.items); }
   useEffect(() => {
     api<{ items: Target[] }>('/api/v1/geometry-targets').then(result => { setTargets(result.items); setTarget(result.items.find(item => item.state === 'ready')?.id || ''); }).catch(reason => setError(reason.message));

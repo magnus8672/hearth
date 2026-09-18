@@ -1,10 +1,28 @@
 # Local image-to-3D generation
 
-Implemented on the existing head and media-worker, 17 September 2026. The selected runtime is [trellis.cpp v0.6.0](https://github.com/pwilkin/trellis.cpp/releases/tag/v0.6.0), executing TRELLIS.2 with the pinned Q8 GGUF profile. This replaces the earlier TripoSR candidate for this deployment, without tying the geometry protocol to one engine.
+Implemented on the existing head and media-worker, 17 September 2026. The original runtime is [trellis.cpp v0.6.0](https://github.com/pwilkin/trellis.cpp/releases/tag/v0.6.0), executing TRELLIS.2 with the pinned Q8 GGUF profile. This replaces the earlier TripoSR candidate for this deployment, without tying the geometry protocol to one engine.
 
 ## Try it
 
-Open **3D models** in the workspace. Enter a model name, upload a still PNG, JPEG or WebP of one clearly visible object, choose Standard (512) or Detailed (1024), and select **Create 3D model**. Alternatively, choose **Make a model** beside a completed image in the gallery, private chat or a joined channel. The 3D form opens with that image selected and previewed. Enter a name, choose the detail and select **Create 3D model** to start work; opening the form alone never generates a model.
+Open **3D models** in the workspace. Enter a model name, upload a still PNG, JPEG or WebP of one clearly visible object, choose a 3D provider and its supported detail (TRELLIS: 512/1024; Hunyuan3D 2.0: 512), and select **Create 3D model**. Alternatively, choose **Make a model** beside a completed image in the gallery, private chat or a joined channel. The 3D form opens with that image selected and previewed. Enter a name, choose the detail and select **Create 3D model** to start work; opening the form alone never generates a model.
+
+### Hunyuan3D 2.0 profile
+
+The alternative is the original [Tencent Hunyuan3D 2.0](https://github.com/Tencent-Hunyuan/Hunyuan3D-2) shape-and-paint pipeline, model ID `hunyuan3d/2.0`, at 512 geometry detail. It does not select 2.1 or a turbo checkpoint. The checked-in [inventory](../../runtimes/hunyuan/inventory.json) pins upstream source `f8db63096c8282cb27354314d896feba5ba6ff8a`, model revision `9cd649ba6913f7a852e3286bad86bfa9a2d83dcf`, every required weight including background removal, and CUDA build tools. Python dependencies are hash-locked. Preserve upstream licenses and notices; downloaded weights and binaries stay outside Git.
+
+On media-worker, the two geometry providers and Fooocus share `media-worker GPU`. Owner fairness selects the next job before its stored target selects the backend. The worker stops every other approved service and confirms its cgroup has exited before starting Hunyuan, TRELLIS or Fooocus. A selected Hunyuan job is never silently converted into a TRELLIS job. Failed readiness or generation remains a visible failure; unknown execution continues to hold capacity. Independent future hosts should use separate provider connections and resource groups so they can run concurrently.
+
+[Historical deployment inventory removed for repository privacy.]
+
+The installer leaves the new service stopped for reviewed adoption:
+
+```sh
+sudo python3 scripts/install_geometry_provider.py --backend hunyuan --user YOUR_RUNTIME_USER --host GPU_LAN_IP --controller HEAD_LAN_IP
+```
+
+Defaults are `/opt/hearth-hunyuan`, `/var/lib/hearth-hunyuan`, HTTPS port `1238` and authenticated loopback health port `1239`. Use Python 3.12 and a C++ build toolchain on the Linux CUDA host. Installation downloads about 13.6 GiB of pinned models, prepares a private virtual environment and builds the reviewed rasterizer/mesh extensions; it never starts inference. Register `https://GPU_LAN_IP:1238/v1`, model `hunyuan3d/2.0`, with its private controller key and public CA. Include the runner, adapter, contract/validation modules, unit, configuration, dependency lock and model/engine inventories in the signed recipe. The health assertion is `protocol=hearth.geometry.v1`. Follow the pause/drain/adoption procedure below, then run the real geometry probe and add the target to the geometry capability. A fresh second-host installation and wider hardware/quality matrix remain unqualified.
+
+### References and saved models
 
 Saved-image handoff uses the existing authorized image endpoint and prepares a JPEG reference copy with a maximum 1600-pixel edge. This includes 4K PNGs larger than the manual upload limit; the saved original is unchanged. Only a source kind and image UUID appear in the link, never arbitrary URLs or image data. Unavailable images leave generation disabled. A channel image produces a model in the requesting member's private workspace, not a shared channel artifact. Browser qualification is recorded in [handoff evidence](../../evidence/geometry/2026-09-18/image-handoff.json).
 
@@ -18,7 +36,7 @@ Thumbnail reads and rename writes require the geometry capability and owner/farm
 
 **Preview 3D** supports orbit, zoom and pan. **Save GLB** exports the mesh and embedded PNG textures. Cancel works both in the queue and during generation. **Delete model** removes the head's saved artifact and reference. Provider caches and backups are separate retention domains, as with image deletion.
 
-media-worker's worker is configured in explicit **shared GPU** mode. Geometry jobs and image requests from the gallery, private chat, and shared channels share one durable queue and one exclusive GPU reservation. A service change waits for the previous process/cgroup to finish. The head checks the new service's qualified manifest before dispatch. The last used service remains selected until another queued job needs the other service. Distributed, concurrently resident specialists on independent machines remain the farm default.
+media-worker's worker is configured in explicit **shared GPU** mode. Geometry jobs and image requests from the gallery, private chat, and shared channels share one durable queue and one exclusive GPU reservation. A service change waits for the previous process/cgroup to finish. The head checks the new service's qualified manifest before dispatch. The last used service remains selected until another queued job needs a different approved service. Distributed, concurrently resident specialists on independent machines remain the farm default.
 
 ## Boundaries
 
@@ -65,6 +83,6 @@ For an existing worker recipe update, pause admission, wait for active work to r
 sudo python3 scripts/adopt_worker.py --inventory /private/reviewed-inventory.json --output /private/new-worker-bundle --existing-bundle /private/previous-worker-bundle
 ```
 
-Include both services in the reviewed inventory. Include each unit, adapter module, configuration, requirements, model inventory and engine inventory in the approved file map. Copy the resulting private bundle to `/etc/hearth-worker` over trusted SSH, preserve root-only permissions, start the supervisor, select the service and verify it in Providers. This keeps the worker ID and credential, checks that the old worker is paused/stopped and the pool idle, and audits the new signed recipe. media-worker's private bundles and farm signing key remain on the head, outside Git.
+Include all services sharing the GPU in the reviewed inventory. Include each unit, adapter module, configuration, requirements, model inventory and engine inventory in the approved file map. Copy the resulting private bundle to `/etc/hearth-worker` over trusted SSH, preserve root-only permissions, start the supervisor, select the service and verify it in Providers. This keeps the worker ID and credential, checks that the old worker is paused/stopped and the pool idle, and audits the new signed recipe. media-worker's private bundles and farm signing key remain on the head, outside Git.
 
 Model provenance: [TRELLIS.2](https://github.com/microsoft/TRELLIS.2), [Q8 conversion inventory](https://huggingface.co/ilintar/trellis2-gguf/tree/a57397bd3d351599d9729fc144b3f87c3f87d65b/q8). Preserve upstream engine and model notices when distributing a runtime bundle; weights and downloaded binaries are not committed to this repository.

@@ -1,0 +1,25 @@
+# Qualified together on the Linux CUDA worker; lock transitive artifacts before activation.
+torch==2.7.1
+torchvision==0.22.1
+diffusers==0.32.2
+transformers==4.49.0
+accelerate==1.4.0
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+scipy==1.14.1
+scikit-image==0.24.0
+trimesh==4.6.4
+pymeshlab==2023.12.post3
+pygltflib==1.16.3
+xatlas==0.0.9
+omegaconf==2.3.0
+einops==0.8.1
+rembg==2.0.61
+onnxruntime==1.20.1
+ninja==1.11.1.3
+pybind11==2.13.6
+fastapi==0.115.12
+uvicorn==0.34.2
+pillow==11.2.1
+setuptools==78.1.1
+wheel==0.45.1

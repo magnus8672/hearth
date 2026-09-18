@@ -194,3 +194,83 @@ def test_image_and_geometry_share_one_queue_and_switch_only_after_release(bff, m
         assert user.get('/api/v1/geometry').json()['items'][0]['status'] == 'completed'
         with scoped_session(engine, workers.SYSTEM, settings.farm_id) as db:
             assert db.execute(text('SELECT active_run_id FROM provider_pools WHERE id=:id'), {'id': pool}).scalar_one() is None
+
+
+def test_three_backends_keep_fairness_and_target_identity(bff, monkeypatch):
+    import json
+
+    from hearth import workers
+
+    from tests.integration.test_images import image_target
+    from tests.integration.test_worker_queue import adopt, fixture_provider
+    from tests.integration.test_worker_queue import request as image_request
+
+    monkeypatch.setattr(image_queue.ImageQueue, 'run', lambda self: self.stop.wait())
+    factory, settings, engine, migration, subject = setup(bff, monkeypatch)
+    fixture_provider(monkeypatch)
+    h3d = INFO.model_copy(update={'model': 'hunyuan3d/2.0', 'manifest_sha256': 'b'*64})
+    monkeypatch.setattr(geometry_transport, 'information', lambda url, *args: h3d if ':1238' in url else INFO)
+    executed = []
+    def render(url, key, settings, data, image, observe=lambda value: False):
+        expected = h3d if ':1238' in url else INFO
+        assert data.model == expected.model
+        executed.append(data.model)
+        return GeometryReceipt(**data.model_dump(), state='completed', progress=100, manifest_sha256=expected.manifest_sha256, execution_released=True, cancel_requested=False), triangle()
+    monkeypatch.setattr(geometry_transport, 'render', render)
+    with factory('admin') as admin, factory() as user:
+        signin(admin)
+        promote(admin, migration, settings)
+        ah = csrf(admin, settings.admin_origin)
+        picture = image_target(admin, ah)
+        targets = {}
+        for service, info, port in [('trellis', INFO, 1236), ('hunyuan', h3d, 1238)]:
+            response = admin.post('/api/v1/providers', headers=ah, json={'name': service, 'base_url': f'http://127.0.0.1:{port}', 'model_id': info.model, 'protocol': info.protocol, 'local_only': True})
+            assert response.status_code == 201
+            targets[service] = response.json()['id']
+            assert admin.post(f"/api/v1/providers/{targets[service]}/probe", headers=ah, json={'revision': 1}).json()['state'] == 'ready'
+        executed.clear()
+        route = admin.put('/api/v1/capability-routes/geometry.generate', headers=ah, json={'revision': 1, 'targets': [
+            {'target_id': targets['trellis'], 'priority': 1}, {'target_id': targets['hunyuan'], 'priority': 0}]})
+        assert route.status_code == 200
+        assert [item['target_id'] for item in route.json()['targets']] == [targets['trellis'], targets['hunyuan']]
+        node, _, pool = adopt(migration, settings, picture, paused=False)
+        with scoped_session(migration, workers.SYSTEM, settings.farm_id) as db:
+            services = {service: {'name': service, 'connection_id': str(db.execute(text('SELECT connection_id FROM inference_targets WHERE id=:id'), {'id': target}).scalar_one())} for service, target in targets.items()}
+            db.execute(text("UPDATE managed_workers SET policy='shared',seen_at=now(),state='ready',observed_revision=revision,ready_service='fooocus',services=services || CAST(:services AS jsonb) WHERE id=:id"), {'id': node, 'services': json.dumps(services)})
+        signin(user)
+        uh = csrf(user, settings.user_origin)
+        image = reference()
+        def submit(client, headers, service):
+            info = h3d if service == 'hunyuan' else INFO
+            data = {'name': service, 'target_id': targets[service], 'request': {'id': str(uuid4()), 'model': info.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+            assert client.post('/api/v1/geometry', headers=headers, json=data).status_code == 202
+            return data['request']['id']
+        assert user.post('/api/v1/images', headers=uh, json=image_request(picture)).status_code == 202
+        trellis = submit(user, uh, 'trellis')
+        other_subject = str(uuid4())
+        monkeypatch.setattr(identity, 'verify_id_token', lambda *args: {'sub': other_subject, 'name': 'Second member'})
+        monkeypatch.setattr(identity, 'token_request', lambda config, endpoint, data: {'active': True, 'sub': subject if data.get('token') == 'EXPLICIT PROVIDER FIXTURE' else other_subject, 'iss': config.issuer} if endpoint == 'token/introspect' else {'id_token': 'FIXTURE', 'access_token': 'SECOND', 'refresh_token': 'FIXTURE', 'expires_in': 300})
+        with factory() as other:
+            signin(other)
+            approve_fixture_member(other, migration, settings)
+            oh = csrf(other, settings.user_origin)
+            hunyuan = submit(other, oh, 'hunyuan')
+            first = image_queue.claim(engine, settings, pool)
+            assert first[1]['protocol'] == 'hearth.image.v1'
+            assert image_queue.claim(engine, settings, pool) is None
+            image_queue.execute_queued(engine, settings, *first)
+            # A different owner's newer Hunyuan job wins over the older TRELLIS
+            # job. Fairness is decided before selecting the resident backend.
+            for service, expected in [('hunyuan', hunyuan), ('trellis', trellis)]:
+                claimed = image_queue.claim(engine, settings, pool)
+                assert str(claimed[2].id) == expected
+                with scoped_session(migration, workers.SYSTEM, settings.farm_id) as db:
+                    worker = workers.for_pool(db, pool)
+                    assert worker['desired_service'] == service
+                    assert worker['ready_service'] != service
+                    db.execute(text("UPDATE managed_workers SET ready_service=:service,state='ready',observed_revision=revision,seen_at=now() WHERE id=:id"), {'id': node, 'service': service})
+                assert image_queue.claim(engine, settings, pool) is None
+                image_queue.execute_queued(engine, settings, *claimed)
+            assert executed == [h3d.model, INFO.model]
+            assert other.get('/api/v1/geometry').json()['items'][0]['status'] == 'completed'
+            assert user.get('/api/v1/geometry').json()['items'][0]['status'] == 'completed'

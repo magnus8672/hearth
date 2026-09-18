@@ -1,0 +1,210 @@
+{
+  "model": "hunyuan3d/2.0",
+  "backend": "hunyuan3d-2.0",
+  "model_revision": "9cd649ba6913f7a852e3286bad86bfa9a2d83dcf",
+  "resolutions": [
+    512
+  ],
+  "source_revision": "f8db63096c8282cb27354314d896feba5ba6ff8a",
+  "archive": {
+    "url": "https://codeload.github.com/Tencent-Hunyuan/Hunyuan3D-2/tar.gz/f8db63096c8282cb27354314d896feba5ba6ff8a",
+    "bytes": 80170129,
+    "sha256": "52b7c9647e457f9b4055e3488e06e675117eae01d6c48b28d8ec1b869a697b2c"
+  },
+  "files": [
+    {
+      "path": "background/u2net.onnx",
+      "bytes": 175997641,
+      "sha256": "8d10d2f3bb75ae3b6d527c77944fc5e7dcd94b29809d47a739a7a728a912b491",
+      "url": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/feature_extractor/preprocessor_config.json",
+      "bytes": 466,
+      "sha256": "205d45875859846dc1ca211b9a19f5db72f47e953b396954ee34d48d8e95c3c6",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/feature_extractor/preprocessor_config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/model_index.json",
+      "bytes": 621,
+      "sha256": "13a10da7af47b30e4da0e76ab44902d8826457afaa431024f7033a369a2572c0",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/model_index.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/scheduler/scheduler_config.json",
+      "bytes": 533,
+      "sha256": "ba61cbc02207f4a6276fd7cd3a76b96ac12ed6d847aad48d65e54cd9be928b69",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/scheduler/scheduler_config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/text_encoder/config.json",
+      "bytes": 583,
+      "sha256": "55c23f6c5b5a2dc5aea935ad82eb6e13a9fa839cf3acd3608fac419a4efd893d",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/text_encoder/config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/text_encoder/model.safetensors",
+      "bytes": 680820392,
+      "sha256": "bc1827c465450322616f06dea41596eac7d493f4e95904dcb51f0fc745c4e13f",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/text_encoder/model.safetensors"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/tokenizer/merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/tokenizer/merges.txt"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/tokenizer/special_tokens_map.json",
+      "bytes": 574,
+      "sha256": "c2d0fb8b86ad86b1f46134d4a5f93fd1e688c932a78efc8d149087c33a53ad06",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/tokenizer/special_tokens_map.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/tokenizer/tokenizer_config.json",
+      "bytes": 855,
+      "sha256": "516314ccab66918d7cb647480ac27abd3520d14e1e5825aac99f50c851c16071",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/tokenizer/tokenizer_config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/tokenizer/vocab.json",
+      "bytes": 1059962,
+      "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/tokenizer/vocab.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/unet/config.json",
+      "bytes": 1835,
+      "sha256": "ba51cb0cff8c8404dd028dc9b55a4dc706114fca2e0feb6a844f54ae981d2d2a",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/unet/config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/unet/diffusion_pytorch_model.safetensors",
+      "bytes": 3463772592,
+      "sha256": "0ce61d15a43d11ba19079ab8f24dfce78b876d3f5291470079ef64b17e08ca58",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/unet/diffusion_pytorch_model.safetensors"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/vae/config.json",
+      "bytes": 787,
+      "sha256": "f4aa821fb7a627f93e17b83face435b9d38e34f45c37dae91925e2a6c81f497f",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/vae/config.json"
+    },
+    {
+      "path": "hunyuan3d-delight-v2-0/vae/diffusion_pytorch_model.safetensors",
+      "bytes": 167335342,
+      "sha256": "3e4c08995484ee61270175e9e7a072b66a6e4eeb5f0c266667fe1f45b90daf9a",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-delight-v2-0/vae/diffusion_pytorch_model.safetensors"
+    },
+    {
+      "path": "hunyuan3d-dit-v2-0/config.yaml",
+      "bytes": 1604,
+      "sha256": "70bbfcdd18b9686ee56fe011c3a059b222eae1f5450f904577c50f0e107a8a53",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-dit-v2-0/config.yaml"
+    },
+    {
+      "path": "hunyuan3d-dit-v2-0/model.fp16.safetensors",
+      "bytes": 4928151562,
+      "sha256": "360bc281fc956d4acac0c3d36d5ec0ebf8cdddbf4b8892e894d12419388d479b",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-dit-v2-0/model.fp16.safetensors"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/feature_extractor/preprocessor_config.json",
+      "bytes": 342,
+      "sha256": "2a1da83b5e1032aaeef397552ddb408dca0d8cd1dc58f61bf6abf38d6f33a0a2",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/feature_extractor/preprocessor_config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/model_index.json",
+      "bytes": 538,
+      "sha256": "2100e8bedefbe893024e744419070f888bcb076c6655a5a3b8cb1769f4d001a2",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/model_index.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/scheduler/scheduler_config.json",
+      "bytes": 387,
+      "sha256": "9a6a7268e4d7c1bc5000450927070e338dc57a51f4530078627c88f5828e792d",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/scheduler/scheduler_config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/text_encoder/config.json",
+      "bytes": 613,
+      "sha256": "7e33bfc475f6cf76e69b28b101993ca834d1f22ff4d35caefde32d63d4f42fba",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/text_encoder/config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/text_encoder/pytorch_model.bin",
+      "bytes": 1361671895,
+      "sha256": "c3e254d7b61353497ea0be2c4013df4ea8f739ee88cffa0ba58cd085459ed565",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/text_encoder/pytorch_model.bin"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/tokenizer/merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/tokenizer/merges.txt"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/tokenizer/special_tokens_map.json",
+      "bytes": 460,
+      "sha256": "f118ab3a983206e4f32583448de6bd6aae4ee21869135cef1f5848a753cdaab6",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/tokenizer/special_tokens_map.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/tokenizer/tokenizer_config.json",
+      "bytes": 807,
+      "sha256": "d562b18a0c6d32a168fce3d7a342fce64579ebacffb98fb71b0affc494fc32d8",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/tokenizer/tokenizer_config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/tokenizer/vocab.json",
+      "bytes": 1059962,
+      "sha256": "e089ad92ba36837a0d31433e555c8f45fe601ab5c221d4f607ded32d9f7a4349",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/tokenizer/vocab.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/unet/config.json",
+      "bytes": 911,
+      "sha256": "ce0c6d379e3b1d3e1f79338de70c80a1e36f17a6372439a8249b6fb0dfa1b608",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/unet/config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/unet/diffusion_pytorch_model.safetensors",
+      "bytes": 3662636472,
+      "sha256": "1c5ce434ba976b30bbb51a080917ecd39f8d8761691887b5df3be765ef4bd9e9",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/unet/diffusion_pytorch_model.safetensors"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/vae/config.json",
+      "bytes": 553,
+      "sha256": "424117cb534ce03497c41305ed868980123917b2b6abba4bbaa615e968772903",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/vae/config.json"
+    },
+    {
+      "path": "hunyuan3d-paint-v2-0/vae/diffusion_pytorch_model.safetensors",
+      "bytes": 167335310,
+      "sha256": "abcec86e499e1ce9f05d1630725d386dc533b61fe0947ab034f07f89042e7a61",
+      "url": "https://huggingface.co/tencent/Hunyuan3D-2/resolve/9cd649ba6913f7a852e3286bad86bfa9a2d83dcf/hunyuan3d-paint-v2-0/vae/diffusion_pytorch_model.safetensors"
+    }
+  ],
+  "build_tools": [
+    {
+      "name": "cuda_nvcc",
+      "url": "https://developer.download.nvidia.com/compute/cuda/redist/cuda_nvcc/linux-x86_64/cuda_nvcc-linux-x86_64-12.6.85-archive.tar.xz",
+      "bytes": 49996208,
+      "sha256": "840deff234d9bef20d6856439c49881cb4f29423b214f9ecd2fa59b7ac323817"
+    },
+    {
+      "name": "cuda_cudart",
+      "url": "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cudart/linux-x86_64/cuda_cudart-linux-x86_64-12.6.77-archive.tar.xz",
+      "bytes": 1126072,
+      "sha256": "f74689258a60fd9c5bdfa7679458527a55e22442691ba678dcfaeffbf4391ef9"
+    },
+    {
+      "name": "cuda_cccl",
+      "url": "https://developer.download.nvidia.com/compute/cuda/redist/cuda_cccl/linux-x86_64/cuda_cccl-linux-x86_64-12.6.77-archive.tar.xz",
+      "bytes": 934952,
+      "sha256": "9c3145ef01f73e50c0f5fcf923f0899c847f487c529817daa8f8b1a3ecf20925"
+    }
+  ]
+}

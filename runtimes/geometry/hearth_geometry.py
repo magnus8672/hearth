@@ -1,13 +1,15 @@
-"""Private image-to-GLB jobs around a pinned TRELLIS CLI. Linux only."""
+"""Private image-to-GLB jobs around pinned, approved geometry backends. Linux only."""
 import argparse
 import base64
 import contextlib
+import ctypes
 import fcntl
 import hashlib
 import hmac
 import io
 import json
 import os
+import shutil
 import signal
 import sqlite3
 import subprocess
@@ -17,14 +19,13 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
+from hearth.contracts import GeometryGeneration
+from hearth.geometry_validation import validate_glb
 from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field
 from starlette.middleware.trustedhost import TrustedHostMiddleware
-
-from hearth.contracts import GeometryGeneration
-from hearth.geometry_validation import validate_glb
 
 
 class Submission(BaseModel):
@@ -35,6 +36,11 @@ class Submission(BaseModel):
 
 class Jobs:
     def __init__(self, root, installation):
+        # A Hunyuan job owns a stage subprocess as well as its runner. Adopt
+        # orphaned descendants so cancellation can reap the entire group before
+        # acknowledging release, even when the runner itself is killed first.
+        if ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) != 0:
+            raise RuntimeError('Linux child-subreaper support is required.')
         self.root, self.installation = root, installation
         root.mkdir(parents=True, exist_ok=True)
         self.lock = (root / 'process.lock').open('a+b')
@@ -53,13 +59,17 @@ class Jobs:
             with path.open('rb') as source:
                 if path.stat().st_size != entry['bytes'] or hashlib.file_digest(source, 'sha256').hexdigest() != entry['sha256']:
                     raise RuntimeError('The approved model inventory changed.')
+        self.backend = self.inventory.get('backend', 'trellis')
+        if self.backend not in {'trellis', 'hunyuan3d-2.0'}:
+            raise RuntimeError('Unsupported geometry backend.')
+        self.resolutions = self.inventory.get('resolutions', [512, 1024])
         self.executor = ThreadPoolExecutor(max_workers=1)
         self.mutex = threading.Lock()
         with self.db() as db:
             db.execute('CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY, request TEXT NOT NULL, state TEXT NOT NULL, cancel INTEGER NOT NULL DEFAULT 0, digest TEXT, reason TEXT, released INTEGER NOT NULL DEFAULT 0)')
             # systemd KillMode=control-group and ExitType=cgroup are required.
             # The next service starts only after the previous child scope is gone.
-            db.execute("UPDATE jobs SET state='interrupted',reason='The geometry service restarted.',released=1 WHERE state IN ('queued','running')")
+            db.execute("UPDATE jobs SET state='interrupted',reason='The geometry service restarted.',released=1 WHERE released=0")
 
     @contextlib.contextmanager
     def db(self):
@@ -84,6 +94,8 @@ class Jobs:
         data = submission.request
         if data.model != self.inventory['model']:
             raise HTTPException(404, 'This model is not installed.')
+        if data.resolution not in self.resolutions:
+            raise HTTPException(422, 'This geometry detail is not supported by the selected backend.')
         try:
             raw = base64.b64decode(submission.image, validate=True)
             if len(raw) > 8 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != data.image_sha256:
@@ -115,16 +127,21 @@ class Jobs:
         image = self.root / f'{data.id}.jpg'
         state, reason, digest = 'failed', 'Geometry generation failed. Check GPU memory and the worker log.', None
         process = None
+        released = True
         try:
             with self.db() as db:
                 db.execute("UPDATE jobs SET state='running' WHERE id=?", (str(data.id),))
             args = [str(self.installation / 'engine/trellis-cli'), str(image), str(output),
                     '--models', str(self.installation / 'models'), '--res', str(data.resolution),
                     '--seed', str(data.seed), '--require-gpu', '--webp', 'off', '--threads', '4']
+            if self.backend == 'hunyuan3d-2.0':
+                args = [str(self.installation / '.venv/bin/python'), str(self.installation / 'app/hunyuan_runner.py'),
+                        str(image), str(output), '--models', str(self.installation / 'models'),
+                        '--resolution', str(data.resolution), '--seed', str(data.seed)]
             # Fixed executable and typed numeric options; no shell or user paths.
             with (self.root / f'{data.id}.log').open('wb') as log:
                 process = subprocess.Popen(args, stdout=log, stderr=log, start_new_session=True,
-                                           cwd=self.installation, env=os.environ | {'HF_HUB_OFFLINE': '1'})
+                                           cwd=self.installation, env=os.environ | {'HF_HUB_OFFLINE': '1', 'TRANSFORMERS_OFFLINE': '1'})
                 deadline = time.monotonic() + 1200
                 while process.poll() is None:
                     if self.get(data.id)['cancel_requested'] or time.monotonic() >= deadline:
@@ -147,13 +164,31 @@ class Jobs:
                 except ProcessLookupError:
                     pass
                 process.wait()
+                deadline = time.monotonic() + 10
+                while True:
+                    try:
+                        while os.waitpid(-process.pid, os.WNOHANG)[0] > 0:
+                            pass
+                    except ChildProcessError:
+                        pass
+                    try:
+                        os.killpg(process.pid, 0)
+                    except ProcessLookupError:
+                        break
+                    if time.monotonic() >= deadline:
+                        released = False
+                        state, reason = 'interrupted', 'The geometry process group has not confirmed release. Check the worker before retrying.'
+                        break
+                    time.sleep(.02)
             image.unlink(missing_ok=True)
+            if self.backend == 'hunyuan3d-2.0':
+                shutil.rmtree(output.with_suffix('.work'), ignore_errors=True)
             with self.mutex, self.db() as db:
-                if self.get(data.id)['cancel_requested']:
+                if released and self.get(data.id)['cancel_requested']:
                     state, reason, digest = 'cancelled', 'Geometry generation stopped.', None
                 if state != 'completed':
                     output.unlink(missing_ok=True)
-                db.execute('UPDATE jobs SET state=?,reason=?,digest=?,released=1 WHERE id=?', (state, reason, digest, str(data.id)))
+                db.execute('UPDATE jobs SET state=?,reason=?,digest=?,released=? WHERE id=?', (state, reason, digest, int(released), str(data.id)))
 
 
 def create_app(config):
@@ -188,7 +223,7 @@ def create_app(config):
     def information():
         return {'schema_version': 1, 'protocol': 'hearth.geometry.v1', 'model': jobs.inventory['model'],
                 'model_revision': jobs.inventory['model_revision'], 'manifest_sha256': jobs.digest,
-                'offline': True, 'job_cancellation': True, 'resolutions': [512, 1024], 'output_format': 'glb'}
+                'offline': True, 'job_cancellation': True, 'resolutions': jobs.resolutions, 'output_format': 'glb'}
     @app.post('/v1/geometry-jobs', status_code=202)
     def submit(data: Submission):
         return jobs.submit(data)
@@ -210,8 +245,9 @@ def create_app(config):
 
 
 def main():
-    import uvicorn
     from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    import uvicorn
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
     args = parser.parse_args()

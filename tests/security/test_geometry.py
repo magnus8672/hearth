@@ -32,26 +32,37 @@ def test_glb_bounds_external_resources_and_scene_cycles():
         validate_glb(triangle()[:-1])
 
 
-def test_geometry_runtime_cancel_reaps_child(tmp_path, monkeypatch):
-    import hashlib
+@pytest.mark.parametrize('backend', ['trellis', 'hunyuan3d-2.0'])
+def test_geometry_runtime_cancel_reaps_child(tmp_path, monkeypatch, backend):
     import base64
-    import time
-    from hearth.contracts import GeometryGeneration
-    from hearth.geometry_probe import reference
-    from runtimes.geometry.hearth_geometry import Jobs, Submission
-    from uuid import uuid4
+    import hashlib
     import subprocess
     import sys
+    import time
+    from uuid import uuid4
+
+    from hearth.contracts import GeometryGeneration
+    from hearth.geometry_probe import reference
+
+    from runtimes.geometry.hearth_geometry import Jobs, Submission
     popen = subprocess.Popen
     processes = []
     def child(args, **kwargs):
-        process = popen([sys.executable, '-c', 'import time; time.sleep(120)'], **kwargs)
+        assert ('--resolution' in args) == (backend == 'hunyuan3d-2.0')
+        if backend == 'hunyuan3d-2.0':
+            assert args[1].endswith('/app/hunyuan_runner.py')
+            work = jobs.root / f'{data.id}.work'
+            work.mkdir()
+            (work / 'reference.png').write_bytes(b'private intermediate')
+        script = 'import subprocess,sys,time; child=subprocess.Popen([sys.executable,"-c","import time; time.sleep(120)"]); '
+        script += f'open({str(jobs.root / "child.pid")!r},"w").write(str(child.pid)); time.sleep(120)'
+        process = popen([sys.executable, '-c', script], **kwargs)
         processes.append(process)
         return process
     monkeypatch.setattr('runtimes.geometry.hearth_geometry.subprocess.Popen', child)
     engine = tmp_path / 'installation'
     (engine / 'engine').mkdir(parents=True)
-    (engine / 'inventory.json').write_text(json.dumps({'files': [], 'model': 'fixture', 'model_revision': 'fixture'}))
+    (engine / 'inventory.json').write_text(json.dumps({'files': [], 'model': 'fixture', 'model_revision': 'fixture', 'backend': backend, 'resolutions': [512]}))
     (engine / 'engine-inventory.json').write_text('[]')
     executable = engine / 'engine/trellis-cli'
     executable.write_text('#!/bin/sh\nsleep 120\n')
@@ -60,10 +71,16 @@ def test_geometry_runtime_cancel_reaps_child(tmp_path, monkeypatch):
     image = reference()
     data = GeometryGeneration(id=uuid4(), model='fixture', image_sha256=hashlib.sha256(image).hexdigest())
     try:
+        from fastapi import HTTPException
+        with pytest.raises(HTTPException) as error:
+            jobs.submit(Submission(request=data.model_copy(update={'resolution': 1024}), image=base64.b64encode(image).decode()))
+        assert error.value.status_code == 422
+        assert not processes
         jobs.submit(Submission(request=data, image=base64.b64encode(image).decode()))
         until = time.monotonic() + 5
-        while not processes and time.monotonic() < until:
+        while not (jobs.root / 'child.pid').exists() and time.monotonic() < until:
             time.sleep(.01)
+        assert (jobs.root / 'child.pid').exists()
         assert processes and processes[0].poll() is None
         with jobs.db() as db:
             db.execute('UPDATE jobs SET cancel=1 WHERE id=?', (str(data.id),))
@@ -73,7 +90,11 @@ def test_geometry_runtime_cancel_reaps_child(tmp_path, monkeypatch):
         assert jobs.get(data.id)['state'] == 'cancelled'
         assert jobs.get(data.id)['execution_released']
         assert processes[0].poll() is not None
+        import os
+        with pytest.raises(ProcessLookupError):
+            os.killpg(processes[0].pid, 0)
         assert not (jobs.root / f'{data.id}.jpg').exists()
+        assert not (jobs.root / f'{data.id}.work').exists()
     finally:
         jobs.executor.shutdown(wait=True)
         jobs.lock.close()

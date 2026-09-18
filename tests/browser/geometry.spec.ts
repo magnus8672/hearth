@@ -2,6 +2,34 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
+test('changing from detailed TRELLIS to Hunyuan submits the supported detail and selected model', async ({ page }) => {
+  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  let submitted: any;
+  await page.route('**/api/**', async route => {
+    const url = new URL(route.request().url()).pathname;
+    if (url.endsWith('/session')) return route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: origin + ':8443' } });
+    if (url.endsWith('/geometry-targets')) return route.fulfill({ json: { items: [
+      { id: 'trellis', model_id: 'trellis2/q8', name: 'TRELLIS', state: 'ready', profile: { resolutions: [512, 1024] } },
+      { id: 'hunyuan', model_id: 'hunyuan3d/2.0', name: 'Hunyuan3D 2.0', state: 'ready', profile: { resolutions: [512] } },
+    ] } });
+    if (url.endsWith('/geometry') && route.request().method() === 'POST') {
+      submitted = route.request().postDataJSON();
+      return route.fulfill({ status: 202, json: { id: submitted.request.id } });
+    }
+    return route.fulfill({ json: { items: [] } });
+  });
+  await page.goto(origin + '/#geometry');
+  await page.getByLabel('Geometry detail').selectOption('1024');
+  await page.getByLabel('3D model provider').selectOption('hunyuan');
+  await expect(page.getByLabel('Geometry detail')).toHaveValue('512');
+  await page.getByLabel('Model name', { exact: true }).fill('Hunyuan comparison');
+  await page.getByLabel('Reference image', { exact: true }).setInputFiles({ name: 'reference.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=', 'base64') });
+  await page.getByRole('button', { name: 'Create 3D model' }).click();
+  await expect.poll(() => submitted?.request.model).toBe('hunyuan3d/2.0');
+  expect(submitted.target_id).toBe('hunyuan');
+  expect(submitted.request.resolution).toBe(512);
+});
+
 // Inspect the new bundle on the VM origin before deployment, without a local server.
 test.beforeEach(async ({ page }) => {
   if (process.env.HEARTH_BROWSER_LOCAL_BUILD !== '1') return;

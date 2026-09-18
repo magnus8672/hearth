@@ -1,6 +1,6 @@
 # Managed Linux services and GPU queues
 
-Implemented 18 September 2026. The first native Go worker can adopt approved, already installed systemd services. media-worker (`10.20.30.20`) is connected to the existing head (`10.20.30.10`) and manages Fooocus. [TRELLIS and the geometry adapter](LOCAL_GEOMETRY.md) now share its GPU through explicit shared mode.
+Implemented 18 September 2026. The first native Go worker can adopt approved, already installed systemd services. media-worker (`10.20.30.20`) is connected to the existing head (`10.20.30.10`) and manages Fooocus. [TRELLIS and Hunyuan3D 2.0 geometry adapters](LOCAL_GEOMETRY.md) share its GPU through explicit shared mode.
 
 ## Try it
 
@@ -8,7 +8,7 @@ Open **Administration → Workers**. media-worker shows its last observation, se
 
 - **Pause queue** holds new work and lets the current job finish. **Resume queue** allows dispatch again.
 - **Keep the selected service resident** is the default. Model services remain resident between jobs; separate machines can work concurrently.
-- **Share this GPU between services** explicitly permits switching among locally approved services. The scheduler selects the service required by the next gallery job, confirms the previous service has stopped, waits for health readiness, and rechecks the previously qualified provider manifest before inference.
+- **Share this GPU between services** explicitly permits switching among locally approved services. The scheduler selects the service required by the next fairly selected gallery or conversation image job, confirms the previous service has stopped, waits for health readiness, and rechecks the previously qualified provider manifest before inference.
 - **Unload and pause** releases the selected service when the group is idle. A running or uncertain job prevents service changes. Select Fooocus to start it again, then resume the queue.
 - **Retry service** requires a new configuration revision after a lifecycle failure. Changed service files require reviewed approval, not repeated retries.
 

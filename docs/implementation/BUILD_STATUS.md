@@ -4,6 +4,14 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Hunyuan3D 2.0 and three-backend scheduling — 18 September
+
+The 3D provider selector now supports the original Hunyuan3D 2.0 shape/paint profile at 512 alongside TRELLIS.2 Q8 at 512/1024. The installer prepares separate pinned weights, hash-locked dependencies, compiled CUDA extensions and a private HTTPS adapter. media-worker's reviewed signed recipe maps Fooocus, TRELLIS and Hunyuan to the same GPU pool. Existing owner fairness selects work before backend selection; jobs retain their chosen model, wait for all other service cgroups to drain, and require qualified readiness before dispatch. Independent host pools remain separately schedulable.
+
+[Historical deployment inventory removed for repository privacy.]
+
+Validation: 133 isolated VM backend cases passed (three live cases deselected), five Linux worker lifecycle cases passed, and seven deployed-bundle browser cases passed (one separately gated edge case skipped). The three adapter security cases were rerun after process-group hardening. A further 37-case VM run passed after adding geometry to the admin route-edit allowlist and verifying explicit two-target ordering. An additional browser check rendered the actual qualification GLB. See [qualification evidence](../../evidence/geometry/2026-09-18/hunyuan-validation.json) and [installation/operation details](LOCAL_GEOMETRY.md). Head deployment updates source/static bundles and the geometry route-edit allowlist, restarting both APIs only after confirming no active work. No schema change is required; migration remains `0026` and release gates remain unchanged. Fresh independent-host installation, sustained multi-user hardware load and broad model-quality comparison remain open.
+
 ## Channel heading — 18 September
 
 Channels now displays **All Together Now** above its page title; Private chat retains **JUST FOR YOU**. TypeScript and production builds passed. A browser check of the deployed bundle verified both labels while switching pages, using synthetic session/API responses. Static bundles were deployed without an API restart or database change; release gates are unchanged.
