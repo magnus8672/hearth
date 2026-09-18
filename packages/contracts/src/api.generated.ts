@@ -571,7 +571,8 @@ export interface paths {
         delete: operations["delete_api_v1_geometry__job_id__delete"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Rename */
+        patch: operations["rename_api_v1_geometry__job_id__patch"];
         trace?: never;
     };
     "/api/v1/geometry/{job_id}/cancel": {
@@ -600,6 +601,23 @@ export interface paths {
         };
         /** Download */
         get: operations["download_api_v1_geometry__job_id__model_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geometry/{job_id}/thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Thumbnail */
+        get: operations["thumbnail_api_v1_geometry__job_id__thumbnail_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2037,6 +2055,8 @@ export interface components {
         CreateGeometry: {
             /** Image */
             image: string;
+            /** Name */
+            name: string;
             request: components["schemas"]["GeometryGeneration"];
             /**
              * Target Id
@@ -2345,6 +2365,11 @@ export interface components {
              * @default 42
              */
             seed: number;
+        };
+        /** GeometryName */
+        GeometryName: {
+            /** Name */
+            name: string;
         };
         /** GeometryProviderInfo */
         GeometryProviderInfo: {
@@ -5047,6 +5072,41 @@ export interface operations {
             };
         };
     };
+    rename_api_v1_geometry__job_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GeometryName"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     cancel_api_v1_geometry__job_id__cancel_post: {
         parameters: {
             query?: never;
@@ -5079,6 +5139,37 @@ export interface operations {
         };
     };
     download_api_v1_geometry__job_id__model_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    thumbnail_api_v1_geometry__job_id__thumbnail_get: {
         parameters: {
             query?: never;
             header?: never;

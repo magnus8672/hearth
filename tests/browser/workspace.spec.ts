@@ -25,7 +25,7 @@ async function fixture(page: Page) {
       const glb = Buffer.alloc(20 + json.length); glb.write('glTF'); glb.writeUInt32LE(2, 4); glb.writeUInt32LE(glb.length, 8); glb.writeUInt32LE(json.length, 12); glb.writeUInt32LE(0x4e4f534a, 16); json.copy(glb, 20);
       return route.fulfill({ contentType: 'model/gltf-binary', body: glb });
     }
-    if (url.endsWith('/geometry')) return route.fulfill({ json: { items: Array.from({ length: 6 }, (_, i) => ({ id: String(i), status: 'completed', request: { model: 'trellis2/q8', resolution: 512, seed: i }, metadata: { triangles: 1000, textures: 2, bytes: 1024 } })) } });
+    if (url.endsWith('/geometry')) return route.fulfill({ json: { items: Array.from({ length: 6 }, (_, i) => ({ id: String(i), name: `Model ${i}`, has_thumbnail: false, status: 'completed', request: { model: 'trellis2/q8', resolution: 512, seed: i }, metadata: { triangles: 1000, textures: 2, bytes: 1024 } })) } });
     return route.fulfill({ json: { items: [] } });
   });
   return state;

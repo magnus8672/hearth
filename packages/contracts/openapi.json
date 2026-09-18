@@ -1418,6 +1418,12 @@
             "title": "Image",
             "type": "string"
           },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
           "request": {
             "$ref": "#/components/schemas/GeometryGeneration"
           },
@@ -1428,6 +1434,7 @@
           }
         },
         "required": [
+          "name",
           "request",
           "target_id",
           "image"
@@ -1976,6 +1983,22 @@
           "image_sha256"
         ],
         "title": "GeometryGeneration",
+        "type": "object"
+      },
+      "GeometryName": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "GeometryName",
         "type": "object"
       },
       "GeometryProviderInfo": {
@@ -6784,6 +6807,55 @@
         "tags": [
           "geometry"
         ]
+      },
+      "patch": {
+        "operationId": "rename_api_v1_geometry__job_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeometryName"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Rename",
+        "tags": [
+          "geometry"
+        ]
       }
     },
     "/api/v1/geometry/{job_id}/cancel": {
@@ -6863,6 +6935,47 @@
           }
         },
         "summary": "Download",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/api/v1/geometry/{job_id}/thumbnail": {
+      "get": {
+        "operationId": "thumbnail_api_v1_geometry__job_id__thumbnail_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Thumbnail",
         "tags": [
           "geometry"
         ]

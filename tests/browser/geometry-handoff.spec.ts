@@ -1,8 +1,19 @@
 import { test, expect } from '@playwright/test';
 import { createHash } from 'node:crypto';
+import path from 'node:path';
 
 const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
 const imageId = '00000000-0000-4000-8000-000000000091';
+test.beforeEach(async ({ page }) => {
+  if (process.env.HEARTH_BROWSER_LOCAL_BUILD !== '1') return;
+  await page.route(origin + '/**', async route => {
+    const pathname = new URL(route.request().url()).pathname;
+    if (pathname !== '/' && !pathname.startsWith('/assets/')) return route.fallback();
+    const file = path.resolve('apps/user-web/dist', '.' + (pathname === '/' ? '/index.html' : pathname));
+    if (!file.startsWith(path.resolve('apps/user-web/dist') + path.sep)) return route.abort();
+    await route.fulfill({ path: file });
+  });
+});
 const request = { id: imageId, model: 'image-fixture', prompt: 'An original reference fixture', negative_prompt: '', shape: 'square', steps: 20, seed: 42 };
 
 for (const surface of ['gallery', 'chat', 'channel'] as const) {
@@ -28,6 +39,7 @@ for (const surface of ['gallery', 'chat', 'channel'] as const) {
       if (route.request().method() === 'POST') {
         submitted++;
         const data = route.request().postDataJSON(); const bytes = Buffer.from(data.image, 'base64');
+        expect(data.name).toBe('Named reference model');
         expect(bytes.length).toBeLessThan(8 * 1024 * 1024);
         expect(bytes.subarray(0, 2).toString('hex')).toBe('ffd8');
         expect(data.request.image_sha256).toBe(createHash('sha256').update(bytes).digest('hex'));
@@ -58,6 +70,8 @@ for (const surface of ['gallery', 'chat', 'channel'] as const) {
     const reference = page.getByRole('img', { name: 'Reference for your 3D model' });
     await expect(reference).toBeVisible();
     await expect(page.getByText('Your selected image is ready.', { exact: false })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Create 3D model' })).toBeDisabled();
+    await page.getByLabel('Model name', { exact: true }).fill('Named reference model');
     await expect(page.getByRole('button', { name: 'Create 3D model' })).toBeEnabled();
     expect(submitted).toBe(0); // Navigation alone never starts GPU work.
     if (surface === 'gallery') await expect.poll(() => reference.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBe(1600);

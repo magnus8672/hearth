@@ -2,7 +2,13 @@
 
 Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.20.30.10`; media-worker `10.20.30.20` provides images/3D and model-host `10.20.30.30` provides LM Studio Qwen. See [current farm state](CURRENT_STATE.md) for the dated inventory and [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
 
-All fourteen capability profiles have bounded implementations. Database migration is **0025**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+
+## Geometry names and reference thumbnails — 18 September
+
+The geometry form and API require a nonblank name of at most 120 characters. Cards use the chosen name as their heading and retain a small static source-image preview after generation. Owners can rename new and existing models. Existing unnamed models receive ID-based display titles and a missing-preview placeholder; their discarded source images cannot be recovered. Migration `0026` adds the two private catalog fields without modifying stored GLBs or weakening RLS.
+
+Validation passed 35 isolated VM backend cases and 17 deployed-bundle browser/edge cases. Both public HTTPS readiness checks passed on migration `0026`; deployment waited for an active chat to finish before restarting the APIs. Results are recorded in [catalog evidence](../../evidence/geometry/2026-09-18/catalog-validation.json); [the geometry guide](LOCAL_GEOMETRY.md) explains retention and privacy. This does not change GPU routing or release-gate status.
 
 ## Shared GPU queue for conversations — 18 September
 

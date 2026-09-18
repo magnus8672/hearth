@@ -151,7 +151,7 @@ def test_geometry_only_grant_and_revocation_before_queue_dispatch(accounts, monk
     target=admin.post('/api/v1/providers',headers=headers,json={'name':'Geometry approval fixture','base_url':'http://127.0.0.1:1236','model_id':INFO.model,'protocol':INFO.protocol,'local_only':True}).json()['id']
     assert admin.post(f'/api/v1/providers/{target}/probe',headers=headers,json={'revision':1}).status_code == 200
     image=reference()
-    body={'target_id':target,'request':{'id':str(uuid4()),'model':INFO.model,'image_sha256':hashlib.sha256(image).hexdigest()},'image':base64.b64encode(image).decode()}
+    body={'name':'Approved fixture model','target_id':target,'request':{'id':str(uuid4()),'model':INFO.model,'image_sha256':hashlib.sha256(image).hexdigest()},'image':base64.b64encode(image).decode()}
     assert user.post('/api/v1/geometry',headers=csrf(user,settings.user_origin),json=body).status_code == 403
     assert update(admin,settings,account,permissions=['capability.geometry.generate']).status_code == 200
     signin(user)

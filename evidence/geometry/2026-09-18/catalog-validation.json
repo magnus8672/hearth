@@ -1,0 +1,80 @@
+{
+  "recorded_at": "2026-09-18T15:29:38.574207+00:00",
+  "source_baseline": "56fe0cf",
+  "scope": "Required private model names, owner renaming, static reference thumbnails and legacy model identification.",
+  "backend": {
+    "host": "10.20.30.10",
+    "passed": 35,
+    "failed": 0,
+    "storage": "Temporary isolated PostgreSQL database on the existing VM; removed afterward. Restricted app role and forced owner/farm RLS.",
+    "fixtures": "Synthetic OIDC, worker and geometry/image transports; no member content or real GPU generation used.",
+    "checks": [
+      "Missing, whitespace-only and overlength names rejected before queue admission",
+      "Names persisted and displayed independently of worker request metadata",
+      "Rename requires CSRF, capability access and owner scope",
+      "Idempotent submit preserves a renamed title",
+      "320-pixel bounded PNG retained after full input is cleared on completion",
+      "Private no-store/nosniff thumbnail response, other member and admin BFF denied",
+      "Legacy null names and thumbnails remain listable and renameable",
+      "Deletion clears thumbnails and prevents later reads/renaming",
+      "Owner/farm RLS and shared GPU queue regressions"
+    ]
+  },
+  "browser": {
+    "origin": "https://hearth.example.invalid",
+    "bundles": "Actual deployed bundles with synthetic API fixtures, plus unauthenticated live upload-edge boundaries",
+    "passed": 17,
+    "skipped": 0,
+    "failed": 0,
+    "checks": [
+      "Required names, card headings, thumbnail decoding, rename and reload",
+      "Legacy placeholder, long escaped titles, failed rename draft preservation",
+      "Named image handoff from gallery, private chat and shared channel",
+      "390 through 3840 pixel layout and existing chat/channel scroll/queue controls",
+      "Existing upload and HTTP error handling"
+    ]
+  },
+  "source_checks": {
+    "typescript": "passed",
+    "production_bundles": "passed; existing lazy Three.js chunk warning",
+    "ruff": "changed API, migration and geometry integration test passed on VM",
+    "contracts": "dev.py generate invoked via uv --no-sync --group knowledge in the existing VM test image. Python schemas and fixtures generated there; missing VM Go/pnpm steps completed on the workstation with pinned gofmt and pnpm openapi-typescript. Go and wire fixtures unchanged.",
+    "diff_whitespace": "passed"
+  },
+  "deployment": {
+    "host": "10.20.30.10",
+    "root": "/opt/hearth",
+    "project": "hearth-head",
+    "backup": "/opt/hearth/.hearth/before-geometry-catalog-20260918T151933Z",
+    "migration": "0026",
+    "services_recreated": [
+      "api",
+      "user-api"
+    ],
+    "active_requests_before_restart": 0,
+    "live_chat_preserved": "Deployment deferred after a chat started during build, then resumed after active work finished.",
+    "https_user_api": "ready",
+    "https_admin_api": "ready",
+    "geometry_rls_enabled_and_forced": true,
+    "served_user_index_and_running_api_hashes_match_checkout": true,
+    "legacy_geometry_rows": 12,
+    "retained_glbs": 9,
+    "sha256": {
+      "services/api/src/hearth/geometry.py": "d8985f7f4c52b9c2a7a7e7bdc5f1417471b75b0a8d7364f21ce2a6ba97e01516",
+      "services/api/migrations/versions/0026_geometry_catalog.py": "981a6bb4cba2bed75b50e813859104f8c699ba7b52fe932813f8e84468b803d8",
+      "packages/ui/src/geometry.tsx": "c6b03d63ab2b9b70e8009517b41d2f9187a7a29d9378e62d1994ffc0d259f667",
+      "packages/ui/src/theme.css": "2e29b2f265c9329733feb2a7a3e76eea2f0b351ef9c6430b758d8281a681c76e",
+      "packages/contracts/openapi.json": "713bc6aa6b3f41b19e8afacb508a6e1e250f357909b4c715067b37805770a1d8",
+      "apps/user-web/dist/index.html": "a7daf7b1f6e14877c09d00ed5003c432b0d3b2f52b95f01674b89a2717e79afe",
+      "apps/admin-web/dist/index.html": "d69ec03af8fee6cd3a91fb74c5e3f428090152b5c8347f2a75f44a3be9b82e50"
+    }
+  },
+  "limits": [
+    "Thumbnails show reference images, not rendered mesh snapshots.",
+    "Previously completed source images were discarded; legacy cards have an ID-based fallback title, Rename and an explicit missing-preview placeholder.",
+    "No fresh physical GPU rendering or full multi-user stress qualification was performed.",
+    "Provider copies and backups remain separate retention domains.",
+    "Release gates remain 20 partial, 41 not run and zero fully passed."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

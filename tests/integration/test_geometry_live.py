@@ -30,7 +30,7 @@ def test_geometry_real_private_queue_cancel_and_export(bff):
         signin(user); uh = csrf(user, settings.user_origin); image = reference()
         def submit(seed):
             job = str(uuid4())
-            result = user.post('/api/v1/geometry', headers=uh, json={'target_id': target, 'request': {'id': job, 'model': config['model'], 'image_sha256': hashlib.sha256(image).hexdigest(), 'seed': seed}, 'image': base64.b64encode(image).decode()})
+            result = user.post('/api/v1/geometry', headers=uh, json={'name': 'Fixture model', 'target_id': target, 'request': {'id': job, 'model': config['model'], 'image_sha256': hashlib.sha256(image).hexdigest(), 'seed': seed}, 'image': base64.b64encode(image).decode()})
             assert result.status_code == 202, result.text
             return job
         def wait(job, wanted, timeout=180):

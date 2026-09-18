@@ -1,16 +1,19 @@
 import base64
 import hashlib
+import io
 import time
-from uuid import uuid4
+from uuid import UUID, uuid4
 
-from hearth import geometry_transport, image_queue
+from hearth import geometry_transport, identity, image_queue
 from hearth.contracts import GeometryProviderInfo, GeometryReceipt
 from hearth.database import scoped_session
 from hearth.geometry_probe import reference
+from PIL import Image
 from sqlalchemy import text
 
 from tests.integration.test_chat import csrf, promote, setup
-from tests.integration.test_identity import bff as bff, signin
+from tests.integration.test_identity import approve_fixture_member, signin
+from tests.integration.test_identity import bff as bff
 from tests.integration.test_postgres import databases as databases
 from tests.security.test_geometry import triangle
 
@@ -29,34 +32,52 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
     monkeypatch.setattr(geometry_transport, 'information', lambda *args: INFO)
     monkeypatch.setattr(geometry_transport, 'render', render)
     with factory('admin') as admin, factory() as user:
-        signin(admin); promote(admin, migration, settings)
+        signin(admin)
+        promote(admin, migration, settings)
         ah = csrf(admin, settings.admin_origin)
         target = admin.post('/api/v1/providers', headers=ah, json={'name': 'Geometry fixture', 'base_url': 'http://127.0.0.1:1236', 'model_id': INFO.model, 'api_key': 'fixture', 'protocol': INFO.protocol, 'local_only': True}).json()['id']
         probe = admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 1})
         assert probe.json()['features'] == ['geometry.image_to_3d', 'geometry.jobs'], probe.text
-        signin(user); uh = csrf(user, settings.user_origin)
+        signin(user)
+        uh = csrf(user, settings.user_origin)
         # A valid 1.7 MiB PNG exercises the base64 envelope beyond the ordinary
-        # 1 MiB request limit; tiny probe images did not cover real uploads.
-        import io
-        from PIL import Image
+        # 1 MiB request limit
+        # Tiny probe images did not cover real uploads.
         buffer = io.BytesIO()
         Image.new('RGB', (960, 600), '#e99044').save(buffer, format='PNG', compress_level=0)
         image = buffer.getvalue()
         assert 1_700_000 < len(image) < 1_800_000
-        data = {'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+        data = {'name': 'Fixture model', 'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
         assert user.post('/api/v1/geometry', json=data).status_code == 403
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         deadline = time.monotonic() + 5
         while time.monotonic() < deadline:
             job = user.get('/api/v1/geometry').json()['items'][0]
-            if job['status'] == 'completed': break
+            if job['status'] == 'completed':
+                break
             time.sleep(.03)
         assert job['status'] == 'completed', job
         assert job['metadata']['triangles'] == 1
+        assert job['name'] == 'Fixture model' and job['has_thumbnail']
+        with scoped_session(engine, UUID(user.get('/api/v1/session').json()['id']), settings.farm_id) as db:
+            assert db.execute(text('SELECT source_image FROM geometry_jobs WHERE id=:id'), {'id': job['id']}).scalar_one() is None
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         assert len(calls) == 2
         path = f"/api/v1/geometry/{job['id']}"
         assert user.get(path+'/model').content == model
+        preview = user.get(path+'/thumbnail')
+        assert preview.status_code == 200 and preview.headers['content-type'] == 'image/png'
+        assert preview.headers['cache-control'] == 'no-store'
+        assert preview.headers['x-content-type-options'] == 'nosniff'
+        with Image.open(io.BytesIO(preview.content)) as thumbnail:
+            assert thumbnail.size == (320, 200)
+        assert len(preview.content) <= 524288
+        assert user.patch(path, json={'name': 'Renamed ship'}).status_code == 403
+        assert user.patch(path, headers=uh, json={'name': '  Renamed ship  '}).json()['name'] == 'Renamed ship'
+        assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
+        assert user.get('/api/v1/geometry').json()['items'][0]['name'] == 'Renamed ship'
+        assert admin.get(path+'/thumbnail').status_code == 403
+        assert admin.patch(path, headers=ah, json={'name': 'Not mine'}).status_code == 403
         assert admin.get(path+'/model').status_code == 403
         with migration.connect() as db:
             other = db.execute(text('SELECT id FROM users WHERE farm_id=:farm AND subject<>:subject'), {'farm': settings.farm_id, 'subject': subject}).scalar_one()
@@ -64,6 +85,10 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
             assert db.execute(text('SELECT count(*) FROM geometry_jobs')).scalar_one() == 0
         assert user.delete(path, headers=uh).status_code == 200
         assert user.get(path+'/model').status_code == 404
+        assert user.get(path+'/thumbnail').status_code == 404
+        assert user.patch(path, headers=uh, json={'name': 'Deleted'}).status_code == 404
+        with scoped_session(engine, UUID(user.get('/api/v1/session').json()['id']), settings.farm_id) as db:
+            assert db.execute(text('SELECT thumbnail FROM geometry_jobs WHERE id=:id'), {'id': job['id']}).scalar_one() is None
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 410
 
 
@@ -73,31 +98,73 @@ def test_geometry_waiting_cancel_and_model_validation(bff, monkeypatch):
     monkeypatch.setattr(geometry_transport, 'information', lambda *args: INFO)
     monkeypatch.setattr(geometry_transport, 'render', lambda url, key, settings, data, image, observe=lambda value: False: (GeometryReceipt(**data.model_dump(), state='completed', progress=100, manifest_sha256='a'*64, execution_released=True, cancel_requested=False), triangle()))
     with factory('admin') as admin, factory() as user:
-        signin(admin); promote(admin, migration, settings); ah = csrf(admin, settings.admin_origin)
+        signin(admin)
+        promote(admin, migration, settings)
+        ah = csrf(admin, settings.admin_origin)
         target = admin.post('/api/v1/providers', headers=ah, json={'name': 'Geometry fixture', 'base_url': 'http://127.0.0.1:1236', 'model_id': INFO.model, 'protocol': INFO.protocol, 'local_only': True}).json()['id']
         assert admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 1}).json()['state'] == 'ready'
-        signin(user); uh = csrf(user, settings.user_origin); image = reference()
-        data = {'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+        signin(user)
+        uh = csrf(user, settings.user_origin)
+        image = reference()
+        data = {'name': 'Fixture model', 'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+        missing_name = {key: value for key, value in data.items() if key != 'name'}
+        assert user.post('/api/v1/geometry', headers=uh, json=missing_name).status_code == 422
+        for bad_name in ['', '   ', '\t\n', 'x' * 121]:
+            assert user.post('/api/v1/geometry', headers=uh, json=data | {'name': bad_name}).status_code == 422
+        assert user.get('/api/v1/geometry').json()['items'] == []
         assert user.post('/api/v1/geometry', headers=uh, json=data | {'request': data['request'] | {'resolution': 1024}}).status_code == 409
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         path = f"/api/v1/geometry/{data['request']['id']}"
         assert user.delete(path, headers=uh).status_code == 409
         assert user.post(path+'/cancel', headers=uh).status_code == 200
         assert user.get('/api/v1/geometry').json()['items'][0]['status'] == 'cancelled'
+        saved_preview = user.get(path+'/thumbnail').content
+        for bad_name in ['', '   ', '\t\n', 'x' * 121]:
+            assert user.patch(path, headers=uh, json={'name': bad_name}).status_code == 422
+        owner = UUID(user.get('/api/v1/session').json()['id'])
+        # Legacy completed rows have neither catalog column populated.
+        with scoped_session(engine, owner, settings.farm_id) as db:
+            db.execute(text('UPDATE geometry_jobs SET name=NULL,thumbnail=NULL WHERE id=:id'), {'id': data['request']['id']})
+        legacy = user.get('/api/v1/geometry').json()['items'][0]
+        assert legacy['name'] == 'Model ' + data['request']['id'][:8] and not legacy['has_thumbnail']
+        assert user.get(path+'/thumbnail').status_code == 404
+        assert user.patch(path, headers=uh, json={'name': 'Old ship'}).status_code == 200
+        assert user.get('/api/v1/geometry').json()['items'][0]['name'] == 'Old ship'
+        with scoped_session(engine, owner, settings.farm_id) as db:
+            db.execute(text('UPDATE geometry_jobs SET thumbnail=:thumbnail WHERE id=:id'), {'id': data['request']['id'], 'thumbnail': saved_preview})
+        assert user.get(path+'/thumbnail').status_code == 200
+        other_subject = str(uuid4())
+        monkeypatch.setattr(identity, 'token_request', lambda config, endpoint, values: {'active': True, 'sub': other_subject, 'iss': config.issuer} if endpoint == 'token/introspect' else {'id_token': 'FIXTURE', 'access_token': 'FIXTURE', 'refresh_token': 'FIXTURE', 'expires_in': 300})
+        monkeypatch.setattr(identity, 'verify_id_token', lambda *args: {'sub': other_subject, 'name': 'Other member'})
+        with factory() as other:
+            signin(other)
+            approve_fixture_member(other, migration, settings)
+            oh = csrf(other, settings.user_origin)
+            assert other.get('/api/v1/geometry').json()['items'] == []
+            assert other.get(path+'/thumbnail').status_code == 404
+            assert other.patch(path, headers=oh, json={'name': 'Stolen title'}).status_code == 404
+        # Farm scope is enforced even if the principal ID is known.
+        with scoped_session(engine, owner, uuid4()) as db:
+            assert db.execute(text('SELECT count(*) FROM geometry_jobs')).scalar_one() == 0
 
 
 def test_image_and_geometry_share_one_queue_and_switch_only_after_release(bff, monkeypatch):
     import json
+
     from hearth import workers
+
     from tests.integration.test_images import image_target
-    from tests.integration.test_worker_queue import fixture_provider, adopt, request as image_request
+    from tests.integration.test_worker_queue import adopt, fixture_provider
+    from tests.integration.test_worker_queue import request as image_request
     monkeypatch.setattr(image_queue.ImageQueue, 'run', lambda self: self.stop.wait())
     factory, settings, engine, migration, _ = setup(bff, monkeypatch)
     fixture_provider(monkeypatch)
     monkeypatch.setattr(geometry_transport, 'information', lambda *args: INFO)
     monkeypatch.setattr(geometry_transport, 'render', lambda url, key, settings, data, image, observe=lambda value: False: (GeometryReceipt(**data.model_dump(), state='completed', progress=100, manifest_sha256='a'*64, execution_released=True, cancel_requested=False), triangle()))
     with factory('admin') as admin, factory() as user:
-        signin(admin); promote(admin, migration, settings); ah = csrf(admin, settings.admin_origin)
+        signin(admin)
+        promote(admin, migration, settings)
+        ah = csrf(admin, settings.admin_origin)
         picture = image_target(admin, ah)
         target = admin.post('/api/v1/providers', headers=ah, json={'name': 'Geometry fixture', 'base_url': 'http://127.0.0.1:1236', 'model_id': INFO.model, 'protocol': INFO.protocol, 'local_only': True}).json()['id']
         assert admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 1}).json()['state'] == 'ready'
@@ -105,9 +172,10 @@ def test_image_and_geometry_share_one_queue_and_switch_only_after_release(bff, m
         with scoped_session(migration, workers.SYSTEM, settings.farm_id) as db:
             connection = db.execute(text('SELECT connection_id FROM inference_targets WHERE id=:id'), {'id': target}).scalar_one()
             db.execute(text("UPDATE managed_workers SET policy='shared',seen_at=now(),state='ready',observed_revision=revision,ready_service='fooocus',services=services || CAST(:service AS jsonb) WHERE id=:id"), {'id': node, 'service': json.dumps({'trellis': {'name': 'TRELLIS', 'connection_id': str(connection)}})})
-        signin(user); uh = csrf(user, settings.user_origin)
+        signin(user)
+        uh = csrf(user, settings.user_origin)
         image = reference()
-        data = {'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+        data = {'name': 'Fixture model', 'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
         assert user.post('/api/v1/images', headers=uh, json=image_request(picture)).status_code == 202
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         first = image_queue.claim(engine, settings, pool)

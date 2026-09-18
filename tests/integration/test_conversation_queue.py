@@ -83,7 +83,7 @@ def test_two_members_geometry_gallery_and_conversation_share_switching_and_fairn
         signin(first)
         fh = csrf(first, settings.user_origin)
         reference_image = reference()
-        geometry_job = {'target_id': geometry, 'image': base64.b64encode(reference_image).decode(), 'request': {'id': str(uuid4()), 'model': GEOMETRY_INFO.model, 'image_sha256': hashlib.sha256(reference_image).hexdigest()}}
+        geometry_job = {'name': 'Queued fixture model', 'target_id': geometry, 'image': base64.b64encode(reference_image).decode(), 'request': {'id': str(uuid4()), 'model': GEOMETRY_INFO.model, 'image_sha256': hashlib.sha256(reference_image).hexdigest()}}
         assert first.post('/api/v1/geometry', headers=fh, json=geometry_job).status_code == 202
         geometry_admission = image_queue.claim(app, settings, pool)
         assert geometry_admission

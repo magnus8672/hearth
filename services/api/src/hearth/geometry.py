@@ -1,12 +1,15 @@
 """Owner-scoped image-to-3D jobs on the shared capability queue."""
 import base64
 import hashlib
+import io
 import json
 import time
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Request, Response
-from pydantic import BaseModel, ConfigDict, Field
+from PIL import Image
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 from sqlalchemy import text
 
 from hearth import geometry_transport, image_queue
@@ -22,8 +25,12 @@ from hearth.vision import normalize_image
 router = APIRouter()
 
 
-class CreateGeometry(BaseModel):
+class GeometryName(BaseModel):
     model_config = ConfigDict(extra='forbid')
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
+
+
+class CreateGeometry(GeometryName):
     request: GeometryGeneration
     target_id: UUID
     image: str = Field(max_length=12_000_000)
@@ -45,7 +52,7 @@ def listing(request: Request):
         for row in rows:
             db.execute(text("UPDATE geometry_jobs SET status='interrupted',reason='The worker connection was interrupted. Check Workers before retrying.',finished_at=now() WHERE id=:id"), {'id': row['id']})
             release_pool(db, row['resource_pool_id'], row['id'], uncertain=True)
-        rows = db.execute(text('SELECT id,target_id,request,status,progress,cancel_requested,reason,metadata,created_at FROM geometry_jobs WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 50')).mappings().all()
+        rows = db.execute(text('SELECT id,target_id,request,status,progress,cancel_requested,reason,metadata,created_at,COALESCE(name,\'Model \' || left(id::text,8)) AS name,thumbnail IS NOT NULL AS has_thumbnail FROM geometry_jobs WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 50')).mappings().all()
     return {'items': [dict(row) for row in rows]}
 
 
@@ -59,6 +66,10 @@ def generate(request: Request, data: CreateGeometry):
     if hashlib.sha256(raw).hexdigest() != data.request.image_sha256:
         raise HTTPException(422, 'The image digest did not match.')
     raw, _, _ = normalize_image(raw)
+    with Image.open(io.BytesIO(raw)) as image:
+        image.thumbnail((320, 320))
+        thumbnail = io.BytesIO()
+        image.save(thumbnail, format='PNG')
     payload = data.request.model_copy(update={'image_sha256': hashlib.sha256(raw).hexdigest()}).model_dump(mode='json')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         workspace = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
@@ -77,10 +88,30 @@ def generate(request: Request, data: CreateGeometry):
             raise HTTPException(409, 'Choose a verified geometry model and supported resolution.')
         if not db.execute(text("SELECT 1 FROM capability_bindings WHERE capability_id='geometry.generate' AND target_id=:id"), {'id': target['id']}).first():
             raise HTTPException(409, 'Assign this model to the geometry capability first.')
-        db.execute(text("INSERT INTO geometry_jobs(id,farm_id,owner_id,workspace_id,target_id,request,source_image,session_hash,authorization_version) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:source,:session,:version)"),
-                   {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': target['id'], 'request': json.dumps(payload), 'source': raw, 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
+        db.execute(text("INSERT INTO geometry_jobs(id,farm_id,owner_id,workspace_id,target_id,request,source_image,session_hash,authorization_version,name,thumbnail) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:source,:session,:version,:name,:thumbnail)"),
+                   {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': target['id'], 'request': json.dumps(payload), 'source': raw, 'name': data.name, 'thumbnail': thumbnail.getvalue(), 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
         image_queue.enqueue(db, principal, target, data.request.id, 'geometry')
     return {'id': data.request.id, 'status': 'queued'}
+
+
+@router.patch('/api/v1/geometry/{job_id}', tags=['geometry'])
+def rename(request: Request, job_id: UUID, data: GeometryName):
+    principal = member(request, mutation=True, permission='capability.geometry.generate')
+    with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        updated = db.execute(text('UPDATE geometry_jobs SET name=:name WHERE id=:id AND deleted_at IS NULL RETURNING id'), {'id': job_id, 'name': data.name}).scalar_one_or_none()
+        if updated is None:
+            raise HTTPException(404, 'This model is not in your workspace.')
+    return {'id': job_id, 'name': data.name}
+
+
+@router.get('/api/v1/geometry/{job_id}/thumbnail', tags=['geometry'])
+def thumbnail(request: Request, job_id: UUID):
+    principal = member(request, permission='capability.geometry.generate')
+    with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        image = db.execute(text('SELECT thumbnail FROM geometry_jobs WHERE id=:id AND deleted_at IS NULL'), {'id': job_id}).scalar_one_or_none()
+        if image is None:
+            raise HTTPException(404, 'This reference preview is not available in your workspace.')
+    return Response(bytes(image), media_type='image/png', headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'})
 
 
 @router.post('/api/v1/geometry/{job_id}/cancel', tags=['geometry'])
@@ -117,7 +148,7 @@ def delete(request: Request, job_id: UUID):
             raise HTTPException(404, 'This model is not in your workspace.')
         if row in {'queued', 'running'}:
             raise HTTPException(409, 'Stop generation and wait for it to end before deleting this model.')
-        db.execute(text('UPDATE geometry_jobs SET artifact=NULL,source_image=NULL,metadata=NULL,deleted_at=now() WHERE id=:id'), {'id': job_id})
+        db.execute(text('UPDATE geometry_jobs SET artifact=NULL,source_image=NULL,thumbnail=NULL,name=NULL,metadata=NULL,deleted_at=now() WHERE id=:id'), {'id': job_id})
     return {'deleted': True}
 
 

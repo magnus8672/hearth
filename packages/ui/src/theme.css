@@ -403,6 +403,15 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .chat-message { overflow-wrap: anywhere; }
 .geometry-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 20px; align-items: start; }
 .geometry-gallery .geometry-card { margin: 0; min-width: 0; }
+.geometry-card h3 { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: 1.15rem; }
+.geometry-card .section-heading { align-items: flex-start; gap: 12px; }
+.geometry-card .section-heading > span { flex-shrink: 0; }
+.geometry-thumbnail { margin: 16px 0; }
+.geometry-thumbnail img { display: block; width: 100%; height: 220px; object-fit: contain; border-radius: 9px; background: var(--hearth-background); }
+.geometry-thumbnail figcaption { margin-top: 6px; font-size: .8rem; color: var(--hearth-muted); }
+.geometry-thumbnail-empty { display: grid; place-items: center; min-height: 100px; border: 1px dashed var(--hearth-border); border-radius: 9px; padding: 12px; }
+.geometry-rename label { display: grid; gap: 8px; margin-bottom: 8px; }
+.geometry-rename input { min-width: 0; width: 100%; }
 .geometry-gallery .preview-open { grid-column: 1 / -1; }
 .media-workspace .image-gallery { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
 @media (min-width: 901px) {

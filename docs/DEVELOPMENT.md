@@ -76,7 +76,7 @@ This produces unsigned Windows AMD64, Linux AMD64/ARM64 and macOS AMD64/ARM64 ZI
 | Path | Responsibility |
 |---|---|
 | `services/api/src/hearth` | FastAPI BFFs, identity/policy, routing, providers, content, MCP/client API and queues |
-| `services/api/migrations` | PostgreSQL schema, restricted roles, RLS; migrations through `0025` |
+| `services/api/migrations` | PostgreSQL schema, restricted roles, RLS; migrations through `0026` |
 | `apps/admin-web`, `apps/user-web` | Separate React/Vite entry points |
 | `packages/ui`, `packages/contracts` | Shared UI and generated contracts |
 | `worker` | Native Go manager, connector, setup, host probes and cryptographic foundations |
