@@ -271,10 +271,37 @@ def certificate_package(values, root_pem, server_pem):
         for name, content in {
             'hearth-root.crt': root_pem, 'hearth-root.cer': roots[0],
             'hearth-server-chain.pem': server_pem,
+            'install-hearth-certificate.cmd': windows_trust_installer(roots[0]),
             'connection.json': json.dumps(metadata, indent=2) + '\n', 'README.txt': instructions,
         }.items():
             archive.writestr(name, content)
     return output.getvalue(), metadata
+
+
+def windows_trust_installer(der):
+    """One public-root installer, no download/elevation or execution of remote code."""
+    import base64
+    encoded = base64.b64encode(der).decode('ascii')
+    fingerprint = hashlib.sha256(der).hexdigest().upper()
+    script = (
+        "$ErrorActionPreference='Stop'; "
+        f"$bytes=[Convert]::FromBase64String('{encoded}'); "
+        "$sha=[Security.Cryptography.SHA256]::Create(); "
+        "$actual=([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-',''); "
+        f"if($actual -ne '{fingerprint}'){{throw 'Certificate integrity check failed'}}; "
+        "Write-Host 'Trust this hearth for your Windows account?'; "
+        "Write-Host ('Root SHA-256: '+$actual); "
+        "Write-Host 'Compare this fingerprint with your farm administrator before continuing.'; "
+        "if((Read-Host 'Type YES to install this root certificate') -cne 'YES'){exit 1}; "
+        "$cert=[Security.Cryptography.X509Certificates.X509Certificate2]::new($bytes); "
+        "$store=[Security.Cryptography.X509Certificates.X509Store]::new('Root','CurrentUser'); "
+        "$store.Open('ReadWrite'); try{$store.Add($cert)}finally{$store.Close()}; "
+        "Write-Host 'Installed for your Windows account. Return to the welcome page and check connections.'; "
+        "Write-Host 'Zen or Firefox may also require import in their certificate Authorities settings.'"
+    )
+    return ('@echo off\r\nrem hearth public root installer; no administrator privileges required.\r\n'
+            'powershell.exe -NoProfile -Command "'+script+'"\r\n'
+            'if errorlevel 1 echo Certificate installation did not complete.\r\npause\r\n')
 
 
 def export_certificates(state):
@@ -305,7 +332,7 @@ def publish_setup(state, package, metadata):
     for key, value in replacements.items():
         page = page.replace('@@' + key + '@@', html.escape(value, quote=True))
     with ZipFile(io.BytesIO(package)) as archive:
-        contents = {name: archive.read(name) for name in ('hearth-root.crt', 'hearth-root.cer', 'connection.json')}
+        contents = {name: archive.read(name) for name in ('hearth-root.crt', 'hearth-root.cer', 'connection.json', 'install-hearth-certificate.cmd')}
     contents.update({'index.html': page.encode(), 'hearth-client-certificates.zip': package})
     for name, content in contents.items():
         descriptor, temporary = tempfile.mkstemp(prefix='.' + name, dir=folder)

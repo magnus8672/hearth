@@ -6,7 +6,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
+from hearth.catalog import CAPABILITIES
 from hearth.contracts import AdminChangeSet, AdminExecutionGrant, CloudAuthorization, Locality
+
+CAPABILITY_PERMISSIONS = {f'capability.{item.capability_id}' for item in CAPABILITIES}
+USER_PERMISSIONS = CAPABILITY_PERMISSIONS | {'conversation.own', 'artifact.own', 'memory.own',
+    'api_key.own', 'channel.use', 'draft.use', 'tool.use'}
 
 PERMISSIONS = {
     "farm.inspect", "farm.configure", "node.enroll", "node.revoke", "node.assign", "node.operate",
@@ -14,14 +19,37 @@ PERMISSIONS = {
     "provider.configure", "budget.configure", "role.grant", "recovery.configure",
     "audit.read", "conversation.own", "artifact.own", "memory.own", "api_key.own",
     "admin_agent.use", "admin_agent.read_history_own",
-}
+} | USER_PERMISSIONS
 ROLES = {
     "Owner": frozenset(PERMISSIONS),
-    "FarmAdmin": frozenset(PERMISSIONS - {"role.grant", "recovery.configure", "package.approve"}),
+    "FarmAdmin": frozenset(PERMISSIONS - {"recovery.configure", "package.approve"}),
     "Operator": frozenset({"farm.inspect", "node.operate", "admin_agent.use", "admin_agent.read_history_own"}),
     "Auditor": frozenset({"farm.inspect", "audit.read", "admin_agent.use", "admin_agent.read_history_own"}),
-    "Member": frozenset({"conversation.own", "artifact.own", "memory.own", "api_key.own"}),
+    "Member": frozenset(),
 }
+
+
+def permissions_for(db, user_id, farm_id):
+    """Only active accounts receive authority; signup and suspended accounts get none."""
+    from sqlalchemy import text
+    row = db.execute(text('SELECT state,access_permissions FROM users WHERE id=:id AND farm_id=:farm'),
+                     {'id': user_id, 'farm': farm_id}).mappings().one_or_none()
+    if not row or row['state'] != 'active':
+        return frozenset()
+    roles = db.execute(text('SELECT role FROM role_grants WHERE user_id=:id AND farm_id=:farm'),
+                       {'id': user_id, 'farm': farm_id}).scalars().all()
+    return frozenset(row['access_permissions']) | frozenset().union(*(ROLES.get(role, frozenset()) for role in roles))
+
+
+def scoped_permissions(db):
+    from sqlalchemy import text
+    scope = db.execute(text("SELECT NULLIF(current_setting('hearth.principal_id',true),'')::uuid, NULLIF(current_setting('hearth.farm_id',true),'')::uuid")).one()
+    return permissions_for(db, scope[0], scope[1])
+
+
+def require_capability(db, capability):
+    if f'capability.{capability}' not in scoped_permissions(db):
+        raise PolicyDenied('capability_denied')
 ACTION_PERMISSIONS = {
     "assign_capability": "node.assign", "configure_service": "node.assign",
     "drain_node": "node.operate", "resume_node": "node.operate", "retry_service": "node.operate",

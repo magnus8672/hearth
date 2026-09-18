@@ -44,7 +44,7 @@ def reconcile(db):
 
 @router.get('/api/v1/image-targets', tags=['images'])
 def targets(request: Request):
-    principal = member(request)
+    principal = member(request, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text("SELECT t.id,t.model_id,t.state,t.verified_until,t.profile,c.name FROM capability_bindings b JOIN inference_targets t ON t.id=b.target_id JOIN provider_connections c ON c.id=t.connection_id WHERE b.capability_id='image.generate' AND t.protocol='hearth.image.v1' ORDER BY b.priority DESC,t.id")).mappings().all()
     return {'items': [dict(row) | {'ready': row['state'] == 'ready', 'verified_until': None} for row in rows]}
@@ -52,7 +52,7 @@ def targets(request: Request):
 
 @router.get('/api/v1/images', tags=['images'])
 def images(request: Request):
-    principal = member(request)
+    principal = member(request, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         reconcile(db)
         rows = db.execute(text('SELECT id,target_id,request,status,progress,cancel_requested,reason,metadata,created_at FROM image_jobs WHERE channel_id IS NULL AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 100')).mappings().all()
@@ -61,7 +61,7 @@ def images(request: Request):
 
 @router.post('/api/v1/images', tags=['images'], status_code=202)
 def generate(request: Request, data: CreateImage):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.image.generate')
     engine = request.app.state.engine
     payload = data.request.model_dump(mode='json')
     with scoped_session(engine, principal.id, principal.farm_id) as db:
@@ -93,7 +93,7 @@ def generate(request: Request, data: CreateImage):
 
 @router.post('/api/v1/images/{job_id}/cancel', tags=['images'])
 def cancel(request: Request, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         queued = db.execute(text('SELECT state FROM capability_queue WHERE id=:id AND owner_id=:owner FOR UPDATE'), {'id': job_id, 'owner': principal.id}).scalar_one_or_none()
         row = db.execute(text('SELECT status FROM image_jobs WHERE id=:id FOR UPDATE'), {'id': job_id}).scalar_one_or_none()
@@ -108,7 +108,7 @@ def cancel(request: Request, job_id: UUID):
 
 @router.get('/api/v1/images/{job_id}/image', tags=['images'])
 def download(request: Request, job_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         image = db.execute(text("SELECT image FROM image_jobs WHERE id=:id AND status='completed' AND channel_id IS NULL AND deleted_at IS NULL"), {'id': job_id}).scalar_one_or_none()
         if image is None:
@@ -118,7 +118,7 @@ def download(request: Request, job_id: UUID):
 
 @router.delete('/api/v1/images/{job_id}', tags=['images'])
 def delete_image(request: Request, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         # RLS scopes this to the requesting owner, including when they are an admin.
         # Shared-channel moderation is separate from this private gallery action.
@@ -138,7 +138,7 @@ def delete_image(request: Request, job_id: UUID):
 
 @router.get('/api/v1/conversation-images/{job_id}/image', tags=['images'])
 def conversation_image(request: Request, job_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='capability.image.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         artifact = db.execute(text("SELECT image FROM conversation_images WHERE id=:id AND status='completed'"), {'id': job_id}).scalar_one_or_none()
         if artifact is None:

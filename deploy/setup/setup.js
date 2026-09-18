@@ -1,5 +1,12 @@
 const byId = id => document.getElementById(id);
 const button = byId('check-browser');
+const register = byId('register');
+byId('trust-confirmed').addEventListener('change', event => { register.disabled = !event.target.checked; });
+register.addEventListener('click', () => {
+  if (!byId('trust-confirmed').checked) return;
+  const target = new URL(register.dataset.url);
+  if (target.protocol === 'https:' && target.hostname === location.hostname && !target.username && !target.password && target.pathname === '/auth/register') location.assign(target.href);
+});
 button.addEventListener('click', async () => {
   button.disabled = true;
   byId('browser-status').textContent = 'Checking secure connections from this browser…';

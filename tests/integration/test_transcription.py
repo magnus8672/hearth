@@ -171,6 +171,8 @@ def test_private_review_does_not_send_raw_audio_or_transcript_to_chat_and_restor
             ),
         )
         signin(other)
+        from tests.integration.test_identity import approve_fixture_member
+        approve_fixture_member(other, migration, settings)
         oh = csrf(other, settings.user_origin)
         assert other.get(path + "/transcriptions").status_code == 404
         assert other.post(url, content=data, headers=oh).status_code == 404

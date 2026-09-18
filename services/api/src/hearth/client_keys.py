@@ -11,7 +11,7 @@ from sqlalchemy import text
 
 from hearth.database import scoped_session
 from hearth.identity import authenticate, check_origin, digest
-from hearth.policy import ROLES, Principal
+from hearth.policy import Principal, permissions_for
 from hearth.routing import TEXT
 
 router = APIRouter()
@@ -34,7 +34,7 @@ def browser_owner(request, mutation=False):
 
 
 def key_current(db, principal, key_id):
-    return db.execute(text("SELECT EXISTS(SELECT 1 FROM client_keys k JOIN users u ON u.id=k.owner_id AND u.farm_id=k.farm_id WHERE k.id=:id AND k.revoked_at IS NULL AND k.expires_at>now() AND u.state='active' AND u.authorization_version=k.authorization_version AND u.authorization_version=:version AND EXISTS(SELECT 1 FROM role_grants g WHERE g.user_id=u.id AND g.farm_id=u.farm_id AND g.role IN ('Owner','FarmAdmin','Member')))"), {'id': key_id, 'version': principal.authorization_version}).scalar_one()
+    return 'api_key.own' in permissions_for(db, principal.id, principal.farm_id) and db.execute(text("SELECT EXISTS(SELECT 1 FROM client_keys k JOIN users u ON u.id=k.owner_id AND u.farm_id=k.farm_id WHERE k.id=:id AND k.revoked_at IS NULL AND k.expires_at>now() AND u.state='active' AND u.authorization_version=k.authorization_version AND u.authorization_version=:version)"), {'id': key_id, 'version': principal.authorization_version}).scalar_one()
 
 
 @dataclass(frozen=True)
@@ -63,22 +63,25 @@ def bearer(request):
         row = db.execute(text('SELECT k.*,u.authorization_version AS current_version FROM client_keys k JOIN users u ON u.id=k.owner_id AND u.farm_id=k.farm_id WHERE token_hash=:hash'), {'hash': digest(match[1])}).mappings().one_or_none()
         if not row:
             raise HTTPException(401, 'This client key is invalid, expired or revoked.')
-        principal = Principal(owner, settings.farm_id, frozenset({'conversation.own', 'artifact.own'}), row['current_version'])
+        principal = Principal(owner, settings.farm_id, permissions_for(db, owner, settings.farm_id), row['current_version'])
         if not key_current(db, principal, row['id']):
             raise HTTPException(401, 'This client key is invalid, expired or revoked.')
         db.execute(text('UPDATE client_keys SET last_used_at=now() WHERE id=:id'), {'id': row['id']})
-        return ClientIdentity(principal, row['id'], frozenset(row['capabilities']), row['allow_tools'])
+        return ClientIdentity(principal, row['id'], frozenset(cap for cap in row['capabilities'] if 'capability.'+cap in principal.permissions), row['allow_tools'] and 'tool.use' in principal.permissions)
 
 
 def principal_current(db, principal):
-    roles = db.execute(text("SELECT g.role FROM users u JOIN role_grants g ON g.user_id=u.id AND g.farm_id=u.farm_id WHERE u.id=:id AND u.farm_id=:farm AND u.state='active' AND u.authorization_version=:version"), {'id': principal.id, 'farm': principal.farm_id, 'version': principal.authorization_version}).scalars().all()
-    return any('conversation.own' in ROLES.get(role, ()) for role in roles)
+    return db.execute(text("SELECT EXISTS(SELECT 1 FROM users WHERE id=:id AND farm_id=:farm AND state='active' AND authorization_version=:version)"), {'id': principal.id, 'farm': principal.farm_id, 'version': principal.authorization_version}).scalar_one()
 
 
 def issue_key(engine, principal, data):
     principal.require('api_key.own')
     if len(set(data.capabilities)) != len(data.capabilities) or not set(data.capabilities) <= set(TEXT):
         raise HTTPException(400, 'Choose supported text capabilities for this key.')
+    for capability in data.capabilities:
+        principal.require('capability.'+capability)
+    if data.allow_tools:
+        principal.require('tool.use')
     key_id = uuid4()
     secret = 'hrt_' + principal.id.hex + '_' + secrets.token_urlsafe(32)
     import json
@@ -101,7 +104,7 @@ def keys(request: Request):
     principal = browser_owner(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text('SELECT id,name,capabilities,allow_tools,created_at,expires_at,revoked_at,last_used_at FROM client_keys ORDER BY created_at DESC LIMIT 100')).mappings().all()
-    return {'items': [dict(row) for row in rows], 'capabilities': list(TEXT), 'base_url': request.app.state.settings.user_origin+'/v1', 'mcp_url': request.app.state.settings.user_origin+'/mcp'}
+    return {'items': [dict(row) for row in rows], 'capabilities': [cap for cap in TEXT if 'capability.'+cap in principal.permissions], 'base_url': request.app.state.settings.user_origin+'/v1', 'mcp_url': request.app.state.settings.user_origin+'/mcp'}
 
 
 @router.post('/api/v1/client-keys', tags=['clients'], status_code=201)

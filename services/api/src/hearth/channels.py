@@ -43,7 +43,7 @@ def room(db, channel_id, *, joined=True, lock=False):
 
 @router.get('/api/v1/channels', tags=['channels'])
 def list_channels(request: Request):
-    principal = member(request)
+    principal = member(request, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text('SELECT c.id,c.name,EXISTS(SELECT 1 FROM channel_memberships m WHERE m.channel_id=c.id) AS joined FROM channels c ORDER BY c.name')).mappings().all()
     return {'items': [dict(row) for row in rows]}
@@ -51,7 +51,7 @@ def list_channels(request: Request):
 
 @router.post('/api/v1/channels', tags=['channels'], status_code=201)
 def create_channel(request: Request, data: CreateChannel):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:farm,1))'), {'farm': str(principal.farm_id)})
         if db.execute(text('SELECT count(*) FROM channels')).scalar_one() >= 100:
@@ -67,7 +67,7 @@ def create_channel(request: Request, data: CreateChannel):
 
 @router.post('/api/v1/channels/{channel_id}/join', tags=['channels'])
 def join(request: Request, channel_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         room(db, channel_id, joined=False, lock=True)
         db.execute(text('INSERT INTO channel_memberships(channel_id,farm_id,owner_id) VALUES(:id,:farm,:owner) ON CONFLICT DO NOTHING'), {'id': channel_id, 'farm': principal.farm_id, 'owner': principal.id})
@@ -76,7 +76,7 @@ def join(request: Request, channel_id: UUID):
 
 @router.post('/api/v1/channels/{channel_id}/leave', tags=['channels'])
 def leave(request: Request, channel_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         room(db, channel_id, lock=True)
         # Save the visible cancellation before removing the membership that
@@ -89,7 +89,7 @@ def leave(request: Request, channel_id: UUID):
 
 @router.get('/api/v1/channels/{channel_id}', tags=['channels'])
 def read_channel(request: Request, channel_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         result = room(db, channel_id)
         # Any current participant may reconcile public output after a lost
@@ -106,7 +106,7 @@ def read_channel(request: Request, channel_id: UUID):
 
 @router.post('/api/v1/channels/{channel_id}/runs/{run_id}/stop', tags=['channels'])
 def stop(request: Request, channel_id: UUID, run_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='channel.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         room(db, channel_id, lock=True)
         run = db.execute(text('SELECT assistant_message_id FROM channel_runs WHERE id=:id AND channel_id=:channel'), {'id': run_id, 'channel': channel_id}).scalar_one_or_none()
@@ -119,7 +119,7 @@ def stop(request: Request, channel_id: UUID, run_id: UUID):
 
 @router.post('/api/v1/channels/{channel_id}/messages', tags=['channels'], status_code=201)
 def post(request: Request, channel_id: UUID, data: ChannelPost):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='channel.use')
     engine, settings = request.app.state.engine, request.app.state.settings
     target, context, assistant_id = None, [], None
     with scoped_session(engine, principal.id, principal.farm_id) as db:

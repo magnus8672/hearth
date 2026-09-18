@@ -21,7 +21,7 @@ for (const surface of ['gallery', 'chat', 'channel'] as const) {
     }, surface === 'gallery');
     const artifact = Buffer.from(encoded, 'base64');
     if (surface === 'gallery') expect(artifact.length).toBeGreaterThan(8 * 1024 * 1024);
-    await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'handoff-fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own'], csrf_token: 'fixture', user_origin: origin, admin_origin: origin } }));
+    await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'handoff-fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: origin } }));
     for (const endpoint of ['capabilities', 'side-notes', 'image-targets']) await page.route(`**/api/v1/${endpoint}`, route => route.fulfill({ json: { items: [] } }));
     await page.route('**/api/v1/geometry-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'trellis2/q8', name: 'Fixture', state: 'ready', profile: { resolutions: [512] } }] } }));
     await page.route('**/api/v1/geometry', async route => {

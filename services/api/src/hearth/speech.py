@@ -38,7 +38,7 @@ def snapshot(db, chat_id):
 
 @router.post('/api/v1/chats/{chat_id}/messages/{message_id}/speech', tags=['speech'], status_code=202)
 def read_aloud(request: Request, chat_id: UUID, message_id: UUID, data: ReadAloud):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.audio.speak')
     engine, settings = request.app.state.engine, request.app.state.settings
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id, lock=True)
@@ -81,7 +81,7 @@ def read_aloud(request: Request, chat_id: UUID, message_id: UUID, data: ReadAlou
 
 @router.post('/api/v1/chats/{chat_id}/speech/{job_id}/cancel', tags=['speech'])
 def cancel(request: Request, chat_id: UUID, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.audio.speak')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         row = db.execute(text('SELECT status FROM speech_jobs WHERE id=:id AND conversation_id=:chat FOR UPDATE'), {'id': job_id, 'chat': chat_id}).scalar_one_or_none()
@@ -94,7 +94,7 @@ def cancel(request: Request, chat_id: UUID, job_id: UUID):
 
 @router.get('/api/v1/chats/{chat_id}/speech/{job_id}/audio', tags=['speech'])
 def download(request: Request, chat_id: UUID, job_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='capability.audio.speak')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         raw = db.execute(text("SELECT audio FROM speech_jobs WHERE id=:id AND conversation_id=:chat AND status='completed'"), {'id': job_id, 'chat': chat_id}).scalar_one_or_none()

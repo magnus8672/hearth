@@ -66,5 +66,7 @@ def test_authorized_cloud_policy_and_geometry_input():
         GeometryRequest()
     GeometryRequest(prompt="A small stone arch")
     assert "node.enroll" not in ROLES["Member"]
-    assert "role.grant" not in ROLES["FarmAdmin"]
+    assert "role.grant" in ROLES["FarmAdmin"]  # Account editor protects Owners separately.
+    assert "recovery.configure" not in ROLES["FarmAdmin"]
+    assert not ROLES["Member"]  # Workspace access now requires explicit per-user grants.
     assert "package.approve" not in ROLES["Operator"]

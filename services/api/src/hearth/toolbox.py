@@ -12,11 +12,12 @@ from pydantic import BaseModel, ConfigDict, Field, SecretStr, StrictBool
 from sqlalchemy import text
 
 from hearth import mcp_transport
-from hearth.client_keys import audit, browser_owner, key_current, principal_current
+from hearth.chat import member
+from hearth.client_keys import audit, key_current, principal_current
 from hearth.database import scoped_session
 from hearth.identity import authenticate, cipher
 from hearth.inference import ProviderError
-from hearth.policy import Principal
+from hearth.policy import Principal, permissions_for
 from hearth.providers import validate_ca
 from hearth.routing import TEXT
 from hearth.tool_schemas import validate_arguments
@@ -221,6 +222,8 @@ class ToolScope:
 
 
 def scope_current(db, scope):
+    if 'tool.use' not in permissions_for(db, scope.principal.id, scope.principal.farm_id):
+        raise HTTPException(403, 'Shared tools have not been granted to this account.')
     if not principal_current(db, scope.principal) or scope.key_id and not key_current(db, scope.principal, scope.key_id):
         raise HTTPException(401, 'The tool caller is no longer authorized.')
     if scope.chat_run_id:
@@ -234,7 +237,8 @@ def scope_current(db, scope):
 def allowed_tools(db, scope):
     scope_current(db, scope)
     rows = db.execute(text("SELECT t.*,s.name AS server_name,s.owner_id AS server_owner FROM mcp_tools t JOIN mcp_servers s ON s.id=t.server_id WHERE t.enabled AND s.enabled AND (t.access='members' OR s.owner_id=:owner) ORDER BY s.name,t.name"), {'owner': scope.principal.id}).mappings().all()
-    return [dict(row) for row in rows if set(row['capabilities']) & scope.capabilities and (scope.capability is None or scope.capability in row['capabilities'])]
+    granted = {p.removeprefix('capability.') for p in permissions_for(db, scope.principal.id, scope.principal.farm_id) if p.startswith('capability.')}
+    return [dict(row) for row in rows if set(row['capabilities']) & scope.capabilities & granted and (scope.capability is None or scope.capability in row['capabilities'])]
 
 
 def selected_tool(db, scope, name):
@@ -324,7 +328,7 @@ def invoke(engine, settings, scope, name, arguments, invocation_id):
 
 @router.get('/api/v1/my-tools', tags=['tools'])
 def my_tools(request: Request):
-    principal = browser_owner(request)
+    principal = member(request, permission='tool.use')
     scope = ToolScope(principal, frozenset(CAPABILITIES))
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         tools = allowed_tools(db, scope)
@@ -336,7 +340,7 @@ def my_tools(request: Request):
 
 @router.put('/api/v1/my-tools/{server_id}/credential', tags=['tools'])
 def my_credential(request: Request, server_id: UUID, data: SetCredential):
-    principal = browser_owner(request, True)
+    principal = member(request, True, permission='tool.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         if server_id not in {row['server_id'] for row in allowed_tools(db, ToolScope(principal, frozenset(CAPABILITIES)))}:
             raise HTTPException(404, 'This tool server is not available in your workspace.')
@@ -348,7 +352,7 @@ def my_credential(request: Request, server_id: UUID, data: SetCredential):
 @router.post('/api/v1/tool-invocations/{invocation_id}/decision', tags=['tools'])
 def decide(request: Request, invocation_id: UUID, data: Decision):
     # Browser session + exact origin + CSRF. MCP/API keys cannot approve actions.
-    principal = browser_owner(request, True)
+    principal = member(request, True, permission='tool.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text("SELECT * FROM tool_invocations WHERE id=:id AND state='awaiting_approval' AND expires_at>now() FOR UPDATE"), {'id': invocation_id}).mappings().one_or_none()
         if not row:

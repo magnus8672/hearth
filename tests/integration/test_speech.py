@@ -122,6 +122,8 @@ def test_saved_speech_owner_scope_route_binding_idempotency_and_reload(bff, monk
             {'active': True, 'sub': other_subject, 'iss': config.issuer} if endpoint == 'token/introspect' else
             {'id_token': 'OTHER FIXTURE', 'access_token': 'OTHER FIXTURE', 'refresh_token': 'OTHER FIXTURE', 'expires_in': 300})
         signin(other)
+        from tests.integration.test_identity import approve_fixture_member
+        approve_fixture_member(other, migration, settings)
         oh = csrf(other, settings.user_origin)
         assert other.get(url).status_code == 404
         assert other.post(endpoint, headers=oh, json=body).status_code == 404

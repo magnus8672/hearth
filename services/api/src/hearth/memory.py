@@ -11,6 +11,7 @@ from sqlalchemy import text
 
 from hearth.database import scoped_session
 from hearth.identity import authenticate
+from hearth.policy import scoped_permissions
 
 router = APIRouter()
 
@@ -54,7 +55,7 @@ class ImportMarkdown(BaseModel):
 
 def member(request, mutation=False):
     principal = authenticate(request, mutation=mutation)
-    principal.require('conversation.own')
+    principal.require('capability.memory.index' if mutation else 'capability.memory.retrieve')
     if request.app.state.settings.audience != 'user':
         raise HTTPException(403, 'Open your personal workspace to manage memory.')
     return principal
@@ -199,6 +200,8 @@ def recall_query(query, context):
 
 def recall_context(db, query, chat_id, context, omitted):
     settings = state(db)
+    if 'capability.memory.retrieve' not in scoped_permissions(db):
+        return context, {'enabled': False, 'sources': [], 'older_messages': omitted, 'search_status': 'not_permitted'}
     receipt = {'enabled': settings['enabled'], 'settings_revision': settings['revision'], 'sources': [], 'older_messages': omitted,
                'search_status': 'no_matches' if settings['enabled'] else 'paused'}
     instruction = ('You are replying within hearth. hearth stores private conversation history and user-editable memory notes across chats. '

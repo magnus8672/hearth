@@ -175,6 +175,8 @@ def test_mcp_credentials_and_approval_receipts_are_private_even_between_members(
         monkeypatch.setattr(identity, 'token_request', lambda config, endpoint, data: {'active': True, 'sub': second_subject, 'iss': config.issuer} if endpoint == 'token/introspect' else {'id_token': 'fixture', 'access_token': 'fixture', 'refresh_token': 'fixture', 'expires_in': 300})
         member_token_request = identity.token_request
         signin(other)
+        from tests.integration.test_identity import approve_fixture_member
+        approve_fixture_member(other, migration, settings)
         other_key = key(other, settings)
         other_auth = {'Authorization': 'Bearer '+other_key['key']}
         mine = other.get('/api/v1/my-tools').json()

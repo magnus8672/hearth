@@ -90,6 +90,8 @@ def test_private_uploads_vision_routes_followups_and_cross_account_isolation(bff
             {'active': True, 'sub': other_subject, 'iss': config.issuer} if endpoint == 'token/introspect' else
             {'id_token': 'OTHER FIXTURE', 'access_token': 'OTHER FIXTURE', 'refresh_token': 'OTHER FIXTURE', 'expires_in': 300})
         signin(other)
+        from tests.integration.test_identity import approve_fixture_member
+        approve_fixture_member(other, migration, settings)
         oh = csrf(other, settings.user_origin)
         assert other.get(image_url).status_code == 404
         assert other.post(path+'/attachments', headers=oh, content=picture()).status_code == 404

@@ -50,23 +50,22 @@ def capabilities(request: Request):
         'builtin': profile(item['capability_id']).get('builtin', False),
         'executable': profile(item['capability_id'])['executable'],
         'reason': profile(item['capability_id'])['scope'] if item['capability_id'] in ready or not profile(item['capability_id'])['executable'] else ('Its route needs a compatible, freshly verified target in Providers.' if item['capability_id'] in assigned else 'No verified provider has been assigned.')
-    } for item in definitions]}
+    } for item in definitions if 'farm.inspect' in principal.permissions or 'capability.'+item['capability_id'] in principal.permissions]}
 
 
 @router.get('/api/v1/workspace', tags=['workspace'])
 def workspace(request: Request):
     principal = authenticate(request)
-    principal.require('conversation.own')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text('SELECT id,name,locality FROM workspaces')).mappings().one()
         drafts = db.execute(text("SELECT id,title,revision FROM conversations WHERE kind='draft' AND deleted_at IS NULL ORDER BY id DESC")).mappings().all()
-        return {'workspace': dict(row), 'drafts': [dict(item) for item in drafts]}
+        return {'workspace': dict(row), 'drafts': [dict(item) for item in drafts] if 'draft.use' in principal.permissions else []}
 
 
 @router.get('/api/v1/drafts/{draft_id}', tags=['workspace'])
 def draft(request: Request, draft_id: UUID):
     principal = authenticate(request)
-    principal.require('conversation.own')
+    principal.require('draft.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text("SELECT c.id,c.title,c.revision,m.content FROM conversations c JOIN messages m ON m.conversation_id=c.id AND m.sequence=1 WHERE c.id=:id AND c.kind='draft' AND c.deleted_at IS NULL"), {'id': draft_id}).mappings().one_or_none()
         if not row:
@@ -77,7 +76,7 @@ def draft(request: Request, draft_id: UUID):
 @router.post('/api/v1/drafts', tags=['workspace'], status_code=201)
 def create_draft(request: Request, data: DraftInput):
     principal = authenticate(request, mutation=True)
-    principal.require('conversation.own')
+    principal.require('draft.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         workspace_id = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
         count = db.execute(text("SELECT count(*) FROM conversations WHERE kind='draft' AND deleted_at IS NULL")).scalar_one()
@@ -93,7 +92,7 @@ def create_draft(request: Request, data: DraftInput):
 @router.put('/api/v1/drafts/{draft_id}', tags=['workspace'])
 def update_draft(request: Request, draft_id: UUID, data: DraftUpdate):
     principal = authenticate(request, mutation=True)
-    principal.require('conversation.own')
+    principal.require('draft.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text("SELECT revision FROM conversations WHERE id=:id AND kind='draft' AND deleted_at IS NULL FOR UPDATE"), {'id': draft_id}).one_or_none()
         if not row:
@@ -108,7 +107,7 @@ def update_draft(request: Request, draft_id: UUID, data: DraftUpdate):
 @router.delete('/api/v1/drafts/{draft_id}', tags=['workspace'])
 def archive_draft(request: Request, draft_id: UUID):
     principal = authenticate(request, mutation=True)
-    principal.require('conversation.own')
+    principal.require('draft.use')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         changed = db.execute(text("UPDATE conversations SET deleted_at=now(),revision=revision+1 WHERE id=:id AND kind='draft' AND deleted_at IS NULL"), {'id': draft_id}).rowcount
         if not changed:
@@ -124,7 +123,7 @@ def farm(request: Request):
     principal.require('farm.inspect')
     with request.app.state.engine.connect() as db:
         farm = db.execute(text('SELECT id,name,created_at FROM farms WHERE id=:id'), {'id': principal.farm_id}).mappings().one()
-        members = db.execute(text('SELECT u.id,u.display_name,u.state,array_agg(g.role ORDER BY g.role) AS roles FROM users u LEFT JOIN role_grants g ON g.user_id=u.id WHERE u.farm_id=:farm GROUP BY u.id ORDER BY u.display_name'), {'farm': principal.farm_id}).mappings().all()
+        members = db.execute(text("SELECT u.id,u.display_name,u.state,COALESCE(array_agg(g.role ORDER BY g.role) FILTER(WHERE g.role IS NOT NULL), '{}') AS roles FROM users u LEFT JOIN role_grants g ON g.user_id=u.id WHERE u.farm_id=:farm GROUP BY u.id ORDER BY u.display_name"), {'farm': principal.farm_id}).mappings().all()
     return {'farm': dict(farm), 'members': [dict(item) for item in members],
             'provider': {'cloud_budget_minor': 0, 'default_locality': 'local_only'},
             'enrollment_available': False}

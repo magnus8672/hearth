@@ -42,6 +42,8 @@ def test_queue_fairness_and_independent_gpu_admission(bff, monkeypatch):
         monkeypatch.setattr(identity, 'token_request', lambda config, endpoint, data: token_request(config, endpoint, data) | ({'sub': subject} if endpoint == 'token/introspect' else {}))
         with factory() as second:
             signin(second)
+            from tests.integration.test_identity import approve_fixture_member
+            approve_fixture_member(second, migration, settings)
             next_job = request(target)
             assert second.post('/api/v1/images', headers=csrf(second, settings.user_origin), json=next_job).status_code == 202
             assert len(second.get('/api/v1/images').json()['items']) == 1

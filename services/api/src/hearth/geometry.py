@@ -31,7 +31,7 @@ class CreateGeometry(BaseModel):
 
 @router.get('/api/v1/geometry-targets', tags=['geometry'])
 def targets(request: Request):
-    principal = member(request)
+    principal = member(request, permission='capability.geometry.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text("SELECT t.id,t.model_id,t.state,t.profile,c.name FROM capability_bindings b JOIN inference_targets t ON t.id=b.target_id JOIN provider_connections c ON c.id=t.connection_id WHERE b.capability_id='geometry.generate' AND t.protocol='hearth.geometry.v1' ORDER BY b.priority DESC,t.id")).mappings().all()
     return {'items': [dict(row) for row in rows]}
@@ -39,7 +39,7 @@ def targets(request: Request):
 
 @router.get('/api/v1/geometry', tags=['geometry'])
 def listing(request: Request):
-    principal = member(request)
+    principal = member(request, permission='capability.geometry.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text("SELECT j.id,t.resource_pool_id FROM geometry_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=j.id AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM j.id OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
         for row in rows:
@@ -51,7 +51,7 @@ def listing(request: Request):
 
 @router.post('/api/v1/geometry', tags=['geometry'], status_code=202)
 def generate(request: Request, data: CreateGeometry):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.geometry.generate')
     try:
         raw = base64.b64decode(data.image, validate=True)
     except ValueError:
@@ -85,7 +85,7 @@ def generate(request: Request, data: CreateGeometry):
 
 @router.post('/api/v1/geometry/{job_id}/cancel', tags=['geometry'])
 def cancel(request: Request, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.geometry.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         queued = db.execute(text('SELECT state FROM capability_queue WHERE id=:id AND owner_id=:owner FOR UPDATE'), {'id': job_id, 'owner': principal.id}).scalar_one_or_none()
         state = db.execute(text('SELECT status FROM geometry_jobs WHERE id=:id FOR UPDATE'), {'id': job_id}).scalar_one_or_none()
@@ -100,7 +100,7 @@ def cancel(request: Request, job_id: UUID):
 
 @router.get('/api/v1/geometry/{job_id}/model', tags=['geometry'])
 def download(request: Request, job_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='capability.geometry.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         artifact = db.execute(text("SELECT artifact FROM geometry_jobs WHERE id=:id AND status='completed' AND deleted_at IS NULL"), {'id': job_id}).scalar_one_or_none()
         if artifact is None:
@@ -110,7 +110,7 @@ def download(request: Request, job_id: UUID):
 
 @router.delete('/api/v1/geometry/{job_id}', tags=['geometry'])
 def delete(request: Request, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.geometry.generate')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         row = db.execute(text('SELECT status FROM geometry_jobs WHERE id=:id FOR UPDATE'), {'id': job_id}).scalar_one_or_none()
         if row is None:

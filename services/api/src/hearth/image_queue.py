@@ -15,7 +15,7 @@ from hearth.chat import session_current
 from hearth.contracts import GeometryGeneration, ImageGeneration
 from hearth.database import scoped_session
 from hearth.inference import ProviderError
-from hearth.policy import Principal
+from hearth.policy import Principal, permissions_for
 from hearth.providers import claim_pool, release_pool, target_record
 
 logger = logging.getLogger('hearth')
@@ -57,12 +57,12 @@ def claim(engine, settings, pool_id):
         db.execute(text("SELECT set_config('hearth.principal_id',:owner,true)"), {'owner': str(entry['owner_id'])})
         table = 'geometry_jobs' if entry['kind'] == 'geometry' else 'image_jobs'
         job = db.execute(text(f'SELECT * FROM {table} WHERE id=:id FOR UPDATE'), {'id': entry['id']}).mappings().one()
-        principal = Principal(entry['owner_id'], settings.farm_id, frozenset({'conversation.own'}), job['authorization_version'])
+        principal = Principal(entry['owner_id'], settings.farm_id, permissions_for(db, entry['owner_id'], settings.farm_id), job['authorization_version'])
         target = target_record(db, entry['target_id'])
         if job['status'] != 'queued' or job['cancel_requested']:
             finish_waiting(db, entry['id'], 'cancelled', 'Removed from the queue.')
             return
-        if entry['expires_at'] <= datetime.now(UTC) or not session_current(db, principal, job['session_hash']):
+        if ('capability.geometry.generate' if entry['kind'] == 'geometry' else 'capability.image.generate') not in principal.permissions or entry['expires_at'] <= datetime.now(UTC) or not session_current(db, principal, job['session_hash']):
             finish_waiting(db, entry['id'], 'cancelled', 'The queued request expired or its sending session ended. Submit it again when ready.')
             return
         if target['revision'] != entry['target_revision'] or target['state'] != 'ready' or target['resource_pool_id'] != pool_id:

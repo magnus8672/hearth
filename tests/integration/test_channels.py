@@ -49,6 +49,8 @@ def test_joined_channels_use_shared_context_only_on_a_new_mention(bff, monkeypat
             {'active': True, 'sub': subject if data.get('token') == 'EXPLICIT PROVIDER FIXTURE' else second_subject, 'iss': config.issuer}
             if endpoint == 'token/introspect' else {'id_token': 'FIXTURE', 'access_token': 'SECOND', 'refresh_token': 'FIXTURE', 'expires_in': 300})
         signin(second)
+        from tests.integration.test_identity import approve_fixture_member
+        approve_fixture_member(second, migration, settings)
         h2 = csrf(second, settings.user_origin)
         assert second.get('/api/v1/channels').json()['items'][0]['joined'] is False
         assert second.get(path).status_code == 404

@@ -64,6 +64,13 @@
 .people-panel h2 { font-size: 20px; }
 .person-row { display: flex; align-items: center; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--hearth-border); }
 .person-row > div { flex: 1; }
+.accounts-layout > *, .accounts-layout .person-row > div { min-width: 0; overflow-wrap: anywhere; }
+.accounts-layout .section-heading, .accounts-layout .person-row { flex-wrap: wrap; }
+.account-editor form { display: grid; gap: 14px; min-width: 0; }
+.account-editor label { display: grid; gap: 8px; }
+.account-editor select { width: 100%; min-width: 0; max-width: 100%; padding: 12px; border: 1px solid var(--hearth-border); border-radius: 8px; background: var(--hearth-background); color: var(--hearth-text); }
+.account-editor fieldset { min-inline-size: 0; margin: 0; padding: 16px; border: 1px solid var(--hearth-border); border-radius: 12px; }
+.account-editor fieldset .check-label { display: flex; align-items: center; margin-block: 12px; }
 .person-row strong { font-size: 14px; }
 .person-row > div > span { display: block; font-size: 12px; color: var(--hearth-muted); }
 .draft-layout { display: grid; grid-template-columns: minmax(200px, .8fr) minmax(0,2fr); gap: 22px; }

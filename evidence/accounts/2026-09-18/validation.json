@@ -1,0 +1,113 @@
+{
+  "date": "2026-09-18",
+  "feature": "Pending signup, administrator approval and explicit capability access",
+  "status": "passed_with_limits",
+  "deployment": {
+    "host": "10.20.30.10",
+    "migration": "0025",
+    "workspace": "https://hearth.example.invalid",
+    "welcome": "http://hearth.example.invalid",
+    "administration": "https://hearth.example.invalid:8443/#people",
+    "user_and_admin_readiness": "ready",
+    "tls_verification_enabled": true,
+    "root_certificate_unchanged": true,
+    "root_sha256": "64d96113e3b54918503af9419ae94772ee98855e336712b0310746f762226ee1",
+    "public_installer_matches_certificate_zip": true,
+    "existing_user_count_and_image_bytes_preserved_during_migration": true,
+    "private_database_backup_before_migration": true,
+    "temporary_signup_accounts_remaining": 0,
+    "pending_accounts_with_grants": 0
+  },
+  "backend": {
+    "environment": "Separate temporary PostgreSQL databases on the active head VM, removed after each run. Live farm data was not used by reset fixtures.",
+    "runs": [
+      {
+        "areas": [
+          "accounts",
+          "identity",
+          "head configuration",
+          "chat",
+          "geometry",
+          "images",
+          "client API",
+          "shared MCP tools"
+        ],
+        "passed": 98,
+        "skipped": 2
+      },
+      {
+        "areas": [
+          "accounts",
+          "channels",
+          "memory",
+          "speech",
+          "transcription",
+          "vision",
+          "contracts and policy"
+        ],
+        "passed": 50,
+        "skipped": 4
+      },
+      {
+        "areas": [
+          "accounts including geometry-only grants and queue revocation",
+          "worker queue",
+          "queue fairness",
+          "PostgreSQL"
+        ],
+        "passed": 10,
+        "skipped": 0
+      }
+    ],
+    "note": "Runs overlap; counts are not a unique-test total. Skips were optional environment-dependent cases. Provider transports were fixtures for authorization tests.",
+    "boundaries": [
+      "Signup has no roles or capability grants; repeat login never adds them",
+      "Browser-bound registration state, nonce, PKCE and separate admin audience",
+      "Pending direct requests, forged grants, wrong-origin mutations and missing CSRF denied",
+      "Current Owner and acting account protected; stale edits conflict",
+      "Chat-only access cannot dispatch images or unauthorized text specialists",
+      "Geometry works without chat permission",
+      "Revoked queued geometry never dispatches to its provider",
+      "Suspension invalidates browser sessions, client keys and in-flight authorization receipts",
+      "Memory recall, shared tools and client-key scopes honor current account grants"
+    ]
+  },
+  "browser": {
+    "passed": 7,
+    "tls_verification_enabled": true,
+    "fixtures": "Deployed VM bundles with synthetic session/API responses for account editor, pending access, chat-only controls and three image-to-model handoffs.",
+    "live_entry": "HTTP welcome offers the current public Windows installer; confirmation enables real branded HTTPS registration.",
+    "visual_review": [
+      "Registration form",
+      "People editor at desktop and 390-pixel width"
+    ],
+    "mobile_overflow": "none"
+  },
+  "live_identity": {
+    "synthetic_account": true,
+    "password_registration": "passed",
+    "authenticator_enrollment": "passed",
+    "recovery_code_enrollment": "passed",
+    "pending_workspace_with_zero_permissions": "passed",
+    "pending_chat_image_geometry_and_client_key_requests": "denied",
+    "farm_admin_promotion": "passed through protected database approval function; authenticated API and editor covered by integration/browser cases",
+    "administration_sso_without_second_otp": "passed",
+    "temporary_account_removed": true,
+    "existing_credential_snapshot_unchanged": true
+  },
+  "source_checks": [
+    "TypeScript typecheck",
+    "Both production browser bundles",
+    "Ruff on every changed Python file",
+    "Documentation links and immutable 119-file plan snapshot",
+    "Git whitespace check"
+  ],
+  "limits": [
+    "Windows installer content and package integrity are tested; installation into a fresh Windows trust store was not executed",
+    "Zen/Firefox can require manual certificate Authorities import",
+    "Invitation policies, email verification, password/MFA recovery administration, permanent deletion, per-account quotas and group policies remain separate work",
+    "Already dispatched external tool side effects cannot be undone by revocation",
+    "No full release gate closed; 20 partial and 41 not run"
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

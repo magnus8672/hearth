@@ -28,7 +28,7 @@ def reconcile(db):
 
 @router.get('/api/v1/chats/{chat_id}/transcriptions', tags=['transcription'])
 def listing(request: Request, chat_id: UUID):
-    principal = member(request)
+    principal = member(request, permission='capability.audio.transcribe')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         reconcile(db)
@@ -38,7 +38,7 @@ def listing(request: Request, chat_id: UUID):
 
 @router.post('/api/v1/chats/{chat_id}/transcriptions', tags=['transcription'], status_code=202)
 async def submit(request: Request, chat_id: UUID, request_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.audio.transcribe')
     engine, settings = request.app.state.engine, request.app.state.settings
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
@@ -74,7 +74,7 @@ async def submit(request: Request, chat_id: UUID, request_id: UUID):
 
 @router.post('/api/v1/chats/{chat_id}/transcriptions/{job_id}/cancel', tags=['transcription'])
 def cancel(request: Request, chat_id: UUID, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.audio.transcribe')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         row = db.execute(text('SELECT status FROM transcription_jobs WHERE id=:id AND conversation_id=:chat FOR UPDATE'), {'id': job_id, 'chat': chat_id}).scalar_one_or_none()
@@ -87,7 +87,7 @@ def cancel(request: Request, chat_id: UUID, job_id: UUID):
 
 @router.delete('/api/v1/chats/{chat_id}/transcriptions/{job_id}', tags=['transcription'])
 def dismiss(request: Request, chat_id: UUID, job_id: UUID):
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.audio.transcribe')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         row = db.execute(text('SELECT status FROM transcription_jobs WHERE id=:id AND conversation_id=:chat FOR UPDATE'), {'id': job_id, 'chat': chat_id}).scalar_one_or_none()

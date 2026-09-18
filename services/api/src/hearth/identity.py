@@ -15,7 +15,7 @@ from joserfc.jwk import KeySet
 from sqlalchemy import text
 from starlette.responses import RedirectResponse
 
-from hearth.policy import ROLES, Principal
+from hearth.policy import Principal, permissions_for
 
 router = APIRouter()
 REAUTHENTICATE_COOKIE = '__Host-hearth_reauthenticate'
@@ -73,6 +73,17 @@ def verify_id_token(settings, tokens, nonce):
 
 @router.get('/auth/login', include_in_schema=False)
 def login(request: Request):
+    return begin_login(request)
+
+
+@router.get('/auth/register', include_in_schema=False)
+def register(request: Request):
+    if request.app.state.settings.audience != 'user':
+        raise HTTPException(403, 'Create your account from the workspace welcome page.')
+    return begin_login(request, registration=True)
+
+
+def begin_login(request: Request, registration=False):
     settings = configured(request)
     check_origin(request)
     # GET navigation starts login but cannot bind an attacker's callback to another browser.
@@ -91,7 +102,8 @@ def login(request: Request):
     if request.cookies.get(REAUTHENTICATE_COOKIE):
         parameters['prompt'] = 'login'
     query = urlencode(parameters)
-    response = RedirectResponse(settings.issuer + '/protocol/openid-connect/auth?' + query, status_code=303)
+    endpoint = 'registrations' if registration else 'auth'
+    response = RedirectResponse(settings.issuer + '/protocol/openid-connect/' + endpoint + '?' + query, status_code=303)
     response.set_cookie(cookie_name(settings, True), browser, max_age=300, secure=True, httponly=True, samesite='lax', path='/')
     return response
 
@@ -122,6 +134,10 @@ def callback(request: Request):
     tokens['expires_at'] = int(time.time()) + int(tokens['expires_in'])
     tokens['subject'] = claims['sub']
     with request.app.state.engine.begin() as connection:
+        existing_state = connection.execute(text('SELECT state FROM users WHERE farm_id=:farm AND issuer=:issuer AND subject=:subject'),
+            {'farm': settings.farm_id, 'issuer': settings.issuer, 'subject': claims['sub']}).scalar_one_or_none()
+        if existing_state not in (None, 'active', 'pending'):
+            raise HTTPException(403, 'This account is suspended. Ask a farm administrator to restore access.')
         user_id = connection.execute(text('SELECT provision_member(:farm,:issuer,:subject,:name)'),
             {'farm': settings.farm_id, 'issuer': settings.issuer, 'subject': claims['sub'],
              'name': claims.get('name') or claims.get('preferred_username') or 'Member'}).scalar_one()
@@ -151,7 +167,7 @@ def authenticate(request: Request, mutation=False):
     with request.app.state.engine.begin() as connection:
         row = connection.execute(text("SELECT s.*,u.display_name,u.state,u.authorization_version AS current_version FROM browser_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=:hash AND s.audience=:audience AND s.farm_id=:farm AND s.expires_at>now() AND s.last_seen_at>now()-interval '30 minutes' FOR UPDATE OF s"),
             {'hash': digest(raw), 'audience': settings.audience, 'farm': settings.farm_id}).mappings().one_or_none()
-        if not row or row['state'] != 'active' or row['authorization_version'] != row['current_version']:
+        if not row or row['state'] not in ('active', 'pending') or row['authorization_version'] != row['current_version']:
             raise HTTPException(401, 'Your session has ended. Sign in again.')
         if mutation and not secrets.compare_digest(request.headers.get('x-hearth-csrf', ''), row['csrf_token']):
             raise HTTPException(403, 'The request verification token is missing or invalid.')
@@ -168,7 +184,7 @@ def authenticate(request: Request, mutation=False):
             raise HTTPException(401, 'The identity session could not be verified. Sign in again.') from None
         roles = connection.execute(text('SELECT role FROM role_grants WHERE user_id=:user AND farm_id=:farm'),
                                    {'user': row['user_id'], 'farm': row['farm_id']}).scalars().all()
-        permissions = frozenset().union(*(ROLES.get(role, frozenset()) for role in roles))
+        permissions = permissions_for(connection, row['user_id'], row['farm_id'])
         connection.execute(text('UPDATE browser_sessions SET last_seen_at=now(),credentials=:credentials WHERE token_hash=:hash'),
             {'hash': digest(raw), 'credentials': cipher(settings).encrypt(json.dumps(tokens).encode()).decode()})
         principal = Principal(row['user_id'], row['farm_id'], permissions, row['current_version'])
@@ -183,6 +199,7 @@ def session(request: Request):
     row = request.state.identity
     settings = request.app.state.settings
     return {'id': str(principal.id), 'display_name': row['display_name'], 'roles': row['roles'],
+            'state': row['state'], 'authorization_version': principal.authorization_version,
             'permissions': sorted(principal.permissions), 'audience': settings.audience,
             'csrf_token': row['csrf_token'], 'expires_at': row['expires_at'].isoformat(),
             'admin_origin': settings.admin_origin, 'user_origin': settings.user_origin}

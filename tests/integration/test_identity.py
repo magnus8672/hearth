@@ -38,7 +38,14 @@ def bff(databases, monkeypatch):
     monkeypatch.setattr(identity, 'verify_id_token', lambda config, tokens, nonce: {'sub': subject, 'name': 'Fixture Member'})
 
     @contextmanager
-    def client(audience='user'):
+    def client(audience='user', approved=True):
+        # Feature fixtures explicitly approve their synthetic account. Production
+        # provisioning and approval tests continue through the default-deny flow.
+        if approved:
+            from hearth.policy import USER_PERMISSIONS
+            with migration.begin() as db:
+                fixture_id = db.execute(text("INSERT INTO users(id,farm_id,issuer,subject,display_name,state,access_permissions) VALUES(gen_random_uuid(),:farm,:issuer,:subject,'Fixture Member','active',CAST(:permissions AS text[])) ON CONFLICT(issuer,subject) DO UPDATE SET display_name=users.display_name RETURNING id"), {'farm': farm, 'issuer': settings.issuer, 'subject': subject, 'permissions': sorted(USER_PERMISSIONS)}).scalar_one()
+                db.execute(text("INSERT INTO role_grants(id,user_id,farm_id,role) VALUES(gen_random_uuid(),:user,:farm,'Member') ON CONFLICT DO NOTHING"), {'user': fixture_id, 'farm': farm})
         config = settings.model_copy(update={'audience': audience})
         with TestClient(create_app(config), base_url=config.origin, follow_redirects=False) as browser:
             yield browser
@@ -82,6 +89,17 @@ def signin(browser):
     return callback
 
 
+def approve_fixture_member(browser, migration, settings):
+    """Explicitly approve a second synthetic subject for existing feature fixtures."""
+    from hearth.policy import USER_PERMISSIONS
+    user = browser.get('/api/v1/session').json()['id']
+    with migration.begin() as db:
+        db.execute(text("UPDATE users SET state='active',access_permissions=CAST(:permissions AS text[]) WHERE id=:id AND farm_id=:farm"),
+            {'id': user, 'farm': settings.farm_id, 'permissions': sorted(USER_PERMISSIONS)})
+        db.execute(text("INSERT INTO role_grants(id,user_id,farm_id,role) VALUES(gen_random_uuid(),:id,:farm,'Member') ON CONFLICT DO NOTHING"),
+            {'id': user, 'farm': settings.farm_id})
+
+
 @pytest.mark.parametrize('audience', ['user', 'admin'])
 def test_normal_login_allows_sso_but_keeps_pkce_and_browser_binding(bff, audience):
     factory, settings, _, _, _ = bff
@@ -122,7 +140,7 @@ def test_signout_ends_companion_browser_session_without_deleting_other_devices(b
 
 def test_one_use_callback_requires_original_browser_and_personal_provision_is_atomic(bff):
     factory, settings, app, migration, subject = bff
-    with factory() as browser, factory() as other:
+    with factory(approved=False) as browser, factory(approved=False) as other:
         start = browser.get('/auth/login')
         state = parse_qs(urlsplit(start.headers['location']).query)['state'][0]
         callback = '/auth/callback?state=' + state + '&code=fixture'
@@ -131,7 +149,8 @@ def test_one_use_callback_requires_original_browser_and_personal_provision_is_at
         assert browser.get(callback).status_code == 400
         signin(browser)
         response = browser.get('/api/v1/session').json()
-        assert response['roles'] == ['Member']
+        assert response['roles'] == []
+        assert response['state'] == 'pending' and response['permissions'] == []
         assert 'farm.inspect' not in response['permissions']
         assert len(browser.get('/api/v1/workspace').json()['drafts']) == 0
         with migration.connect() as db:

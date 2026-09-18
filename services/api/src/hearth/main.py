@@ -11,6 +11,7 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from hearth import __version__
+from hearth.accounts import router as accounts_router
 from hearth.channels import router as channels_router
 from hearth.chat import router as chat_router
 from hearth.client_api import router as client_api_router
@@ -18,10 +19,10 @@ from hearth.client_keys import router as client_keys_router
 from hearth.config import Settings, get_settings
 from hearth.contracts import ErrorDetail, ErrorResponse
 from hearth.database import make_engine, verify_application_role
+from hearth.geometry import router as geometry_router
 from hearth.head_settings import router as head_settings_router
 from hearth.identity import router as identity_router
 from hearth.images import router as images_router
-from hearth.geometry import router as geometry_router
 from hearth.inference import ProviderError
 from hearth.memory import router as memory_router
 from hearth.middleware import BodyLimitMiddleware, request_body_limit
@@ -137,6 +138,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"status": "ready", "version": __version__}
 
     app.include_router(identity_router)
+    app.include_router(accounts_router)
     app.include_router(workspace_router)
     app.include_router(workers_router)
     app.include_router(head_settings_router)

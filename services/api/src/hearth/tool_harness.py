@@ -16,7 +16,7 @@ def stream(engine, settings, principal, run_id, target, context, transport_strea
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         capability = db.execute(text('SELECT capability_id FROM chat_runs WHERE id=:id'), {'id': run_id}).scalar_one()
         scope = toolbox.ToolScope(principal, frozenset({capability}), capability, chat_run_id=run_id)
-        enabled = 'tools' in target['features'] and bool(toolbox.allowed_tools(db, scope))
+        enabled = 'tool.use' in principal.permissions and 'tools' in target['features'] and bool(toolbox.allowed_tools(db, scope))
     if not enabled:
         yield from transport_stream(target['base_url'], credential_for(target, settings), target['model_id'], context, transport_settings(target, settings), include_reasoning=True)
         return

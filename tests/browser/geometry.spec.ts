@@ -4,7 +4,7 @@ import fs from 'node:fs';
 test('geometry upload, private preview, cancellation and deletion', async ({ page }) => {
   const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
   let jobs: Record<string, any>[] = [];
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/geometry-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'trellis2/q8', name: 'media-worker fixture', state: 'ready', profile: { resolutions: [512, 1024] } }] } }));
   await page.route('**/api/v1/geometry', async route => {
@@ -51,7 +51,7 @@ test('geometry upload, private preview, cancellation and deletion', async ({ pag
 
 test('upload errors preserve HTTP meaning and keep the selected file', async ({ page }) => {
   const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/geometry-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'trellis2/q8', name: 'Fixture', state: 'ready', profile: { resolutions: [512] } }] } }));
   let failure = { status: 413, body: '', contentType: 'text/plain' };

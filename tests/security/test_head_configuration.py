@@ -154,7 +154,11 @@ def test_client_certificate_package_has_matching_public_material_and_no_secrets(
     pem = certificate.public_bytes(serialization.Encoding.PEM).decode()
     package, metadata = head.certificate_package(values, pem, pem)
     with ZipFile(io.BytesIO(package)) as archive:
-        assert set(archive.namelist()) == {'hearth-root.crt', 'hearth-root.cer', 'hearth-server-chain.pem', 'connection.json', 'README.txt'}
+        assert set(archive.namelist()) == {'hearth-root.crt', 'hearth-root.cer', 'hearth-server-chain.pem', 'connection.json', 'README.txt', 'install-hearth-certificate.cmd'}
+        installer = archive.read('install-hearth-certificate.cmd').decode()
+        assert "'Root','CurrentUser'" in installer and 'Read-Host' in installer
+        assert 'Invoke-WebRequest' not in installer and 'ExecutionPolicy' not in installer
+        assert metadata['root_sha256'].upper() in installer
         der = archive.read('hearth-root.cer')
         assert x509.load_der_x509_certificate(der) == certificate
         assert ssl.PEM_cert_to_DER_cert(archive.read('hearth-root.crt').decode()) == der
@@ -170,7 +174,7 @@ def test_client_certificate_package_has_matching_public_material_and_no_secrets(
     head.publish_setup(tmp_path, package, metadata)
     published = tmp_path / 'public-setup'
     assert {path.name for path in published.iterdir()} == {
-        'index.html', 'connection.json', 'hearth-root.crt', 'hearth-root.cer', 'hearth-client-certificates.zip',
+        'install-hearth-certificate.cmd', 'index.html', 'connection.json', 'hearth-root.crt', 'hearth-root.cer', 'hearth-client-certificates.zip',
     }
     assert (published / 'hearth-root.cer').read_bytes() == der
     assert (published / 'hearth-client-certificates.zip').read_bytes() == package

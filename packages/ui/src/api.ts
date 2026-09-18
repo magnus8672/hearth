@@ -1,4 +1,4 @@
-export type Identity = { id: string; display_name: string; roles: string[]; permissions: string[]; csrf_token: string; admin_origin: string; user_origin: string };
+export type Identity = { state?: string; authorization_version?: number; id: string; display_name: string; roles: string[]; permissions: string[]; csrf_token: string; admin_origin: string; user_origin: string };
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, { ...init, credentials: 'same-origin', cache: 'no-store' });

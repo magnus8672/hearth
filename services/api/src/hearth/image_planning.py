@@ -52,6 +52,7 @@ cannot be resolved, return a clarification instead of silently dropping images.'
 
 
 def candidate(db):
+    routing.require_capability(db, 'image.generate')
     ids = routing.candidates(db, 'image.generate')
     for target_id in ids:
         row = target_record(db, target_id)

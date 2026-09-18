@@ -6,6 +6,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 
 | Need | Document |
 |---|---|
+| Register people, approve accounts and grant individual capabilities | [Signup and account approval](implementation/ACCOUNT_APPROVAL.md) |
 | Control installed worker services and queue GPU image jobs | [Managed Linux workers](implementation/MANAGED_WORKERS.md) |
 | Preview or serve the project website | [Static website](WEBSITE.md) |
 | Review product coverage and remaining work | [Design coverage table](implementation/DESIGN_COVERAGE.md) |

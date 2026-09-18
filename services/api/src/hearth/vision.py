@@ -105,7 +105,7 @@ def probe(base_url, credential, model_id, settings):
 @router.post('/api/v1/chats/{chat_id}/attachments', tags=['chat'], status_code=201)
 async def upload(request: Request, chat_id: UUID):
     from hearth.chat import conversation, member
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.vision.describe')
     # Authorize the conversation before decoding untrusted image content.
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
@@ -127,7 +127,7 @@ async def upload(request: Request, chat_id: UUID):
 @router.get('/api/v1/chats/{chat_id}/attachments/{attachment_id}', tags=['chat'])
 def download(request: Request, chat_id: UUID, attachment_id: UUID):
     from hearth.chat import conversation, member
-    principal = member(request)
+    principal = member(request, permission='capability.vision.describe')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id)
         raw = db.execute(text('SELECT image FROM chat_attachments WHERE id=:id AND conversation_id=:chat'), {'id': attachment_id, 'chat': chat_id}).scalar_one_or_none()
@@ -139,7 +139,7 @@ def download(request: Request, chat_id: UUID, attachment_id: UUID):
 @router.delete('/api/v1/chats/{chat_id}/attachments/{attachment_id}', tags=['chat'])
 def discard(request: Request, chat_id: UUID, attachment_id: UUID):
     from hearth.chat import conversation, member
-    principal = member(request, mutation=True)
+    principal = member(request, mutation=True, permission='capability.vision.describe')
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         conversation(db, chat_id, lock=True)
         metadata(db, chat_id, [attachment_id])

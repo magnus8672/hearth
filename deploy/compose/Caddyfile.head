@@ -25,7 +25,7 @@ http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {
         root * /srv/setup-assets
         file_server
     }
-    @downloads path /hearth-root.crt /hearth-root.cer /hearth-client-certificates.zip
+    @downloads path /hearth-root.crt /hearth-root.cer /hearth-client-certificates.zip /install-hearth-certificate.cmd
     handle @downloads {
         header Content-Disposition "attachment"
         root * /srv/setup-public

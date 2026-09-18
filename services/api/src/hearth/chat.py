@@ -45,9 +45,9 @@ class SendTurn(BaseModel):
     note_revision: int | None = Field(default=None, strict=True, ge=1, le=9007199254740991)
 
 
-def member(request, mutation=False):
+def member(request, mutation=False, permission='conversation.own'):
     principal = authenticate(request, mutation=mutation)
-    principal.require('conversation.own')
+    principal.require(permission)
     if request.app.state.settings.audience != 'user':
         raise HTTPException(403, 'Open your personal workspace to chat.')
     return principal

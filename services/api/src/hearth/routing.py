@@ -9,6 +9,7 @@ from sqlalchemy import text
 
 from hearth.catalog import CAPABILITIES
 from hearth.database import scoped_session
+from hearth.policy import require_capability
 from hearth.providers import administrator, target_record
 
 router = APIRouter()
@@ -77,6 +78,7 @@ def candidates(db, capability):
 
 
 def select(db, capability, *, tools=False):
+    require_capability(db, capability)
     for target_id in candidates(db, capability):
         item = target_record(db, target_id, lock=True, idle_only=True)
         # Recheck under the same row locks used by disable, retarget and probes.
