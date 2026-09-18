@@ -123,7 +123,7 @@ export interface CloudAuthorization {
 export interface ConversationImage {
   schema_version?: 1;
   request: ImageGeneration;
-  status: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  status: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted" | "deleted";
   progress: number;
   reason?: string | null;
   sha256?: string | null;

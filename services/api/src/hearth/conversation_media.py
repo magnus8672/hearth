@@ -108,6 +108,8 @@ def recent_image(db, *, chat_id=None, channel_id=None):
             return None
         image = rows[0]
         if image['id']:
+            if image['status'] == 'deleted':
+                return None
             if image['batch_count'] > 1:
                 pictures = attachments(db, image['message_id'])
                 completed = [p for p in pictures if p['status'] == 'completed']
@@ -140,7 +142,7 @@ def admit(db, principal, session_hash, target, run_id, prompt, *, shape='square'
     # Serialize the quota without taking workspace/target locks in opposite order
     # to the standalone image endpoint. The target pool is already locked.
     db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:owner,7))'), {'owner': str(principal.id)})
-    if db.execute(text('SELECT count(*) FROM image_jobs')).scalar_one() >= 100:
+    if db.execute(text('SELECT count(*) FROM image_jobs WHERE deleted_at IS NULL')).scalar_one() >= 100:
         raise HTTPException(409, 'This workspace supports 100 image jobs in this build.')
     if target['protocol'] != 'hearth.image.v1' or shape not in target['profile'].get('shapes', []) or 20 not in target['profile'].get('steps', []):
         raise HTTPException(409, 'The selected image provider needs verification for chat images.')

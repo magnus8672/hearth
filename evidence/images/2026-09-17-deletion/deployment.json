@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "checks": [
+    "user: verified HTTPS readiness and current deletion bundle",
+    "admin: verified HTTPS readiness and current deletion bundle",
+    "live deletion endpoint rejects unauthenticated requests"
+  ],
+  "migration": "0021",
+  "host": "10.20.30.10",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

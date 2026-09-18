@@ -1305,7 +1305,8 @@
               "completed",
               "cancelled",
               "failed",
-              "interrupted"
+              "interrupted",
+              "deleted"
             ],
             "title": "Status",
             "type": "string"
@@ -6198,6 +6199,47 @@
           }
         },
         "summary": "Generate",
+        "tags": [
+          "images"
+        ]
+      }
+    },
+    "/api/v1/images/{job_id}": {
+      "delete": {
+        "operationId": "delete_image_api_v1_images__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Image",
         "tags": [
           "images"
         ]

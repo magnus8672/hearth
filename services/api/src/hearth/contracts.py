@@ -443,7 +443,7 @@ class ImageReceipt(WireModel):
 
 class ConversationImage(WireModel):
     request: ImageGeneration
-    status: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    status: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted', 'deleted']
     progress: Annotated[StrictInt, Field(ge=0, le=40)]
     reason: Annotated[str, Field(max_length=500)] | None = None
     sha256: Digest | None = None

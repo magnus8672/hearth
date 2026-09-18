@@ -197,6 +197,7 @@ def test_channel_image_is_shared_only_with_joined_members_not_private_gallery(bf
         assert len(calls) == 2
         assert first.get('/api/v1/images').json()['items'] == []
         assert first.get('/api/v1/images/' + data['request_id'] + '/image').status_code == 404
+        assert first.delete('/api/v1/images/' + data['request_id'], headers=h1).status_code == 404
         second_subject = str(uuid4())
         monkeypatch.setattr(identity, 'verify_id_token', lambda *args: {'sub': second_subject, 'name': 'Another member'})
         monkeypatch.setattr(identity, 'token_request', lambda config, endpoint, data:

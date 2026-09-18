@@ -8,7 +8,7 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
-from hearth import chat, image_planning, image_transport
+from hearth import chat, conversation_media, image_planning, image_transport
 from hearth.database import scoped_session
 from hearth.inference import ProviderError
 from sqlalchemy import text
@@ -81,9 +81,21 @@ def test_four_images_persist_in_order_and_only_in_their_conversation_scope(bff, 
             question = wait_finished(user, path)['messages'][-1]
             assert question['content'].startswith('Which picture') and not question['images']
             assert len(calls) == 5  # An ambiguous batch reference does not guess.
+            first = pictures[0]['request']['id']
+            # Existing variations may reference a removed image's identity.
+            with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
+                db.execute(text('UPDATE conversation_images SET source_image_id=:source WHERE id=:id'), {'source': first, 'id': pictures[1]['request']['id']})
+            assert user.delete('/api/v1/images/' + first, headers=headers).status_code == 200
+            assert user.get('/api/v1/images/' + first + '/image').status_code == 404
+            assert user.get('/api/v1/conversation-images/' + first + '/image').status_code == 404
+            updated = next(m['images'] for m in user.get(path).json()['messages'] if len(m['images']) == 4)
+            assert [p['status'] for p in updated] == ['deleted', 'completed', 'completed', 'completed']
+            assert user.get('/api/v1/conversation-images/' + pictures[1]['request']['id'] + '/image').status_code == 200
+            with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
+                assert db.execute(text('SELECT image IS NULL AND sha256 IS NULL FROM conversation_images WHERE id=:id'), {'id': first}).scalar_one()
 
 
-@pytest.mark.parametrize('action', ['complete', 'stop', 'steer', 'unknown', 'expire', 'revoke'])
+@pytest.mark.parametrize('action', ['complete', 'stop', 'steer', 'unknown', 'expire', 'revoke', 'delete'])
 def test_batch_keeps_one_pool_receipt_and_preserves_completed_images_on_interruption(bff, monkeypatch, action):
     factory, settings, app, migration, _ = setup(bff, monkeypatch)
     calls = []
@@ -124,6 +136,9 @@ def test_batch_keeps_one_pool_receipt_and_preserves_completed_images_on_interrup
             assert [p['status'] for p in running['messages'][-1]['images']] == ['completed', 'running', 'queued', 'queued']
             assert admin.get('/api/v1/providers').json()['items'][0]['active_run_id'] == parent
             assert all(job['status'] != 'interrupted' for job in user.get('/api/v1/images').json()['items'])
+            if action == 'delete':
+                assert user.delete('/api/v1/images/' + running['messages'][-1]['images'][2]['request']['id'], headers=headers).status_code == 409
+                assert user.delete('/api/v1/images/' + parent, headers=headers).status_code == 200
             if action == 'stop':
                 assert user.post(path + '/stop', headers=headers).status_code == 200
             if action == 'steer':
@@ -147,9 +162,17 @@ def test_batch_keeps_one_pool_receipt_and_preserves_completed_images_on_interrup
                 time.sleep(.02)
                 result = user.get(path).json()
         pictures = next(m['images'] for m in result['messages'] if len(m['images']) == 4)
-        assert pictures[0]['status'] == 'completed'
-        assert len(calls) == (4 if action == 'complete' else 2)
-        assert sum(p['status'] == 'completed' for p in pictures) == (4 if action == 'complete' else 1)
+        assert pictures[0]['status'] == ('deleted' if action == 'delete' else 'completed')
+        assert len(calls) == (4 if action in {'complete', 'delete'} else 2)
+        assert sum(p['status'] == 'completed' for p in pictures) == (4 if action == 'complete' else 3 if action == 'delete' else 1)
+        if action == 'delete':
+            assert user.get('/api/v1/conversation-images/' + parent + '/image').status_code == 404
+            assert all(job['id'] != parent for job in user.get('/api/v1/images').json()['items'])
+            # Deleting the rest of the batch leaves no automatic variation source.
+            for picture in pictures[1:]:
+                assert user.delete('/api/v1/images/' + picture['request']['id'], headers=headers).status_code == 200
+            with scoped_session(app, owner, settings.farm_id) as db:
+                assert conversation_media.recent_image(db, chat_id=path.split('/')[-1]) is None
         assert all(p['status'] not in {'queued', 'running'} for p in pictures)
         expected = 'unknown' if action in {'unknown', 'expire'} else 'idle'
         deadline = time.monotonic() + 5

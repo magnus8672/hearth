@@ -1,5 +1,7 @@
 # hearth design coverage
 
+Private image lifecycle, 17 September 2026: [gallery deletion](IMAGE_DELETION.md) now erases saved PNGs from the head's gallery and private conversation storage, with ownership checks, tombstones and quota release. Database and deployed-bundle UI fixtures pass. Provider-side files, backups and complete account/content erasure remain open; no full release gate is closed.
+
 Identity usability, 17 September 2026: [single sign-on](SINGLE_SIGN_ON.md) removes duplicate password/OTP prompts when switching between workspace and Administration. Separate audience/authorization boundaries and mandatory MFA remain. Real Keycloak protocol and isolated BFF checks pass; full sensitive-action step-up and browser release qualification remain open.
 
 [Historical deployment inventory removed for repository privacy.]

@@ -54,7 +54,7 @@ def images(request: Request):
     principal = member(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         reconcile(db)
-        rows = db.execute(text('SELECT id,target_id,request,status,progress,cancel_requested,reason,metadata,created_at FROM image_jobs WHERE channel_id IS NULL ORDER BY created_at DESC LIMIT 100')).mappings().all()
+        rows = db.execute(text('SELECT id,target_id,request,status,progress,cancel_requested,reason,metadata,created_at FROM image_jobs WHERE channel_id IS NULL AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 100')).mappings().all()
     return {'items': [dict(row) for row in rows]}
 
 
@@ -65,14 +65,16 @@ def generate(request: Request, data: CreateImage):
     payload = data.request.model_dump(mode='json')
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         workspace = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
-        previous = db.execute(text('SELECT target_id,request,status FROM image_jobs WHERE id=:id'), {'id': data.request.id}).mappings().one_or_none()
+        previous = db.execute(text('SELECT target_id,request,status,deleted_at FROM image_jobs WHERE id=:id'), {'id': data.request.id}).mappings().one_or_none()
         if previous:
+            if previous['deleted_at'] is not None:
+                raise HTTPException(410, 'This image was deleted. Use a new request to generate another image.')
             if previous['target_id'] != data.target_id or previous['request'] != payload:
                 raise HTTPException(409, 'This image request identifier was already used.')
             return {'id': data.request.id, 'status': previous['status']}
         row = target_record(db, data.target_id, lock=True)
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:owner,7))'), {'owner': str(principal.id)})
-        if db.execute(text('SELECT count(*) FROM image_jobs')).scalar_one() >= 100:
+        if db.execute(text('SELECT count(*) FROM image_jobs WHERE deleted_at IS NULL')).scalar_one() >= 100:
             raise HTTPException(409, 'This workspace supports 100 saved image jobs in this build.')
         if row['protocol'] != 'hearth.image.v1' or row['model_id'] != data.request.model:
             raise HTTPException(409, 'Choose a configured image model.')
@@ -103,10 +105,30 @@ def cancel(request: Request, job_id: UUID):
 def download(request: Request, job_id: UUID):
     principal = member(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        image = db.execute(text("SELECT image FROM image_jobs WHERE id=:id AND status='completed' AND channel_id IS NULL"), {'id': job_id}).scalar_one_or_none()
+        image = db.execute(text("SELECT image FROM image_jobs WHERE id=:id AND status='completed' AND channel_id IS NULL AND deleted_at IS NULL"), {'id': job_id}).scalar_one_or_none()
         if image is None:
             raise HTTPException(404, 'This completed image is not available in your workspace.')
     return Response(bytes(image), media_type='image/png', headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Content-Disposition': f'inline; filename="hearth-{job_id}.png"'})
+
+
+@router.delete('/api/v1/images/{job_id}', tags=['images'])
+def delete_image(request: Request, job_id: UUID):
+    principal = member(request, mutation=True)
+    with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        # RLS scopes this to the requesting owner, including when they are an admin.
+        # Shared-channel moderation is separate from this private gallery action.
+        row = db.execute(text('SELECT status,deleted_at FROM image_jobs WHERE id=:id AND channel_id IS NULL FOR UPDATE'), {'id': job_id}).mappings().one_or_none()
+        if row is None:
+            raise HTTPException(404, 'This image is not available in your workspace.')
+        if row['deleted_at'] is not None:
+            return {'deleted': True}
+        if row['status'] in {'queued', 'running'}:
+            raise HTTPException(409, 'Stop this image and wait for generation to end before deleting it.')
+        # Keep IDs for idempotency, batch bookkeeping and variation references,
+        # but atomically erase both copies of the artifact and its byte receipt.
+        db.execute(text('UPDATE image_jobs SET image=NULL,metadata=NULL,deleted_at=now() WHERE id=:id'), {'id': job_id})
+        db.execute(text("UPDATE conversation_images SET image=NULL,sha256=NULL,status='deleted',reason='Image deleted.' WHERE id=:id AND channel_id IS NULL"), {'id': job_id})
+    return {'deleted': True}
 
 
 @router.get('/api/v1/conversation-images/{job_id}/image', tags=['images'])

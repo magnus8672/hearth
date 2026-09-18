@@ -10,6 +10,7 @@ export function ConversationMedia({ image, images, content }: { image?: ImageRes
 
 export function ConversationPicture({ image }: { image: ImageResult }) {
   const { request } = image;
+  if (image.status === 'deleted') return <figure className="conversation-image"><p className="small-copy">{(image.batch_count || 1) > 1 ? `Image ${image.batch_index} of ${image.batch_count} deleted.` : 'Image deleted.'}</p></figure>;
   const source = `/api/v1/conversation-images/${encodeURIComponent(request.id)}/image`;
   return <figure className="conversation-image">
     {(image.batch_count || 1) > 1 && <p className="small-copy">Image {image.batch_index} of {image.batch_count}</p>}

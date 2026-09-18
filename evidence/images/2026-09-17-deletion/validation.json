@@ -1,0 +1,23 @@
+{
+  "status": "passed_with_user_acceptance_pending",
+  "deployment_host": "10.20.30.10",
+  "migration": "0021",
+  "database_tests_passed": 25,
+  "opt_in_generation_tests_skipped": 3,
+  "database_scope": "Restricted roles in a temporary database on the existing VM; synthetic identity and image providers. Temporary storage removed.",
+  "browser_tests_passed": 1,
+  "browser_scope": "Deployed HTTPS bundle with synthetic API responses and a harmless PNG, confirmation and error recovery, gallery removal, chat tombstone and mobile overflow.",
+  "browser_tls_validation": true,
+  "typecheck": "passed",
+  "python_lint": "passed",
+  "production_builds": [
+    "admin",
+    "user"
+  ],
+  "generated_contracts": true,
+  "existing_user_images_deleted": false,
+  "migration_account_counts_and_image_byte_totals_unchanged": true,
+  "real_user_acceptance": "pending",
+  "release_gates_closed": 0,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

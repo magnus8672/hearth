@@ -591,6 +591,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/images/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Image */
+        delete: operations["delete_image_api_v1_images__job_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/images/{job_id}/cancel": {
         parameters: {
             query?: never;
@@ -1808,7 +1825,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+            status: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted" | "deleted";
             /**
              * Variation
              * @default false
@@ -4620,6 +4637,37 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_image_api_v1_images__job_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -118,6 +118,7 @@ def test_image_cancel_waits_for_receipt_and_shares_chat_resource_group(bff, monk
         try:
             assert user.post('/api/v1/images', json=data, headers=headers).status_code == 202
             assert entered.wait(5)
+            assert user.delete('/api/v1/images/' + data['request']['id'], headers=headers).status_code == 409
             chat = user.post('/api/v1/chats', headers=headers, json={}).json()
             assert user.post('/api/v1/chats/' + chat['id'] + '/turns', headers=headers, json={'request_id': str(uuid4()), 'content': 'No overlapping GPU work', 'revision': 1}).status_code == 409
             assert user.post('/api/v1/images/' + data['request']['id'] + '/cancel', headers=headers).status_code == 200

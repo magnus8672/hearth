@@ -859,7 +859,8 @@
             "completed",
             "cancelled",
             "failed",
-            "interrupted"
+            "interrupted",
+            "deleted"
           ],
           "title": "Status",
           "type": "string"
