@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "checks": [
+    "user: verified HTTPS readiness and current image-options bundle",
+    "admin: verified HTTPS readiness and current image-options bundle"
+  ],
+  "migration": "0022",
+  "host": "10.20.30.10",
+  "provider": {
+    "existing_target_ready": true,
+    "profile_matches_live_service": true,
+    "resolutions": [
+      "native",
+      "2k",
+      "4k"
+    ],
+    "style_count": 279
+  },
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

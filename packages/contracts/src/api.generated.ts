@@ -2222,6 +2222,7 @@ export interface components {
              * @default
              */
             negative_prompt: string;
+            options?: components["schemas"]["ImageOptions"];
             /** Prompt */
             prompt: string;
             /**
@@ -2237,13 +2238,68 @@ export interface components {
              * @default square
              * @enum {string}
              */
-            shape: "square" | "landscape" | "portrait";
+            shape: "square" | "landscape" | "portrait" | "widescreen" | "tall";
             /**
              * Steps
              * @default 20
              * @enum {integer}
              */
-            steps: 20 | 30 | 40;
+            steps: 20 | 30 | 40 | 60;
+        };
+        /** ImageOptions */
+        ImageOptions: {
+            /**
+             * Guidance Scale
+             * @default null
+             */
+            guidance_scale: number | null;
+            /**
+             * Resolution
+             * @default native
+             * @enum {string}
+             */
+            resolution: "native" | "2k" | "4k";
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Sharpness
+             * @default null
+             */
+            sharpness: number | null;
+            /**
+             * Styles
+             * @default null
+             */
+            styles: string[] | null;
+        };
+        /** ImageOptionsProfile */
+        ImageOptionsProfile: {
+            /** Default Styles */
+            default_styles?: string[];
+            /**
+             * Guidance Scale
+             * @default null
+             */
+            guidance_scale: number | null;
+            /** Resolutions */
+            resolutions?: ("native" | "2k" | "4k")[];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Sharpness
+             * @default null
+             */
+            sharpness: number | null;
+            /** Styles */
+            styles?: string[];
         };
         /** ImagePrompt */
         ImagePrompt: {
@@ -2319,6 +2375,8 @@ export interface components {
             model_revision: string;
             /** Offline */
             offline: boolean;
+            /** @default null */
+            options: components["schemas"]["ImageOptionsProfile"] | null;
             /**
              * Protocol
              * @constant
@@ -2331,9 +2389,9 @@ export interface components {
              */
             schema_version: 1;
             /** Shapes */
-            shapes: ("square" | "landscape" | "portrait")[];
+            shapes: ("square" | "landscape" | "portrait" | "widescreen" | "tall")[];
             /** Steps */
-            steps: (20 | 30 | 40)[];
+            steps: (20 | 30 | 40 | 60)[];
         };
         /** ImageReceipt */
         ImageReceipt: {
@@ -2376,7 +2434,7 @@ export interface components {
              * Shape
              * @enum {string}
              */
-            shape: "square" | "landscape" | "portrait";
+            shape: "square" | "landscape" | "portrait" | "widescreen" | "tall";
             /**
              * State
              * @enum {string}
@@ -2386,7 +2444,7 @@ export interface components {
              * Steps
              * @enum {integer}
              */
-            steps: 20 | 30 | 40;
+            steps: 20 | 30 | 40 | 60;
             /** Width */
             width: number;
         };

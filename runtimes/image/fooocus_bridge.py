@@ -16,6 +16,8 @@ import threading
 import time
 from pathlib import Path
 
+from hearth.image_settings import dimensions
+
 if __package__:
     from .hearth_image import SIZES, Cancelled, GenerationError, create_app
 else:
@@ -44,9 +46,17 @@ class Fooocus:
     def __init__(self, ui):
         self.ui, self.task = ui, None
 
+    def profile(self):
+        styles = [item[1] if isinstance(item, (list, tuple)) else item for item in self.ui.style_selections.choices]
+        upscaler = Path(self.ui.modules.config.path_upscale_models) / 'fooocus_upscaler_s409985e5.bin'
+        return {'shapes': list(SIZES), 'steps': [20, 30, 40, 60], 'options': {
+            'resolutions': ['native', '2k', '4k'] if upscaler.is_file() else ['native'], 'styles': styles,
+            'default_styles': list(self.ui.style_selections.value),
+            'guidance_scale': self.ui.guidance_scale.value, 'sharpness': self.ui.sharpness.value}}
+
     def build_task(self, data, cancelled):
         # Fooocus interprets these as filesystem-backed wildcard/LoRA requests.
-        # The remote API intentionally offers one fixed text-to-image profile.
+        # Remote controls never select filesystem paths, checkpoints or LoRAs.
         if any('__' in text or re.search(r'<\s*lora\s*:', text, re.I) for text in (data.prompt, data.negative_prompt)):
             raise GenerationError('Wildcard and LoRA directives are not supported by this image profile.')
         width, height = SIZES[data.shape]
@@ -60,23 +70,61 @@ class Fooocus:
             'enhance_checkbox': False, 'disable_preview': True, 'disable_intermediate_results': True,
             'save_metadata_to_images': False,
         }
+        if data.options.styles is not None:
+            changes['style_selections'] = data.options.styles
+        for name in ('guidance_scale', 'sharpness'):
+            if getattr(data.options, name) is not None:
+                changes[name] = getattr(data.options, name)
         for name, value in changes.items():
             component = getattr(self.ui, name)
             for index, control in enumerate(self.ui.ctrls[1:]):
                 if control is component:
                     values[index] = value
                     break
+            else:
+                raise GenerationError('The installed Fooocus controls changed. Review the adapter.')
         task = self.ui.worker.AsyncTask(values)
         task.hearth_released = threading.Event()
         task.hearth_cancelled = cancelled
         task.hearth_failed = False
         return task
 
+    def upscale(self, task, data, cancelled, progress):
+        # Called by the same Fooocus worker, before its CUDA completion receipt.
+        # Never overlaps another graphical/API task or releases capacity early.
+        if len(task.results) != 1 or cancelled():
+            return
+        import numpy as np
+        import torch
+        from modules.upscaler import perform_upscale
+        from PIL import Image
+        if not (Path(self.ui.modules.config.path_upscale_models) / 'fooocus_upscaler_s409985e5.bin').is_file():
+            raise GenerationError('Prepare the Fooocus upscaler before requesting larger images.')
+        path = Path(task.results[0]).resolve()
+        if not path.is_relative_to(Path(self.ui.modules.config.temp_path).resolve()):
+            raise GenerationError('Fooocus returned an unexpected output location.')
+        progress(data.steps)
+        with Image.open(path) as image:
+            pixels = np.array(image.convert('RGB'))
+        with torch.inference_mode():
+            pixels = perform_upscale(pixels)
+        if cancelled():
+            return
+        image = Image.fromarray(pixels)
+        size = dimensions(data.shape, data.options.resolution)
+        if image.size[0] < size[0] or image.size[1] < size[1]:
+            raise GenerationError('The upscaler did not reach the requested resolution.')
+        if image.size != size:
+            image = image.resize(size, Image.Resampling.LANCZOS)
+        image.save(path, format='PNG')
+
     def generate(self, data, cancelled, progress, output):
         self.task = None
         if cancelled():
             raise Cancelled()
         task = self.build_task(data, cancelled)
+        if data.options.resolution != 'native':
+            task.hearth_postprocess = lambda: self.upscale(task, data, cancelled, progress)
         self.task = task
         self.ui.worker.async_tasks.append(task)
         deadline = time.monotonic() + 1200
@@ -102,7 +150,7 @@ class Fooocus:
         try:
             with Image.open(path) as picture:
                 picture.load()
-                if picture.size != SIZES[data.shape]:
+                if picture.size != dimensions(data.shape, data.options.resolution):
                     raise GenerationError('Fooocus returned unexpected image dimensions.')
                 picture.save(output, format='PNG')
             progress(data.steps)
@@ -151,9 +199,10 @@ def main():
         ui = sys.modules['webui']
         if not ui.worker.hearth_worker_ready.wait(180):
             raise RuntimeError('Fooocus worker failed to initialize.')
+        engine = Fooocus(ui)
         app = create_app(Path(config['jobs']), root, Path(config['token_file']).read_text().strip(),
-                         engine=Fooocus(ui), manifest_digest=digest, model=MODEL, revision='fooocus-2.5.5-juggernaut-v8',
-                         allowed_hosts=config['allowed_hosts'], allowed_controllers=config['allowed_controllers'])
+                         engine=engine, manifest_digest=digest, model=MODEL, revision='fooocus-2.5.5-juggernaut-v8-upscale',
+                         allowed_hosts=config['allowed_hosts'], allowed_controllers=config['allowed_controllers'], profile=engine.profile())
         import uvicorn
         uvicorn.run(app, host=config['listen'], port=config['port'], access_log=False, proxy_headers=False)
 

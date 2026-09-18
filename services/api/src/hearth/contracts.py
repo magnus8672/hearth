@@ -407,14 +407,30 @@ class GeometryRequest(WireModel):
         return self
 
 
+class ImageOptions(WireModel):
+    resolution: Literal['native', '2k', '4k'] = 'native'
+    styles: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = Field(default=None, max_length=8)
+    guidance_scale: Annotated[float, Field(ge=1, le=30, allow_inf_nan=False)] | None = None
+    sharpness: Annotated[float, Field(ge=0, le=30, allow_inf_nan=False)] | None = None
+
+
+class ImageOptionsProfile(WireModel):
+    resolutions: list[Literal['native', '2k', '4k']] = Field(default_factory=lambda: ['native'], min_length=1, max_length=3)
+    styles: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(default_factory=list, max_length=512)
+    default_styles: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(default_factory=list, max_length=8)
+    guidance_scale: Annotated[float, Field(ge=1, le=30, allow_inf_nan=False)] | None = None
+    sharpness: Annotated[float, Field(ge=0, le=30, allow_inf_nan=False)] | None = None
+
+
 class ImageGeneration(WireModel):
     id: UUID
     model: Annotated[str, Field(min_length=1, max_length=200)]
     prompt: Annotated[str, Field(min_length=1, max_length=1000)]
     negative_prompt: Annotated[str, Field(max_length=1000)] = ''
-    shape: Literal['square', 'landscape', 'portrait'] = 'square'
-    steps: Literal[20, 30, 40] = 20
+    shape: Literal['square', 'landscape', 'portrait', 'widescreen', 'tall'] = 'square'
+    steps: Literal[20, 30, 40, 60] = 20
     seed: Annotated[StrictInt, Field(ge=0, le=4294967295)]
+    options: ImageOptions = Field(default_factory=ImageOptions)
 
     @field_validator('prompt')
     @classmethod
@@ -428,12 +444,12 @@ class ImageReceipt(WireModel):
     id: UUID
     model: Annotated[str, Field(min_length=1, max_length=200)]
     state: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
-    progress: Annotated[StrictInt, Field(ge=0, le=40)]
-    steps: Literal[20, 30, 40]
+    progress: Annotated[StrictInt, Field(ge=0, le=60)]
+    steps: Literal[20, 30, 40, 60]
     seed: Annotated[StrictInt, Field(ge=0, le=4294967295)]
-    shape: Literal['square', 'landscape', 'portrait']
-    width: Annotated[StrictInt, Field(ge=1, le=2048)]
-    height: Annotated[StrictInt, Field(ge=1, le=2048)]
+    shape: Literal['square', 'landscape', 'portrait', 'widescreen', 'tall']
+    width: Annotated[StrictInt, Field(ge=1, le=4096)]
+    height: Annotated[StrictInt, Field(ge=1, le=4096)]
     reason: Annotated[str, Field(max_length=500)] | None = None
     sha256: Digest | None = None
     execution_released: StrictBool
@@ -444,7 +460,7 @@ class ImageReceipt(WireModel):
 class ConversationImage(WireModel):
     request: ImageGeneration
     status: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted', 'deleted']
-    progress: Annotated[StrictInt, Field(ge=0, le=40)]
+    progress: Annotated[StrictInt, Field(ge=0, le=60)]
     reason: Annotated[str, Field(max_length=500)] | None = None
     sha256: Digest | None = None
     planning_model: Annotated[str, Field(max_length=200)] | None = None
@@ -495,8 +511,9 @@ class ImageProviderInfo(WireModel):
     model: Annotated[str, Field(min_length=1, max_length=200)]
     model_revision: Annotated[str, Field(min_length=1, max_length=100)]
     manifest_sha256: Digest
-    shapes: list[Literal['square', 'landscape', 'portrait']] = Field(min_length=1, max_length=3)
-    steps: list[Literal[20, 30, 40]] = Field(min_length=1, max_length=3)
+    shapes: list[Literal['square', 'landscape', 'portrait', 'widescreen', 'tall']] = Field(min_length=1, max_length=5)
+    steps: list[Literal[20, 30, 40, 60]] = Field(min_length=1, max_length=4)
+    options: ImageOptionsProfile | None = None
     job_cancellation: StrictBool
     offline: StrictBool
 

@@ -19,11 +19,11 @@ from uuid import UUID
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from hearth.contracts import ImageGeneration as Generate
+from hearth.image_settings import MAX_IMAGE_BYTES, SIZES, dimensions, validate_settings
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 MODEL = 'stabilityai/stable-diffusion-xl-base-1.0'
 REVISION = '462165984030d82259a11f4367a4eed129e94a7b'
-SIZES = {'square': (1024, 1024), 'landscape': (1024, 768), 'portrait': (768, 1024)}
 
 
 class Cancelled(Exception):
@@ -101,9 +101,10 @@ def verify_model(path):
 
 
 class Jobs:
-    def __init__(self, root, engine, manifest_digest, model=MODEL):
+    def __init__(self, root, engine, manifest_digest, model=MODEL, profile=None):
         self.root, self.engine, self.manifest_digest = root, engine, manifest_digest
         self.model = model
+        self.profile = profile or {'shapes': ['square', 'landscape', 'portrait'], 'steps': [20, 30, 40]}
         root.mkdir(parents=True, exist_ok=True)
         self.lock_file = (root / 'process.lock').open('a+b')
         self.lock_file.seek(0)
@@ -132,19 +133,24 @@ class Jobs:
         if not row:
             raise HTTPException(404, 'This image job is not available.')
         data = json.loads(row['request'])
+        width, height = dimensions(data['shape'], data.get('options', {}).get('resolution', 'native'))
         return {'schema_version': 1, 'id': row['id'], 'model': data['model'], 'state': row['state'], 'progress': row['progress'], 'steps': data['steps'],
-                'seed': data['seed'], 'shape': data['shape'], 'width': SIZES[data['shape']][0], 'height': SIZES[data['shape']][1],
+                'seed': data['seed'], 'shape': data['shape'], 'width': width, 'height': height,
                 'reason': row['reason'], 'sha256': row['digest'], 'execution_released': bool(row['released']),
                 'manifest_sha256': self.manifest_digest, 'cancel_requested': bool(row['cancel'])}
 
     def submit(self, data):
         if data.model != self.model:
             raise HTTPException(404, 'This model is not installed on this provider.')
+        try:
+            validate_settings(data, self.profile)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from None
         payload = data.model_dump_json()
         with self.mutex, self.db() as db:
             previous = db.execute('SELECT request FROM jobs WHERE id=?', (str(data.id),)).fetchone()
             if previous:
-                if previous['request'] != payload:
+                if Generate.model_validate_json(previous['request']).model_dump_json() != payload:
                     raise HTTPException(409, 'This job identifier was already used for another request.')
             else:
                 if self.poisoned or db.execute("SELECT 1 FROM jobs WHERE state IN ('queued','running') OR released=0").fetchone():
@@ -176,6 +182,8 @@ class Jobs:
             self.engine.generate(data, cancelled, progress, output)
             if cancelled():
                 raise Cancelled()
+            if output.stat().st_size > MAX_IMAGE_BYTES:
+                raise GenerationError('The image exceeded the supported 64 MiB PNG limit.')
             with output.open('rb') as source:
                 digest = hashlib.file_digest(source, 'sha256').hexdigest()
         except Cancelled:
@@ -212,13 +220,13 @@ def transaction(db):
 
 
 def create_app(root, model_path, token, *, engine=None, manifest_digest=None, model=MODEL, revision=REVISION,
-               allowed_hosts=None, allowed_controllers=None):
+               allowed_hosts=None, allowed_controllers=None, profile=None):
     if len(token) < 32:
         raise RuntimeError('A controller credential of at least 32 characters is required.')
     digest = manifest_digest or verify_model(model_path)
     if model != MODEL and (engine is None or manifest_digest is None):
         raise RuntimeError('A custom model requires an explicit engine and verified manifest.')
-    jobs = Jobs(root, engine or SDXL(model_path), digest, model=model)
+    jobs = Jobs(root, engine or SDXL(model_path), digest, model=model, profile=profile)
 
     @contextlib.asynccontextmanager
     async def lifespan(app):
@@ -249,7 +257,7 @@ def create_app(root, model_path, token, *, engine=None, manifest_digest=None, mo
     @app.get('/v1/image-provider')
     def capabilities():
         return {'schema_version': 1, 'protocol': 'hearth.image.v1', 'model': model, 'model_revision': revision, 'manifest_sha256': digest,
-                'shapes': list(SIZES), 'steps': [20, 30, 40], 'job_cancellation': True, 'offline': True}
+                **jobs.profile, 'job_cancellation': True, 'offline': True}
 
     @app.post('/v1/image-jobs', status_code=202)
     def submit(data: Generate):

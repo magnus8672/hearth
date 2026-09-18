@@ -52,3 +52,38 @@ def test_receipt_binding_artifact_verification_and_unknown_execution(monkeypatch
         with pytest.raises(ProviderError) as error:
             image_transport.render('http://fixture', '', Settings(mode='test'), data)
         assert error.value.uncertain is (fault in {'wrong_job', 'lost_receipt', 'unreleased', 'running_released'})
+
+
+@pytest.mark.parametrize('large', [False, True])
+def test_resolution_receipt_and_legacy_request_compatibility(monkeypatch, large):
+    data = ImageGeneration(id=uuid4(), model='fixture', prompt='A cabin', seed=7, shape='widescreen' if large else 'square',
+                           options={'resolution': '4k' if large else 'native'})
+    output = io.BytesIO()
+    size = (3840, 2160) if large else (1024, 1024)
+    Image.new('RGB', size, 'orange').save(output, format='PNG')
+    artifact = output.getvalue()
+    result = ImageReceipt(id=data.id, model=data.model, state='completed', progress=20, steps=20, seed=7,
+        shape=data.shape, width=size[0], height=size[1], sha256=hashlib.sha256(artifact).hexdigest(), execution_released=True,
+        manifest_sha256='a' * 64, cancel_requested=False)
+
+    def handler(request):
+        if request.method == 'POST':
+            import json
+            payload = json.loads(request.content)
+            assert ('options' in payload) is large
+            if large:
+                assert payload['options']['resolution'] == '4k'
+        if request.url.path.endswith('/image'):
+            return httpx.Response(200, content=artifact, headers={'content-type': 'image/png'})
+        return httpx.Response(202, json=result.model_dump(mode='json'))
+
+    @contextmanager
+    def client(*args):
+        with httpx.Client(base_url='http://fixture/v1/', transport=httpx.MockTransport(handler)) as connection:
+            yield connection, {}
+
+    monkeypatch.setattr(image_transport, 'client_for', client)
+    assert image_transport.render('http://fixture', '', Settings(mode='test'), data)[1] == artifact
+    result.width = 1024 if large else 2048
+    with pytest.raises(ProviderError, match='different request'):
+        image_transport.render('http://fixture', '', Settings(mode='test'), data)

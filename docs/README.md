@@ -16,6 +16,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Understand reply limits, continuation and model labels | [Reply streaming and identity](implementation/REPLY_STREAMING_AND_IDENTITY.md) |
 | Understand images and concurrent model dispatch | [Vision and concurrent farm](implementation/VISION_AND_CONCURRENT_FARM.md) |
 | Remove generated pictures from the gallery and private chat | [Image deletion](implementation/IMAGE_DELETION.md) |
+| Choose Fooocus styles, advanced controls and 4K output | [Image settings](implementation/IMAGE_OPTIONS.md) |
 | Record or upload speech and review its transcript | [Microphone and transcription](implementation/TRANSCRIPTION.md) |
 | Edit memory and use Obsidian vaults | [Private memory](implementation/PRIVATE_MEMORY.md) |
 | Register shared MCP tools and connect a local agent/editor | [Shared tools and client API](implementation/SHARED_TOOLS_AND_CLIENT_API.md) |

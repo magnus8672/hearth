@@ -1,5 +1,7 @@
 # hearth design coverage
 
+Image controls, 17 September 2026: [Fooocus options](IMAGE_OPTIONS.md) expose verified shapes, styles, guidance, sharpness, up to 60 sampling passes and bounded AI-upscaled 4K output. Real widescreen and square renders pass on the dedicated mobile RTX 4090, along with cancellation, storage and UI fixtures. The existing user-registered provider remains assigned. Native 4K diffusion, image editing, 3D and complete model/runtime qualification remain open; no full release gate is closed.
+
 Private image lifecycle, 17 September 2026: [gallery deletion](IMAGE_DELETION.md) now erases saved PNGs from the head's gallery and private conversation storage, with ownership checks, tombstones and quota release. Database and deployed-bundle UI fixtures pass. Provider-side files, backups and complete account/content erasure remain open; no full release gate is closed.
 
 Identity usability, 17 September 2026: [single sign-on](SINGLE_SIGN_ON.md) removes duplicate password/OTP prompts when switching between workspace and Administration. Separate audience/authorization boundaries and mandatory MFA remain. Real Keycloak protocol and isolated BFF checks pass; full sensitive-action step-up and browser release qualification remain open.

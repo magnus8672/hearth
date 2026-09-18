@@ -129,6 +129,54 @@ def test_image_cancel_waits_for_receipt_and_shares_chat_resource_group(bff, monk
         assert admin.get('/api/v1/providers').json()['items'][0]['execution_state'] == 'idle'
 
 
+def test_advertised_4k_settings_survive_storage_and_unsupported_options_are_rejected(bff, monkeypatch):
+    from hearth.contracts import ImageOptionsProfile
+    factory, settings, app, migration, _ = setup(bff, monkeypatch)
+    options = ImageOptionsProfile(resolutions=['native', '2k', '4k'], styles=['Fooocus V2'], default_styles=['Fooocus V2'], guidance_scale=4, sharpness=2)
+    info = INFO.model_copy(update={'shapes': ['square', 'widescreen'], 'steps': [20, 60], 'options': options})
+    monkeypatch.setattr(image_transport, 'information', lambda *args: info)
+    calls = []
+
+    def render(url, key, config, data, observe=lambda value: False):
+        calls.append(data)
+        size = (3840, 2160) if data.options.resolution == '4k' else (1024, 1024)
+        output = io.BytesIO()
+        Image.new('RGB', size, 'orange').save(output, format='PNG')
+        artifact = output.getvalue()
+        result = receipt(data).model_copy(update={'steps': data.steps, 'progress': data.steps, 'shape': data.shape,
+                                                'width': size[0], 'height': size[1], 'sha256': hashlib.sha256(artifact).hexdigest()})
+        observe(result)
+        return result, artifact
+
+    monkeypatch.setattr(image_transport, 'render', render)
+    with factory('admin') as admin, factory() as user:
+        signin(admin)
+        promote(admin, migration, settings)
+        target = image_target(admin, csrf(admin, settings.admin_origin))
+        signin(user)
+        headers = csrf(user, settings.user_origin)
+        assert user.get('/api/v1/image-targets').json()['items'][0]['profile']['options']['resolutions'] == ['native', '2k', '4k']
+        request = {'id': str(uuid4()), 'model': MODEL, 'prompt': 'An orange square', 'seed': 3, 'shape': 'widescreen', 'steps': 60,
+                   'options': {'resolution': '4k', 'styles': [], 'guidance_scale': 5.5, 'sharpness': 3}}
+        invalid = request | {'options': request['options'] | {'styles': ['Unqualified style']}}
+        assert user.post('/api/v1/images', headers=headers, json={'target_id': target, 'request': invalid}).status_code == 409
+        assert len(calls) == 1  # Probe only; rejected options never reach the provider.
+        assert user.post('/api/v1/images', headers=headers, json={'target_id': target, 'request': request}).status_code == 202
+        result = wait_image(user)
+        assert result['status'] == 'completed'
+        assert result['metadata']['width'] == 3840 and result['metadata']['height'] == 2160
+        assert result['request']['options']['styles'] == [] and result['request']['options']['guidance_scale'] == 5.5
+        with Image.open(io.BytesIO(user.get('/api/v1/images/' + request['id'] + '/image').content)) as image:
+            assert image.size == (3840, 2160)
+        with factory() as reopened:
+            signin(reopened)
+            assert reopened.get('/api/v1/images').json()['items'][0]['request'] == result['request']
+        with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
+            # The old 16 MiB storage cap must not reject a valid larger PNG transfer.
+            db.execute(text("UPDATE image_jobs SET image=repeat('x',16777217)::bytea WHERE id=:id"), {'id': request['id']})
+        assert user.delete('/api/v1/images/' + request['id'], headers=headers).status_code == 200
+
+
 @pytest.mark.skipif(not os.environ.get('HEARTH_LIVE_IMAGE_PROVIDER'), reason='Live GPU image generation is explicitly opt-in.')
 def test_live_image_provider_through_private_bff_and_database(bff):
     factory, settings, _, migration, _ = bff

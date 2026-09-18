@@ -8,6 +8,7 @@ from PIL import Image
 from pydantic import ValidationError
 
 from hearth.contracts import ImageProviderInfo, ImageReceipt
+from hearth.image_settings import MAX_IMAGE_BYTES, dimensions
 from hearth.inference import ProviderError, client_for
 
 
@@ -43,7 +44,7 @@ def collect_png(base_url, credential, settings, receipt):
             started = time.monotonic()
             for block in response.iter_bytes():
                 raw.extend(block)
-                if len(raw) > 16777216 or time.monotonic() - started > 30:
+                if len(raw) > MAX_IMAGE_BYTES or time.monotonic() - started > 60:
                     raise ProviderError('The image exceeded its supported file size or transfer time.')
         if hashlib.sha256(raw).hexdigest() != receipt.sha256:
             raise ProviderError('The image digest did not match its completion receipt.')
@@ -61,11 +62,15 @@ def collect_png(base_url, credential, settings, receipt):
 def render(base_url, credential, settings, data, on_receipt=lambda receipt: False):
     dispatched, released, cancel_sent = False, False, False
     try:
-        receipt = rpc(base_url, credential, settings, 'image-jobs', payload=data.model_dump(mode='json'), model=ImageReceipt)
+        # Omit new default options so existing v1 providers still accept a basic request.
+        payload = data.model_dump(mode='json')
+        if not data.options.model_dump(exclude_defaults=True, exclude={'schema_version'}):
+            payload.pop('options')
+        receipt = rpc(base_url, credential, settings, 'image-jobs', payload=payload, model=ImageReceipt)
         dispatched = True
         deadline = time.monotonic() + 900
         while True:
-            expected_size = {'square': (1024, 1024), 'landscape': (1024, 768), 'portrait': (768, 1024)}[data.shape]
+            expected_size = dimensions(data.shape, data.options.resolution)
             if (receipt.id != data.id or receipt.model != data.model or receipt.seed != data.seed
                     or receipt.steps != data.steps or receipt.shape != data.shape or (receipt.width, receipt.height) != expected_size):
                 raise ProviderError('The image provider returned a receipt for a different request.', uncertain=True)

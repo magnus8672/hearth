@@ -219,14 +219,32 @@ type Heartbeat struct {
 }
 
 type ImageGeneration struct {
-	SchemaVersion  int64  `json:"schema_version"`
-	Id             string `json:"id"`
-	Model          string `json:"model"`
-	Prompt         string `json:"prompt"`
-	NegativePrompt string `json:"negative_prompt"`
-	Shape          string `json:"shape"`
-	Steps          int64  `json:"steps"`
-	Seed           int64  `json:"seed"`
+	SchemaVersion  int64        `json:"schema_version"`
+	Id             string       `json:"id"`
+	Model          string       `json:"model"`
+	Prompt         string       `json:"prompt"`
+	NegativePrompt string       `json:"negative_prompt"`
+	Shape          string       `json:"shape"`
+	Steps          int64        `json:"steps"`
+	Seed           int64        `json:"seed"`
+	Options        ImageOptions `json:"options"`
+}
+
+type ImageOptions struct {
+	SchemaVersion int64     `json:"schema_version"`
+	Resolution    string    `json:"resolution"`
+	Styles        *[]string `json:"styles"`
+	GuidanceScale *float64  `json:"guidance_scale"`
+	Sharpness     *float64  `json:"sharpness"`
+}
+
+type ImageOptionsProfile struct {
+	SchemaVersion int64    `json:"schema_version"`
+	Resolutions   []string `json:"resolutions"`
+	Styles        []string `json:"styles"`
+	DefaultStyles []string `json:"default_styles"`
+	GuidanceScale *float64 `json:"guidance_scale"`
+	Sharpness     *float64 `json:"sharpness"`
 }
 
 type ImagePrompt struct {
@@ -247,15 +265,16 @@ type ImagePromptPlan struct {
 }
 
 type ImageProviderInfo struct {
-	SchemaVersion   int64    `json:"schema_version"`
-	Protocol        string   `json:"protocol"`
-	Model           string   `json:"model"`
-	ModelRevision   string   `json:"model_revision"`
-	ManifestSha256  string   `json:"manifest_sha256"`
-	Shapes          []string `json:"shapes"`
-	Steps           []int64  `json:"steps"`
-	JobCancellation bool     `json:"job_cancellation"`
-	Offline         bool     `json:"offline"`
+	SchemaVersion   int64                `json:"schema_version"`
+	Protocol        string               `json:"protocol"`
+	Model           string               `json:"model"`
+	ModelRevision   string               `json:"model_revision"`
+	ManifestSha256  string               `json:"manifest_sha256"`
+	Shapes          []string             `json:"shapes"`
+	Steps           []int64              `json:"steps"`
+	Options         *ImageOptionsProfile `json:"options"`
+	JobCancellation bool                 `json:"job_cancellation"`
+	Offline         bool                 `json:"offline"`
 }
 
 type ImageReceipt struct {

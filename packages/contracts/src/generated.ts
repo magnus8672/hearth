@@ -222,9 +222,27 @@ export interface ImageGeneration {
   model: string;
   prompt: string;
   negative_prompt?: string;
-  shape?: "square" | "landscape" | "portrait";
-  steps?: 20 | 30 | 40;
+  shape?: "square" | "landscape" | "portrait" | "widescreen" | "tall";
+  steps?: 20 | 30 | 40 | 60;
   seed: number;
+  options?: ImageOptions;
+}
+
+export interface ImageOptions {
+  schema_version?: 1;
+  resolution?: "native" | "2k" | "4k";
+  styles?: Array<string> | null;
+  guidance_scale?: number | null;
+  sharpness?: number | null;
+}
+
+export interface ImageOptionsProfile {
+  schema_version?: 1;
+  resolutions?: Array<"native" | "2k" | "4k">;
+  styles?: Array<string>;
+  default_styles?: Array<string>;
+  guidance_scale?: number | null;
+  sharpness?: number | null;
 }
 
 export interface ImagePrompt {
@@ -250,8 +268,9 @@ export interface ImageProviderInfo {
   model: string;
   model_revision: string;
   manifest_sha256: string;
-  shapes: Array<"square" | "landscape" | "portrait">;
-  steps: Array<20 | 30 | 40>;
+  shapes: Array<"square" | "landscape" | "portrait" | "widescreen" | "tall">;
+  steps: Array<20 | 30 | 40 | 60>;
+  options?: ImageOptionsProfile | null;
   job_cancellation: boolean;
   offline: boolean;
 }
@@ -262,9 +281,9 @@ export interface ImageReceipt {
   model: string;
   state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
   progress: number;
-  steps: 20 | 30 | 40;
+  steps: 20 | 30 | 40 | 60;
   seed: number;
-  shape: "square" | "landscape" | "portrait";
+  shape: "square" | "landscape" | "portrait" | "widescreen" | "tall";
   width: number;
   height: number;
   reason?: string | null;

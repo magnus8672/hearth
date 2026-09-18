@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "scope": "Actual head transport to the existing Fooocus GPU provider; authenticated artifact validation, reserved existing resource group; no user chat or gallery records created.",
+  "renders": [
+    {
+      "shape": "widescreen",
+      "cancelled": true,
+      "receipt": {
+        "schema_version": 1,
+        "id": "b0506c26-2c97-4b3e-a705-863e594f7236",
+        "model": "fooocus/juggernaut-xl-v8",
+        "state": "cancelled",
+        "progress": 20,
+        "steps": 20,
+        "seed": 8672,
+        "shape": "widescreen",
+        "width": 3840,
+        "height": 2160,
+        "reason": "Image generation stopped.",
+        "sha256": null,
+        "execution_released": true,
+        "manifest_sha256": "ea873178e294a4b350cbe2f6e215f34bcb1b238ab41124bb1ae6b4304e6d4397",
+        "cancel_requested": true
+      },
+      "seconds": 4.81,
+      "bytes": 0
+    },
+    {
+      "shape": "widescreen",
+      "cancelled": false,
+      "receipt": {
+        "schema_version": 1,
+        "id": "550d26dd-0461-4c99-8054-ed841eec248e",
+        "model": "fooocus/juggernaut-xl-v8",
+        "state": "completed",
+        "progress": 20,
+        "steps": 20,
+        "seed": 8672,
+        "shape": "widescreen",
+        "width": 3840,
+        "height": 2160,
+        "reason": null,
+        "sha256": "684ca4c4317272c8234ae017646f4673b91a70a4c2cdb04efcb4de83b3f902bc",
+        "execution_released": true,
+        "manifest_sha256": "ea873178e294a4b350cbe2f6e215f34bcb1b238ab41124bb1ae6b4304e6d4397",
+        "cancel_requested": false
+      },
+      "seconds": 13.22,
+      "bytes": 11267017
+    },
+    {
+      "shape": "square",
+      "cancelled": false,
+      "receipt": {
+        "schema_version": 1,
+        "id": "bc5f0fd7-35ee-4df6-8eb6-d45aa3744182",
+        "model": "fooocus/juggernaut-xl-v8",
+        "state": "completed",
+        "progress": 20,
+        "steps": 20,
+        "seed": 8672,
+        "shape": "square",
+        "width": 4096,
+        "height": 4096,
+        "reason": null,
+        "sha256": "703af549786875ed9f9aae6b2a7b1589ccdc794702c720880ba9910284333cf2",
+        "execution_released": true,
+        "manifest_sha256": "ea873178e294a4b350cbe2f6e215f34bcb1b238ab41124bb1ae6b4304e6d4397",
+        "cancel_requested": false
+      },
+      "seconds": 23.01,
+      "bytes": 21632401
+    }
+  ],
+  "existing_provider_requalified": true
+}

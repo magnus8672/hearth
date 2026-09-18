@@ -799,7 +799,7 @@
           "title": "Planning Model"
         },
         "progress": {
-          "maximum": 40,
+          "maximum": 60,
           "minimum": 0,
           "title": "Progress",
           "type": "integer"
@@ -1348,6 +1348,9 @@
           "title": "Negative Prompt",
           "type": "string"
         },
+        "options": {
+          "$ref": "#/$defs/ImageOptions"
+        },
         "prompt": {
           "maxLength": 1000,
           "minLength": 1,
@@ -1371,7 +1374,9 @@
           "enum": [
             "square",
             "landscape",
-            "portrait"
+            "portrait",
+            "widescreen",
+            "tall"
           ],
           "title": "Shape",
           "type": "string"
@@ -1381,7 +1386,8 @@
           "enum": [
             20,
             30,
-            40
+            40,
+            60
           ],
           "title": "Steps",
           "type": "integer"
@@ -1394,6 +1400,150 @@
         "seed"
       ],
       "title": "ImageGeneration",
+      "type": "object"
+    },
+    "ImageOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "guidance_scale": {
+          "anyOf": [
+            {
+              "maximum": 30,
+              "minimum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guidance Scale"
+        },
+        "resolution": {
+          "default": "native",
+          "enum": [
+            "native",
+            "2k",
+            "4k"
+          ],
+          "title": "Resolution",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sharpness": {
+          "anyOf": [
+            {
+              "maximum": 30,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sharpness"
+        },
+        "styles": {
+          "anyOf": [
+            {
+              "items": {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 8,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Styles"
+        }
+      },
+      "title": "ImageOptions",
+      "type": "object"
+    },
+    "ImageOptionsProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "default_styles": {
+          "items": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Default Styles",
+          "type": "array"
+        },
+        "guidance_scale": {
+          "anyOf": [
+            {
+              "maximum": 30,
+              "minimum": 1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guidance Scale"
+        },
+        "resolutions": {
+          "items": {
+            "enum": [
+              "native",
+              "2k",
+              "4k"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Resolutions",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "sharpness": {
+          "anyOf": [
+            {
+              "maximum": 30,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sharpness"
+        },
+        "styles": {
+          "items": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 512,
+          "title": "Styles",
+          "type": "array"
+        }
+      },
+      "title": "ImageOptionsProfile",
       "type": "object"
     },
     "ImagePrompt": {
@@ -1547,6 +1697,17 @@
           "title": "Offline",
           "type": "boolean"
         },
+        "options": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageOptionsProfile"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "protocol": {
           "const": "hearth.image.v1",
           "title": "Protocol",
@@ -1563,11 +1724,13 @@
             "enum": [
               "square",
               "landscape",
-              "portrait"
+              "portrait",
+              "widescreen",
+              "tall"
             ],
             "type": "string"
           },
-          "maxItems": 3,
+          "maxItems": 5,
           "minItems": 1,
           "title": "Shapes",
           "type": "array"
@@ -1577,11 +1740,12 @@
             "enum": [
               20,
               30,
-              40
+              40,
+              60
             ],
             "type": "integer"
           },
-          "maxItems": 3,
+          "maxItems": 4,
           "minItems": 1,
           "title": "Steps",
           "type": "array"
@@ -1612,7 +1776,7 @@
           "type": "boolean"
         },
         "height": {
-          "maximum": 2048,
+          "maximum": 4096,
           "minimum": 1,
           "title": "Height",
           "type": "integer"
@@ -1634,7 +1798,7 @@
           "type": "string"
         },
         "progress": {
-          "maximum": 40,
+          "maximum": 60,
           "minimum": 0,
           "title": "Progress",
           "type": "integer"
@@ -1681,7 +1845,9 @@
           "enum": [
             "square",
             "landscape",
-            "portrait"
+            "portrait",
+            "widescreen",
+            "tall"
           ],
           "title": "Shape",
           "type": "string"
@@ -1702,13 +1868,14 @@
           "enum": [
             20,
             30,
-            40
+            40,
+            60
           ],
           "title": "Steps",
           "type": "integer"
         },
         "width": {
-          "maximum": 2048,
+          "maximum": 4096,
           "minimum": 1,
           "title": "Width",
           "type": "integer"

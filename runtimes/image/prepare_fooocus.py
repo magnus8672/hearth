@@ -54,6 +54,22 @@ def patch_source(root):
                                                 '# hearth: retain certificate verification for downloads.'))
 
 
+def patch_upscale(root):
+    worker = root / 'modules/async_worker.py'
+    before = worker.read_text()
+    if 'hearth_postprocess' in before:
+        return
+    old = '                    handler(task)\n'
+    if before.count(old) != 1:
+        raise RuntimeError('The reviewed worker hook is missing.')
+    backup = root / 'hearth-backups' / ('upscale-' + datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ'))
+    backup.mkdir(parents=True, mode=0o700)
+    shutil.copy2(worker, backup / worker.name)
+    worker.write_text(before.replace(old, old +
+        '                    if hasattr(task, "hearth_postprocess") and not task.hearth_cancelled():\n'
+        '                        task.hearth_postprocess()\n'))
+
+
 def inventory(root, destination):
     files = []
     paths = [p for p in root.rglob('*.py') if 'fooocus_env' not in p.parts and 'hearth-backups' not in p.parts]
@@ -79,6 +95,7 @@ def main():
     if '2.5.5' not in version:
         raise RuntimeError('This adapter is qualified only for Fooocus 2.5.5.')
     patch_source(root)
+    patch_upscale(root)
     inventory(root, args.manifest)
     print('Fooocus compatibility patch and local inventory prepared.')
 

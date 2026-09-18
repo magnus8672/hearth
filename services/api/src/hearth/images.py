@@ -11,6 +11,7 @@ from hearth import conversation_media, image_transport
 from hearth.chat import identity_current, member, session_current
 from hearth.contracts import ImageGeneration
 from hearth.database import scoped_session
+from hearth.image_settings import validate_settings
 from hearth.inference import ProviderError
 from hearth.provider_health import record_failure
 from hearth.providers import claim_pool, credential_for, release_pool, target_record, transport_settings
@@ -45,7 +46,7 @@ def reconcile(db):
 def targets(request: Request):
     principal = member(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        rows = db.execute(text("SELECT t.id,t.model_id,t.state,t.verified_until,c.name FROM capability_bindings b JOIN inference_targets t ON t.id=b.target_id JOIN provider_connections c ON c.id=t.connection_id WHERE b.capability_id='image.generate' AND t.protocol='hearth.image.v1' ORDER BY b.priority DESC,t.id")).mappings().all()
+        rows = db.execute(text("SELECT t.id,t.model_id,t.state,t.verified_until,t.profile,c.name FROM capability_bindings b JOIN inference_targets t ON t.id=b.target_id JOIN provider_connections c ON c.id=t.connection_id WHERE b.capability_id='image.generate' AND t.protocol='hearth.image.v1' ORDER BY b.priority DESC,t.id")).mappings().all()
     return {'items': [dict(row) | {'ready': row['state'] == 'ready', 'verified_until': None} for row in rows]}
 
 
@@ -69,7 +70,7 @@ def generate(request: Request, data: CreateImage):
         if previous:
             if previous['deleted_at'] is not None:
                 raise HTTPException(410, 'This image was deleted. Use a new request to generate another image.')
-            if previous['target_id'] != data.target_id or previous['request'] != payload:
+            if previous['target_id'] != data.target_id or ImageGeneration.model_validate(previous['request']).model_dump(mode='json') != payload:
                 raise HTTPException(409, 'This image request identifier was already used.')
             return {'id': data.request.id, 'status': previous['status']}
         row = target_record(db, data.target_id, lock=True)
@@ -80,8 +81,10 @@ def generate(request: Request, data: CreateImage):
             raise HTTPException(409, 'Choose a configured image model.')
         if row['state'] != 'ready':
             raise HTTPException(409, 'This image model needs verification in Providers.')
-        if data.request.shape not in row['profile'].get('shapes', []) or data.request.steps not in row['profile'].get('steps', []):
-            raise HTTPException(409, 'These image settings have not been verified for this model.')
+        try:
+            validate_settings(data.request, row['profile'])
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
         claim_pool(db, row, data.request.id, principal.id)
         db.execute(text('INSERT INTO image_jobs(id,farm_id,owner_id,workspace_id,target_id,request,session_hash,authorization_version) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:session,:version)'),
             {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': row['id'], 'request': json.dumps(payload), 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
