@@ -4,6 +4,10 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Channel heading — 18 September
+
+Channels now displays **All Together Now** above its page title; Private chat retains **JUST FOR YOU**. TypeScript and production builds passed. A browser check of the deployed bundle verified both labels while switching pages, using synthetic session/API responses. Static bundles were deployed without an API restart or database change; release gates are unchanged.
+
 ## Geometry names and reference thumbnails — 18 September
 
 The geometry form and API require a nonblank name of at most 120 characters. Cards use the chosen name as their heading and retain a small static source-image preview after generation. Owners can rename new and existing models. Existing unnamed models receive ID-based display titles and a missing-preview placeholder; their discarded source images cannot be recovered. Migration `0026` adds the two private catalog fields without modifying stored GLBs or weakening RLS.
