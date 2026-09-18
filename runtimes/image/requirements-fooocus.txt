@@ -1,0 +1,4 @@
+# Overlay on the existing Fooocus 2.5.5 environment, not a fresh GPU installer.
+# Starlette 1.x removed the template call used by Gradio 3.41.2.
+fastapi==0.115.14
+starlette==0.46.2

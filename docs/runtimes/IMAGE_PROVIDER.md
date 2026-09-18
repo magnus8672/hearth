@@ -1,5 +1,7 @@
 # hearth image provider
 
+For the dedicated Linux Fooocus machine at `10.20.30.20`, use [Fooocus on media-worker](../operations/FOOOCUS_PROVIDER.md). Its new adapter shares the existing Fooocus worker and model while speaking the same job protocol. The Windows reference below is historical and must not be restarted for current farm tests.
+
 This experimental headless provider runs Stable Diffusion XL directly through Diffusers. It is the first local text-to-image implementation, separate from chat servers and graphical model tools. It does not implement the signed native worker installer, enrollment, remote supervision, image editing or 3D generation.
 
 [Historical deployment inventory removed for repository privacy.]

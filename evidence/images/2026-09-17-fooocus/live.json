@@ -1,0 +1,71 @@
+{
+  "provider": {
+    "schema_version": 1,
+    "protocol": "hearth.image.v1",
+    "model": "fooocus/juggernaut-xl-v8",
+    "model_revision": "fooocus-2.5.5-juggernaut-v8",
+    "manifest_sha256": "aa475f1fcfe75a9b61d525730a3dbc9beb995758d9ff018c5bc2e734f3074565",
+    "shapes": [
+      "square",
+      "landscape",
+      "portrait"
+    ],
+    "steps": [
+      20,
+      30,
+      40
+    ],
+    "job_cancellation": true,
+    "offline": true
+  },
+  "cancel_receipt": {
+    "schema_version": 1,
+    "id": "f07202ad-5543-4f86-85f8-236d74adc40e",
+    "model": "fooocus/juggernaut-xl-v8",
+    "state": "cancelled",
+    "progress": 2,
+    "steps": 40,
+    "seed": 87,
+    "shape": "square",
+    "width": 1024,
+    "height": 1024,
+    "reason": "Image generation stopped.",
+    "sha256": null,
+    "execution_released": true,
+    "manifest_sha256": "aa475f1fcfe75a9b61d525730a3dbc9beb995758d9ff018c5bc2e734f3074565",
+    "cancel_requested": true
+  },
+  "cancel_seconds": 4.19,
+  "render_receipt": {
+    "schema_version": 1,
+    "id": "d40acb8d-c132-4030-83a1-1b36a8cfd223",
+    "model": "fooocus/juggernaut-xl-v8",
+    "state": "completed",
+    "progress": 20,
+    "steps": 20,
+    "seed": 8672,
+    "shape": "landscape",
+    "width": 1024,
+    "height": 768,
+    "reason": null,
+    "sha256": "7fa3f3ba358f14fb6f90bd078786c39bb31a288ae8f9e5b4c2258971373468f0",
+    "execution_released": true,
+    "manifest_sha256": "aa475f1fcfe75a9b61d525730a3dbc9beb995758d9ff018c5bc2e734f3074565",
+    "cancel_requested": false
+  },
+  "render_seconds": 7.4,
+  "png_bytes": 1550985,
+  "sha256": "7fa3f3ba358f14fb6f90bd078786c39bb31a288ae8f9e5b4c2258971373468f0",
+  "checks": [
+    "head-to-provider LAN access",
+    "correct manifest and model",
+    "missing-key rejection",
+    "Origin rejection",
+    "body-size limit",
+    "busy admission",
+    "real cancellation after progress",
+    "render after cancellation",
+    "PNG digest and dimensions"
+  ],
+  "registered_in_farm": false
+}

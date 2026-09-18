@@ -35,6 +35,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Prepare or run the CPU transcription provider | [Transcription runtime](runtimes/TRANSCRIPTION_PROVIDER.md) |
 | Run or extend the experimental CPU speech provider | [Speech runtime](runtimes/SPEECH_PROVIDER.md) |
 | Run or extend the experimental image provider | [Image runtime](runtimes/IMAGE_PROVIDER.md) |
+| Register and maintain the dedicated Fooocus machine | [Fooocus on media-worker](operations/FOOOCUS_PROVIDER.md) |
 | Work on the repository as a coding agent | [Repository guidance](AGENT_GUIDANCE.md) |
 | Find every reviewed document and its purpose | [Document inventory](DOCUMENT_INVENTORY.md) |
 

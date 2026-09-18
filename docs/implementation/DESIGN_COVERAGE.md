@@ -1,5 +1,7 @@
 # hearth design coverage
 
+[Historical deployment inventory removed for repository privacy.]
+
 Address management, 16 September 2026: [admin address settings](HEAD_ADDRESS_SETTINGS.md) now migrate an existing head's public hostname and account issuer, retaining its trust root, data and keys. The live VM uses `https://hearth.example.invalid`. This bounded single-head operation includes certificate export and rollback; full Move hearth, IPv6, public CA enrollment and release installer qualification remain open.
 
 Current test target, 15 September 2026: the existing [ESX head at 10.20.30.10](../operations/ESX_HEAD.md) is now the exclusive head deployment/runtime test host. The laptop head is retired with its data retained. Previous localhost/appliance evidence remains historical; it does not prove current VM feature acceptance. This operational decision closes no release gate.

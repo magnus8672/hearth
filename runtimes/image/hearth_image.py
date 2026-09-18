@@ -101,8 +101,9 @@ def verify_model(path):
 
 
 class Jobs:
-    def __init__(self, root, engine, manifest_digest):
+    def __init__(self, root, engine, manifest_digest, model=MODEL):
         self.root, self.engine, self.manifest_digest = root, engine, manifest_digest
+        self.model = model
         root.mkdir(parents=True, exist_ok=True)
         self.lock_file = (root / 'process.lock').open('a+b')
         self.lock_file.seek(0)
@@ -131,13 +132,13 @@ class Jobs:
         if not row:
             raise HTTPException(404, 'This image job is not available.')
         data = json.loads(row['request'])
-        return {'schema_version': 1, 'id': row['id'], 'model': MODEL, 'state': row['state'], 'progress': row['progress'], 'steps': data['steps'],
+        return {'schema_version': 1, 'id': row['id'], 'model': data['model'], 'state': row['state'], 'progress': row['progress'], 'steps': data['steps'],
                 'seed': data['seed'], 'shape': data['shape'], 'width': SIZES[data['shape']][0], 'height': SIZES[data['shape']][1],
                 'reason': row['reason'], 'sha256': row['digest'], 'execution_released': bool(row['released']),
                 'manifest_sha256': self.manifest_digest, 'cancel_requested': bool(row['cancel'])}
 
     def submit(self, data):
-        if data.model != MODEL:
+        if data.model != self.model:
             raise HTTPException(404, 'This model is not installed on this provider.')
         payload = data.model_dump_json()
         with self.mutex, self.db() as db:
@@ -210,11 +211,14 @@ def transaction(db):
         db.close()
 
 
-def create_app(root, model_path, token, *, engine=None, manifest_digest=None):
+def create_app(root, model_path, token, *, engine=None, manifest_digest=None, model=MODEL, revision=REVISION,
+               allowed_hosts=None, allowed_controllers=None):
     if len(token) < 32:
         raise RuntimeError('A controller credential of at least 32 characters is required.')
     digest = manifest_digest or verify_model(model_path)
-    jobs = Jobs(root, engine or SDXL(model_path), digest)
+    if model != MODEL and (engine is None or manifest_digest is None):
+        raise RuntimeError('A custom model requires an explicit engine and verified manifest.')
+    jobs = Jobs(root, engine or SDXL(model_path), digest, model=model)
 
     @contextlib.asynccontextmanager
     async def lifespan(app):
@@ -223,10 +227,12 @@ def create_app(root, model_path, token, *, engine=None, manifest_digest=None):
 
     app = FastAPI(title='hearth image provider', docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.jobs = jobs
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=['127.0.0.1', 'localhost', '10.0.2.2', 'testserver'])
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts or ['127.0.0.1', 'localhost', '10.0.2.2', 'testserver'])
 
     @app.middleware('http')
     async def boundary(request: Request, call_next):
+        if allowed_controllers is not None and (request.client is None or request.client.host not in allowed_controllers):
+            return JSONResponse({'detail': 'This controller address is not allowed.'}, status_code=403)
         if request.headers.get('origin') or not hmac.compare_digest(request.headers.get('authorization', '').encode(), ('Bearer ' + token).encode()):
             return JSONResponse({'detail': 'A trusted controller credential is required.'}, status_code=401)
         body = bytearray()
@@ -242,7 +248,7 @@ def create_app(root, model_path, token, *, engine=None, manifest_digest=None):
 
     @app.get('/v1/image-provider')
     def capabilities():
-        return {'schema_version': 1, 'protocol': 'hearth.image.v1', 'model': MODEL, 'model_revision': REVISION, 'manifest_sha256': digest,
+        return {'schema_version': 1, 'protocol': 'hearth.image.v1', 'model': model, 'model_revision': revision, 'manifest_sha256': digest,
                 'shapes': list(SIZES), 'steps': [20, 30, 40], 'job_cancellation': True, 'offline': True}
 
     @app.post('/v1/image-jobs', status_code=202)

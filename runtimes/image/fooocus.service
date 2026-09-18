@@ -1,0 +1,27 @@
+[Unit]
+Description=Fooocus with hearth image adapter
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+User=operator
+Group=operator
+WorkingDirectory=/opt/Fooocus-main
+ExecStart=/opt/Fooocus-main/fooocus_env/bin/python -u /opt/hearth-fooocus/fooocus_bridge.py --config /var/lib/hearth-fooocus/config.json
+Environment=PYTHONPATH=/opt/hearth-fooocus
+Environment=GRADIO_ANALYTICS_ENABLED=False
+UMask=0077
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+KillMode=control-group
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+LimitCORE=0
+
+[Install]
+WantedBy=multi-user.target
