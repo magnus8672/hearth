@@ -52,14 +52,22 @@ https://localhost:8444 {
         method POST
         path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
     }
+    @geometry_upload {
+        method POST
+        path /api/v1/geometry
+    }
     @ordinary_body {
         not {
             method POST
-            path_regexp "^/api/v1/chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)$"
+            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions))$"
         }
     }
     request_body @image_upload {
         max_size 8388608
+    }
+    # Match the BFF envelope limit, including base64 overhead for an 8 MiB image.
+    request_body @geometry_upload {
+        max_size 12100000
     }
     request_body @ordinary_body {
         max_size 1048576

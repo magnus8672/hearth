@@ -1,0 +1,82 @@
+{
+  "scope": "Geometry upload size and browser error handling correction",
+  "head": "10.20.30.10",
+  "origin": "https://hearth.example.invalid",
+  "reproduced_before": {
+    "request_bytes": 2300013,
+    "status": 413,
+    "response_bytes": 0,
+    "cause": "Geometry POST inherited the proxy ordinary 1048576-byte request limit. The browser unconditionally parsed the empty error as JSON."
+  },
+  "fix": {
+    "geometry_post_envelope_bytes": 12100000,
+    "reference_file_bytes": 8388608,
+    "ordinary_body_bytes": 1048576,
+    "templates": [
+      "deploy/compose/Caddyfile.head",
+      "deploy/compose/Caddyfile.development"
+    ],
+    "client": "Preserve structured API messages, supply HTTP-aware fallbacks for empty or non-JSON failures, and report empty success responses without parser exceptions."
+  },
+  "verification": {
+    "focused_vm_tests": {
+      "passed": 5,
+      "storage": "Temporary isolated Postgres database, removed afterward",
+      "large_png": "Valid uncompressed 960x600 PNG, between 1700000 and 1800000 bytes, accepted and completed with an explicit geometry transport fixture"
+    },
+    "deployed_browser_tests": {
+      "passed": 5,
+      "tls_validation": true,
+      "error_fixtures": [
+        "empty 413",
+        "HTML 502",
+        "structured 409",
+        "empty 200"
+      ],
+      "selected_file_retained": true
+    },
+    "live_edge_browser_probe": {
+      "test": "tests/browser/geometry.spec.ts::live edge admits geometry upload envelopes while retaining other limits",
+      "opt_in": "HEARTH_LIVE_UPLOAD_EDGE=1",
+      "authentication": "No credentials; allowed bodies must reach application authentication and return JSON 401. No model generation or private content is created.",
+      "cases": [
+        {
+          "method": "POST",
+          "path": "/api/v1/geometry",
+          "base64_characters": 2300000,
+          "status": 401
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/geometry",
+          "base64_characters": 11184812,
+          "status": 401
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/geometry",
+          "body_bytes": 12100001,
+          "status": 413
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/notes",
+          "body_bytes": 2300000,
+          "status": 413
+        },
+        {
+          "method": "PUT",
+          "path": "/api/v1/geometry",
+          "body_bytes": 2300000,
+          "status": 413
+        }
+      ]
+    },
+    "typescript": "passed",
+    "production_bundles": "passed",
+    "live_caddy_configuration_validation": "passed"
+  },
+  "deployment": "Updated both web bundles and restarted the validated head edge after checking that no provider pool was executing. Backend and GPU runtime changes were not needed.",
+  "limitations": "The user's jeep.png was not supplied or used. This correction qualifies upload admission and error presentation; it does not repeat GPU model quality acceptance or close release gates.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

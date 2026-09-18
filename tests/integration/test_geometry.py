@@ -35,7 +35,14 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
         probe = admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 1})
         assert probe.json()['features'] == ['geometry.image_to_3d', 'geometry.jobs'], probe.text
         signin(user); uh = csrf(user, settings.user_origin)
-        image = reference()
+        # A valid 1.7 MiB PNG exercises the base64 envelope beyond the ordinary
+        # 1 MiB request limit; tiny probe images did not cover real uploads.
+        import io
+        from PIL import Image
+        buffer = io.BytesIO()
+        Image.new('RGB', (960, 600), '#e99044').save(buffer, format='PNG', compress_level=0)
+        image = buffer.getvalue()
+        assert 1_700_000 < len(image) < 1_800_000
         data = {'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
         assert user.post('/api/v1/geometry', json=data).status_code == 403
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
