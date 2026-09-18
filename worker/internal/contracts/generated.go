@@ -196,12 +196,14 @@ type ExternalProviderConnection struct {
 }
 
 type GeometryGeneration struct {
-	SchemaVersion int64  `json:"schema_version"`
-	Id            string `json:"id"`
-	Model         string `json:"model"`
-	ImageSha256   string `json:"image_sha256"`
-	Seed          int64  `json:"seed"`
-	Resolution    int64  `json:"resolution"`
+	SchemaVersion int64           `json:"schema_version"`
+	Id            string          `json:"id"`
+	Model         string          `json:"model"`
+	ImageSha256   string          `json:"image_sha256"`
+	Seed          int64           `json:"seed"`
+	Resolution    int64           `json:"resolution"`
+	Trellis       *TrellisOptions `json:"trellis"`
+	Hunyuan       *HunyuanOptions `json:"hunyuan"`
 }
 
 type GeometryProviderInfo struct {
@@ -214,22 +216,25 @@ type GeometryProviderInfo struct {
 	JobCancellation bool    `json:"job_cancellation"`
 	Resolutions     []int64 `json:"resolutions"`
 	OutputFormat    string  `json:"output_format"`
+	Tuning          *string `json:"tuning"`
 }
 
 type GeometryReceipt struct {
-	SchemaVersion     int64   `json:"schema_version"`
-	Id                string  `json:"id"`
-	Model             string  `json:"model"`
-	ImageSha256       string  `json:"image_sha256"`
-	Seed              int64   `json:"seed"`
-	Resolution        int64   `json:"resolution"`
-	State             string  `json:"state"`
-	Progress          int64   `json:"progress"`
-	Reason            *string `json:"reason"`
-	Sha256            *string `json:"sha256"`
-	ExecutionReleased bool    `json:"execution_released"`
-	ManifestSha256    string  `json:"manifest_sha256"`
-	CancelRequested   bool    `json:"cancel_requested"`
+	SchemaVersion     int64           `json:"schema_version"`
+	Id                string          `json:"id"`
+	Model             string          `json:"model"`
+	ImageSha256       string          `json:"image_sha256"`
+	Seed              int64           `json:"seed"`
+	Resolution        int64           `json:"resolution"`
+	Trellis           *TrellisOptions `json:"trellis"`
+	Hunyuan           *HunyuanOptions `json:"hunyuan"`
+	State             string          `json:"state"`
+	Progress          int64           `json:"progress"`
+	Reason            *string         `json:"reason"`
+	Sha256            *string         `json:"sha256"`
+	ExecutionReleased bool            `json:"execution_released"`
+	ManifestSha256    string          `json:"manifest_sha256"`
+	CancelRequested   bool            `json:"cancel_requested"`
 }
 
 type GeometryRequest struct {
@@ -253,6 +258,29 @@ type Heartbeat struct {
 	ObservedPlanRevision int64                `json:"observed_plan_revision"`
 	ActiveAttemptIds     []string             `json:"active_attempt_ids"`
 	Services             []ServiceObservation `json:"services"`
+}
+
+type HunyuanOptions struct {
+	Steps                int64   `json:"steps"`
+	Guidance             float64 `json:"guidance"`
+	OctreeResolution     int64   `json:"octree_resolution"`
+	Chunks               int64   `json:"chunks"`
+	SurfaceLevel         float64 `json:"surface_level"`
+	Bounds               float64 `json:"bounds"`
+	RemoveBackground     bool    `json:"remove_background"`
+	RemoveFloaters       bool    `json:"remove_floaters"`
+	RemoveDegenerate     bool    `json:"remove_degenerate"`
+	MaxFaces             int64   `json:"max_faces"`
+	Texture              bool    `json:"texture"`
+	PaintSteps           int64   `json:"paint_steps"`
+	PaintGuidance        float64 `json:"paint_guidance"`
+	PaintSeed            int64   `json:"paint_seed"`
+	TextureSize          int64   `json:"texture_size"`
+	RenderSize           int64   `json:"render_size"`
+	BakeExp              float64 `json:"bake_exp"`
+	Delight              bool    `json:"delight"`
+	DelightImageGuidance float64 `json:"delight_image_guidance"`
+	DelightTextGuidance  float64 `json:"delight_text_guidance"`
 }
 
 type ImageGeneration struct {
@@ -557,6 +585,19 @@ type TranscriptionRequest struct {
 	Id            string `json:"id"`
 	Model         string `json:"model"`
 	AudioSha256   string `json:"audio_sha256"`
+}
+
+type TrellisOptions struct {
+	SparseGuidance    float64 `json:"sparse_guidance"`
+	ShapeGuidance     float64 `json:"shape_guidance"`
+	MaxTokens         int64   `json:"max_tokens"`
+	Background        string  `json:"background"`
+	Texture           bool    `json:"texture"`
+	Unwrap            string  `json:"unwrap"`
+	RemeshBand        int64   `json:"remesh_band"`
+	Decimation        int64   `json:"decimation"`
+	AtlasSize         int64   `json:"atlas_size"`
+	TextureResolution int64   `json:"texture_resolution"`
 }
 
 type WorkerCommand struct {

@@ -36,11 +36,12 @@ def collect(base_url, credential, settings, receipt):
 def render(base_url, credential, settings, data, image, on_receipt=lambda receipt: False):
     dispatched, released, cancel_sent = False, False, False
     try:
-        receipt = rpc(base_url, credential, settings, 'geometry-jobs', payload={'request': data.model_dump(mode='json'), 'image': base64.b64encode(image).decode()}, model=GeometryReceipt)
+        receipt = rpc(base_url, credential, settings, 'geometry-jobs', payload={'request': data.model_dump(mode='json', exclude_none=True), 'image': base64.b64encode(image).decode()}, model=GeometryReceipt)
         dispatched = True
         deadline = time.monotonic() + 1260
         while True:
-            if any(getattr(receipt, key) != value for key, value in data.model_dump().items()):
+            receipt_values = receipt.model_dump()
+            if any(receipt_values[key] != value for key, value in data.model_dump().items()):
                 raise ProviderError('The geometry receipt belongs to another request.', uncertain=True)
             released = receipt.execution_released
             stop = on_receipt(receipt)

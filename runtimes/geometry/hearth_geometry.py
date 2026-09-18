@@ -21,7 +21,7 @@ from uuid import UUID
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
-from hearth.contracts import GeometryGeneration
+from hearth.contracts import GeometryGeneration, HunyuanOptions, TrellisOptions
 from hearth.geometry_validation import validate_glb
 from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,6 +32,31 @@ class Submission(BaseModel):
     model_config = ConfigDict(extra='forbid')
     request: GeometryGeneration
     image: str = Field(max_length=12_000_000)
+
+
+def generation_command(installation, backend, data, image, output):
+    data.check_tuning('hunyuan-v1' if backend == 'hunyuan3d-2.0' else 'trellis-v1')
+    if backend == 'hunyuan3d-2.0':
+        options = data.hunyuan or HunyuanOptions()
+        return [str(installation / '.venv/bin/python'), str(installation / 'app/hunyuan_runner.py'),
+                str(image), str(output), '--models', str(installation / 'models'),
+                '--resolution', str(data.resolution), '--seed', str(data.seed), '--options', options.model_dump_json()]
+    options = data.trellis or TrellisOptions()
+    command = [str(installation / 'engine/trellis-cli'), str(image), str(output),
+               '--models', str(installation / 'models'), '--res', str(data.resolution),
+               '--seed', str(data.seed), '--require-gpu', '--webp', 'off', '--threads', '4',
+               '--gss', str(options.sparse_guidance), '--gsh', str(options.shape_guidance),
+               '--max-tokens', str(options.max_tokens), '--band', str(options.remesh_band),
+               '--decim', str(options.decimation), '--box-uv' if options.unwrap == 'box' else '--xatlas']
+    if options.background != 'auto':
+        command += ['--bg-removal', options.background]
+    if not options.texture:
+        command.append('--no-texture')
+    if options.atlas_size:
+        command += ['--atlas', str(options.atlas_size)]
+    if options.texture_resolution:
+        command += ['--tex-res', str(options.texture_resolution)]
+    return command
 
 
 class Jobs:
@@ -63,6 +88,7 @@ class Jobs:
         if self.backend not in {'trellis', 'hunyuan3d-2.0'}:
             raise RuntimeError('Unsupported geometry backend.')
         self.resolutions = self.inventory.get('resolutions', [512, 1024])
+        self.tuning = 'hunyuan-v1' if self.backend == 'hunyuan3d-2.0' else 'trellis-v1'
         self.executor = ThreadPoolExecutor(max_workers=1)
         self.mutex = threading.Lock()
         with self.db() as db:
@@ -97,6 +123,10 @@ class Jobs:
         if data.resolution not in self.resolutions:
             raise HTTPException(422, 'This geometry detail is not supported by the selected backend.')
         try:
+            data.check_tuning(self.tuning)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from None
+        try:
             raw = base64.b64decode(submission.image, validate=True)
             if len(raw) > 8 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != data.image_sha256:
                 raise ValueError()
@@ -109,7 +139,7 @@ class Jobs:
         with self.mutex, self.db() as db:
             previous = db.execute('SELECT request FROM jobs WHERE id=?', (str(data.id),)).fetchone()
             if previous:
-                if previous['request'] != data.model_dump_json():
+                if GeometryGeneration.model_validate_json(previous['request']) != data:
                     raise HTTPException(409, 'This job identifier was already used.')
             else:
                 if db.execute("SELECT 1 FROM jobs WHERE released=0").fetchone():
@@ -131,13 +161,7 @@ class Jobs:
         try:
             with self.db() as db:
                 db.execute("UPDATE jobs SET state='running' WHERE id=?", (str(data.id),))
-            args = [str(self.installation / 'engine/trellis-cli'), str(image), str(output),
-                    '--models', str(self.installation / 'models'), '--res', str(data.resolution),
-                    '--seed', str(data.seed), '--require-gpu', '--webp', 'off', '--threads', '4']
-            if self.backend == 'hunyuan3d-2.0':
-                args = [str(self.installation / '.venv/bin/python'), str(self.installation / 'app/hunyuan_runner.py'),
-                        str(image), str(output), '--models', str(self.installation / 'models'),
-                        '--resolution', str(data.resolution), '--seed', str(data.seed)]
+            args = generation_command(self.installation, self.backend, data, image, output)
             # Fixed executable and typed numeric options; no shell or user paths.
             with (self.root / f'{data.id}.log').open('wb') as log:
                 process = subprocess.Popen(args, stdout=log, stderr=log, start_new_session=True,
@@ -223,7 +247,7 @@ def create_app(config):
     def information():
         return {'schema_version': 1, 'protocol': 'hearth.geometry.v1', 'model': jobs.inventory['model'],
                 'model_revision': jobs.inventory['model_revision'], 'manifest_sha256': jobs.digest,
-                'offline': True, 'job_cancellation': True, 'resolutions': jobs.resolutions, 'output_format': 'glb'}
+                'offline': True, 'job_cancellation': True, 'resolutions': jobs.resolutions, 'output_format': 'glb', 'tuning': jobs.tuning}
     @app.post('/v1/geometry-jobs', status_code=202)
     def submit(data: Submission):
         return jobs.submit(data)

@@ -407,12 +407,56 @@ class GeometryRequest(WireModel):
         return self
 
 
+class TrellisOptions(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True, validate_default=True)
+    sparse_guidance: float = Field(default=7.5, ge=0, le=30, allow_inf_nan=False, title='Structure guidance', description='How strongly the initial structure follows the reference.')
+    shape_guidance: float = Field(default=7.5, ge=0, le=30, allow_inf_nan=False, title='Shape guidance', description='How strongly detailed geometry follows the reference.')
+    max_tokens: int = Field(default=49152, ge=1024, le=49152, title='High detail token budget', description='Used at 1024 detail. Lower values reduce memory and detail.')
+    background: Literal['auto', 'birefnet', 'threshold'] = Field(default='auto', title='Background removal', description='Auto uses BiRefNet on the normalized reference. Threshold can lose bright details.')
+    texture: bool = Field(default=True, title='Generate textures', description='Turn off for a geometry-only GLB.')
+    unwrap: Literal['xatlas', 'box'] = Field(default='xatlas', title='UV unwrap', description='Xatlas favors quality; box projection is faster.')
+    remesh_band: int = Field(default=0, ge=0, le=4, title='Remesh band width', description='0 chooses automatically from geometry detail. Wider bands can smooth thin parts.')
+    decimation: int = Field(default=-1, ge=-1, le=512, title='Mesh simplification grid', description='-1 uses automatic quadric simplification; 0 disables simplification; positive values use a legacy cluster grid. Unsimplified meshes may exceed the one million triangle limit.')
+    atlas_size: Literal[0, 512, 1024, 2048, 4096] = Field(default=0, title='Texture atlas size', description='0 chooses 1024 at standard detail or 2048 at high detail.')
+    texture_resolution: Literal[0, 512, 1024] = Field(default=0, title='PBR volume resolution', description='0 lets the backend fit the texture volume to geometry density.')
+
+
+class HunyuanOptions(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True, validate_default=True)
+    steps: int = Field(default=50, ge=1, le=100, title='Shape steps', description='More diffusion steps take longer; 50 is the working default.')
+    guidance: float = Field(default=5.5, ge=0, le=20, allow_inf_nan=False, title='Shape guidance', description='Strength of adherence to the reference image.')
+    octree_resolution: Literal[128, 256, 384, 512] = Field(default=512, title='Octree resolution', description='Mesh extraction detail. Lower values are faster and use less memory.')
+    chunks: int = Field(default=8000, ge=1000, le=32000, title='Decode chunk size', description='Smaller chunks use less memory but take longer.')
+    surface_level: float = Field(default=0, ge=-0.1, le=0.1, allow_inf_nan=False, title='Surface threshold', description='Marching-cubes isosurface level; leave at zero for normal extraction.')
+    bounds: float = Field(default=1.01, ge=1, le=1.2, allow_inf_nan=False, title='Extraction bounds', description='Half-width of the extraction volume; 1.01 encloses the normal shape.')
+    remove_background: bool = Field(default=True, title='Remove background', description='Use U2Net before shape generation. Disable for an already prepared reference.')
+    remove_floaters: bool = Field(default=False, title='Remove disconnected fragments', description='Discard small disconnected mesh components.')
+    remove_degenerate: bool = Field(default=False, title='Clean degenerate faces', description='Remove invalid faces before simplification.')
+    max_faces: int = Field(default=50000, ge=100, le=500000, title='Target triangle count', description='Simplify toward this count. Actual output can be smaller.')
+    texture: bool = Field(default=True, title='Generate textures', description='Turn off to skip painting and export a geometry-only GLB.')
+    paint_steps: int = Field(default=30, ge=1, le=100, title='Texture steps', description='Diffusion steps for the six texture views.')
+    paint_guidance: float = Field(default=7.5, ge=1, le=20, allow_inf_nan=False, title='Texture guidance', description='Guidance strength for multiview painting.')
+    paint_seed: int = Field(default=0, ge=0, le=2147483647, title='Texture seed', description='Independent texture random seed; zero preserves the original paint default.')
+    texture_size: Literal[512, 1024, 2048, 4096] = Field(default=2048, title='Texture atlas size', description='Final texture dimensions; larger textures use more memory.')
+    render_size: Literal[512, 1024, 2048] = Field(default=2048, title='Texture render size', description='Resolution used to project the six generated views onto the mesh.')
+    bake_exp: float = Field(default=4, ge=1, le=8, allow_inf_nan=False, title='Texture blending exponent', description='Higher values favor views facing each surface directly.')
+    delight: bool = Field(default=True, title='Remove reference lighting', description='Reduce baked-in light and shadow before painting.')
+    delight_image_guidance: float = Field(default=1.5, ge=1, le=5, allow_inf_nan=False, title='Lighting removal image guidance', description='Preserve reference appearance during lighting removal.')
+    delight_text_guidance: float = Field(default=1, ge=1, le=5, allow_inf_nan=False, title='Lighting removal guidance', description='Guidance for the lighting removal model.')
+
+
 class GeometryGeneration(WireModel):
     id: UUID
     model: Annotated[str, Field(min_length=1, max_length=200)]
     image_sha256: Digest
     seed: Annotated[StrictInt, Field(ge=0, le=2147483647)] = 42
     resolution: Literal[512, 1024] = 512
+    trellis: TrellisOptions | None = None
+    hunyuan: HunyuanOptions | None = None
+
+    def check_tuning(self, profile):
+        if (self.trellis is not None and profile != 'trellis-v1') or (self.hunyuan is not None and profile != 'hunyuan-v1'):
+            raise ValueError('These tuning settings are not supported by the selected geometry provider. Refresh its verification and choose settings for that provider.')
 
 
 class GeometryReceipt(GeometryGeneration):
@@ -434,6 +478,7 @@ class GeometryProviderInfo(WireModel):
     job_cancellation: StrictBool
     resolutions: list[Literal[512, 1024]] = Field(min_length=1, max_length=2)
     output_format: Literal['glb'] = 'glb'
+    tuning: Literal['trellis-v1', 'hunyuan-v1'] | None = None
 
 
 class ImageOptions(WireModel):

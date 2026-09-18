@@ -4,6 +4,16 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Geometry tuning controls — 18 September
+
+The geometry page now exposes 10 TRELLIS and 20 Hunyuan controls in Generation, Mesh and Texture groups, initialized from generated contract defaults. Members can reset defaults, keep separate values while switching providers, and inspect the exact saved settings on each model card. Both engines offer geometry-only output. Typed settings survive the existing fair queue and must match provider receipts; unsupported profiles and invalid values fail explicitly. Legacy requests remain compatible. No database migration or scheduler policy change was needed.
+
+Validation passed 54 isolated VM backend cases, eight deployed-bundle browser cases (one opt-in live edge case skipped), the 200 shared Go contract fixtures on Linux, TypeScript, lint and production builds. Four geometry integration cases were rerun after strengthening the mixed-owner queue test to assert preservation of both engines' nondefault settings. Real signed-worker runs produced a Hunyuan model with 20,000 triangles and a 1024-pixel texture in 76.8 seconds, and a TRELLIS model with box UV mapping and two 512-pixel textures in 26.67 seconds. The actual Hunyuan GLB also rendered in a deployed-UI browser fixture. These individual measurements do not establish maximum-setting memory fit, sustained load or quality across inputs. See [controls and defaults](LOCAL_GEOMETRY.md#generation-tuning--18-september-2026) and [tuning evidence](../../evidence/geometry/2026-09-18/tuning-validation.json).
+
+Separate real geometry-only runs completed on both engines and returned zero embedded textures (TRELLIS 24.12 seconds; Hunyuan 24.82 seconds). Private input and intermediate cleanup was verified for all four qualification jobs.
+
+Head source/API/static bundles and both signed geometry adapter closures were deployed with backups, idle checks and confirmed worker unload. Both geometry providers were reverified and both public HTTPS readiness checks pass. Existing accounts/artifacts, migration `0026` and all release-gate statuses remain unchanged.
+
 ## Hunyuan3D 2.0 and three-backend scheduling — 18 September
 
 The 3D provider selector now supports the original Hunyuan3D 2.0 shape/paint profile at 512 alongside TRELLIS.2 Q8 at 512/1024. The installer prepares separate pinned weights, hash-locked dependencies, compiled CUDA extensions and a private HTTPS adapter. media-worker's reviewed signed recipe maps Fooocus, TRELLIS and Hunyuan to the same GPU pool. Existing owner fairness selects work before backend selection; jobs retain their chosen model, wait for all other service cgroups to drain, and require qualified readiness before dispatch. Independent host pools remain separately schedulable.

@@ -1938,6 +1938,17 @@
       "GeometryGeneration": {
         "additionalProperties": false,
         "properties": {
+          "hunyuan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HunyuanOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
           "id": {
             "format": "uuid",
             "title": "Id",
@@ -1975,6 +1986,17 @@
             "minimum": 0,
             "title": "Seed",
             "type": "integer"
+          },
+          "trellis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TrellisOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           }
         },
         "required": [
@@ -2058,6 +2080,22 @@
             "default": 1,
             "title": "Schema Version",
             "type": "integer"
+          },
+          "tuning": {
+            "anyOf": [
+              {
+                "enum": [
+                  "trellis-v1",
+                  "hunyuan-v1"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Tuning"
           }
         },
         "required": [
@@ -2082,6 +2120,17 @@
           "execution_released": {
             "title": "Execution Released",
             "type": "boolean"
+          },
+          "hunyuan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HunyuanOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           },
           "id": {
             "format": "uuid",
@@ -2169,6 +2218,17 @@
             ],
             "title": "State",
             "type": "string"
+          },
+          "trellis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TrellisOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
           }
         },
         "required": [
@@ -2363,6 +2423,174 @@
           "allow_insecure_http"
         ],
         "title": "HttpConsent",
+        "type": "object"
+      },
+      "HunyuanOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "bake_exp": {
+            "default": 4,
+            "description": "Higher values favor views facing each surface directly.",
+            "maximum": 8,
+            "minimum": 1,
+            "title": "Texture blending exponent",
+            "type": "number"
+          },
+          "bounds": {
+            "default": 1.01,
+            "description": "Half-width of the extraction volume; 1.01 encloses the normal shape.",
+            "maximum": 1.2,
+            "minimum": 1,
+            "title": "Extraction bounds",
+            "type": "number"
+          },
+          "chunks": {
+            "default": 8000,
+            "description": "Smaller chunks use less memory but take longer.",
+            "maximum": 32000,
+            "minimum": 1000,
+            "title": "Decode chunk size",
+            "type": "integer"
+          },
+          "delight": {
+            "default": true,
+            "description": "Reduce baked-in light and shadow before painting.",
+            "title": "Remove reference lighting",
+            "type": "boolean"
+          },
+          "delight_image_guidance": {
+            "default": 1.5,
+            "description": "Preserve reference appearance during lighting removal.",
+            "maximum": 5,
+            "minimum": 1,
+            "title": "Lighting removal image guidance",
+            "type": "number"
+          },
+          "delight_text_guidance": {
+            "default": 1,
+            "description": "Guidance for the lighting removal model.",
+            "maximum": 5,
+            "minimum": 1,
+            "title": "Lighting removal guidance",
+            "type": "number"
+          },
+          "guidance": {
+            "default": 5.5,
+            "description": "Strength of adherence to the reference image.",
+            "maximum": 20,
+            "minimum": 0,
+            "title": "Shape guidance",
+            "type": "number"
+          },
+          "max_faces": {
+            "default": 50000,
+            "description": "Simplify toward this count. Actual output can be smaller.",
+            "maximum": 500000,
+            "minimum": 100,
+            "title": "Target triangle count",
+            "type": "integer"
+          },
+          "octree_resolution": {
+            "default": 512,
+            "description": "Mesh extraction detail. Lower values are faster and use less memory.",
+            "enum": [
+              128,
+              256,
+              384,
+              512
+            ],
+            "title": "Octree resolution",
+            "type": "integer"
+          },
+          "paint_guidance": {
+            "default": 7.5,
+            "description": "Guidance strength for multiview painting.",
+            "maximum": 20,
+            "minimum": 1,
+            "title": "Texture guidance",
+            "type": "number"
+          },
+          "paint_seed": {
+            "default": 0,
+            "description": "Independent texture random seed; zero preserves the original paint default.",
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "Texture seed",
+            "type": "integer"
+          },
+          "paint_steps": {
+            "default": 30,
+            "description": "Diffusion steps for the six texture views.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Texture steps",
+            "type": "integer"
+          },
+          "remove_background": {
+            "default": true,
+            "description": "Use U2Net before shape generation. Disable for an already prepared reference.",
+            "title": "Remove background",
+            "type": "boolean"
+          },
+          "remove_degenerate": {
+            "default": false,
+            "description": "Remove invalid faces before simplification.",
+            "title": "Clean degenerate faces",
+            "type": "boolean"
+          },
+          "remove_floaters": {
+            "default": false,
+            "description": "Discard small disconnected mesh components.",
+            "title": "Remove disconnected fragments",
+            "type": "boolean"
+          },
+          "render_size": {
+            "default": 2048,
+            "description": "Resolution used to project the six generated views onto the mesh.",
+            "enum": [
+              512,
+              1024,
+              2048
+            ],
+            "title": "Texture render size",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 50,
+            "description": "More diffusion steps take longer; 50 is the working default.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Shape steps",
+            "type": "integer"
+          },
+          "surface_level": {
+            "default": 0,
+            "description": "Marching-cubes isosurface level; leave at zero for normal extraction.",
+            "maximum": 0.1,
+            "minimum": -0.1,
+            "title": "Surface threshold",
+            "type": "number"
+          },
+          "texture": {
+            "default": true,
+            "description": "Turn off to skip painting and export a geometry-only GLB.",
+            "title": "Generate textures",
+            "type": "boolean"
+          },
+          "texture_size": {
+            "default": 2048,
+            "description": "Final texture dimensions; larger textures use more memory.",
+            "enum": [
+              512,
+              1024,
+              2048,
+              4096
+            ],
+            "title": "Texture atlas size",
+            "type": "integer"
+          }
+        },
+        "title": "HunyuanOptions",
         "type": "object"
       },
       "ImageGeneration": {
@@ -4918,6 +5146,104 @@
           "audio_sha256"
         ],
         "title": "TranscriptionRequest",
+        "type": "object"
+      },
+      "TrellisOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "atlas_size": {
+            "default": 0,
+            "description": "0 chooses 1024 at standard detail or 2048 at high detail.",
+            "enum": [
+              0,
+              512,
+              1024,
+              2048,
+              4096
+            ],
+            "title": "Texture atlas size",
+            "type": "integer"
+          },
+          "background": {
+            "default": "auto",
+            "description": "Auto uses BiRefNet on the normalized reference. Threshold can lose bright details.",
+            "enum": [
+              "auto",
+              "birefnet",
+              "threshold"
+            ],
+            "title": "Background removal",
+            "type": "string"
+          },
+          "decimation": {
+            "default": -1,
+            "description": "-1 uses automatic quadric simplification; 0 disables simplification; positive values use a legacy cluster grid. Unsimplified meshes may exceed the one million triangle limit.",
+            "maximum": 512,
+            "minimum": -1,
+            "title": "Mesh simplification grid",
+            "type": "integer"
+          },
+          "max_tokens": {
+            "default": 49152,
+            "description": "Used at 1024 detail. Lower values reduce memory and detail.",
+            "maximum": 49152,
+            "minimum": 1024,
+            "title": "High detail token budget",
+            "type": "integer"
+          },
+          "remesh_band": {
+            "default": 0,
+            "description": "0 chooses automatically from geometry detail. Wider bands can smooth thin parts.",
+            "maximum": 4,
+            "minimum": 0,
+            "title": "Remesh band width",
+            "type": "integer"
+          },
+          "shape_guidance": {
+            "default": 7.5,
+            "description": "How strongly detailed geometry follows the reference.",
+            "maximum": 30,
+            "minimum": 0,
+            "title": "Shape guidance",
+            "type": "number"
+          },
+          "sparse_guidance": {
+            "default": 7.5,
+            "description": "How strongly the initial structure follows the reference.",
+            "maximum": 30,
+            "minimum": 0,
+            "title": "Structure guidance",
+            "type": "number"
+          },
+          "texture": {
+            "default": true,
+            "description": "Turn off for a geometry-only GLB.",
+            "title": "Generate textures",
+            "type": "boolean"
+          },
+          "texture_resolution": {
+            "default": 0,
+            "description": "0 lets the backend fit the texture volume to geometry density.",
+            "enum": [
+              0,
+              512,
+              1024
+            ],
+            "title": "PBR volume resolution",
+            "type": "integer"
+          },
+          "unwrap": {
+            "default": "xatlas",
+            "description": "Xatlas favors quality; box projection is faster.",
+            "enum": [
+              "xatlas",
+              "box"
+            ],
+            "title": "UV unwrap",
+            "type": "string"
+          }
+        },
+        "title": "TrellisOptions",
         "type": "object"
       },
       "ValidationError": {

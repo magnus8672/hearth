@@ -46,6 +46,8 @@ def main():
         definitions.update(schema.pop("$defs", {}))
         definitions[name] = schema
     bundle = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://hearth.invalid/contracts/v1", "$defs": definitions}
+    tuning = {'trellis-v1': definitions['TrellisOptions']['properties'], 'hunyuan-v1': definitions['HunyuanOptions']['properties']}
+    (ROOT / 'packages/contracts/schema/geometry-tuning.json').write_text(json.dumps(tuning, indent=2) + '\n', encoding='utf-8')
     text = json.dumps(bundle, indent=2, sort_keys=True) + "\n"
     for relative in ("packages/contracts/schema/hearth.json", "worker/internal/contracts/schema/hearth.json"):
         path = ROOT / relative

@@ -2,6 +2,55 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
+test('provider tuning defaults, nondefault submission, saved settings and reset', async ({ page }) => {
+  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  let submitted: any; const jobs: any[] = [];
+  await page.route('**/api/**', async route => {
+    const url = new URL(route.request().url()).pathname;
+    if (url.endsWith('/session')) return route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: origin + ':8443' } });
+    if (url.endsWith('/geometry-targets')) return route.fulfill({ json: { items: [
+      { id: 'trellis', model_id: 'trellis2/q8', name: 'TRELLIS', state: 'ready', profile: { resolutions: [512, 1024], tuning: 'trellis-v1' } },
+      { id: 'hunyuan', model_id: 'hunyuan3d/2.0', name: 'Hunyuan3D 2.0', state: 'ready', profile: { resolutions: [512], tuning: 'hunyuan-v1' } },
+    ] } });
+    if (url.endsWith('/geometry') && route.request().method() === 'POST') {
+      submitted = route.request().postDataJSON();
+      jobs.push({ id: submitted.request.id, name: submitted.name, request: submitted.request, status: 'queued' });
+      return route.fulfill({ status: 202, json: { id: submitted.request.id } });
+    }
+    return route.fulfill({ json: { items: url.endsWith('/geometry') ? jobs : [] } });
+  });
+  await page.goto(origin + '/#geometry');
+  await expect(page.getByLabel('Structure guidance', { exact: false })).toHaveValue('7.5');
+  await page.getByLabel('Structure guidance', { exact: false }).fill('6');
+  await page.getByRole('button', { name: 'Reset tuning defaults' }).click();
+  await expect(page.getByLabel('Structure guidance', { exact: false })).toHaveValue('7.5');
+  await page.getByLabel('3D model provider').selectOption('hunyuan');
+  await expect(page.getByLabel('Shape steps', { exact: false })).toHaveValue('50');
+  await page.getByLabel('Shape steps', { exact: false }).fill('24');
+  await page.getByText('Mesh settings', { exact: true }).click();
+  await page.getByLabel('Octree resolution', { exact: false }).selectOption('256');
+  await page.getByText('Texture settings', { exact: true }).click();
+  await expect(page.getByLabel('Texture steps', { exact: false })).toHaveValue('30');
+  await page.getByLabel('Texture steps', { exact: false }).fill('16');
+  await page.getByLabel('3D model provider').selectOption('trellis');
+  await expect(page.getByLabel('Structure guidance', { exact: false })).toHaveValue('7.5');
+  await page.getByLabel('3D model provider').selectOption('hunyuan');
+  await expect(page.getByLabel('Shape steps', { exact: false })).toHaveValue('24');
+  await page.getByLabel('Model name', { exact: true }).fill('Tuned model');
+  await page.getByLabel('Reference image', { exact: true }).setInputFiles({ name: 'reference.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=', 'base64') });
+  await page.getByRole('button', { name: 'Create 3D model' }).click();
+  await expect.poll(() => submitted?.request.hunyuan.steps).toBe(24);
+  expect(submitted.request.hunyuan.octree_resolution).toBe(256);
+  expect(submitted.request.hunyuan.paint_steps).toBe(16);
+  expect(submitted.request.trellis).toBeUndefined();
+  await page.locator('.geometry-card summary').click();
+  await expect(page.locator('.geometry-card')).toContainText('Shape steps24');
+  await page.setViewportSize({ width: 3840, height: 2160 });
+  await page.screenshot({ path: '.hearth/geometry-tuning-wide.png', fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('changing from detailed TRELLIS to Hunyuan submits the supported detail and selected model', async ({ page }) => {
   const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
   let submitted: any;

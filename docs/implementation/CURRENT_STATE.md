@@ -26,8 +26,8 @@ Use the hostname for application TLS and SSH IPs for maintenance. The head certi
 |---|---|---|
 | model-host | `http://10.20.30.30:1234/v1`; `qwen/qwen3.8-27b` | Previously qualified for chat, streaming and tools, but currently marked failed after a generation error; `lmstudio_loaded` preflight; `text-pool` |
 | media-worker Fooocus | `http://10.20.30.20:1235/v1`; `fooocus/juggernaut-xl-v8` | Ready; text-to-image and image jobs; `media-worker GPU` |
-| media-worker TRELLIS | `https://10.20.30.20:1236/v1`; `trellis2/q8` | Ready; image-to-3D and geometry jobs; `media-worker GPU` |
-| media-worker Hunyuan3D 2.0 | `https://10.20.30.20:1238/v1`; `hunyuan3d/2.0` | Ready; image-to-3D at 512 and geometry jobs; `media-worker GPU` |
+| media-worker TRELLIS | `https://10.20.30.20:1236/v1`; `trellis2/q8` | Ready; image-to-3D and geometry jobs; verified `trellis-v1` tuning controls; `media-worker GPU` |
+| media-worker Hunyuan3D 2.0 | `https://10.20.30.20:1238/v1`; `hunyuan3d/2.0` | Ready; image-to-3D with 128–512 octree extraction (default 512); verified `hunyuan-v1` tuning controls; `media-worker GPU` |
 
 Saved qualification and a selected running service are separate. media-worker uses policy `shared`; the next job chosen by owner fairness determines which of its three signed services runs. Gallery and conversation images select Fooocus; geometry jobs retain their chosen TRELLIS or Hunyuan target. The worker confirms all other service cgroups stopped before starting the selected service. Saved provider qualification alone does not mean it is currently resident.
 

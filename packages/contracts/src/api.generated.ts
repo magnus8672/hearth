@@ -2339,6 +2339,8 @@ export interface components {
         };
         /** GeometryGeneration */
         GeometryGeneration: {
+            /** @default null */
+            hunyuan: components["schemas"]["HunyuanOptions"] | null;
             /**
              * Id
              * Format: uuid
@@ -2365,6 +2367,8 @@ export interface components {
              * @default 42
              */
             seed: number;
+            /** @default null */
+            trellis: components["schemas"]["TrellisOptions"] | null;
         };
         /** GeometryName */
         GeometryName: {
@@ -2402,6 +2406,11 @@ export interface components {
              * @constant
              */
             schema_version: 1;
+            /**
+             * Tuning
+             * @default null
+             */
+            tuning: ("trellis-v1" | "hunyuan-v1") | null;
         };
         /** GeometryReceipt */
         GeometryReceipt: {
@@ -2409,6 +2418,8 @@ export interface components {
             cancel_requested: boolean;
             /** Execution Released */
             execution_released: boolean;
+            /** @default null */
+            hunyuan: components["schemas"]["HunyuanOptions"] | null;
             /**
              * Id
              * Format: uuid
@@ -2454,6 +2465,8 @@ export interface components {
              * @enum {string}
              */
             state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+            /** @default null */
+            trellis: components["schemas"]["TrellisOptions"] | null;
         };
         /** GeometryRequest */
         GeometryRequest: {
@@ -2545,6 +2558,132 @@ export interface components {
             allow_insecure_http: boolean;
             /** Revision */
             revision: number;
+        };
+        /** HunyuanOptions */
+        HunyuanOptions: {
+            /**
+             * Texture blending exponent
+             * @description Higher values favor views facing each surface directly.
+             * @default 4
+             */
+            bake_exp: number;
+            /**
+             * Extraction bounds
+             * @description Half-width of the extraction volume; 1.01 encloses the normal shape.
+             * @default 1.01
+             */
+            bounds: number;
+            /**
+             * Decode chunk size
+             * @description Smaller chunks use less memory but take longer.
+             * @default 8000
+             */
+            chunks: number;
+            /**
+             * Remove reference lighting
+             * @description Reduce baked-in light and shadow before painting.
+             * @default true
+             */
+            delight: boolean;
+            /**
+             * Lighting removal image guidance
+             * @description Preserve reference appearance during lighting removal.
+             * @default 1.5
+             */
+            delight_image_guidance: number;
+            /**
+             * Lighting removal guidance
+             * @description Guidance for the lighting removal model.
+             * @default 1
+             */
+            delight_text_guidance: number;
+            /**
+             * Shape guidance
+             * @description Strength of adherence to the reference image.
+             * @default 5.5
+             */
+            guidance: number;
+            /**
+             * Target triangle count
+             * @description Simplify toward this count. Actual output can be smaller.
+             * @default 50000
+             */
+            max_faces: number;
+            /**
+             * Octree resolution
+             * @description Mesh extraction detail. Lower values are faster and use less memory.
+             * @default 512
+             * @enum {integer}
+             */
+            octree_resolution: 128 | 256 | 384 | 512;
+            /**
+             * Texture guidance
+             * @description Guidance strength for multiview painting.
+             * @default 7.5
+             */
+            paint_guidance: number;
+            /**
+             * Texture seed
+             * @description Independent texture random seed; zero preserves the original paint default.
+             * @default 0
+             */
+            paint_seed: number;
+            /**
+             * Texture steps
+             * @description Diffusion steps for the six texture views.
+             * @default 30
+             */
+            paint_steps: number;
+            /**
+             * Remove background
+             * @description Use U2Net before shape generation. Disable for an already prepared reference.
+             * @default true
+             */
+            remove_background: boolean;
+            /**
+             * Clean degenerate faces
+             * @description Remove invalid faces before simplification.
+             * @default false
+             */
+            remove_degenerate: boolean;
+            /**
+             * Remove disconnected fragments
+             * @description Discard small disconnected mesh components.
+             * @default false
+             */
+            remove_floaters: boolean;
+            /**
+             * Texture render size
+             * @description Resolution used to project the six generated views onto the mesh.
+             * @default 2048
+             * @enum {integer}
+             */
+            render_size: 512 | 1024 | 2048;
+            /**
+             * Shape steps
+             * @description More diffusion steps take longer; 50 is the working default.
+             * @default 50
+             */
+            steps: number;
+            /**
+             * Surface threshold
+             * @description Marching-cubes isosurface level; leave at zero for normal extraction.
+             * @default 0
+             */
+            surface_level: number;
+            /**
+             * Generate textures
+             * @description Turn off to skip painting and export a geometry-only GLB.
+             * @default true
+             */
+            texture: boolean;
+            /**
+             * Texture atlas size
+             * @description Final texture dimensions; larger textures use more memory.
+             * @default 2048
+             * @enum {integer}
+             */
+            texture_size: 512 | 1024 | 2048 | 4096;
         };
         /** ImageGeneration */
         ImageGeneration: {
@@ -3722,6 +3861,73 @@ export interface components {
              * @constant
              */
             schema_version: 1;
+        };
+        /** TrellisOptions */
+        TrellisOptions: {
+            /**
+             * Texture atlas size
+             * @description 0 chooses 1024 at standard detail or 2048 at high detail.
+             * @default 0
+             * @enum {integer}
+             */
+            atlas_size: 0 | 512 | 1024 | 2048 | 4096;
+            /**
+             * Background removal
+             * @description Auto uses BiRefNet on the normalized reference. Threshold can lose bright details.
+             * @default auto
+             * @enum {string}
+             */
+            background: "auto" | "birefnet" | "threshold";
+            /**
+             * Mesh simplification grid
+             * @description -1 uses automatic quadric simplification; 0 disables simplification; positive values use a legacy cluster grid. Unsimplified meshes may exceed the one million triangle limit.
+             * @default -1
+             */
+            decimation: number;
+            /**
+             * High detail token budget
+             * @description Used at 1024 detail. Lower values reduce memory and detail.
+             * @default 49152
+             */
+            max_tokens: number;
+            /**
+             * Remesh band width
+             * @description 0 chooses automatically from geometry detail. Wider bands can smooth thin parts.
+             * @default 0
+             */
+            remesh_band: number;
+            /**
+             * Shape guidance
+             * @description How strongly detailed geometry follows the reference.
+             * @default 7.5
+             */
+            shape_guidance: number;
+            /**
+             * Structure guidance
+             * @description How strongly the initial structure follows the reference.
+             * @default 7.5
+             */
+            sparse_guidance: number;
+            /**
+             * Generate textures
+             * @description Turn off for a geometry-only GLB.
+             * @default true
+             */
+            texture: boolean;
+            /**
+             * PBR volume resolution
+             * @description 0 lets the backend fit the texture volume to geometry density.
+             * @default 0
+             * @enum {integer}
+             */
+            texture_resolution: 0 | 512 | 1024;
+            /**
+             * UV unwrap
+             * @description Xatlas favors quality; box projection is faster.
+             * @default xatlas
+             * @enum {string}
+             */
+            unwrap: "xatlas" | "box";
         };
         /** ValidationError */
         ValidationError: {

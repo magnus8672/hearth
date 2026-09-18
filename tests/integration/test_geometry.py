@@ -26,10 +26,12 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
     calls = []
     def render(url, key, settings, data, image, observe=lambda value: False):
         calls.append(data.id)
+        if len(calls) > 1:
+            assert data.trellis.shape_guidance == 6 and data.trellis.atlas_size == 512
         receipt = GeometryReceipt(**data.model_dump(), state='completed', progress=100, sha256=hashlib.sha256(model).hexdigest(), manifest_sha256='a'*64, execution_released=True, cancel_requested=False)
         observe(receipt)
         return receipt, model
-    monkeypatch.setattr(geometry_transport, 'information', lambda *args: INFO)
+    monkeypatch.setattr(geometry_transport, 'information', lambda *args: INFO.model_copy(update={'tuning': 'trellis-v1'}))
     monkeypatch.setattr(geometry_transport, 'render', render)
     with factory('admin') as admin, factory() as user:
         signin(admin)
@@ -48,6 +50,8 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
         image = buffer.getvalue()
         assert 1_700_000 < len(image) < 1_800_000
         data = {'name': 'Fixture model', 'target_id': target, 'request': {'id': str(uuid4()), 'model': INFO.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+        data['request']['trellis'] = {'shape_guidance': 6, 'atlas_size': 512}
+        assert user.post('/api/v1/geometry', headers=uh, json=data | {'request': data['request'] | {'hunyuan': {'steps': 20}}}).status_code == 422
         assert user.post('/api/v1/geometry', json=data).status_code == 403
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         deadline = time.monotonic() + 5
@@ -59,6 +63,7 @@ def test_geometry_private_queue_artifact_and_delete(bff, monkeypatch):
         assert job['status'] == 'completed', job
         assert job['metadata']['triangles'] == 1
         assert job['name'] == 'Fixture model' and job['has_thumbnail']
+        assert job['request']['trellis']['shape_guidance'] == 6
         with scoped_session(engine, UUID(user.get('/api/v1/session').json()['id']), settings.farm_id) as db:
             assert db.execute(text('SELECT source_image FROM geometry_jobs WHERE id=:id'), {'id': job['id']}).scalar_one() is None
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
@@ -112,6 +117,7 @@ def test_geometry_waiting_cancel_and_model_validation(bff, monkeypatch):
         for bad_name in ['', '   ', '\t\n', 'x' * 121]:
             assert user.post('/api/v1/geometry', headers=uh, json=data | {'name': bad_name}).status_code == 422
         assert user.get('/api/v1/geometry').json()['items'] == []
+        assert user.post('/api/v1/geometry', headers=uh, json=data | {'request': data['request'] | {'trellis': {}}}).status_code == 422
         assert user.post('/api/v1/geometry', headers=uh, json=data | {'request': data['request'] | {'resolution': 1024}}).status_code == 409
         assert user.post('/api/v1/geometry', headers=uh, json=data).status_code == 202
         path = f"/api/v1/geometry/{data['request']['id']}"
@@ -208,8 +214,9 @@ def test_three_backends_keep_fairness_and_target_identity(bff, monkeypatch):
     monkeypatch.setattr(image_queue.ImageQueue, 'run', lambda self: self.stop.wait())
     factory, settings, engine, migration, subject = setup(bff, monkeypatch)
     fixture_provider(monkeypatch)
-    h3d = INFO.model_copy(update={'model': 'hunyuan3d/2.0', 'manifest_sha256': 'b'*64})
-    monkeypatch.setattr(geometry_transport, 'information', lambda url, *args: h3d if ':1238' in url else INFO)
+    h3d = INFO.model_copy(update={'model': 'hunyuan3d/2.0', 'manifest_sha256': 'b'*64, 'tuning': 'hunyuan-v1'})
+    trellis_info = INFO.model_copy(update={'tuning': 'trellis-v1'})
+    monkeypatch.setattr(geometry_transport, 'information', lambda url, *args: h3d if ':1238' in url else trellis_info)
     executed = []
     def render(url, key, settings, data, image, observe=lambda value: False):
         expected = h3d if ':1238' in url else INFO
@@ -243,6 +250,7 @@ def test_three_backends_keep_fairness_and_target_identity(bff, monkeypatch):
         def submit(client, headers, service):
             info = h3d if service == 'hunyuan' else INFO
             data = {'name': service, 'target_id': targets[service], 'request': {'id': str(uuid4()), 'model': info.model, 'image_sha256': hashlib.sha256(image).hexdigest()}, 'image': base64.b64encode(image).decode()}
+            data['request'][service] = {'steps': 24, 'paint_steps': 16} if service == 'hunyuan' else {'shape_guidance': 6, 'atlas_size': 512}
             assert client.post('/api/v1/geometry', headers=headers, json=data).status_code == 202
             return data['request']['id']
         assert user.post('/api/v1/images', headers=uh, json=image_request(picture)).status_code == 202
@@ -264,6 +272,10 @@ def test_three_backends_keep_fairness_and_target_identity(bff, monkeypatch):
             for service, expected in [('hunyuan', hunyuan), ('trellis', trellis)]:
                 claimed = image_queue.claim(engine, settings, pool)
                 assert str(claimed[2].id) == expected
+                if service == 'hunyuan':
+                    assert claimed[2].hunyuan.steps == 24 and claimed[2].hunyuan.paint_steps == 16
+                else:
+                    assert claimed[2].trellis.shape_guidance == 6 and claimed[2].trellis.atlas_size == 512
                 with scoped_session(migration, workers.SYSTEM, settings.farm_id) as db:
                     worker = workers.for_pool(db, pool)
                     assert worker['desired_service'] == service

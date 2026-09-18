@@ -2,15 +2,17 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { Workspace } from './workspace';
 import { api, mutation, type Identity } from './api';
 import { geometryReference, prepareGeometryReference } from './geometry-reference';
+import { GeometrySettings, SavedGeometrySettings, tuningDefaults, type TuningProfile, type TuningValues } from './geometry-settings';
 const Preview = lazy(() => import('./geometry-preview'));
-type Target = { id: string; name: string; model_id: string; state: string; profile: { resolutions?: number[] } };
-type Job = { id: string; name: string; has_thumbnail: boolean; status: string; reason: string | null; cancel_requested: boolean; request: { model: string; resolution: number; seed: number }; metadata: { triangles: number; textures: number; bytes: number } | null };
+type Target = { id: string; name: string; model_id: string; state: string; profile: { resolutions?: number[]; tuning?: TuningProfile | null } };
+type Job = { id: string; name: string; has_thumbnail: boolean; status: string; reason: string | null; cancel_requested: boolean; request: { model: string; resolution: number; seed: number; trellis?: TuningValues; hunyuan?: TuningValues }; metadata: { triangles: number; textures: number; bytes: number } | null };
 
 export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (dirty: boolean) => void }) {
   const [targets, setTargets] = useState<Target[]>([]); const [targetId, setTarget] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]); const [file, setFile] = useState<File | null>(null);
   const [name, setName] = useState(''); const [editing, setEditing] = useState(''); const [renameName, setRenameName] = useState(''); const [renaming, setRenaming] = useState(false);
   const [resolution, setResolution] = useState(512); const [seed, setSeed] = useState('');
+  const [tuning, setTuning] = useState<Record<TuningProfile, TuningValues>>(() => ({ 'trellis-v1': tuningDefaults('trellis-v1'), 'hunyuan-v1': tuningDefaults('hunyuan-v1') }));
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [preview, setPreview] = useState('');
   const [source, setSource] = useState(() => geometryReference(window.location.hash));
   const [sourceLoading, setSourceLoading] = useState(false); const [referenceUrl, setReferenceUrl] = useState('');
@@ -60,7 +62,8 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
       const bytes = await file.arrayBuffer();
       const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(x => x.toString(16).padStart(2, '0')).join('');
       const encoded = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1]); reader.onerror = reject; reader.readAsDataURL(file); });
-      await api('/api/v1/geometry', mutation(identity, { name: name.trim(), target_id: target.id, image: encoded, request: { schema_version: 1, id: crypto.randomUUID(), model: target.model_id, image_sha256: digest, resolution, seed: seed ? Number(seed) : crypto.getRandomValues(new Uint32Array(1))[0] % 2147483648 } }));
+      const options = target.profile.tuning ? { [target.profile.tuning === 'trellis-v1' ? 'trellis' : 'hunyuan']: tuning[target.profile.tuning] } : {};
+      await api('/api/v1/geometry', mutation(identity, { name: name.trim(), target_id: target.id, image: encoded, request: { schema_version: 1, id: crypto.randomUUID(), model: target.model_id, image_sha256: digest, resolution, seed: seed ? Number(seed) : crypto.getRandomValues(new Uint32Array(1))[0] % 2147483648, ...options } }));
       setFile(null); setName(''); await refresh();
     } catch (reason) { setError((reason as Error).message); } finally { setBusy(false); }
   }
@@ -89,13 +92,15 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
       {referenceUrl && <img className="geometry-reference" src={referenceUrl} alt="Reference for your 3D model" />}
       {file && <p>{file.name} · {(file.size / 1024 / 1024).toFixed(1)} MB</p>}
       {source && file && <p className="small-copy">Your selected image is ready. The original stays unchanged; this model will be saved privately to your workspace.</p>}
-      <label>Geometry detail<select value={resolution} onChange={event => setResolution(Number(event.target.value))}>{(target?.profile.resolutions || [512]).map(value => <option key={value} value={value}>{value === 512 ? 'Standard · 512' : 'Detailed · 1024'}</option>)}</select></label>
-      <p className="small-copy">Higher detail needs more GPU memory and time. Jobs share the GPU queue with image generation. The finished GLB includes its textures.</p>
+      {target?.profile.tuning !== 'hunyuan-v1' && <label>Geometry detail<select value={resolution} onChange={event => setResolution(Number(event.target.value))}>{(target?.profile.resolutions || [512]).map(value => <option key={value} value={value}>{value === 512 ? 'Standard · 512' : 'Detailed · 1024'}</option>)}</select></label>}
+      <p className="small-copy">Jobs share the GPU queue with image generation. Textures are included by default.</p>
       <label>Seed <span className="muted">optional</span><input type="number" min="0" max="2147483647" step="1" placeholder="Choose one for me" value={seed} onChange={event => setSeed(event.target.value)} /></label>
+      {target?.profile.tuning ? <GeometrySettings profile={target.profile.tuning} values={tuning[target.profile.tuning]} disabled={busy} onChange={values => setTuning(previous => ({ ...previous, [target.profile.tuning!]: values }))} /> : target && <p className="small-copy">This provider uses its verified defaults. Tuning controls become available after an administrator updates and verifies its adapter.</p>}
       <button className="primary-button" disabled={busy || sourceLoading || !name.trim() || !file || !target || waiting >= 8}>{busy ? 'Adding to queue…' : 'Create 3D model'}</button>
     </form></section><section><div className="section-heading"><h2>Your models</h2><span>{waiting ? `${waiting} waiting or running` : 'Private to you'}</span></div>
       {!jobs.length && <div className="panel"><p>Your finished models will appear here.</p></div>}
-      <div className="geometry-gallery">{jobs.map(job => <article className={`panel geometry-card ${preview === job.id ? 'preview-open' : ''}`} key={job.id}><div className="section-heading"><h3>{job.name}</h3><span>{job.status}</span></div><p className="small-copy">{job.request.model} · Detail {job.request.resolution} · seed {job.request.seed}</p>
+      <div className="geometry-gallery">{jobs.map(job => <article className={`panel geometry-card ${preview === job.id ? 'preview-open' : ''}`} key={job.id}><div className="section-heading"><h3>{job.name}</h3><span>{job.status}</span></div><p className="small-copy">{job.request.model} · Detail {job.request.hunyuan?.octree_resolution ?? job.request.resolution} · seed {job.request.seed}</p>
+        <SavedGeometrySettings trellis={job.request.trellis} hunyuan={job.request.hunyuan} />
         {editing === job.id ? <form className="geometry-rename" onSubmit={event => { event.preventDefault(); void rename(job); }}>
           <label>New model name<input autoFocus required maxLength={120} value={renameName} onChange={event => setRenameName(event.target.value)} disabled={renaming} /></label>
           <div className="target-actions"><button className="quiet-button" disabled={renaming || !renameName.trim()}>{renaming ? 'Saving…' : 'Save name'}</button><button type="button" className="quiet-button" disabled={renaming} onClick={() => setEditing('')}>Cancel rename</button></div>

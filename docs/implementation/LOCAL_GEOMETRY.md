@@ -2,9 +2,61 @@
 
 Implemented on the existing head and media-worker, 17 September 2026. The original runtime is [trellis.cpp v0.6.0](https://github.com/pwilkin/trellis.cpp/releases/tag/v0.6.0), executing TRELLIS.2 with the pinned Q8 GGUF profile. This replaces the earlier TripoSR candidate for this deployment, without tying the geometry protocol to one engine.
 
+## Generation tuning — 18 September 2026
+
+The model form exposes provider-specific **Generation**, **Mesh** and **Texture** settings. Defaults preserve the working profiles; **Reset tuning defaults** restores the selected backend. Values are retained separately while switching providers, copied into each durable queue request, and shown under **Generation settings** on its model card. Waiting work does not read later form changes. Historical jobs without tuning fields continue using the legacy defaults.
+
+Controls appear only when the verified provider advertises `trellis-v1` or `hunyuan-v1`. The head and adapter reject settings for the wrong backend, unknown fields and values outside the typed bounds. Completion receipts must echo every setting. Old adapters receive legacy requests without the new fields; they cannot silently accept custom tuning. Reverify an updated adapter to advertise its controls.
+
+Textures are enabled by default; either engine can export geometry alone. Hunyuan's octree setting controls its actual extraction resolution (128/256/384/512), while its legacy transport resolution remains 512 for compatibility. TRELLIS supports the already installed 512/1024 models. The 20-minute execution deadline, 64 MiB GLB ceiling, one million triangle limit, owner fairness and exclusive GPU switching still apply. Higher settings are bounded but do not guarantee memory fit or successful geometry for every input. Camera layout, supported checkpoints, GPU placement, precision/offload, FlashAttention and process/thread limits remain fixed runtime choices. Debug dumps, arbitrary paths, server flags and unsupported WebP GLB extensions are not generation controls.
+
+### Default controls
+
+#### TRELLIS.2
+
+| Control | Default | Allowed values |
+|---|---|---|
+| Structure guidance | 7.5 | 0–30 |
+| Shape guidance | 7.5 | 0–30 |
+| High detail token budget | 49152 | 1024–49152 |
+| Background removal | auto | auto, birefnet, threshold |
+| Generate textures | On | On / Off |
+| UV unwrap | xatlas | xatlas, box |
+| Remesh band width | 0 | 0–4 |
+| Mesh simplification grid | -1 | -1–512 |
+| Texture atlas size | 0 | 0, 512, 1024, 2048, 4096 |
+| PBR volume resolution | 0 | 0, 512, 1024 |
+
+#### Hunyuan3D 2.0
+
+| Control | Default | Allowed values |
+|---|---|---|
+| Shape steps | 50 | 1–100 |
+| Shape guidance | 5.5 | 0–20 |
+| Octree resolution | 512 | 128, 256, 384, 512 |
+| Decode chunk size | 8000 | 1000–32000 |
+| Surface threshold | 0 | -0.1–0.1 |
+| Extraction bounds | 1.01 | 1–1.2 |
+| Remove background | On | On / Off |
+| Remove disconnected fragments | Off | On / Off |
+| Clean degenerate faces | Off | On / Off |
+| Target triangle count | 50000 | 100–500000 |
+| Generate textures | On | On / Off |
+| Texture steps | 30 | 1–100 |
+| Texture guidance | 7.5 | 1–20 |
+| Texture seed | 0 | 0–2147483647 |
+| Texture atlas size | 2048 | 512, 1024, 2048, 4096 |
+| Texture render size | 2048 | 512, 1024, 2048 |
+| Texture blending exponent | 4 | 1–8 |
+| Remove reference lighting | On | On / Off |
+| Lighting removal image guidance | 1.5 | 1–5 |
+| Lighting removal guidance | 1 | 1–5 |
+
+TRELLIS zero-valued texture/band settings select automatic sizing; simplification `-1` selects automatic quadric reduction and `0` disables reduction. Hunyuan always reduces toward its target triangle count. Hunyuan texture seed is independent of shape seed and defaults to the original upstream paint seed of zero. Disabled texture/lighting controls retain their values for later use.
+
 ## Try it
 
-Open **3D models** in the workspace. Enter a model name, upload a still PNG, JPEG or WebP of one clearly visible object, choose a 3D provider and its supported detail (TRELLIS: 512/1024; Hunyuan3D 2.0: 512), and select **Create 3D model**. Alternatively, choose **Make a model** beside a completed image in the gallery, private chat or a joined channel. The 3D form opens with that image selected and previewed. Enter a name, choose the detail and select **Create 3D model** to start work; opening the form alone never generates a model.
+Open **3D models** in the workspace. Enter a model name, upload a still PNG, JPEG or WebP of one clearly visible object, choose a 3D provider and its supported detail (TRELLIS: 512/1024; Hunyuan3D 2.0: 512 by default, tunable octree extraction), and select **Create 3D model**. Alternatively, choose **Make a model** beside a completed image in the gallery, private chat or a joined channel. The 3D form opens with that image selected and previewed. Enter a name, choose the detail and select **Create 3D model** to start work; opening the form alone never generates a model.
 
 ### Hunyuan3D 2.0 profile
 

@@ -200,6 +200,8 @@ export interface GeometryGeneration {
   image_sha256: string;
   seed?: number;
   resolution?: 512 | 1024;
+  trellis?: TrellisOptions | null;
+  hunyuan?: HunyuanOptions | null;
 }
 
 export interface GeometryProviderInfo {
@@ -212,6 +214,7 @@ export interface GeometryProviderInfo {
   job_cancellation: boolean;
   resolutions: Array<512 | 1024>;
   output_format?: "glb";
+  tuning?: "trellis-v1" | "hunyuan-v1" | null;
 }
 
 export interface GeometryReceipt {
@@ -221,6 +224,8 @@ export interface GeometryReceipt {
   image_sha256: string;
   seed?: number;
   resolution?: 512 | 1024;
+  trellis?: TrellisOptions | null;
+  hunyuan?: HunyuanOptions | null;
   state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
   progress: number;
   reason?: string | null;
@@ -251,6 +256,29 @@ export interface Heartbeat {
   observed_plan_revision: number;
   active_attempt_ids?: Array<string>;
   services?: Array<ServiceObservation>;
+}
+
+export interface HunyuanOptions {
+  steps?: number;
+  guidance?: number;
+  octree_resolution?: 128 | 256 | 384 | 512;
+  chunks?: number;
+  surface_level?: number;
+  bounds?: number;
+  remove_background?: boolean;
+  remove_floaters?: boolean;
+  remove_degenerate?: boolean;
+  max_faces?: number;
+  texture?: boolean;
+  paint_steps?: number;
+  paint_guidance?: number;
+  paint_seed?: number;
+  texture_size?: 512 | 1024 | 2048 | 4096;
+  render_size?: 512 | 1024 | 2048;
+  bake_exp?: number;
+  delight?: boolean;
+  delight_image_guidance?: number;
+  delight_text_guidance?: number;
 }
 
 export interface ImageGeneration {
@@ -555,6 +583,19 @@ export interface TranscriptionRequest {
   id: string;
   model: string;
   audio_sha256: string;
+}
+
+export interface TrellisOptions {
+  sparse_guidance?: number;
+  shape_guidance?: number;
+  max_tokens?: number;
+  background?: "auto" | "birefnet" | "threshold";
+  texture?: boolean;
+  unwrap?: "xatlas" | "box";
+  remesh_band?: number;
+  decimation?: number;
+  atlas_size?: 0 | 512 | 1024 | 2048 | 4096;
+  texture_resolution?: 0 | 512 | 1024;
 }
 
 export interface WorkerCommand {

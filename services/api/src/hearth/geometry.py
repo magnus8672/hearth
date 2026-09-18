@@ -77,10 +77,14 @@ def generate(request: Request, data: CreateGeometry):
         if previous:
             if previous['deleted_at']:
                 raise HTTPException(410, 'This model was deleted. Start a new request.')
-            if previous['target_id'] != data.target_id or previous['request'] != payload:
+            if previous['target_id'] != data.target_id or GeometryGeneration.model_validate(previous['request']).model_dump(mode='json') != payload:
                 raise HTTPException(409, 'This request identifier was already used.')
             return {'id': data.request.id, 'status': previous['status']}
         target = target_record(db, data.target_id, lock=True)
+        try:
+            data.request.check_tuning(target['profile'].get('tuning'))
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from None
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:owner,7))'), {'owner': str(principal.id)})
         if db.execute(text('SELECT count(*) FROM geometry_jobs WHERE deleted_at IS NULL')).scalar_one() >= 50:
             raise HTTPException(409, 'Delete a saved model before adding more. This build supports 50 per workspace.')

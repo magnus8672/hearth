@@ -1,0 +1,282 @@
+{
+  "date": "2026-09-18",
+  "scope": "Provider-specific geometry tuning UI, durable requests, typed adapter execution and saved settings",
+  "controls": {
+    "trellis": 10,
+    "hunyuan": 20,
+    "defaults": "Preserve the existing working profiles; schema-generated UI defaults and bounds"
+  },
+  "validation": {
+    "isolated_vm_backend": {
+      "passed": 54,
+      "includes": "Geometry catalog and permissions, nondefault settings through queue, rejection, nested receipt mismatch, legacy wire compatibility, cancellation process groups, account/PostgreSQL and conversation queue regressions"
+    },
+    "mixed_owner_settings_followup": {
+      "passed": 4,
+      "overlaps_backend_total": true
+    },
+    "deployed_browser": {
+      "passed": 8,
+      "skipped": 1,
+      "boundary": "Synthetic session/API on the live VM origin with deployed assets; provider switching, defaults/reset, submission, saved settings, image handoff, mobile width"
+    },
+    "real_glb_browser": {
+      "passed": 1,
+      "boundary": "Actual tuned Hunyuan GLB rendered with synthetic catalog/session"
+    },
+    "go_shared_contract_fixtures": {
+      "passed": 200,
+      "host": "Existing head VM, Linux AMD64"
+    },
+    "typescript": "passed",
+    "production_builds": "passed",
+    "ruff": "passed",
+    "https_readiness": "Both public BFF readiness endpoints passed with certificate validation"
+  },
+  "real_provider_runs": [
+    {
+      "backend": "hunyuan",
+      "elapsed_seconds": 76.8,
+      "receipt": {
+        "schema_version": 1,
+        "id": "3ff6fadd-8da5-4471-8c0a-3d2c9cfb6057",
+        "model": "hunyuan3d/2.0",
+        "image_sha256": "b5eef819ecb95aafce304df38a071ccafc3fa20fe96d856be5efbdc53b662c60",
+        "seed": 42,
+        "resolution": 512,
+        "trellis": null,
+        "hunyuan": {
+          "steps": 24,
+          "guidance": 5.0,
+          "octree_resolution": 256,
+          "chunks": 4000,
+          "surface_level": 0.0,
+          "bounds": 1.01,
+          "remove_background": true,
+          "remove_floaters": true,
+          "remove_degenerate": true,
+          "max_faces": 20000,
+          "texture": true,
+          "paint_steps": 16,
+          "paint_guidance": 7.0,
+          "paint_seed": 42,
+          "texture_size": 1024,
+          "render_size": 1024,
+          "bake_exp": 3.0,
+          "delight": true,
+          "delight_image_guidance": 1.5,
+          "delight_text_guidance": 1.0
+        },
+        "state": "completed",
+        "progress": 100,
+        "reason": null,
+        "sha256": "d91f0cfdb080c0f6c2bf44cd04c2cdf3d97f2be90a22be088fda91928238f0f0",
+        "execution_released": true,
+        "manifest_sha256": "9c4cb11c5922c880547f663f4fca8c28cd5fe8595390525784143fdf8ac4e048",
+        "cancel_requested": false
+      },
+      "metadata": {
+        "triangles": 20000,
+        "textures": 1,
+        "bytes": 1041604,
+        "format": "glb"
+      },
+      "qualification": "hunyuan",
+      "private_input_and_intermediates_removed": true,
+      "verified_embedded_texture_dimensions": [
+        [
+          1024,
+          1024
+        ]
+      ]
+    },
+    {
+      "backend": "trellis",
+      "elapsed_seconds": 26.67,
+      "receipt": {
+        "schema_version": 1,
+        "id": "7cd0361b-c383-4e43-9bea-3f243f350bde",
+        "model": "trellis2/q8",
+        "image_sha256": "b5eef819ecb95aafce304df38a071ccafc3fa20fe96d856be5efbdc53b662c60",
+        "seed": 42,
+        "resolution": 512,
+        "trellis": {
+          "sparse_guidance": 6.0,
+          "shape_guidance": 6.0,
+          "max_tokens": 49152,
+          "background": "auto",
+          "texture": true,
+          "unwrap": "box",
+          "remesh_band": 0,
+          "decimation": -1,
+          "atlas_size": 512,
+          "texture_resolution": 0
+        },
+        "hunyuan": null,
+        "state": "completed",
+        "progress": 100,
+        "reason": null,
+        "sha256": "f58822070413a90a0494ddd0a428d5bcf5c05f03613c925ef9e35b83257f2ddf",
+        "execution_released": true,
+        "manifest_sha256": "12b940a975a1df56eab6876fe3ac95a59e252684f36138b8c90cc45b7081e11a",
+        "cancel_requested": false
+      },
+      "metadata": {
+        "triangles": 143342,
+        "textures": 2,
+        "bytes": 4355960,
+        "format": "glb"
+      },
+      "qualification": "trellis",
+      "private_input_and_intermediates_removed": true,
+      "verified_embedded_texture_dimensions": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ]
+    },
+    {
+      "backend": "hunyuan",
+      "elapsed_seconds": 24.82,
+      "receipt": {
+        "schema_version": 1,
+        "id": "c9d1e57c-a001-43b8-9c4d-1bcdd46fdf0d",
+        "model": "hunyuan3d/2.0",
+        "image_sha256": "b5eef819ecb95aafce304df38a071ccafc3fa20fe96d856be5efbdc53b662c60",
+        "seed": 42,
+        "resolution": 512,
+        "trellis": null,
+        "hunyuan": {
+          "steps": 8,
+          "guidance": 5.5,
+          "octree_resolution": 128,
+          "chunks": 8000,
+          "surface_level": 0.0,
+          "bounds": 1.01,
+          "remove_background": true,
+          "remove_floaters": false,
+          "remove_degenerate": false,
+          "max_faces": 5000,
+          "texture": false,
+          "paint_steps": 30,
+          "paint_guidance": 7.5,
+          "paint_seed": 0,
+          "texture_size": 2048,
+          "render_size": 2048,
+          "bake_exp": 4.0,
+          "delight": true,
+          "delight_image_guidance": 1.5,
+          "delight_text_guidance": 1.0
+        },
+        "state": "completed",
+        "progress": 100,
+        "reason": null,
+        "sha256": "0a4119326b46006c4eb17bb70160b97aad4529186c87f04da8c54209fcf2da3b",
+        "execution_released": true,
+        "manifest_sha256": "9c4cb11c5922c880547f663f4fca8c28cd5fe8595390525784143fdf8ac4e048",
+        "cancel_requested": false
+      },
+      "metadata": {
+        "triangles": 1160,
+        "textures": 0,
+        "bytes": 21760,
+        "format": "glb"
+      },
+      "qualification": "hunyuan-shape",
+      "private_input_and_intermediates_removed": true
+    },
+    {
+      "backend": "trellis",
+      "elapsed_seconds": 24.12,
+      "receipt": {
+        "schema_version": 1,
+        "id": "535f20f8-211d-46fe-8bbf-b16eef18510c",
+        "model": "trellis2/q8",
+        "image_sha256": "b5eef819ecb95aafce304df38a071ccafc3fa20fe96d856be5efbdc53b662c60",
+        "seed": 42,
+        "resolution": 512,
+        "trellis": {
+          "sparse_guidance": 7.5,
+          "shape_guidance": 7.5,
+          "max_tokens": 49152,
+          "background": "auto",
+          "texture": false,
+          "unwrap": "xatlas",
+          "remesh_band": 0,
+          "decimation": -1,
+          "atlas_size": 0,
+          "texture_resolution": 0
+        },
+        "hunyuan": null,
+        "state": "completed",
+        "progress": 100,
+        "reason": null,
+        "sha256": "478899104086e677e9f17b69096b350796ac5b5b2cc09fb10b0a8c529f0d6f9f",
+        "execution_released": true,
+        "manifest_sha256": "12b940a975a1df56eab6876fe3ac95a59e252684f36138b8c90cc45b7081e11a",
+        "cancel_requested": false
+      },
+      "metadata": {
+        "triangles": 322088,
+        "textures": 0,
+        "bytes": 5798432,
+        "format": "glb"
+      },
+      "qualification": "trellis-shape",
+      "private_input_and_intermediates_removed": true
+    }
+  ],
+  "deployment": {
+    "head": "10.20.30.10",
+    "worker": "10.20.30.20",
+    "backup": "/opt/hearth/.hearth/before-geometry-tuning-20260918T165442Z",
+    "recipe_sha256": "4d02968202d30ddf9aede9282f550f17fa036e55009df92e7c815ff2b22067f1",
+    "lifecycle": "Idle check, backup, requested unload, confirmed stopped revision, supervisor stop, signed closure update for both adapters, restart and actual generation requalification",
+    "database_migration": "None; 0026 retained"
+  },
+  "final_snapshot": {
+    "geometry_targets": [
+      {
+        "model_id": "hunyuan3d/2.0",
+        "state": "ready",
+        "revision": 7,
+        "tuning": "hunyuan-v1"
+      },
+      {
+        "model_id": "trellis2/q8",
+        "state": "ready",
+        "revision": 4,
+        "tuning": "trellis-v1"
+      }
+    ],
+    "workers": [
+      {
+        "state": "ready",
+        "paused": false,
+        "policy": "shared",
+        "revision": 68,
+        "observed_revision": 68,
+        "desired_service": "hunyuan",
+        "ready_service": "hunyuan",
+        "active_run_id": null
+      }
+    ],
+    "migration": [
+      {
+        "version_num": "0026"
+      }
+    ]
+  },
+  "limitations": [
+    "Individual real runs are not a quality benchmark or sustained multi-user load test.",
+    "Maximum-setting memory fit and every combination of controls are not qualified.",
+    "Hardware/offload, camera layout, model checkpoints and debug/export-server options remain fixed by the approved runtime.",
+    "Release gates remain 20 partial, 41 not run, zero fully passed."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}
