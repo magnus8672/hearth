@@ -4,7 +4,9 @@ Implemented on the existing head and media-worker, 17 September 2026. The select
 
 ## Try it
 
-Open **3D models** in the workspace. Upload a still PNG, JPEG or WebP of one clearly visible object, choose Standard (512) or Detailed (1024), and select **Create 3D model**. Alternatively, choose **Make 3D model** on a completed private gallery image. The reference is normalized and stripped of metadata before dispatch.
+Open **3D models** in the workspace. Upload a still PNG, JPEG or WebP of one clearly visible object, choose Standard (512) or Detailed (1024), and select **Create 3D model**. Alternatively, choose **Make a model** beside a completed image in the gallery, private chat or a joined channel. The 3D form opens with that image selected and previewed. Choose the detail and select **Create 3D model** to start work; opening the form alone never generates a model.
+
+Saved-image handoff uses the existing authorized image endpoint and prepares a JPEG reference copy with a maximum 1600-pixel edge. This includes 4K PNGs larger than the manual upload limit; the saved original is unchanged. Only a source kind and image UUID appear in the link, never arbitrary URLs or image data. Unavailable images leave generation disabled. A channel image produces a model in the requesting member's private workspace, not a shared channel artifact. Browser qualification is recorded in [handoff evidence](../../evidence/geometry/2026-09-18/image-handoff.json).
 
 Reference files may be up to 8 MiB. Both Caddy templates and the BFF permit a 12,100,000-byte JSON envelope for `POST /api/v1/geometry`, including base64 overhead; ordinary requests retain their 1 MiB limit. An upload regression originally left the edge at 1 MiB, producing an empty HTTP 413 that the UI misreported as a JSON parse error. The corrected client preserves structured API errors and supplies readable messages for empty or non-JSON failures. [Upload correction evidence](../../evidence/geometry/2026-09-18/upload-fix.json) includes real edge boundary checks, a large valid PNG through the BFF, and browser error fixtures.
 

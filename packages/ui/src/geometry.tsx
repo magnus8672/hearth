@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { api, mutation, type Identity } from './api';
+import { geometryReference, prepareGeometryReference } from './geometry-reference';
 const Preview = lazy(() => import('./geometry-preview'));
 type Target = { id: string; name: string; model_id: string; state: string; profile: { resolutions?: number[] } };
 type Job = { id: string; status: string; reason: string | null; cancel_requested: boolean; request: { model: string; resolution: number; seed: number }; metadata: { triangles: number; textures: number; bytes: number } | null };
@@ -9,6 +10,8 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
   const [jobs, setJobs] = useState<Job[]>([]); const [file, setFile] = useState<File | null>(null);
   const [resolution, setResolution] = useState(512); const [seed, setSeed] = useState('');
   const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [preview, setPreview] = useState('');
+  const [source, setSource] = useState(() => geometryReference(window.location.hash));
+  const [sourceLoading, setSourceLoading] = useState(false); const [referenceUrl, setReferenceUrl] = useState('');
   const target = targets.find(item => item.id === targetId);
   const waiting = jobs.filter(item => ['queued', 'running'].includes(item.status)).length;
   async function refresh() { const result = await api<{ items: Job[] }>('/api/v1/geometry'); setJobs(result.items); }
@@ -16,16 +19,35 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
     api<{ items: Target[] }>('/api/v1/geometry-targets').then(result => { setTargets(result.items); setTarget(result.items.find(item => item.state === 'ready')?.id || ''); }).catch(reason => setError(reason.message));
     void refresh().catch(reason => setError(reason.message));
     const timer = window.setInterval(() => { void refresh().catch(reason => setError(reason.message)); }, 2000);
-    const source = window.location.hash.split('/')[1];
-    if (source && /^[0-9a-f-]{36}$/.test(source)) fetch(`/api/v1/images/${source}/image`, { credentials: 'same-origin', cache: 'no-store' }).then(async response => {
-      if (!response.ok) throw new Error('The source image is no longer available.');
-      setFile(new File([await response.blob()], 'Your hearth image.png', { type: 'image/png' }));
-    }).catch(reason => setError(reason.message));
     return () => window.clearInterval(timer);
   }, []);
+  useEffect(() => {
+    const changed = () => setSource(geometryReference(window.location.hash));
+    window.addEventListener('hashchange', changed); window.addEventListener('popstate', changed);
+    return () => { window.removeEventListener('hashchange', changed); window.removeEventListener('popstate', changed); };
+  }, []);
+  useEffect(() => {
+    if (!source) { setSourceLoading(false); return; }
+    const controller = new AbortController(); let disposed = false;
+    const [kind, id] = source.split('/');
+    setFile(null); setError(''); setSourceLoading(true);
+    fetch(`/api/v1/${kind === 'conversation' ? 'conversation-images' : 'images'}/${id}/image`, { credentials: 'same-origin', cache: 'no-store', signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error('The selected image is no longer available to you. Choose another reference.');
+        return prepareGeometryReference(await response.blob());
+      }).then(reference => { if (!disposed) setFile(reference); })
+      .catch(reason => { if (!disposed) setError(reason.message || 'The selected image could not be opened.'); })
+      .finally(() => { if (!disposed) setSourceLoading(false); });
+    return () => { disposed = true; controller.abort(); };
+  }, [source]);
+  useEffect(() => {
+    if (!file) { setReferenceUrl(''); return; }
+    const url = URL.createObjectURL(file); setReferenceUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
   useEffect(() => { onDirty(!!file); return () => onDirty(false); }, [file, onDirty]);
   async function generate() {
-    if (!file || !target || busy) return;
+    if (!file || !target || busy || sourceLoading) return;
     setBusy(true); setError('');
     try {
       if (file.size > 8 * 1024 * 1024) throw new Error('Choose an image smaller than 8 MB.');
@@ -47,12 +69,15 @@ export function Geometry({ identity, onDirty }: { identity: Identity; onDirty: (
     <div className="geometry-layout"><section className="panel"><h2>Give an image a new dimension.</h2><form className="image-form" onSubmit={event => { event.preventDefault(); void generate(); }}>
       <label>3D model provider<select value={targetId} onChange={event => setTarget(event.target.value)} required><option value="">Choose a verified provider</option>{targets.map(item => <option key={item.id} value={item.id} disabled={item.state !== 'ready'}>{item.name} · {item.model_id}</option>)}</select></label>
       {!targets.length && <p className="small-copy">Ask your administrator to connect and verify a geometry provider.</p>}
-      <label>Reference image<input key={file?.name || 'unselected'} type="file" accept="image/png,image/jpeg,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} disabled={busy} /></label>
+      <label>Reference image<input key={file?.name || 'unselected'} type="file" accept="image/png,image/jpeg,image/webp" onChange={event => setFile(event.target.files?.[0] || null)} disabled={busy || sourceLoading} /></label>
+      {sourceLoading && <p role="status">Preparing your selected image…</p>}
+      {referenceUrl && <img className="geometry-reference" src={referenceUrl} alt="Reference for your 3D model" />}
       {file && <p>{file.name} · {(file.size / 1024 / 1024).toFixed(1)} MB</p>}
+      {source && file && <p className="small-copy">Your selected image is ready. The original stays unchanged; this model will be saved privately to your workspace.</p>}
       <label>Geometry detail<select value={resolution} onChange={event => setResolution(Number(event.target.value))}>{(target?.profile.resolutions || [512]).map(value => <option key={value} value={value}>{value === 512 ? 'Standard · 512' : 'Detailed · 1024'}</option>)}</select></label>
       <p className="small-copy">Higher detail needs more GPU memory and time. Jobs share the GPU queue with image generation. The finished GLB includes its textures.</p>
       <label>Seed <span className="muted">optional</span><input type="number" min="0" max="2147483647" step="1" placeholder="Choose one for me" value={seed} onChange={event => setSeed(event.target.value)} /></label>
-      <button className="primary-button" disabled={busy || !file || !target || waiting >= 8}>{busy ? 'Adding to queue…' : 'Create 3D model'}</button>
+      <button className="primary-button" disabled={busy || sourceLoading || !file || !target || waiting >= 8}>{busy ? 'Adding to queue…' : 'Create 3D model'}</button>
     </form></section><section><div className="section-heading"><h2>Your models</h2><span>{waiting ? `${waiting} waiting or running` : 'Private to you'}</span></div>
       {!jobs.length && <div className="panel"><p>Your finished models will appear here.</p></div>}
       {jobs.map(job => <article className="panel geometry-card" key={job.id}><div className="section-heading"><strong>{job.request.model}</strong><span>{job.status}</span></div><p className="small-copy">Detail {job.request.resolution} · seed {job.request.seed}</p>

@@ -1,0 +1,32 @@
+{
+  "scope": "Generated-image buttons and preselected image-to-3D form",
+  "deployed_origin": "https://hearth.example.invalid",
+  "backend_changes": false,
+  "behavior": [
+    "Make a model links on completed gallery, private chat and joined-channel images",
+    "Reference preview, loading and unavailable-source states",
+    "Saved images prepared as JPEG copies up to 1600 pixels, preserving originals",
+    "Only fixed same-origin image endpoints and UUID references are used",
+    "Unsent writing confirmation and no inference before Create 3D model",
+    "The resulting model is private even when its source was visible in a channel"
+  ],
+  "verification": {
+    "typescript_typecheck": "passed",
+    "production_bundles": "passed",
+    "new_browser_cases": 3,
+    "existing_browser_cases": 5,
+    "source_sizes": "The gallery fixture is an original 4096x768 PNG exceeding 8 MiB; the other source images are small generated fixtures.",
+    "assertions": [
+      "Gallery, chat and channel buttons open the expected 3D route",
+      "Prepared references are JPEGs below the upload limit with matching SHA-256 and CSRF header",
+      "The large reference is resized to 1600 pixels wide",
+      "No generation request occurs merely by navigating",
+      "Dismissing the unsent-message confirmation preserves the chat draft",
+      "An unavailable source disables generation instead of reusing the previous image",
+      "Mobile layout has no horizontal overflow"
+    ],
+    "browser_mode": "Deployed production bundle over validated HTTPS, with explicit API fixtures. Existing opt-in live edge boundary probe also passes."
+  },
+  "limitations": "No user images or live inference were used for these UI fixtures. Existing owner/channel authorization and geometry execution are unchanged. Natural-language 3D requests and shared model artifacts are not implemented here.",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}
