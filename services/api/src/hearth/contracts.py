@@ -407,6 +407,35 @@ class GeometryRequest(WireModel):
         return self
 
 
+class GeometryGeneration(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    image_sha256: Digest
+    seed: Annotated[StrictInt, Field(ge=0, le=2147483647)] = 42
+    resolution: Literal[512, 1024] = 512
+
+
+class GeometryReceipt(GeometryGeneration):
+    state: Literal['queued', 'running', 'completed', 'cancelled', 'failed', 'interrupted']
+    progress: Annotated[StrictInt, Field(ge=0, le=100)]
+    reason: Annotated[str, Field(max_length=500)] | None = None
+    sha256: Digest | None = None
+    execution_released: StrictBool
+    manifest_sha256: Digest
+    cancel_requested: StrictBool
+
+
+class GeometryProviderInfo(WireModel):
+    protocol: Literal['hearth.geometry.v1']
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=200)]
+    manifest_sha256: Digest
+    offline: StrictBool
+    job_cancellation: StrictBool
+    resolutions: list[Literal[512, 1024]] = Field(min_length=1, max_length=2)
+    output_format: Literal['glb'] = 'glb'
+
+
 class ImageOptions(WireModel):
     resolution: Literal['native', '2k', '4k'] = 'native'
     styles: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = Field(default=None, max_length=8)

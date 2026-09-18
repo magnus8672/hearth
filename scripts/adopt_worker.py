@@ -39,7 +39,7 @@ def write(path, content):
         output.write(content if isinstance(content, bytes) else content.encode())
 
 
-def prepare(inventory, output, state):
+def prepare(inventory, output, state, existing_bundle=None):
     values = json.loads((state / 'config.json').read_text())
     farm, pool = UUID(values['HEARTH_FARM_ID']), UUID(inventory['pool_id'])
     name = inventory['name']
@@ -71,6 +71,12 @@ def prepare(inventory, output, state):
         approved[key] = service
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     node, token = uuid4(), secrets.token_hex(32)
+    if existing_bundle:
+        previous = json.loads((existing_bundle / 'config.json').read_text())
+        node = UUID(previous['worker_id'])
+        token = (existing_bundle / 'worker.key').read_text().strip()
+        if not re.fullmatch('[a-f0-9]{64}', token):
+            raise ValueError('Invalid existing worker credential.')
     signing = state / 'worker-recipe-signing.pem'
     if not signing.exists():
         result = subprocess.run(['openssl', 'genpkey', '-algorithm', 'ED25519'], capture_output=True, check=True)
@@ -96,7 +102,22 @@ def prepare(inventory, output, state):
     write(output / 'config.json', json.dumps(config, indent=2))
     # Locked, fail-closed adoption. An already managed or occupied group must
     # be reviewed manually, never silently replaced by another worker identity.
-    sql(f"""BEGIN;
+    if existing_bundle:
+        sql(f"""BEGIN;
+          SELECT id FROM provider_pools WHERE id={quote(pool)} AND farm_id={quote(farm)} FOR UPDATE;
+          DO $$ BEGIN IF NOT EXISTS(SELECT 1 FROM managed_workers w JOIN provider_pools p ON p.id=w.pool_id
+            WHERE w.id={quote(node)} AND w.farm_id={quote(farm)} AND w.pool_id={quote(pool)} AND w.paused
+            AND w.desired_service IS NULL AND w.state='stopped' AND w.observed_revision=w.revision
+            AND w.seen_at<now()-interval '30 seconds' AND p.active_run_id IS NULL
+            AND w.token_hash={quote(hashlib.sha256(token.encode()).hexdigest())})
+          THEN RAISE EXCEPTION 'Pause and unload the idle worker, then stop its supervisor for thirty seconds before updating its approved recipe'; END IF; END $$;
+          UPDATE managed_workers SET name={quote(name)},recipe_digest={quote(hashlib.sha256(payload).hexdigest())},
+            services={quote(json.dumps(public))}::jsonb,revision=revision+1,boot_id=NULL,sequence=0,seen_at=NULL,
+            state='offline',ready_service=NULL,reason='' WHERE id={quote(node)};
+          INSERT INTO audit_events(id,farm_id,action,safe_metadata) VALUES(gen_random_uuid(),{quote(farm)},'worker.console_recipe_updated',jsonb_build_object('worker_id',{quote(node)}));
+          COMMIT;""")
+    else:
+        sql(f"""BEGIN;
       SELECT id FROM provider_pools WHERE id={quote(pool)} AND farm_id={quote(farm)} FOR UPDATE;
       DO $$ BEGIN IF NOT EXISTS(SELECT 1 FROM provider_pools WHERE id={quote(pool)} AND farm_id={quote(farm)} AND active_run_id IS NULL)
       OR EXISTS(SELECT 1 FROM managed_workers WHERE pool_id={quote(pool)}) THEN RAISE EXCEPTION 'GPU group occupied or already managed'; END IF; END $$;
@@ -112,10 +133,11 @@ def main():
     parser.add_argument('--inventory', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--state', type=Path, default=ROOT / '.hearth/head')
+    parser.add_argument('--existing-bundle', type=Path, help='Update a stopped, paused worker using its private original bundle.')
     args = parser.parse_args()
     if os.geteuid() != 0:
         raise SystemExit('Run this operator setup tool as root on the head.')
-    prepare(json.loads(args.inventory.read_text()), args.output, args.state)
+    prepare(json.loads(args.inventory.read_text()), args.output, args.state, args.existing_bundle)
 
 
 if __name__ == '__main__':

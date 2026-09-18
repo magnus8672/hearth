@@ -1,6 +1,6 @@
 # Managed Linux services and GPU queues
 
-Implemented 18 September 2026. The first native Go worker can adopt approved, already installed systemd services. media-worker (`10.20.30.20`) is connected to the existing head (`10.20.30.10`) and manages Fooocus. TRELLIS and a 3D artifact adapter are not installed yet.
+Implemented 18 September 2026. The first native Go worker can adopt approved, already installed systemd services. media-worker (`10.20.30.20`) is connected to the existing head (`10.20.30.10`) and manages Fooocus. [TRELLIS and the geometry adapter](LOCAL_GEOMETRY.md) now share its GPU through explicit shared mode.
 
 ## Try it
 
@@ -20,7 +20,7 @@ PostgreSQL migration `0023` adds content-free queue metadata and operator-adopte
 
 Queued requests survive head restarts. A claimed or dispatched request is never automatically replayed. Lost execution holds the existing pool reservation; expiration diagnoses interruption, not proof that GPU work stopped. The provider's confirmed cancellation/release receipt or the existing explicit recovery workflow releases execution capacity. Queued cancellation is immediate; running cancellation waits for the provider. Idempotent requests retain their original IDs and deletion tombstones.
 
-The first durable queue covers **private gallery generation**. Chat/channel image batches, text, speech, transcription and client API requests still use their existing busy/admission behavior. All existing callers respect an adopted worker's pause, freshness and service readiness before taking its pool. Moving a managed provider to an unrelated group is rejected. This is not yet a universal task scheduler.
+The durable queue covers **private image and geometry galleries**. Chat/channel image batches, text, speech, transcription and client API requests still use their existing busy/admission behavior. All existing callers respect an adopted worker's pause, freshness and service readiness before taking its pool. Moving a managed provider to an unrelated group is rejected. This is not yet a universal task scheduler.
 
 Each worker controls one resource group with up to sixteen approved service definitions. A service may back multiple model targets on its registered provider connection. The worker does not assume Fooocus internals: its local recipe names an exact unit, approved file hashes, an authenticated loopback health endpoint, and an expected response field. Future model drivers can use the same lifecycle boundary with their own typed job/artifact protocols.
 
@@ -58,4 +58,4 @@ media-worker uses `/etc/hearth-worker`, `/var/lib/hearth-worker` and `hearth-wor
 - A separate real GPU integration test passed using isolated database storage: two queued 1024 × 1024 PNGs completed sequentially, a third was cancelled before dispatch, and no two jobs were observed running together. Existing user galleries were not used as test storage.
 - [Real lifecycle evidence](../../evidence/workers/2026-09-18/lifecycle.json): authenticated outbound control unloaded Fooocus in 5.36 seconds, GPU use fell from 8,328 MiB to 651 MiB, and API readiness returned in 17.64 seconds. These are single observations, not benchmarks. The queue was resumed after qualification.
 
-Multi-engine switching has native fixture coverage only. Actual Fooocus-to-TRELLIS switching, 3D outputs/previews, multiple managed physical workers, sustained load, process/host power-loss recovery, signed distribution, automatic installation, full enrollment/mTLS, certificate lifecycle, automatic GPU fit checks and unified queues for other capabilities remain unqualified or unfinished. No full release gate is closed.
+Actual approved Fooocus/TRELLIS selection and textured GLB output now pass; mixed queued switching has database fixture coverage. Multiple managed physical workers, sustained load, process/host power-loss recovery, signed distribution, automatic installation, full enrollment/mTLS, certificate lifecycle, automatic GPU fit checks and unified queues for other capabilities remain unqualified or unfinished. No full release gate is closed.

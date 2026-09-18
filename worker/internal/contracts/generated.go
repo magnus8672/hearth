@@ -195,6 +195,43 @@ type ExternalProviderConnection struct {
 	CredentialConfigured bool   `json:"credential_configured"`
 }
 
+type GeometryGeneration struct {
+	SchemaVersion int64  `json:"schema_version"`
+	Id            string `json:"id"`
+	Model         string `json:"model"`
+	ImageSha256   string `json:"image_sha256"`
+	Seed          int64  `json:"seed"`
+	Resolution    int64  `json:"resolution"`
+}
+
+type GeometryProviderInfo struct {
+	SchemaVersion   int64   `json:"schema_version"`
+	Protocol        string  `json:"protocol"`
+	Model           string  `json:"model"`
+	ModelRevision   string  `json:"model_revision"`
+	ManifestSha256  string  `json:"manifest_sha256"`
+	Offline         bool    `json:"offline"`
+	JobCancellation bool    `json:"job_cancellation"`
+	Resolutions     []int64 `json:"resolutions"`
+	OutputFormat    string  `json:"output_format"`
+}
+
+type GeometryReceipt struct {
+	SchemaVersion     int64   `json:"schema_version"`
+	Id                string  `json:"id"`
+	Model             string  `json:"model"`
+	ImageSha256       string  `json:"image_sha256"`
+	Seed              int64   `json:"seed"`
+	Resolution        int64   `json:"resolution"`
+	State             string  `json:"state"`
+	Progress          int64   `json:"progress"`
+	Reason            *string `json:"reason"`
+	Sha256            *string `json:"sha256"`
+	ExecutionReleased bool    `json:"execution_released"`
+	ManifestSha256    string  `json:"manifest_sha256"`
+	CancelRequested   bool    `json:"cancel_requested"`
+}
+
 type GeometryRequest struct {
 	SchemaVersion      int64   `json:"schema_version"`
 	Prompt             *string `json:"prompt"`

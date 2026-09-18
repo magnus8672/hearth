@@ -1171,7 +1171,8 @@
               "openai.chat.v1",
               "hearth.image.v1",
               "hearth.speech.v1",
-              "hearth.transcription.v1"
+              "hearth.transcription.v1",
+              "hearth.geometry.v1"
             ],
             "title": "Protocol",
             "type": "string"
@@ -1362,6 +1363,31 @@
           "name"
         ],
         "title": "CreateChannel",
+        "type": "object"
+      },
+      "CreateGeometry": {
+        "additionalProperties": false,
+        "properties": {
+          "image": {
+            "maxLength": 12000000,
+            "title": "Image",
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/components/schemas/GeometryGeneration"
+          },
+          "target_id": {
+            "format": "uuid",
+            "title": "Target Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request",
+          "target_id",
+          "image"
+        ],
+        "title": "CreateGeometry",
         "type": "object"
       },
       "CreateImage": {
@@ -1855,6 +1881,239 @@
           "base_url"
         ],
         "title": "ExternalProviderConnection",
+        "type": "object"
+      },
+      "GeometryGeneration": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "image_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Image Sha256",
+            "type": "string"
+          },
+          "model": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Model",
+            "type": "string"
+          },
+          "resolution": {
+            "default": 512,
+            "enum": [
+              512,
+              1024
+            ],
+            "title": "Resolution",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "seed": {
+            "default": 42,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "Seed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "image_sha256"
+        ],
+        "title": "GeometryGeneration",
+        "type": "object"
+      },
+      "GeometryProviderInfo": {
+        "additionalProperties": false,
+        "properties": {
+          "job_cancellation": {
+            "title": "Job Cancellation",
+            "type": "boolean"
+          },
+          "manifest_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Manifest Sha256",
+            "type": "string"
+          },
+          "model": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Model",
+            "type": "string"
+          },
+          "model_revision": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Model Revision",
+            "type": "string"
+          },
+          "offline": {
+            "title": "Offline",
+            "type": "boolean"
+          },
+          "output_format": {
+            "const": "glb",
+            "default": "glb",
+            "title": "Output Format",
+            "type": "string"
+          },
+          "protocol": {
+            "const": "hearth.geometry.v1",
+            "title": "Protocol",
+            "type": "string"
+          },
+          "resolutions": {
+            "items": {
+              "enum": [
+                512,
+                1024
+              ],
+              "type": "integer"
+            },
+            "maxItems": 2,
+            "minItems": 1,
+            "title": "Resolutions",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "protocol",
+          "model",
+          "model_revision",
+          "manifest_sha256",
+          "offline",
+          "job_cancellation",
+          "resolutions"
+        ],
+        "title": "GeometryProviderInfo",
+        "type": "object"
+      },
+      "GeometryReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "cancel_requested": {
+            "title": "Cancel Requested",
+            "type": "boolean"
+          },
+          "execution_released": {
+            "title": "Execution Released",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "image_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Image Sha256",
+            "type": "string"
+          },
+          "manifest_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Manifest Sha256",
+            "type": "string"
+          },
+          "model": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Model",
+            "type": "string"
+          },
+          "progress": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Progress",
+            "type": "integer"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason"
+          },
+          "resolution": {
+            "default": 512,
+            "enum": [
+              512,
+              1024
+            ],
+            "title": "Resolution",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "seed": {
+            "default": 42,
+            "maximum": 2147483647,
+            "minimum": 0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Sha256"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "cancelled",
+              "failed",
+              "interrupted"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "image_sha256",
+          "state",
+          "progress",
+          "execution_released",
+          "manifest_sha256",
+          "cancel_requested"
+        ],
+        "title": "GeometryReceipt",
         "type": "object"
       },
       "GeometryRequest": {
@@ -3497,7 +3756,8 @@
               "openai.chat.v1",
               "hearth.image.v1",
               "hearth.speech.v1",
-              "hearth.transcription.v1"
+              "hearth.transcription.v1",
+              "hearth.geometry.v1"
             ],
             "title": "Protocol",
             "type": "string"
@@ -6292,6 +6552,204 @@
         "summary": "Farm",
         "tags": [
           "administration"
+        ]
+      }
+    },
+    "/api/v1/geometry": {
+      "get": {
+        "operationId": "listing_api_v1_geometry_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Listing",
+        "tags": [
+          "geometry"
+        ]
+      },
+      "post": {
+        "operationId": "generate_api_v1_geometry_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGeometry"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Generate",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/api/v1/geometry-targets": {
+      "get": {
+        "operationId": "targets_api_v1_geometry_targets_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Targets",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/api/v1/geometry/{job_id}": {
+      "delete": {
+        "operationId": "delete_api_v1_geometry__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/api/v1/geometry/{job_id}/cancel": {
+      "post": {
+        "operationId": "cancel_api_v1_geometry__job_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/api/v1/geometry/{job_id}/model": {
+      "get": {
+        "operationId": "download_api_v1_geometry__job_id__model_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download",
+        "tags": [
+          "geometry"
         ]
       }
     },

@@ -21,6 +21,7 @@ from hearth.database import make_engine, verify_application_role
 from hearth.head_settings import router as head_settings_router
 from hearth.identity import router as identity_router
 from hearth.images import router as images_router
+from hearth.geometry import router as geometry_router
 from hearth.inference import ProviderError
 from hearth.memory import router as memory_router
 from hearth.middleware import BodyLimitMiddleware, request_body_limit
@@ -149,6 +150,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(notes_router)
     app.include_router(channels_router)
     app.include_router(images_router)
+    app.include_router(geometry_router)
     app.include_router(client_keys_router)
     app.include_router(client_api_router)
     app.include_router(toolbox_router)

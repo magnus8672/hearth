@@ -178,7 +178,7 @@ def test_durable_queue_cancel_quota_and_restart_resume(bff, monkeypatch):
             with scoped_session(app, uuid4(), settings.farm_id) as db:
                 assert db.execute(text("SELECT count(*) FROM image_jobs")).scalar_one() == 0
             with scoped_session(app, owner, uuid4()) as db:
-                assert db.execute(text("SELECT count(*) FROM image_queue")).scalar_one() == 0
+                assert db.execute(text("SELECT count(*) FROM capability_queue")).scalar_one() == 0
 
 
 def test_queue_waits_for_worker_and_fences_uncertain_execution(bff, monkeypatch):

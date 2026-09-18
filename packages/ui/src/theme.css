@@ -356,3 +356,10 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .head-fingerprint { overflow-wrap: anywhere; }
 .head-preview { border-top: 1px solid var(--hearth-border); padding-top: 1.5rem; }
 @media (max-width: 600px) { .head-addresses { grid-template-columns: 1fr; } }
+
+.geometry-layout { display: grid; grid-template-columns: minmax(280px, 400px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.geometry-layout form { display: grid; gap: 20px; }
+.geometry-card { margin-bottom: 20px; }
+.geometry-preview { width: 100%; height: 360px; background: var(--surface); border-radius: 16px; overflow: hidden; touch-action: none; }
+.geometry-preview canvas { width: 100%; height: 100%; display: block; }
+@media (max-width: 1000px) { .geometry-layout { grid-template-columns: 1fr; } }

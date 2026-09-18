@@ -1,6 +1,6 @@
 # ADR 0003: local geometry pipeline
 
-Status: selected qualification candidate, not an advertised deployment, 12 September 2026.
+Status: original candidate decision, 12 September 2026. The deployed engine selection is superseded by the 17 September [TRELLIS.2 implementation](../implementation/LOCAL_GEOMETRY.md). The pipeline and acceptance requirements below remain applicable.
 
 Local 3D and validated GLB output remain required scope. Select TripoSR as the first image-to-mesh qualification candidate at source revision `107cefdc244c39106fa830359024f6a2f1c78871`. Its upstream describes source and pretrained weights as MIT licensed and reports roughly 6 GB VRAM for default single-image inference. Those are upstream statements, not hearth performance results. [TripoSR repository](https://github.com/VAST-AI-Research/TripoSR).
 

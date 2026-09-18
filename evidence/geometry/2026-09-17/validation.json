@@ -1,0 +1,119 @@
+{
+  "scope": "Bounded managed TRELLIS.2 image-to-3D slice on the existing head and media-worker",
+  "head": "10.20.30.10",
+  "gpu_host": "10.20.30.20",
+  "runtime": {
+    "engine": "trellis.cpp v0.6.0",
+    "model": "trellis2/q8",
+    "gpu": "[redacted deployment detail]",
+    "vram_mib": "[redacted deployment detail]",
+    "inventory": "runtimes/geometry/inventory.json"
+  },
+  "native_measurements": [
+    {
+      "resolution": 512,
+      "seconds": 27.29,
+      "glb_bytes": 5364416,
+      "triangles": 144438,
+      "textures": 2
+    },
+    {
+      "resolution": 1024,
+      "seconds": 60.27,
+      "glb_bytes": 14253468,
+      "textures": 2
+    }
+  ],
+  "checks": {
+    "existing_focused_vm_tests": {
+      "passed": 69,
+      "skipped": 3,
+      "scope": "Image transport/jobs/deletion, worker queue/fairness/preparation, provider health, Postgres, Python shared contracts"
+    },
+    "geometry_security_and_database_tests": {
+      "passed": 5,
+      "scope": "GLB validation, native process cancellation/reap, owner isolation/idempotency/deletion, queued cancel/profile rejection, mixed image/geometry scheduling"
+    },
+    "real_geometry_bff_test": {
+      "passed": 1,
+      "seconds": 150.33,
+      "completed_glbs": 2,
+      "queued_cancel": true,
+      "active_cancel": true,
+      "gpu_reused_after_cancel": true,
+      "download_validated": true,
+      "head_artifact_deleted": true,
+      "database": "Temporary isolated Postgres database on the existing head, removed afterward"
+    },
+    "generated_wire_cases": {
+      "python_passed": 200,
+      "go_passed": 200,
+      "wire_contracts": 50,
+      "schema_definitions": 51
+    },
+    "browser_fixtures": {
+      "passed": 3,
+      "origin": "https://hearth.example.invalid",
+      "tls_validation": true,
+      "api_responses": "Explicit fixtures, not an authenticated user session",
+      "preview": "Actual generated GLB with embedded textures rendered from the deployed bundle",
+      "scope": "Upload/cancel/delete/preview, mobile overflow, worker controls, image queue controls"
+    },
+    "typescript_typecheck": "passed",
+    "production_bundles": "passed",
+    "live_signed_worker_switch": "TRELLIS ready, then Fooocus restored; queue admission resumed",
+    "migration": "0024 applied, existing account/image counts and saved image bytes unchanged; private database backup retained"
+  },
+  "final_state": {
+    "worker": {
+      "state": "ready",
+      "desired": "fooocus",
+      "ready": "fooocus",
+      "revision": 17,
+      "observed": 17,
+      "policy": "shared",
+      "paused": false,
+      "online": true,
+      "pool_idle": true
+    },
+    "geometry_target": {
+      "model": "trellis2/q8",
+      "state": "ready",
+      "revision": 2,
+      "resolutions": [
+        512,
+        1024
+      ],
+      "assigned": true
+    },
+    "services": {
+      "hearth-worker": "active",
+      "fooocus": "active",
+      "hearth-trellis": "inactive",
+      "worker_enabled": "enabled",
+      "unreleased_geometry_jobs": 0
+    },
+    "head_health": {
+      "api": {
+        "status": "ready",
+        "version": "0.1.0"
+      },
+      "user-api": {
+        "status": "ready",
+        "version": "0.1.0"
+      }
+    },
+    "migration": "0024"
+  },
+  "limitations": [
+    "Measurements use an original synthetic cube reference, not a broad asset quality benchmark.",
+    "Text/chat-to-3D chaining, independent editor import, physical scale, rigging and animation remain open.",
+    "Mixed image/geometry scheduling is fixture-qualified; sustained multi-user mixed live load remains open.",
+    "Shared GPU operation is explicitly selected for this machine; independently resident distributed specialists remain the default.",
+    "Console-approved adoption is not automatic enrollment or signed package distribution.",
+    "Reusable installer follows the deployed steps but has not had a second fresh-machine qualification.",
+    "Head deletion does not erase provider caches or backups.",
+    "No full P8, E19, A12 or other release gate is closed."
+  ],
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

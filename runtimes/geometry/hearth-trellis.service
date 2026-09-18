@@ -1,0 +1,26 @@
+[Unit]
+Description=hearth TRELLIS geometry provider
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+ExitType=cgroup
+User=operator
+Group=operator
+WorkingDirectory=/opt/hearth-trellis
+Environment=PYTHONPATH=/opt/hearth-trellis/app
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/hearth-trellis/.venv/bin/python /opt/hearth-trellis/app/hearth_geometry.py --config /var/lib/hearth-trellis/config.json
+KillMode=control-group
+TimeoutStopSec=20
+Restart=no
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/hearth-trellis
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+# The hearth worker starts this unit. Do not enable independent GPU startup.

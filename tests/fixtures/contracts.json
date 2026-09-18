@@ -1261,6 +1261,213 @@
     }
   },
   {
+    "name": "GeometryGeneration.valid",
+    "contract": "GeometryGeneration",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512
+    }
+  },
+  {
+    "name": "GeometryGeneration.unknown_authority",
+    "contract": "GeometryGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "GeometryGeneration.future_version",
+    "contract": "GeometryGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512
+    }
+  },
+  {
+    "name": "GeometryGeneration.boolean_version",
+    "contract": "GeometryGeneration",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512
+    }
+  },
+  {
+    "name": "GeometryProviderInfo.valid",
+    "contract": "GeometryProviderInfo",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.geometry.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "offline": true,
+      "job_cancellation": true,
+      "resolutions": [
+        512
+      ],
+      "output_format": "glb"
+    }
+  },
+  {
+    "name": "GeometryProviderInfo.unknown_authority",
+    "contract": "GeometryProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.geometry.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "offline": true,
+      "job_cancellation": true,
+      "resolutions": [
+        512
+      ],
+      "output_format": "glb",
+      "is_admin": true
+    }
+  },
+  {
+    "name": "GeometryProviderInfo.future_version",
+    "contract": "GeometryProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "protocol": "hearth.geometry.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "offline": true,
+      "job_cancellation": true,
+      "resolutions": [
+        512
+      ],
+      "output_format": "glb"
+    }
+  },
+  {
+    "name": "GeometryProviderInfo.boolean_version",
+    "contract": "GeometryProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "protocol": "hearth.geometry.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "offline": true,
+      "job_cancellation": true,
+      "resolutions": [
+        512
+      ],
+      "output_format": "glb"
+    }
+  },
+  {
+    "name": "GeometryReceipt.valid",
+    "contract": "GeometryReceipt",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512,
+      "state": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "GeometryReceipt.unknown_authority",
+    "contract": "GeometryReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512,
+      "state": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "GeometryReceipt.future_version",
+    "contract": "GeometryReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512,
+      "state": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
+    "name": "GeometryReceipt.boolean_version",
+    "contract": "GeometryReceipt",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "seed": 42,
+      "resolution": 512,
+      "state": "queued",
+      "progress": 0,
+      "reason": null,
+      "sha256": null,
+      "execution_released": true,
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "cancel_requested": true
+    }
+  },
+  {
     "name": "GeometryRequest.valid",
     "contract": "GeometryRequest",
     "valid": true,

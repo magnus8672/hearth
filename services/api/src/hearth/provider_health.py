@@ -9,7 +9,7 @@ from uuid import UUID
 
 from sqlalchemy import text
 
-from hearth import image_transport, speech_transport, transcription_transport
+from hearth import geometry_transport, image_transport, speech_transport, transcription_transport
 from hearth.database import scoped_session
 from hearth.inference import ProviderError, list_models, require_loaded_model
 from hearth.providers import credential_for, target_record, transport_settings
@@ -37,7 +37,7 @@ def check_connection(target, settings):
             raise ProviderError('The saved model is not listed on this server. Check the model server and verify again.')
         require_loaded_model(target['base_url'], key, target['model_id'], transport)
     else:
-        adapter = {'hearth.image.v1': image_transport, 'hearth.speech.v1': speech_transport,
+        adapter = {'hearth.geometry.v1': geometry_transport, 'hearth.image.v1': image_transport, 'hearth.speech.v1': speech_transport,
                    'hearth.transcription.v1': transcription_transport}[target['protocol']]
         info = adapter.information(target['base_url'], key, transport).model_dump(mode='json')
         # Match every previously qualified information field, including recipe,

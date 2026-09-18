@@ -110,7 +110,7 @@ def poll(request: Request, worker_id: UUID, data: WorkerReport):
 def listing(request: Request):
     principal = administrator(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        workers = db.execute(text("SELECT w.*,p.name AS pool_name,p.execution_state,p.active_run_id,(SELECT count(*) FROM image_queue q WHERE q.pool_id=w.pool_id AND q.state='queued') AS queued FROM managed_workers w JOIN provider_pools p ON p.id=w.pool_id ORDER BY w.name")).mappings().all()
+        workers = db.execute(text("SELECT w.*,p.name AS pool_name,p.execution_state,p.active_run_id,(SELECT count(*) FROM capability_queue q WHERE q.pool_id=w.pool_id AND q.state='queued') AS queued FROM managed_workers w JOIN provider_pools p ON p.id=w.pool_id ORDER BY w.name")).mappings().all()
         return {'items': [{key: value for key, value in dict(row).items() if key not in {'token_hash', 'recipe_digest', 'boot_id', 'sequence'}} | {'online': fresh(row)} for row in workers]}
 
 

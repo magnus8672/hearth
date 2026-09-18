@@ -26,7 +26,7 @@ class CreateImage(BaseModel):
 
 
 def reconcile(db):
-    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM image_queue q WHERE q.id=j.id AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
+    rows = db.execute(text("SELECT j.id,j.batch_run_id,t.resource_pool_id FROM image_jobs j JOIN inference_targets t ON t.id=j.target_id JOIN provider_pools p ON p.id=t.resource_pool_id WHERE j.status IN ('queued','running') AND NOT EXISTS(SELECT 1 FROM capability_queue q WHERE q.id=j.id AND q.state='queued') AND (p.active_run_id IS DISTINCT FROM COALESCE(j.batch_run_id,j.id) OR p.lease_until<now()) FOR UPDATE OF j")).mappings().all()
     reconciled = set()
     for row in rows:
         execution = row['batch_run_id'] or row['id']
@@ -95,7 +95,7 @@ def generate(request: Request, data: CreateImage):
 def cancel(request: Request, job_id: UUID):
     principal = member(request, mutation=True)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
-        queued = db.execute(text('SELECT state FROM image_queue WHERE id=:id AND owner_id=:owner FOR UPDATE'), {'id': job_id, 'owner': principal.id}).scalar_one_or_none()
+        queued = db.execute(text('SELECT state FROM capability_queue WHERE id=:id AND owner_id=:owner FOR UPDATE'), {'id': job_id, 'owner': principal.id}).scalar_one_or_none()
         row = db.execute(text('SELECT status FROM image_jobs WHERE id=:id FOR UPDATE'), {'id': job_id}).scalar_one_or_none()
         if row is None:
             raise HTTPException(404, 'This image is not available in your workspace.')

@@ -488,6 +488,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/geometry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listing */
+        get: operations["listing_api_v1_geometry_get"];
+        put?: never;
+        /** Generate */
+        post: operations["generate_api_v1_geometry_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geometry-targets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Targets */
+        get: operations["targets_api_v1_geometry_targets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geometry/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete */
+        delete: operations["delete_api_v1_geometry__job_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geometry/{job_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel */
+        post: operations["cancel_api_v1_geometry__job_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/geometry/{job_id}/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download */
+        get: operations["download_api_v1_geometry__job_id__model_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/head/apply": {
         parameters: {
             query?: never;
@@ -1816,7 +1902,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1";
             /**
              * Residency Policy
              * @default unknown
@@ -1894,6 +1980,17 @@ export interface components {
         CreateChannel: {
             /** Name */
             name: string;
+        };
+        /** CreateGeometry */
+        CreateGeometry: {
+            /** Image */
+            image: string;
+            request: components["schemas"]["GeometryGeneration"];
+            /**
+             * Target Id
+             * Format: uuid
+             */
+            target_id: string;
         };
         /** CreateImage */
         CreateImage: {
@@ -2167,6 +2264,119 @@ export interface components {
              * @constant
              */
             schema_version: 1;
+        };
+        /** GeometryGeneration */
+        GeometryGeneration: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Image Sha256 */
+            image_sha256: string;
+            /** Model */
+            model: string;
+            /**
+             * Resolution
+             * @default 512
+             * @enum {integer}
+             */
+            resolution: 512 | 1024;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+        };
+        /** GeometryProviderInfo */
+        GeometryProviderInfo: {
+            /** Job Cancellation */
+            job_cancellation: boolean;
+            /** Manifest Sha256 */
+            manifest_sha256: string;
+            /** Model */
+            model: string;
+            /** Model Revision */
+            model_revision: string;
+            /** Offline */
+            offline: boolean;
+            /**
+             * Output Format
+             * @default glb
+             * @constant
+             */
+            output_format: "glb";
+            /**
+             * Protocol
+             * @constant
+             */
+            protocol: "hearth.geometry.v1";
+            /** Resolutions */
+            resolutions: (512 | 1024)[];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+        };
+        /** GeometryReceipt */
+        GeometryReceipt: {
+            /** Cancel Requested */
+            cancel_requested: boolean;
+            /** Execution Released */
+            execution_released: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Image Sha256 */
+            image_sha256: string;
+            /** Manifest Sha256 */
+            manifest_sha256: string;
+            /** Model */
+            model: string;
+            /** Progress */
+            progress: number;
+            /**
+             * Reason
+             * @default null
+             */
+            reason: string | null;
+            /**
+             * Resolution
+             * @default 512
+             * @enum {integer}
+             */
+            resolution: 512 | 1024;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Seed
+             * @default 42
+             */
+            seed: number;
+            /**
+             * Sha256
+             * @default null
+             */
+            sha256: string | null;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
         };
         /** GeometryRequest */
         GeometryRequest: {
@@ -2944,7 +3154,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1";
             /**
              * Residency Policy
              * @default unknown
@@ -4622,6 +4832,172 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    listing_api_v1_geometry_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    generate_api_v1_geometry_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateGeometry"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    targets_api_v1_geometry_targets_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    delete_api_v1_geometry__job_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_api_v1_geometry__job_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_api_v1_geometry__job_id__model_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

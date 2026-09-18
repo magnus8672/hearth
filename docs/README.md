@@ -1,6 +1,6 @@
 # hearth documentation
 
-Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The audit compares the complete design package with the current source and recorded validation as of 13 September 2026. Thirteen of fourteen capability profiles have executable implementations; none of the 61 full release gates is closed.
+Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The original 13 September audit is updated with later implementation evidence. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
 
 The active head and runtime test target is **10.20.30.10**. Use [VM operations](operations/ESX_HEAD.md) and [testing](TESTING.md). The laptop head and QEMU appliance are retired; their data remains preserved.
 
@@ -17,6 +17,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Understand reply limits, continuation and model labels | [Reply streaming and identity](implementation/REPLY_STREAMING_AND_IDENTITY.md) |
 | Understand images and concurrent model dispatch | [Vision and concurrent farm](implementation/VISION_AND_CONCURRENT_FARM.md) |
 | Remove generated pictures from the gallery and private chat | [Image deletion](implementation/IMAGE_DELETION.md) |
+| Turn images into private 3D models | [Local geometry](implementation/LOCAL_GEOMETRY.md) |
 | Choose Fooocus styles, advanced controls and 4K output | [Image settings](implementation/IMAGE_OPTIONS.md) |
 | Record or upload speech and review its transcript | [Microphone and transcription](implementation/TRANSCRIPTION.md) |
 | Edit memory and use Obsidian vaults | [Private memory](implementation/PRIVATE_MEMORY.md) |

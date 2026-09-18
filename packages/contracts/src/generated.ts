@@ -193,6 +193,43 @@ export interface ExternalProviderConnection {
   credential_configured?: boolean;
 }
 
+export interface GeometryGeneration {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  image_sha256: string;
+  seed?: number;
+  resolution?: 512 | 1024;
+}
+
+export interface GeometryProviderInfo {
+  schema_version?: 1;
+  protocol: "hearth.geometry.v1";
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  offline: boolean;
+  job_cancellation: boolean;
+  resolutions: Array<512 | 1024>;
+  output_format?: "glb";
+}
+
+export interface GeometryReceipt {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  image_sha256: string;
+  seed?: number;
+  resolution?: 512 | 1024;
+  state: "queued" | "running" | "completed" | "cancelled" | "failed" | "interrupted";
+  progress: number;
+  reason?: string | null;
+  sha256?: string | null;
+  execution_released: boolean;
+  manifest_sha256: string;
+  cancel_requested: boolean;
+}
+
 export interface GeometryRequest {
   schema_version?: 1;
   prompt?: string | null;

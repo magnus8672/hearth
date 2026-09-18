@@ -13,8 +13,8 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, StrictBool, model_validator
 from sqlalchemy import text
 
-from hearth import image_transport, speech_transport, transcription_probe, transcription_transport, vision
-from hearth.contracts import ImageGeneration, SpeechGeneration, TranscriptionRequest
+from hearth import geometry_transport, image_transport, speech_transport, transcription_probe, transcription_transport, vision
+from hearth.contracts import GeometryGeneration, ImageGeneration, SpeechGeneration, TranscriptionRequest
 from hearth.database import scoped_session
 from hearth.identity import authenticate, cipher
 from hearth.inference import ProviderError, chat_stream, list_models, normalize_url
@@ -30,7 +30,7 @@ class ConnectProvider(BaseModel):
     api_key: SecretStr = SecretStr('')
     resource_pool: str | None = Field(default=None, min_length=1, max_length=120)
     local_only: StrictBool
-    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1'] = 'openai.chat.v1'
+    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1', 'hearth.geometry.v1'] = 'openai.chat.v1'
     tls_ca_pem: str = Field(default='', max_length=16384)
     residency_policy: Literal['unknown', 'lmstudio_loaded'] = 'unknown'
     allow_insecure_http: StrictBool = False
@@ -268,6 +268,20 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
             if result.state == 'completed' and artifact and result.manifest_sha256 == info.manifest_sha256:
                 features = ['audio.speak', 'audio.jobs']
                 profile = info.model_dump(mode='json')
+        elif row['protocol'] == 'hearth.geometry.v1':
+            from hearth.geometry_probe import reference
+            info = geometry_transport.information(row['base_url'], key, transport)
+            if info.model != row['model_id'] or not info.offline or not info.job_cancellation:
+                raise ProviderError('The geometry provider does not offer the selected local model and job controls.')
+            def progress(value):
+                with scoped_session(engine, principal.id, principal.farm_id) as db:
+                    db.execute(text("UPDATE provider_pools SET lease_until=now()+interval '240 seconds' WHERE id=:pool AND active_run_id=:run"), {'pool': row['resource_pool_id'], 'run': receipt})
+                return False
+            image = reference()
+            result, artifact = geometry_transport.render(row['base_url'], key, transport, GeometryGeneration(id=receipt, model=row['model_id'], image_sha256=sha256(image).hexdigest()), image, progress)
+            if result.state == 'completed' and artifact and result.manifest_sha256 == info.manifest_sha256:
+                features = ['geometry.image_to_3d', 'geometry.jobs']
+                profile = info.model_dump(mode='json')
         elif row['protocol'] == 'hearth.image.v1':
             info = image_transport.information(row['base_url'], key, transport)
             if info.model != row['model_id'] or not info.offline or not info.job_cancellation:
@@ -330,7 +344,7 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
         db.execute(text("UPDATE inference_targets SET state=:state,features=CAST(:features AS jsonb),profile=CAST(:profile AS jsonb),probed_at=now(),verified_until=NULL,reason=:reason WHERE id=:id"),
             {'id': target_id, 'state': 'failed' if problem else 'ready', 'features': json.dumps(features), 'profile': json.dumps(profile), 'ready': not problem, 'reason': str(problem) if problem else warning})
         if not problem:
-            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
+            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.geometry.v1': 'geometry.generate', 'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
         db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'provider.probed',jsonb_build_object('target_id',CAST(:target AS text),'ready',CAST(:ready AS boolean)))"),
             {'farm': principal.farm_id, 'actor': principal.id, 'target': str(target_id), 'ready': not problem})
     return {'id': target_id, 'revision': revision + 1, 'state': 'failed' if problem else 'ready', 'features': features,
