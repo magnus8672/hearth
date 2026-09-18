@@ -36,6 +36,16 @@ def test_clarification_answer_keeps_image_intent_but_allows_cancel_and_questions
         assert intent(value, awaiting_description=True) == (None, False)
 
 
+@pytest.mark.parametrize('description', [
+    'a futuristic 3D spaceship in an isometric view, give it a very industrial look, with a bridge and a design similar to a fighter jet',
+    'a spaceship above a pine forest',
+    'a fox that has a red scarf, make it playful',
+])
+@pytest.mark.parametrize('awaiting', [False, True])
+def test_self_contained_image_descriptions_do_not_require_a_chat_planner(description, awaiting):
+    assert intent('generate an image of ' + description, awaiting_description=awaiting) == (description, False)
+
+
 @pytest.mark.parametrize('proposal', [
     {'action': 'generate', 'prompt': 'A blue Jeep', 'url': 'http://untrusted'},
     {'action': 'generate', 'prompt': 'A blue Jeep', 'owner_id': 'someone-else'},

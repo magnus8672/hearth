@@ -1,6 +1,6 @@
 # hearth vision and concurrent resident models
 
-> Current status, 18 September: private and shared-channel vision are implemented, but the active Qwen target lacks saved vision verification. Run the explicit pixel probe before treating its Vision binding as eligible. Audio, memory and geometry implementations now also exist; their deployment status is separate. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
+> Current status, 18 September: private vision is implemented; channel uploads are sharing-only, but the active Qwen target lacks saved vision verification. Run the explicit pixel probe before treating its Vision binding as eligible. Audio, memory and geometry implementations now also exist; their deployment status is separate. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. Private chat can now send actual image pixels to a separately verified vision model. Automatic routing selects `vision.describe` when a turn or its retained history contains uploaded images. Normal text chats continue using their existing conversation/coding routes.
 
@@ -33,10 +33,10 @@ The first concurrency attempt used a more demanding coding prompt and failed; a 
 
 ## Boundaries and next work
 
-This milestone originally delivered nine executable profiles; all fourteen now have bounded implementations. Vision supports private and joined-channel image understanding; uploaded-image editing, inpainting, image-aware generation and document/PDF ingestion are not implemented. In an image conversation, Automatic keeps follow-ups on Vision; use a new conversation for image generation or explicit text-specialist selection for text-only work. The existing short text-history limit still applies, and provider-native context limits can reject larger requests.
+This milestone originally delivered nine executable profiles; all fourteen now have bounded implementations. Vision supports private image understanding; uploaded-image editing, inpainting, image-aware generation and document/PDF ingestion are not implemented. In an image conversation, Automatic keeps follow-ups on Vision; use a new conversation for image generation or explicit text-specialist selection for text-only work. The existing short text-history limit still applies, and provider-native context limits can reject larger requests.
 
 Audio, private memory and geometry adapters were subsequently implemented; active-farm assignments and remaining quality qualification are tracked separately. Managed node enrollment and runtime placement remain separate unfinished work. No release gate was closed by this slice.
 
 The next audio step now has a [measured offline CPU speech probe](SPEECH_FEASIBILITY.md) using existing Kokoro files. It produced a playable sample without downloading models or displacing GPT-OSS; provider registration, playback and transcription were subsequently implemented. No audio provider is registered on today's farm.
 
-Channel upload privacy, recent image context and 3D handoff are described in [shared image attachments](NOTES_CHANNELS_IMAGES.md#shared-image-attachments-and-composer-focus--18-september-2026).
+Channel upload privacy, sharing-only behavior and 3D handoff are described in [shared image attachments](NOTES_CHANNELS_IMAGES.md#shared-image-attachments-and-composer-focus--18-september-2026).

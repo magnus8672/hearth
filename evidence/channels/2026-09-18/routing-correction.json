@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-18",
+  "scope": "Remove automatic channel vision and decouple complete image descriptions from chat planning",
+  "causes": [
+    "Shared channel upload rollout automatically attached recent image pixels to subsequent mentions.",
+    "Broad reference matcher interpreted give it and spatial above inside a complete image description as needing the chat planner."
+  ],
+  "behavior": [
+    "Channel uploads are sharing-only, with geometry handoff preserved.",
+    "Neither new nor historical channel images send pixels to the LLM.",
+    "Complete image descriptions dispatch directly to the image queue.",
+    "Actual contextual references and batches retain explicit prompt planning.",
+    "Private chat Vision behavior is unchanged."
+  ],
+  "validation": {
+    "isolated_vm_passed": 125,
+    "live_deselected": 3,
+    "fixture_boundary": "Restricted-role disposable PostgreSQL database on existing VM; synthetic identities and provider transport. No live provider qualification.",
+    "key_regression": "Exact reported spaceship image finishes on separate image resource pool while channel chat stream is held open; planner calls fail the test. Covers request with and without a newly attached image.",
+    "deployed_browser_passed": 2,
+    "browser_boundary": "Synthetic session/API upload/model-handoff/focus case plus real anonymous HTTPS edge body-limit case.",
+    "source_checks": [
+      "TypeScript",
+      "production builds",
+      "focused Ruff",
+      "documentation including 119 immutable file hashes"
+    ]
+  },
+  "deployment": {
+    "head": "10.20.30.10",
+    "backup": "/opt/hearth/.hearth/before-channel-routing-20260918T190434Z",
+    "migration": "0027 unchanged",
+    "api_restarts": 2,
+    "edge_restarts": 0,
+    "worker_updates": 0,
+    "new_live_inference": 0,
+    "readiness": "Both HTTPS endpoints passed; both saved resource pools idle after existing vision run finished."
+  },
+  "release_gates": {
+    "partial": 20,
+    "not_run": 41,
+    "passed": 0
+  },
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

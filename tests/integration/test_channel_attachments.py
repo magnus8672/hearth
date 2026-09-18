@@ -93,12 +93,12 @@ def test_channel_attachment_limit_removal_and_leave_cleanup(bff, monkeypatch):
         assert user.get(path).json()['unused_attachments'] == []
 
 
-def test_channel_mentions_use_verified_vision_and_recent_shared_pixels(bff, monkeypatch):
+def test_channel_pictures_never_trigger_vision_or_send_pixels_to_text(bff, monkeypatch):
     factory, settings, app, migration, _ = setup(bff, monkeypatch)
     calls = []
     def stream(*args, **kwargs):
         calls.append(args[3])
-        yield 'text', 'A red rectangle and a blue circle.'
+        yield 'text', 'Text reply; shared pictures are not inspected.'
         yield 'done', 'stop'
     monkeypatch.setattr(channels, 'chat_stream', stream)
     monkeypatch.setattr(vision, 'probe', lambda *a: {'vision_probe': 'explicit-fixture'})
@@ -108,40 +108,31 @@ def test_channel_mentions_use_verified_vision_and_recent_shared_pixels(bff, monk
         ah = csrf(admin, settings.admin_origin)
         target = configure(admin, ah)
         assert assign(admin, ah, 'vision.describe', [target]).status_code == 200
+        assert admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 2, 'vision': True}).status_code == 200
         signin(user)
         headers = csrf(user, settings.user_origin)
-        path = '/api/v1/channels/' + user.post('/api/v1/channels', headers=headers, json={'name': 'Vision'}).json()['id']
-        attachment = user.post(path + '/attachments', headers=headers, content=picture()).json()
-        body = {'request_id': str(uuid4()), 'content': '@hearth what do you see?', 'attachment_ids': [attachment['id']]}
-        assert user.post(path + '/messages', headers=headers, json=body).status_code == 201
-        failed = user.get(path).json()['messages'][-1]
-        assert failed['status'] == 'failed' and 'vision' in failed['reason']
-        assert calls == []  # Never silently fall back to the text-only target.
-        assert admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 2, 'vision': True}).status_code == 200
-        follow = {'request_id': str(uuid4()), 'content': '@hearth which shape is blue?'}
+        path = '/api/v1/channels/' + user.post('/api/v1/channels', headers=headers, json={'name': 'Pictures only'}).json()['id']
+        for content in ('', '@hearth hello'):
+            attachment = user.post(path + '/attachments', headers=headers, content=picture()).json()
+            body = {'request_id': str(uuid4()), 'content': content, 'attachment_ids': [attachment['id']]}
+            assert user.post(path + '/messages', headers=headers, json=body).status_code == 201
+            if not content:
+                assert calls == []
+                continue
+            for _ in range(150):
+                if user.get(path).json()['messages'][-1]['status'] != 'running':
+                    break
+                time.sleep(.02)
+            assert len(calls) == 1
+            assert all(isinstance(message['content'], str) for message in calls[-1])
+            assert any('Pixels are not included' in message['content'] for message in calls[-1])
+            with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
+                assert db.execute(text('SELECT capability_id FROM channel_runs WHERE id=:id'), {'id': body['request_id']}).scalar_one() == 'chat.general'
+        follow = {'request_id': str(uuid4()), 'content': '@hearth hello again'}
         assert user.post(path + '/messages', headers=headers, json=follow).status_code == 201
-        for _ in range(150):
-            result = user.get(path).json()
-            if result['messages'][-1]['status'] != 'running':
-                break
-            time.sleep(.02)
-        assert result['messages'][-1]['content'] == 'A red rectangle and a blue circle.'
-        assert len(calls) == 1
-        pixels = [part for message in calls[0] if isinstance(message['content'], list) for part in message['content'] if part['type'] == 'image_url']
-        assert len(pixels) == 1 and pixels[0]['image_url']['url'].startswith('data:image/jpeg;base64,')
-        assert user.post(path + '/messages', headers=headers, json=follow).status_code == 201
-        assert len(calls) == 1
-        with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
-            assert db.execute(text('SELECT capability_id FROM channel_runs WHERE id=:id'), {'id': follow['request_id']}).scalar_one() == 'vision.describe'
-        for count in (4, 2):
-            images = [user.post(path + '/attachments', headers=headers, content=picture()).json()['id'] for _ in range(count)]
-            assert user.post(path + '/messages', headers=headers, json={'request_id': str(uuid4()), 'content': '', 'attachment_ids': images}).status_code == 201
-        private_draft = user.post(path + '/attachments', headers=headers, content=picture()).json()
-        assert user.post(path + '/messages', headers=headers, json={'request_id': str(uuid4()), 'content': '@hearth compare the recent pictures'}).status_code == 201
         for _ in range(150):
             if user.get(path).json()['messages'][-1]['status'] != 'running':
                 break
             time.sleep(.02)
-        pixels = [part for message in calls[-1] if isinstance(message['content'], list) for part in message['content'] if part['type'] == 'image_url']
-        assert len(pixels) == 4
-        assert user.get(path).json()['unused_attachments'] == [private_draft]
+        assert len(calls) == 2
+        assert all(isinstance(message['content'], str) for message in calls[-1])

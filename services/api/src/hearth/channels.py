@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import text
 
-from hearth import channel_attachments, conversation_media, image_planning, routing, vision
+from hearth import channel_attachments, conversation_media, image_planning, routing
 from hearth.chat import identity_current, member, session_current
 from hearth.database import scoped_session
 from hearth.inference import ProviderError, chat_stream
@@ -154,10 +154,6 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
             request_text = MENTION.sub('', data.content).strip(' ,:')
             reference = conversation_media.recent_image(db, channel_id=channel_id)
             prompt, needs_plan = conversation_media.intent(request_text, reference, awaiting_description=conversation_media.awaiting_description(db, channel_id=channel_id))
-            # An explicitly attached picture is a vision input, never silently
-            # discarded in favor of text-to-image generation.
-            if data.attachment_ids:
-                prompt, needs_plan = None, False
             planned_image, route_problem = None, None
             if needs_plan:
                 try:
@@ -167,7 +163,7 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
             rows = db.execute(text("SELECT id,role,display_name,content FROM channel_messages WHERE channel_id=:id AND status='completed' ORDER BY sequence DESC LIMIT 20"), {'id': channel_id}).mappings().all()
             # Each human speaker remains data within a user message. A display
             # name or message can never choose an OIDC identity or tool role.
-            budget, image_count = 0, 0
+            budget = 0
             for row in rows:
                 content = row['content'] if row['role'] == 'assistant' else json.dumps({'speaker': row['display_name'], 'message': row['content']}, ensure_ascii=False)
                 budget += len(content.encode('utf-8'))
@@ -175,22 +171,12 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
                     break
                 has_pictures = db.execute(text('SELECT EXISTS(SELECT 1 FROM channel_attachments WHERE message_id=:id)'), {'id': row['id']}).scalar_one()
                 if has_pictures:
-                    if not prompt and not needs_plan and image_count < 4:
-                        selected_images = db.execute(text('SELECT image FROM channel_attachments WHERE message_id=:id ORDER BY position LIMIT :maximum'), {'id': row['id'], 'maximum': 4 - image_count}).scalars().all()
-                        content = [{'type': 'text', 'text': content}, *[vision.image_part(bytes(raw)) for raw in selected_images]]
-                        image_count += len(selected_images)
-                    else:
-                        content += '\n[Images attached; their pixels are not included in this request.]'
+                    content += '\n[Shared image attached. Pixels are not included in channel chat; do not claim to see it.]'
                 context.insert(0, {'role': row['role'], 'content': content})
-            capability = 'vision.describe' if image_count else 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
-            try:
-                target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
-            except HTTPException as exc:
-                if capability != 'vision.describe':
-                    raise
-                target, route_problem = None, str(exc.detail)
+            capability = 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
+            target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
             assistant_id = uuid4()
-            reason = None if target and context else f'No verified {"vision" if image_count else "image" if prompt else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
+            reason = None if target and context else f'No verified {"image" if prompt else "prompt-planning" if needs_plan else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
             if route_problem:
                 reason = route_problem + ' Your message is saved.'
             if not context:

@@ -4,7 +4,7 @@ import hashlib
 import json
 import threading
 import time
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from hearth import geometry_transport, identity, image_planning, image_queue, provider_health, workers
@@ -22,6 +22,62 @@ from tests.integration.test_images import image_target
 from tests.integration.test_postgres import databases as databases
 from tests.integration.test_worker_queue import adopt, report, request
 from tests.security.test_geometry import triangle
+
+
+@pytest.mark.parametrize('attach_to_request', [False, True])
+def test_explicit_channel_image_runs_on_independent_gpu_while_chat_is_busy(bff, monkeypatch, attach_to_request):
+    from hearth import channels
+
+    from tests.integration.test_vision import picture
+    factory, settings, app, migration, _ = setup(bff, monkeypatch)
+    calls, text_calls = [], []
+    fixture_images(monkeypatch, calls)
+    entered, finish = threading.Event(), threading.Event()
+    def stream(*args, **kwargs):
+        text_calls.append(args[3])
+        entered.set()
+        assert finish.wait(15)
+        yield 'text', 'Chat completed after the image.'
+        yield 'done', 'stop'
+    monkeypatch.setattr(channels, 'chat_stream', stream)
+    monkeypatch.setattr(image_planning, 'chat_stream', lambda *a, **kw: pytest.fail('A complete image description must not call the planner.'))
+    with factory('admin') as admin, factory() as user:
+        signin(admin)
+        promote(admin, migration, settings)
+        ah = csrf(admin, settings.admin_origin)
+        image = image_target(admin, ah)
+        chat = admin.post('/api/v1/providers', headers=ah, json={'name': 'Independent LM Studio', 'base_url': 'http://127.0.0.1:1234', 'model_id': 'fixture', 'resource_pool': 'Independent chat GPU', 'local_only': True}).json()['id']
+        assert admin.post(f'/api/v1/providers/{chat}/probe', headers=ah, json={'revision': 1}).status_code == 200
+        signin(user)
+        headers = csrf(user, settings.user_origin)
+        path = '/api/v1/channels/' + user.post('/api/v1/channels', headers=headers, json={'name': 'Independent media'}).json()['id']
+        attachment = user.post(path + '/attachments', headers=headers, content=picture()).json()['id']
+        assert user.post(path + '/messages', headers=headers, json={'request_id': str(uuid4()), 'attachment_ids': [attachment]}).status_code == 201
+        chat_run = str(uuid4())
+        try:
+            assert user.post(path + '/messages', headers=headers, json={'request_id': chat_run, 'content': '@hearth tell a story'}).status_code == 201
+            assert entered.wait(5)
+            description = 'a futuristic 3D spaceship in an isometric view, give it a very industrial look, with a bridge and a design similar to a fighter jet'
+            image_run = str(uuid4())
+            new_attachment = user.post(path + '/attachments', headers=headers, content=picture()).json()['id'] if attach_to_request else None
+            body = {'request_id': image_run, 'content': '@hearth generate an image of ' + description, 'attachment_ids': [new_attachment] if new_attachment else []}
+            result = user.post(path + '/messages', headers=headers, json=body)
+            assert result.status_code == 201, result.text
+            for _ in range(200):
+                saved = user.get(path).json()['messages'][-1]
+                if (saved.get('image') or {}).get('status') == 'completed':
+                    break
+                time.sleep(.02)
+            assert saved['image']['status'] == 'completed', saved
+            assert saved['image']['request']['prompt'] == description
+            assert len(text_calls) == 1
+            assert all(isinstance(message['content'], str) for message in text_calls[0])
+            with scoped_session(app, user.get('/api/v1/session').json()['id'], settings.farm_id) as db:
+                assert db.execute(text('SELECT status FROM channel_runs WHERE id=:id'), {'id': chat_run}).scalar_one() == 'running'
+                assert db.execute(text('SELECT capability_id FROM channel_runs WHERE id=:id'), {'id': image_run}).scalar_one() == 'image.generate'
+                assert db.execute(text('SELECT target_id FROM image_jobs WHERE id=:id'), {'id': image_run}).scalar_one() == UUID(image)
+        finally:
+            finish.set()
 
 
 def send(user, headers, scope, content='Make us an image of a fox'):

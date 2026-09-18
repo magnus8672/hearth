@@ -19,7 +19,7 @@ CREATE = re.compile(r'^' + PREFIX + r'(?:make|create|generate|render)\s+(?:(?:me
 DRAW = re.compile(r'^' + PREFIX + r'(?P<verb>draw|paint|illustrate)\s+(?:(?:me|us)\s+)?(?P<description>.+)$', re.I | re.S)
 WANT = re.compile(r"^(?:I(?:'d| would) (?:like|love)|I want|(?:Could|Can) I have)\s+" + SUBJECT + '$', re.I | re.S)
 NEGATED = re.compile(r"\b(?:do not|don't|don’t|without)\s+(?:actually\s+)?(?:generate|create|draw|render|make|paint)\b", re.I)
-REFERENCE = re.compile(r'\b(?:it|that|this|above|previous|earlier|same)\b|\b(?:we|you|I) (?:just )?(?:discussed|described|mentioned|talked about)\b', re.I)
+REFERENCE = re.compile(r'^(?:it|that|this|the above|what we)\b|\b(?:previous|earlier|same|above-mentioned)\b|\b(?:we|you|I) (?:just )?(?:discussed|described|mentioned|talked about)\b', re.I)
 VARIATION = re.compile(r'^' + PREFIX + r'(?:make|render|draw|create|generate|paint|turn|change)\s+(?:it|that|this|another(?: one)?|a new (?:one|version)|a variation|the (?:image|picture|photo))\b.+$', re.I | re.S)
 COUNT = r'(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|a dozen)'
 PLURAL = re.compile(r'^' + PREFIX + r'(?:ok(?:ay)?[, ]+)?(?:make|create|generate|render|draw|paint|illustrate)\s+(?:(?:me|us)\s+)?(?:(?:the|some|a few|' + COUNT + r')\s+)?(?:different\s+)?(?:images|pictures|photos|photographs|illustrations|paintings|drawings|renders|variations)\b(?!\s+(?:prompts?|generators?|tools?|descriptions?|captions?)\b).*$', re.I | re.S)
@@ -74,11 +74,12 @@ def intent(content, reference=None, *, awaiting_description=False):
     value = content.strip()
     if NEGATED.search(value):
         return None, False
+    match = CREATE.fullmatch(value) or DRAW.fullmatch(value) or WANT.fullmatch(value)
     counted = COUNTED.fullmatch(value)
     if PLURAL.fullmatch(value) or (reference and counted and not re.match(r'(?:prompts?|descriptions?|sentences?|paragraphs?|bullet|lists?|ideas?|suggestions?)\b', counted['subject'], re.I)):
         image_limit(value)
         return None, True
-    if awaiting_description and not re.match(r"^(?:never\s*mind|cancel|stop|forget|no\b|thanks?\b|thank you|what\b|why\b|how\b|when\b|where\b|who\b|can\b|could\b|would\b|explain\b|tell\b)", value, re.I):
+    if awaiting_description and not match and not re.match(r"^(?:never\s*mind|cancel|stop|forget|no\b|thanks?\b|thank you|what\b|why\b|how\b|when\b|where\b|who\b|can\b|could\b|would\b|explain\b|tell\b)", value, re.I):
         return None, True
     if reference and VARIATION.fullmatch(value):
         return None, True
