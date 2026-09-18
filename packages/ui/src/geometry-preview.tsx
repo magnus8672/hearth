@@ -34,7 +34,10 @@ export default function GeometryPreview({ id }: { id: string }) {
     controls.maxDistance = 8;
     const fill = new THREE.AmbientLight(0xffffff, defaultLighting.fill); scene.add(fill);
     const light = new THREE.DirectionalLight(0xffffff, 3);
-    light.position.set(...lightDirection(defaultLighting.azimuth, defaultLighting.elevation)).multiplyScalar(5); scene.add(light);
+    // Both source and target share the camera frame so direction labels match
+    // the viewport through orbit, pan and zoom (including corner presets).
+    light.position.set(...lightDirection(defaultLighting.azimuth, defaultLighting.elevation)).multiplyScalar(5);
+    camera.add(light, light.target); scene.add(camera);
     lights.current = { key: light, fill };
     const resize = new ResizeObserver(() => {
       const width = element.clientWidth;
@@ -60,11 +63,11 @@ export default function GeometryPreview({ id }: { id: string }) {
       <div className="target-actions">{['Top', 'Bottom', 'Front', 'Back', 'Left', 'Right'].map(name => <button type="button" className="quiet-button" key={name} aria-pressed={preset?.name === name} onClick={() => select(name)}>{name}</button>)}</div>
       <div className="geometry-lighting-controls">
         <label>Light direction<select value={preset?.name || ''} onChange={event => select(event.target.value)}><option value="" disabled>Custom direction</option>{lightPresets.map(item => <option key={item.name}>{item.name}</option>)}</select></label>
-        <label>Direction around model · {Math.round(lighting.azimuth)}°<input aria-label="Light azimuth" type="range" min="-180" max="180" step="1" value={lighting.azimuth} onChange={event => setLighting(current => ({ ...current, azimuth: Number(event.target.value) }))} /></label>
+        <label>Direction around view · {Math.round(lighting.azimuth)}°<input aria-label="Light azimuth" type="range" min="-180" max="180" step="1" value={lighting.azimuth} onChange={event => setLighting(current => ({ ...current, azimuth: Number(event.target.value) }))} /></label>
         <label>Height · {Math.round(lighting.elevation)}°<input aria-label="Light elevation" type="range" min="-90" max="90" step="1" value={lighting.elevation} onChange={event => setLighting(current => ({ ...current, elevation: Number(event.target.value) }))} /></label>
         <label>Light brightness · {lighting.intensity.toFixed(1)}<input aria-label="Light brightness" type="range" min="0" max="8" step="0.1" value={lighting.intensity} onChange={event => setLighting(current => ({ ...current, intensity: Number(event.target.value) }))} /></label>
         <label>Ambient fill · {lighting.fill.toFixed(1)}<input aria-label="Ambient fill" type="range" min="0" max="4" step="0.1" value={lighting.fill} onChange={event => setLighting(current => ({ ...current, fill: Number(event.target.value) }))} /></label>
       </div><button type="button" className="quiet-button" onClick={() => setLighting(defaultLighting)}>Reset lighting</button>
-      <p className="small-copy">Light comes from the selected side of the model: front +Z, right +X, top +Y. Orbiting the camera keeps the light in place. Preview lighting does not change your downloads.</p>
+      <p className="small-copy">Directions follow your view: Right lights from screen-right, Top from above, and Front from your side of the model. The light follows as you orbit. Preview lighting does not change your downloads.</p>
     </fieldset><p className="small-copy">Drag to orbit · scroll to zoom · right-drag to pan · drag the lower edge to resize.</p></>;
 }

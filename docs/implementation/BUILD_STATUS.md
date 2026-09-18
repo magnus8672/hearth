@@ -4,6 +4,12 @@ Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.2
 
 All fourteen capability profiles have bounded implementations. Database migration is **0026**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## View-relative preview lighting — 18 September
+
+Lighting directions now follow the camera: Right means screen-right, Top means screen-up, and Front means toward the viewer. The light and its target share the camera frame so orbit, pan and zoom preserve those meanings for face and corner presets. The original world-axis labels could look reversed from another viewing angle. Downloads and GPU scheduling are unchanged.
+
+TypeScript and both production builds passed. Three browser cases passed using the updated build on the VM HTTPS origin with synthetic sessions and API responses: a matte-sphere pixel test checks left/right and corner lighting before and after camera movement, and both real TRELLIS/Hunyuan export/lighting regressions pass. The new pixel test fails against the previous deployed build, confirming it detects the reported mismatch. All three cases passed again against the deployed static assets; both HTTPS readiness checks passed. Static deployment backed up source and indexes without an API restart, migration or inference call. Release gates remain unchanged.
+
 ## OBJ downloads and preview lighting — 18 September
 
 Completed models now offer OBJ ZIP downloads containing mesh, materials and textures, converted locally from the stored GLB. Export preserves world transforms, provided normals, UV orientation and material assignments; base-color pixels are unchanged. Roughness/metallic maps use MTL extensions whose support varies by editor. The preview has 26 face/edge/corner presets, six face shortcuts, continuous direction controls, key brightness, ambient fill and reset. Lighting does not alter stored or downloaded models.
