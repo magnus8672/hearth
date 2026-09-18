@@ -1,5 +1,7 @@
 # hearth sign-in theme
 
+Workspace and Administration now share an identity sign-in while retaining separate application sessions. See [single sign-on](../implementation/SINGLE_SIGN_ON.md) for the current flow, logout behavior and existing-head upgrade. Ordinary app switching must not force a second OTP prompt.
+
 The `hearth` login theme extends the pinned Keycloak 26.7.3 `keycloak.v2` theme. It supplies hearth's current artwork and palette, application context, and plain-language messages. Login, registration, OTP, recovery, validation, accessibility controls and authentication scripts remain inherited from Keycloak. Do not copy passwords or second factors into the React applications.
 
 The development container mounts `deploy/identity/themes/hearth` read-only at `/opt/keycloak/themes/hearth`. Run commands from the repository root. Run the stack sync after edits, then restart Keycloak to invalidate its theme caches. Apply presentation settings to an existing farm with:

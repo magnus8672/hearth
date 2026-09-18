@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": [
+    "user: verified TLS, readiness and SSO-compatible PKCE redirect",
+    "admin: verified TLS, readiness and SSO-compatible PKCE redirect"
+  ],
+  "realm": {
+    "browserFlow": "hearth-browser-sso-v1",
+    "ssoSessionIdleTimeout": 1800,
+    "ssoSessionMaxLifespan": 28800,
+    "otpPolicyCodeReusable": false
+  },
+  "deployed_on": "10.20.30.10",
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

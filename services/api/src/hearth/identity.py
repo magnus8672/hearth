@@ -18,6 +18,7 @@ from starlette.responses import RedirectResponse
 from hearth.policy import ROLES, Principal
 
 router = APIRouter()
+REAUTHENTICATE_COOKIE = '__Host-hearth_reauthenticate'
 
 
 def digest(value: str) -> str:
@@ -81,10 +82,15 @@ def login(request: Request):
         connection.execute(text('DELETE FROM login_attempts WHERE expires_at < now()'))
         connection.execute(text('INSERT INTO login_attempts(state_hash,audience,browser_hash,payload) VALUES(:state,:audience,:browser,:payload)'),
                            {'state': digest(state), 'audience': settings.audience, 'browser': digest(browser), 'payload': payload})
-    query = urlencode({'client_id': settings.client_id, 'redirect_uri': settings.origin + '/auth/callback',
-        'response_type': 'code', 'scope': 'openid profile', 'state': state, 'nonce': nonce, 'prompt': 'login',
+    parameters = {'client_id': settings.client_id, 'redirect_uri': settings.origin + '/auth/callback',
+        'response_type': 'code', 'scope': 'openid profile', 'state': state, 'nonce': nonce,
         'code_challenge': urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip('='),
-        'code_challenge_method': 'S256'})
+        'code_challenge_method': 'S256'}
+    # Ordinary navigation reuses the IdP's MFA-authenticated SSO session.
+    # Explicit sign-out during an IdP outage must still force a fresh login.
+    if request.cookies.get(REAUTHENTICATE_COOKIE):
+        parameters['prompt'] = 'login'
+    query = urlencode(parameters)
     response = RedirectResponse(settings.issuer + '/protocol/openid-connect/auth?' + query, status_code=303)
     response.set_cookie(cookie_name(settings, True), browser, max_age=300, secure=True, httponly=True, samesite='lax', path='/')
     return response
@@ -130,6 +136,7 @@ def callback(request: Request):
             {'farm': settings.farm_id, 'actor': user_id, 'audience': settings.audience})
     response = RedirectResponse(settings.origin + '/', status_code=303)
     response.delete_cookie(cookie_name(settings, True), secure=True, httponly=True, samesite='lax')
+    response.delete_cookie(REAUTHENTICATE_COOKIE, secure=True, httponly=True, samesite='lax')
     response.set_cookie(cookie_name(settings), secret, max_age=28800, secure=True, httponly=True, samesite='lax', path='/')
     return response
 
@@ -187,7 +194,7 @@ def logout(request: Request):
     check_origin(request, mutation=True)
     raw = request.cookies.get(cookie_name(settings), '')
     with request.app.state.engine.begin() as connection:
-        row = connection.execute(text('SELECT csrf_token,credentials FROM browser_sessions WHERE token_hash=:hash AND audience=:audience AND farm_id=:farm FOR UPDATE'),
+        row = connection.execute(text('SELECT csrf_token,credentials,user_id FROM browser_sessions WHERE token_hash=:hash AND audience=:audience AND farm_id=:farm FOR UPDATE'),
             {'hash': digest(raw), 'audience': settings.audience, 'farm': settings.farm_id}).mappings().one_or_none()
         if not row:
             raise HTTPException(401, 'Your session has already ended.')
@@ -195,11 +202,23 @@ def logout(request: Request):
             raise HTTPException(403, 'The request verification token is missing or invalid.')
         connection.execute(text('DELETE FROM browser_sessions WHERE token_hash=:hash AND audience=:audience'),
             {'hash': digest(raw), 'audience': settings.audience})
+        # End only the same account's companion session presented by this browser.
+        # Never sign out unrelated users or other devices by user ID alone.
+        for audience in ('admin', 'user'):
+            companion = request.cookies.get(f'__Host-hearth_{audience}_session', '')
+            connection.execute(text('DELETE FROM browser_sessions WHERE token_hash=:hash AND audience=:audience AND user_id=:user AND farm_id=:farm'),
+                {'hash': digest(companion), 'audience': audience, 'user': row['user_id'], 'farm': settings.farm_id})
     try:
         tokens = json.loads(cipher(settings).decrypt(row['credentials'].encode()))
-        token_request(settings, 'revoke', {'token': tokens['refresh_token'], 'token_type_hint': 'refresh_token'})
+        # The pinned Keycloak backchannel logout ends this SSO session, not just
+        # one client grant. Refresh/ID tokens remain entirely in the BFF.
+        token_request(settings, 'logout', {'refresh_token': tokens['refresh_token']})
+        identity_ended = True
     except Exception:
-        pass  # Local session is already invalidated even during an identity outage.
+        identity_ended = False  # Local sessions are already invalidated during an outage.
     response = RedirectResponse(settings.origin, status_code=303)
-    response.delete_cookie(cookie_name(settings), secure=True, httponly=True, samesite='lax')
+    for audience in ('admin', 'user'):
+        response.delete_cookie(f'__Host-hearth_{audience}_session', secure=True, httponly=True, samesite='lax')
+    if not identity_ended:
+        response.set_cookie(REAUTHENTICATE_COOKIE, '1', max_age=28800, secure=True, httponly=True, samesite='lax', path='/')
     return response

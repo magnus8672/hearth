@@ -1,0 +1,33 @@
+{
+  "status": "passed_with_user_browser_acceptance_pending",
+  "host": "10.20.30.10",
+  "identity_version": "Keycloak 26.7.3",
+  "real_protocol_checks": [
+    "new flow is idempotent",
+    "workspace password and OTP once, then immediate admin SSO",
+    "admin password and OTP once, then immediate workspace SSO",
+    "signed tokens retain exact client audience and shared identity session",
+    "backchannel logout invalidates both grants and requires credentials again",
+    "a user without a second factor must enroll OTP",
+    "temporary identity realm removed",
+    "existing account and credential identifiers unchanged"
+  ],
+  "isolated_tests_passed": 12,
+  "isolated_tests": [
+    "tests/integration/test_identity.py",
+    "tests/integration/test_head_origins.py",
+    "tests/security/test_head_package.py"
+  ],
+  "test_database_removed": true,
+  "typecheck": "passed",
+  "production_builds": [
+    "admin",
+    "user"
+  ],
+  "lint": "passed",
+  "real_browser_test": false,
+  "existing_farm_reset": false,
+  "new_test_farm_created": false,
+  "release_gates_closed": 0,
+  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+}

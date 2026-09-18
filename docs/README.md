@@ -32,6 +32,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Understand a design decision | [Architecture decision records](adr/) |
 | Apply the current logo, name and palette | [Brand guide](brand/BRAND_GUIDE.md), [identity 1.2](implementation/BRAND_REVISION_1_2.md) |
 | Maintain branded sign-in | [Identity theme](operations/IDENTITY.md) |
+| Switch between workspace and administration with one sign-in | [Single sign-on](implementation/SINGLE_SIGN_ON.md) |
 | Prepare or run the CPU transcription provider | [Transcription runtime](runtimes/TRANSCRIPTION_PROVIDER.md) |
 | Run or extend the experimental CPU speech provider | [Speech runtime](runtimes/SPEECH_PROVIDER.md) |
 | Run or extend the experimental image provider | [Image runtime](runtimes/IMAGE_PROVIDER.md) |

@@ -1,5 +1,7 @@
 # hearth design coverage
 
+Identity usability, 17 September 2026: [single sign-on](SINGLE_SIGN_ON.md) removes duplicate password/OTP prompts when switching between workspace and Administration. Separate audience/authorization boundaries and mandatory MFA remain. Real Keycloak protocol and isolated BFF checks pass; full sensitive-action step-up and browser release qualification remain open.
+
 [Historical deployment inventory removed for repository privacy.]
 
 Address management, 16 September 2026: [admin address settings](HEAD_ADDRESS_SETTINGS.md) now migrate an existing head's public hostname and account issuer, retaining its trust root, data and keys. The live VM uses `https://hearth.example.invalid`. This bounded single-head operation includes certificate export and rollback; full Move hearth, IPv6, public CA enrollment and release installer qualification remain open.

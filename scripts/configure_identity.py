@@ -178,7 +178,13 @@ def configure_mfa_flow(client, realm_path):
     cannot get a password-only login by removing their last second factor.
     """
     path = realm_path + '/authentication'
-    alias = 'hearth-browser'
+    # Keep the old password/MFA-only flow intact for in-flight logins. A new
+    # versioned root allows either an established SSO session or the complete
+    # password + second-factor subflow, never a password-only alternative.
+    alias = 'hearth-browser-sso-v1'
+    forms = 'hearth-login-mfa-v1'
+    second_factor = 'hearth-second-factor-v1'
+    enrollment = 'hearth-enroll-second-factor-v1'
     flows = client.get(path + '/flows').json()
     if not any(flow['alias'] == alias for flow in flows):
         client.post(path + '/flows', json={'alias': alias, 'providerId': 'basic-flow', 'topLevel': True, 'builtIn': False}).raise_for_status()
@@ -198,26 +204,28 @@ def configure_mfa_flow(client, realm_path):
         requirement(flow, item, required)
         return item
 
-    def subflow(name):
-        item = next((x for x in executions(alias) if x['displayName'] == name), None)
+    def subflow(parent, name, required):
+        item = next((x for x in executions(parent) if x['displayName'] == name and x['level'] == 0), None)
         if item is None:
-            client.post(path + '/flows/' + alias + '/executions/flow', json={'alias': name, 'type': 'basic-flow', 'provider': 'basic-flow'}).raise_for_status()
-            item = next(x for x in executions(alias) if x['displayName'] == name)
-        requirement(alias, item, 'CONDITIONAL')
+            client.post(path + '/flows/' + parent + '/executions/flow', json={'alias': name, 'type': 'basic-flow', 'provider': 'basic-flow'}).raise_for_status()
+            item = next(x for x in executions(parent) if x['displayName'] == name and x['level'] == 0)
+        requirement(parent, item, required)
 
-    execution(alias, 'auth-username-password-form', 'REQUIRED')
-    subflow('hearth-second-factor')
-    execution('hearth-second-factor', 'conditional-user-configured', 'REQUIRED')
-    execution('hearth-second-factor', 'auth-otp-form', 'ALTERNATIVE')
-    execution('hearth-second-factor', 'auth-recovery-authn-code-form', 'ALTERNATIVE')
-    subflow('hearth-enroll-second-factor')
-    condition = execution('hearth-enroll-second-factor', 'conditional-sub-flow-executed', 'REQUIRED')
-    config = {'alias': 'hearth-require-second-factor', 'config': {'flow_to_check': 'hearth-second-factor', 'check_result': 'not-executed'}}
+    execution(alias, 'auth-cookie', 'ALTERNATIVE')
+    subflow(alias, forms, 'ALTERNATIVE')
+    execution(forms, 'auth-username-password-form', 'REQUIRED')
+    subflow(forms, second_factor, 'CONDITIONAL')
+    execution(second_factor, 'conditional-user-configured', 'REQUIRED')
+    execution(second_factor, 'auth-otp-form', 'ALTERNATIVE')
+    execution(second_factor, 'auth-recovery-authn-code-form', 'ALTERNATIVE')
+    subflow(forms, enrollment, 'CONDITIONAL')
+    condition = execution(enrollment, 'conditional-sub-flow-executed', 'REQUIRED')
+    config = {'alias': 'hearth-require-second-factor-v1', 'config': {'flow_to_check': second_factor, 'check_result': 'not-executed'}}
     if condition.get('authenticationConfig'):
         client.put(path + '/config/' + condition['authenticationConfig'], json=config).raise_for_status()
     else:
         client.post(path + '/executions/' + condition['id'] + '/config', json=config).raise_for_status()
-    execution('hearth-enroll-second-factor', 'auth-otp-form', 'REQUIRED')
+    execution(enrollment, 'auth-otp-form', 'REQUIRED')
     client.put(realm_path, json={'browserFlow': alias}).raise_for_status()
 
 

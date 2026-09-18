@@ -12,6 +12,7 @@ from configure_identity import (
     admin_client,
     change_address,
     configure,
+    configure_mfa_flow,
     create_owner,
     owner_created,
 )
@@ -19,7 +20,7 @@ from configure_identity import (
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('action', choices=['configure', 'owner', 'status', 'address-check', 'address-apply'])
+    parser.add_argument('action', choices=['configure', 'owner', 'status', 'address-check', 'address-apply', 'sso'])
     args = parser.parse_args()
     values = dict(os.environ)
     try:
@@ -37,6 +38,10 @@ def main():
                 change_address(values, json.loads(sys.stdin.read(4096)))
             else:
                 configure(values)
+        elif args.action == 'sso':
+            with admin_client(values) as client:
+                configure_mfa_flow(client, '/admin/realms/hearth')
+            print('Single sign-on flow enabled; accounts and required second factors preserved.')
         elif args.action == 'address-check':
             address_authority(values, json.loads(sys.stdin.read(4096)))
         elif args.action == 'owner':

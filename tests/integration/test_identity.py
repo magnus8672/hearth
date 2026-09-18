@@ -82,6 +82,44 @@ def signin(browser):
     return callback
 
 
+@pytest.mark.parametrize('audience', ['user', 'admin'])
+def test_normal_login_allows_sso_but_keeps_pkce_and_browser_binding(bff, audience):
+    factory, settings, _, _, _ = bff
+    with factory(audience) as browser:
+        response = browser.get('/auth/login?prompt=none&redirect_uri=https://rogue.example')
+        query = parse_qs(urlsplit(response.headers['location']).query)
+        assert 'prompt' not in query and 'max_age' not in query
+        assert query['client_id'] == ['hearth-' + audience]
+        origin = settings.admin_origin if audience == 'admin' else settings.user_origin
+        assert query['redirect_uri'] == [origin + '/auth/callback']
+        assert query['code_challenge_method'] == ['S256']
+        assert len(query['nonce'][0]) >= 32 and len(query['state'][0]) >= 32
+
+
+def test_signout_ends_companion_browser_session_without_deleting_other_devices(bff, monkeypatch):
+    factory, settings, _, _, _ = bff
+    with factory() as browser, factory('admin') as admin, factory() as other_device:
+        signin(browser)
+        signin(admin)
+        signin(other_device)
+        assert admin.get('/api/v1/farm').status_code == 403  # SSO does not elevate a Member.
+        browser.cookies.update(admin.cookies)
+        session = browser.get('/api/v1/session').json()
+        calls = []
+        original = identity.token_request
+
+        def record(config, endpoint, data):
+            calls.append((endpoint, data))
+            return original(config, endpoint, data)
+
+        monkeypatch.setattr(identity, 'token_request', record)
+        response = browser.post('/api/v1/logout', headers={'Origin': settings.user_origin, 'X-Hearth-CSRF': session['csrf_token']})
+        assert response.status_code == 303
+        assert calls[0][0] == 'logout' and 'refresh_token' in calls[0][1]
+        assert admin.get('/api/v1/session').status_code == 401
+        assert other_device.get('/api/v1/session').status_code == 200
+
+
 def test_one_use_callback_requires_original_browser_and_personal_provision_is_atomic(bff):
     factory, settings, app, migration, subject = bff
     with factory() as browser, factory() as other:
@@ -155,9 +193,17 @@ def test_logout_remains_available_during_identity_outage(bff, monkeypatch):
         def unavailable(*args):
             raise ConnectionError('Explicit identity outage fixture')
 
+        original = identity.token_request
         monkeypatch.setattr(identity, 'token_request', unavailable)
         assert browser.get('/api/v1/session').status_code == 401
         assert browser.post('/api/v1/logout', headers={'Origin': settings.user_origin, 'X-Hearth-CSRF': session['csrf_token']}).status_code == 303
+        assert browser.cookies.get(identity.REAUTHENTICATE_COOKIE) == '1'
+        start = browser.get('/auth/login')
+        query = parse_qs(urlsplit(start.headers['location']).query)
+        assert query['prompt'] == ['login']
+        monkeypatch.setattr(identity, 'token_request', original)
+        assert browser.get('/auth/callback?state=' + query['state'][0] + '&code=fixture').status_code == 303
+        assert not browser.cookies.get(identity.REAUTHENTICATE_COOKIE)
 
 
 def test_actual_oidc_signature_issuer_audience_nonce_and_expiry(monkeypatch):

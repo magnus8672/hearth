@@ -2,6 +2,8 @@
 
 Status: implemented for the local development reference, not a completed P1 release gate.
 
+17 September 2026 amendment: [single sign-on](../implementation/SINGLE_SIGN_ON.md) reuses the authenticated Keycloak session across the two BFF clients. Separate audiences and current role checks remain; routine navigation no longer forces password/OTP again. Explicit sign-out ends the shared identity session.
+
 The first user test exercises real accounts and durable private work before provider installation. Separate React bundles are served over HTTPS at localhost ports 8443 and 8444. Keycloak is on 8445. The edge excludes the master realm and administrative identity routes.
 
 Each BFF process has a fixed audience. Login uses confidential clients, authorization code flow, S256 PKCE, nonce/state, exact callback origins and a browser-bound, one-use PostgreSQL login attempt. ID token signatures, issuer, audience, nonce and lifetime are verified with maintained libraries. OIDC credentials are encrypted in PostgreSQL with a private generated key. Distinct Secure, HttpOnly, host-only cookie names contain opaque session secrets. Token hashes and audience bindings prevent cookie renaming from granting cross-application access. Mutation requests require the exact Origin and the session's CSRF token.
