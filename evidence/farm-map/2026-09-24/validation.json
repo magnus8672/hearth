@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-24",
+  "feature": "Dynamic Admin farm map",
+  "backend": {
+    "host": "existing ESXi head VM",
+    "storage": "isolated temporary database, separate application and migration roles; removed after tests",
+    "passed": 18,
+    "suites": ["security/test_farm_map.py", "security/test_capability_routing.py", "integration/test_farm_map.py", "integration/test_worker_queue.py"]
+  },
+  "frontend": {
+    "typecheck": "passed",
+    "admin_and_user_builds": "passed",
+    "browser_cases_passed": 2,
+    "browser_data": "synthetic authenticated session and API fixtures, pre-deploy and deployed bundles",
+    "coverage": ["automatic residency refresh", "host removal", "stale failure and recovery", "collapse and expand", "selection", "zoom", "unassigned inventory", "empty farm", "five hosts with seven bindings each", "390px layout"]
+  },
+  "live_read_only_checks": {
+    "admin_https_ready": true,
+    "user_https_ready": true,
+    "anonymous_map_http_status": 401,
+    "host_groups": 3,
+    "bindings": 6,
+    "saved_verified_bindings": 6,
+    "qwen_bound_capabilities": ["chat.general", "code.implement", "vision.describe"],
+    "qwen_residency": "loaded",
+    "fooocus": "service_ready",
+    "trellis": "on_demand",
+    "hunyuan": "on_demand",
+    "method": "Read-only projection through the deployed module, application-role database scope and native LM Studio inventory; not a new authenticated browser acceptance test"
+  },
+  "deployment": {
+    "backup": "/opt/hearth/.hearth/before-farm-map-20260924T182934Z",
+    "active_jobs_before_restart": 0,
+    "schema": "0027",
+    "migration": false,
+    "model_generation_or_lifecycle_requests": false,
+    "preserved_remote_drift": "Newer operational ledger entry and existing inference timeout fix"
+  },
+  "limitations": ["Host grouping uses saved endpoint hostname/IP; aliases may duplicate physical machines", "External providers without native residency evidence show unknown", "No fresh generation or model quality qualification", "Release gates unchanged"]
+}

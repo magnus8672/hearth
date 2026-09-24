@@ -19,6 +19,8 @@ from hearth.client_keys import router as client_keys_router
 from hearth.config import Settings, get_settings
 from hearth.contracts import ErrorDetail, ErrorResponse
 from hearth.database import make_engine, verify_application_role
+from hearth.farm_map import Observations
+from hearth.farm_map import router as farm_map_router
 from hearth.geometry import router as geometry_router
 from hearth.head_settings import router as head_settings_router
 from hearth.identity import router as identity_router
@@ -81,6 +83,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                   docs_url="/docs" if settings.mode != "production" else None,
                   redoc_url=None, openapi_url="/openapi.json" if settings.mode != "production" else None)
     app.state.settings = settings
+    app.state.farm_map_observations = Observations()
     app.add_middleware(BodyLimitMiddleware)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.trusted_hosts)
 
@@ -141,6 +144,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(accounts_router)
     app.include_router(workspace_router)
     app.include_router(workers_router)
+    app.include_router(farm_map_router)
     app.include_router(head_settings_router)
     app.include_router(providers_router)
     app.include_router(routing_router)

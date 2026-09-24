@@ -7168,6 +7168,25 @@
         ]
       }
     },
+    "/api/v1/farm-map": {
+      "get": {
+        "operationId": "farm_map_api_v1_farm_map_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Farm Map",
+        "tags": [
+          "farm"
+        ]
+      }
+    },
     "/api/v1/geometry": {
       "get": {
         "operationId": "listing_api_v1_geometry_get",

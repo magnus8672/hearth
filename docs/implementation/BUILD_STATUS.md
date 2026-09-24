@@ -1,8 +1,14 @@
 # hearth implementation ledger
 
-Updated 18 September 2026. The active head runs on the existing ESXi VM at `10.20.30.10`; media-worker `10.20.30.20` provides images/3D and model-host `10.20.30.30` provides LM Studio Qwen. See [current farm state](CURRENT_STATE.md) for the dated inventory and [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
+Updated 24 September 2026. The active head runs on the existing ESXi VM at `10.20.30.10`; media-worker `10.20.30.20` provides images/3D and model-host `10.20.30.30` provides LM Studio Qwen. See [current farm state](CURRENT_STATE.md) for the dated inventory and [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
 
 All fourteen capability profiles have bounded implementations. Database migration is **0027**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+
+## Dynamic Admin farm map — 24 September
+
+Administration now includes a capability tree with dotted endpoint-host groups, separate nodes for each binding, built-in memory, and unassigned/unbound inventories. The read-only, `farm.inspect`-protected snapshot endpoint separates saved qualification, pool occupancy and residency. Fresh worker observations drive managed-service states; bounded LM Studio inventory GETs report loaded instance IDs, cached for up to fifteen seconds. The page refreshes every ten seconds while visible, preserves inspection/layout controls, and explicitly marks stale data after failures. No lifecycle or generation call is made by the map. See [behavior and host-grouping limits](FARM_MAP.md).
+
+Checks passed 18 focused backend cases on isolated VM storage, TypeScript, both bundles and two browser fixture cases covering refresh/reconciliation, outages, empty/growing farms and responsive interactions; both browser cases also passed against the deployed bundles. Shared contracts and transport artifacts were regenerated. Deployment backed up source/assets and the prior image, checked that all job types were idle before restart, and preserved the newer operational log and inference changes already on the head. Both HTTPS readiness checks passed and anonymous access to the new endpoint returned 401. A read-only service-level projection using the deployed code and live farm data reported three host groups, six verified bindings, Qwen loaded for three capabilities, Fooocus service-ready, and TRELLIS/Hunyuan on demand. This was not a new authenticated browser session or inference qualification. See [recorded checks](../../evidence/farm-map/2026-09-24/validation.json). Schema remains `0027`; release gates are unchanged.
 
 ## Channel sharing and independent image dispatch correction — 18 September
 
