@@ -2,6 +2,8 @@
 
 Agentic Cloud at Home.
 
+hearth will always be open source and free.
+
 **Your machines. One place to create.** hearth brings local models into a shared workspace for private chat, channels, images, 3D models, memory and connected tools.
 
 Built on the belief that inference belongs in our homes and on our devices, where conversations can stay between us and our families. Exploring this wave of technology should be within reach, without paying hundreds of dollars a month just to participate. That vision includes paying model makers for local-use licenses, with control over our own hardware and ongoing operation.

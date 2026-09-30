@@ -8,6 +8,8 @@ All fourteen capability profiles have bounded implementations. Database migratio
 
 Added an [offline HTML README](../readme.html) using the farm map's dotted machine boundaries and separate capability nodes. The introduction covers the edge-inference motivation, workspace features, provider architecture, setup paths and development limits. Its selectable workflows are explicitly illustrative, contain no private farm addresses and make no live requests. Firelight/Daylight themes use the existing brand assets. The root README includes a preview image and points to the HTML; GitHub renders that image but displays the HTML file as source.
 
+The README now states the owner's commitment that hearth will always be open source and free, and omits the paid cloud gateway from its release-work summary. This copy change does not select a repository license or alter the historical specification.
+
 Static-document validation via `node scripts/check_readme.mjs` passed ten viewport/theme combinations from 320 to 2560 pixels, local asset/link checks, keyboard workflow selection, theme persistence, blocked-storage and no-JavaScript fallbacks, and 200% text enlargement. Desktop Firelight/Daylight and mobile renders were reviewed. This is documentation-only work: no head deployment, schema change, provider inference or release-gate change.
 
 ## Dynamic Admin farm map — 24 September
