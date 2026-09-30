@@ -10,6 +10,8 @@ Added an [offline HTML README](../readme.html) using the farm map's dotted machi
 
 The README now states the owner's commitment that hearth will always be open source and free, and omits the paid cloud gateway from its release-work summary. This copy change does not select a repository license or alter the historical specification.
 
+Its honest progress report also describes planned, optional cloud connections to providers such as OpenAI and Anthropic and services hosting Gemma models, for additional capacity when local hardware is unavailable. The copy distinguishes free hearth software from any external provider usage charges and explicitly marks these connections as future work; no cloud integration was implemented by this documentation change.
+
 Static-document validation via `node scripts/check_readme.mjs` passed ten viewport/theme combinations from 320 to 2560 pixels, local asset/link checks, keyboard workflow selection, theme persistence, blocked-storage and no-JavaScript fallbacks, and 200% text enlargement. Desktop Firelight/Daylight and mobile renders were reviewed. This is documentation-only work: no head deployment, schema change, provider inference or release-gate change.
 
 ## Dynamic Admin farm map — 24 September
