@@ -4,17 +4,16 @@ New here? [Explore the illustrated HTML README](readme.html) for the idea behind
 
 Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The coverage table was reconciled on 18 September against source, feature evidence and read-only live metadata. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
 
-The active head and runtime test target is **10.20.30.10**. Use [VM operations](operations/ESX_HEAD.md) and [testing](TESTING.md). The laptop head and QEMU appliance are retired; their data remains preserved.
+For deployment and validation, start with [head VM setup](operations/HEAD_VM_SETUP.md) and [testing](TESTING.md).
 
 | Need | Document |
 |---|---|
-| See the actual head, worker, model and enabled routes | [Current farm snapshot](implementation/CURRENT_STATE.md) |
 | Inspect live capability placement and model residency | [Admin farm map](implementation/FARM_MAP.md) |
 | Register people, approve accounts and grant individual capabilities | [Signup and account approval](implementation/ACCOUNT_APPROVAL.md) |
 | Control installed worker services and queue GPU image jobs | [Managed Linux workers](implementation/MANAGED_WORKERS.md) |
 | Preview or serve the project website | [Static website](WEBSITE.md) |
 | Review product coverage and remaining work | [Design coverage table](implementation/DESIGN_COVERAGE.md) |
-| Test the active VM build | [Testing](TESTING.md) |
+| Validate a deployment | [Testing](TESTING.md) |
 | Connect model servers on other machines | [LAN provider testing](implementation/LAN_PROVIDER_TESTING.md) |
 | Add multiple servers and preserve resident models | [Multiple providers and residency](implementation/MULTI_PROVIDER_RESIDENCY.md) |
 | Connect a trusted LAN service without certificates | [External HTTP provider approval](implementation/EXTERNAL_HTTP_PROVIDERS.md) |
@@ -32,7 +31,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Run the head on a LAN or ESX VM | [Head VM setup](operations/HEAD_VM_SETUP.md) |
 | Change an existing head's URL and rebuild certificates | [Head address settings](implementation/HEAD_ADDRESS_SETTINGS.md) |
 | Copy just the fresh-farm deployment package | [VM ZIP setup](operations/VM_PACKAGE.md) |
-| Maintain the user's deployed VM at 10.20.30.10 | [Current ESX head](operations/ESX_HEAD.md) |
+| Operate an existing VM deployment | [VM operations](operations/ESX_HEAD.md) |
 | Understand lasting verification and startup checks | [Provider lifecycle](implementation/PROVIDER_LIFECYCLE.md) |
 | Build, check or recover the development stack | [Development guide](DEVELOPMENT.md) |
 | Review Git contents and artifact exclusions | [Git repository](operations/GIT_REPOSITORY.md) |
@@ -45,7 +44,7 @@ The active head and runtime test target is **10.20.30.10**. Use [VM operations](
 | Prepare or run the CPU transcription provider | [Transcription runtime](runtimes/TRANSCRIPTION_PROVIDER.md) |
 | Run or extend the experimental CPU speech provider | [Speech runtime](runtimes/SPEECH_PROVIDER.md) |
 | Run or extend the experimental image provider | [Image runtime](runtimes/IMAGE_PROVIDER.md) |
-| Register and maintain the dedicated Fooocus machine | [Fooocus on media-worker](operations/FOOOCUS_PROVIDER.md) |
+| Register and maintain a Fooocus provider | [Fooocus operations](operations/FOOOCUS_PROVIDER.md) |
 | Work on the repository as a coding agent | [Repository guidance](AGENT_GUIDANCE.md) |
 | Find every reviewed document and its purpose | [Document inventory](DOCUMENT_INVENTORY.md) |
 
