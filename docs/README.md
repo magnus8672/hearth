@@ -1,5 +1,7 @@
 # hearth documentation
 
+New here? [Explore the illustrated HTML README](readme.html) for the idea behind hearth, its workspace and an interactive example farm. Open the file in a browser from a checkout; it needs no build, server or network connection. Validate this static page with `node scripts/check_readme.mjs`; add `--update-preview` to refresh its root-README preview image.
+
 Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The coverage table was reconciled on 18 September against source, feature evidence and read-only live metadata. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
 
 The active head and runtime test target is **10.20.30.10**. Use [VM operations](operations/ESX_HEAD.md) and [testing](TESTING.md). The laptop head and QEMU appliance are retired; their data remains preserved.

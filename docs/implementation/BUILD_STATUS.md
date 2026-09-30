@@ -1,8 +1,14 @@
 # hearth implementation ledger
 
-Updated 24 September 2026. The active head runs on the existing ESXi VM at `10.20.30.10`; media-worker `10.20.30.20` provides images/3D and model-host `10.20.30.30` provides LM Studio Qwen. See [current farm state](CURRENT_STATE.md) for the dated inventory and [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
+Updated 29 September 2026. The active head runs on the existing ESXi VM at `10.20.30.10`; media-worker `10.20.30.20` provides images/3D and model-host `10.20.30.30` provides LM Studio Qwen. See [current farm state](CURRENT_STATE.md) for the dated inventory and [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
 
 All fourteen capability profiles have bounded implementations. Database migration is **0027**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+
+## Illustrated repository introduction — 29 September
+
+Added an [offline HTML README](../readme.html) using the farm map's dotted machine boundaries and separate capability nodes. The introduction covers the edge-inference motivation, workspace features, provider architecture, setup paths and development limits. Its selectable workflows are explicitly illustrative, contain no private farm addresses and make no live requests. Firelight/Daylight themes use the existing brand assets. The root README includes a preview image and points to the HTML; GitHub renders that image but displays the HTML file as source.
+
+Static-document validation via `node scripts/check_readme.mjs` passed ten viewport/theme combinations from 320 to 2560 pixels, local asset/link checks, keyboard workflow selection, theme persistence, blocked-storage and no-JavaScript fallbacks, and 200% text enlargement. Desktop Firelight/Daylight and mobile renders were reviewed. This is documentation-only work: no head deployment, schema change, provider inference or release-gate change.
 
 ## Dynamic Admin farm map — 24 September
 
