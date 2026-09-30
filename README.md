@@ -4,6 +4,8 @@ Agentic Cloud at Home.
 
 hearth will always be open source and free.
 
+Licensed under the [MIT License](LICENSE). Third-party dependencies, model weights and provider runtimes retain their respective licenses.
+
 **Your machines. One place to create.** hearth brings the machines at your disposal together to serve models and capabilities tuned to what that hardware can do so you can serve smaller, capability specific models and coalesce them into a shared workspace for private chat, channels, images, 3D models, memory, speech, dictation, and connected tools.
 
 Built on the belief that inference belongs in our homes and on our devices, where conversations can stay between us and our families. Exploring this wave of technology should be within reach, without paying hundreds of dollars a month just to participate. 

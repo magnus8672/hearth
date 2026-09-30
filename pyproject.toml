@@ -6,6 +6,8 @@ build-backend = "hatchling.build"
 name = "hearth-control"
 version = "0.1.0"
 description = "Private capability orchestration for a home compute farm"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "fastapi>=0.115,<1",

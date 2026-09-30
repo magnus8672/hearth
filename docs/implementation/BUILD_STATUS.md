@@ -4,6 +4,10 @@ Updated 29 September 2026. This ledger records implemented behavior, dated valid
 
 All fourteen capability profiles have bounded implementations. Database migration is **0027**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## MIT license — 29 September
+
+Added the standard [MIT License](../../LICENSE) for hearth, with copyright attributed to the public repository account and hearth contributors. The root README links the license, and the Python and JavaScript package metadata identify it as `MIT`. Third-party dependencies, model weights and provider runtimes retain their own licenses; this does not complete the redistribution notice/SBOM release work. Documentation links and package metadata parsing were checked. No runtime behavior, deployment or release-gate status changed.
+
 ## Repository privacy cleanup — 29 September
 
 Sanitized current documentation, archived notes, test fixtures and evidence to use generic roles and illustrative endpoints. Browser and opt-in inference tests now take deployment targets from private environment configuration; new live evidence goes into ignored local storage. Provider service templates use a dedicated generic account. Removed five identifying screenshots, and recorded two exact baseline-document redaction exceptions. The historical cleanup removes deployment identifiers and identifying media from earlier revisions and replaces personal author email with the public repository account identity. Private backups and operator notes stay in ignored storage.
@@ -14,7 +18,7 @@ Source validation covers documentation links and baseline hashes, TypeScript, Py
 
 Added an [offline HTML README](../readme.html) using the farm map's dotted machine boundaries and separate capability nodes. The introduction covers the edge-inference motivation, workspace features, provider architecture, setup paths and development limits. Its selectable workflows are explicitly illustrative, contain no private farm addresses and make no live requests. Firelight/Daylight themes use the existing brand assets. The root README includes a preview image and points to the HTML; GitHub renders that image but displays the HTML file as source.
 
-The README now states the owner's commitment that hearth will always be open source and free, and omits the paid cloud gateway from its release-work summary. This copy change does not select a repository license or alter the historical specification.
+The README now states the owner's commitment that hearth will always be open source and free, and omits the paid cloud gateway from its release-work summary. That initial copy change did not select a repository license; the later MIT adoption is recorded above. The historical specification is preserved.
 
 Its honest progress report also describes planned, optional cloud connections to providers such as OpenAI and Anthropic and services hosting Gemma models, for additional capacity when local hardware is unavailable. The copy distinguishes free hearth software from any external provider usage charges and explicitly marks these connections as future work; no cloud integration was implemented by this documentation change.
 
