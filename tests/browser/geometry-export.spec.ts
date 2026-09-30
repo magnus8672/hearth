@@ -1,3 +1,4 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,7 +7,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { Mesh, SphereGeometry } from 'three';
 
-const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+const origin = browserOrigins.workspace;
 test.beforeEach(async ({ page }) => {
   if (process.env.HEARTH_BROWSER_LOCAL_BUILD !== '1') return;
   await page.route(origin + '/**', async route => {

@@ -18,6 +18,7 @@ from tests.integration.test_chat import configure, csrf, promote, setup, wait_fi
 from tests.integration.test_identity import bff as bff
 from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
+from tests.live_targets import configured_provider
 
 
 def seed_history(db, workspace, owner, farm, content='The observatory telescope is named Juniper.', count=1):
@@ -274,7 +275,7 @@ def test_unicode_window_and_hostile_import_parser():
 def test_live_resident_qwen_recall_and_corrected_note(bff):
     import httpx
     factory, settings, _, migration, _ = bff
-    url, model = 'http://10.20.30.40:1234', 'qwen/qwen3.8-27b'
+    url, model = configured_provider()
     def loaded():
         return sorted(item['id'] for row in httpx.get(url+'/api/v1/models', timeout=10, trust_env=False).raise_for_status().json()['models'] for item in row['loaded_instances'])
     before = loaded()
@@ -307,6 +308,6 @@ def test_live_resident_qwen_recall_and_corrected_note(bff):
             assert any(item['id'] == note['id'] and item['revision'] == index+1 for item in result['runs'][-1]['memory_receipt']['sources'])
             replies.append({'note_revision': index+1, 'reply': result['messages'][-1]['content'], 'finish_reason': result['runs'][-1]['finish_reason'], 'memory_sources': result['runs'][-1]['memory_receipt']['sources']})
         assert loaded() == before
-        output = Path('evidence/memory/2026-09-13')
+        output = Path('.hearth/test-results/memory/2026-09-13')
         output.mkdir(parents=True, exist_ok=True)
         (output/'live-recall.json').write_text(json.dumps({'scope': 'Real resident Qwen over the LAN and real restricted-role PostgreSQL/BFF in a disposable farm. OIDC is an explicit fixture.', 'model': model, 'new_chat_each_time': True, 'replies': replies, 'loaded_models_unchanged': True, 'cloud_calls': 0}, indent=2), encoding='utf-8')

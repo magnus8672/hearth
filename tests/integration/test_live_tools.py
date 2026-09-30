@@ -1,4 +1,4 @@
-"""Opt-in qualification using the user's resident LAN Qwen and a real MCP server."""
+"""Opt-in qualification using an explicitly configured resident LAN model and a real MCP server."""
 import json
 import os
 from pathlib import Path
@@ -15,12 +15,13 @@ from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
 from tests.integration.test_toolbox import approve, register
 from tests.integration.test_toolbox import upstream as upstream
+from tests.live_targets import configured_provider
 
 
 @pytest.mark.skipif(os.environ.get('HEARTH_LIVE_TOOLS') != '1', reason='Explicit live resident tool qualification required.')
 def test_resident_qwen_client_function_roundtrip_and_shared_mcp_chat(bff, upstream):
     factory, settings, app, migration, subject = bff
-    url, model = 'http://10.20.30.40:1234', 'qwen/qwen3.8-27b'
+    url, model = configured_provider()
     def loaded():
         return sorted(item['id'] for row in httpx.get(url+'/api/v1/models', timeout=10, trust_env=False).raise_for_status().json()['models'] for item in row['loaded_instances'])
     before = loaded()
@@ -63,6 +64,6 @@ def test_resident_qwen_client_function_roundtrip_and_shared_mcp_chat(bff, upstre
         assert upstream['executions'] == [(17, 25, 'Bearer fixture-owner-token')]
         assert '42' in result['messages'][-1]['content']
         assert loaded() == before
-        folder = Path('evidence/tools/2026-09-14')
+        folder = Path('.hearth/test-results/tools/2026-09-14')
         folder.mkdir(parents=True, exist_ok=True)
         (folder/'live-qwen.json').write_text(json.dumps({'model': model, 'native_tool_probe': probe.json()['features'], 'client_alias': 'chat.general', 'client_owned_function': 'read_project_title', 'client_tool_result_consumed': True, 'shared_mcp_steps': ['list_tools', 'describe_tool', 'run_tool'], 'shared_tool_result': 42, 'loaded_models_unchanged': True, 'synthetic_farm': True, 'real_user_data_accessed': False}, indent=2)+'\n')

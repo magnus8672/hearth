@@ -1,5 +1,7 @@
 # Multiple provider instances and resident specialists
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 > Current status, 18 September: the active farm has one Qwen LLM target plus Fooocus/TRELLIS. Historical physical two-LLM concurrency has evidence in the vision report; complete UI/residency/failure/load qualification remains open. Provider qualification no longer expires hourly. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. The local build now has explicit server onboarding and loaded-model checks for LM Studio. It is ready for the user's multi-machine test; physical LAN concurrency and automatic-loading configuration on those machines remain to be qualified.

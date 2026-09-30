@@ -13,5 +13,5 @@
     "HypervisorPresent does not qualify WHPX, QEMU or guest appliance boot.",
     "GPU backend, model fit, signing credentials, remote workers and NAS were not probed."
   ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Personal host inventory and application installation paths removed; historical tool versions retained."
 }

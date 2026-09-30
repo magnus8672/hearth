@@ -1,8 +1,9 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const origin = process.env.HEARTH_ADMIN_BROWSER_ORIGIN || 'https://hearth.example.invalid:8443';
+const origin = browserOrigins.admin;
 const node = (id: string, cap = 'chat.general', model = 'fixture-model') => ({ id, capability: cap, name: cap === 'chat.general' ? 'Conversation' : '3D generation', icon: 'cube', residency: 'loaded', verified: true, model, endpoint: 'https://10.1.1.2:1234/v1', pool: 'Fixture pool', priority: 0 });
 const initial = () => ({ observed_at: new Date().toISOString(), binding_count: 3,
   machines: [
@@ -23,7 +24,7 @@ test.beforeEach(async ({ page }) => {
       } else await route.fallback();
     });
   }
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Operator', roles: ['Owner'], permissions: ['farm.inspect'], csrf_token: 'fixture', admin_origin: origin, user_origin: 'https://hearth.example.invalid' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Operator', roles: ['Owner'], permissions: ['farm.inspect'], csrf_token: 'fixture', admin_origin: origin, user_origin: browserOrigins.workspace } }));
   await page.route('**/api/v1/farm', route => route.fulfill({ json: { farm: { name: 'Fixture farm' }, members: [] } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
 });

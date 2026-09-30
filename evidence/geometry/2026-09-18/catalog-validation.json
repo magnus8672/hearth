@@ -76,5 +76,5 @@
     "Provider copies and backups remain separate retention domains.",
     "Release gates remain 20 partial, 41 not run and zero fully passed."
   ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

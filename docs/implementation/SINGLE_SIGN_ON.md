@@ -1,5 +1,7 @@
 # One sign-in across hearth
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Implemented and deployed on the existing head at `10.20.30.10`, 17 September 2026.
 
 Previously every `/auth/login` request sent `prompt=login`, and the custom Keycloak browser flow contained only password and second-factor steps. Both choices forced credentials again when an administrator moved between the workspace and Administration. OTP replay protection then correctly rejected a code just used in the other application, making the unnecessary second login particularly awkward.

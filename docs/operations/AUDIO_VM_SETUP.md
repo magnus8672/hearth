@@ -1,5 +1,7 @@
 # CPU audio providers on a VM
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 The speech and transcription providers can run in the head VM or on a separate CPU VM. The head only routes requests to their saved addresses. They do not require the laptop, a GPU, GPU passthrough, LM Studio or the image provider. Give speech and transcription separate resource groups so they can run concurrently with each other and the GPU specialists.
 
 The [setup script](../../scripts/setup_audio_vm.py) supports Ubuntu 24.04 x86-64, Python 3.12 and systemd. An initial sizing suggestion is four vCPUs, 8 GB RAM and at least 8 GB free disk for audio installation and its caches. Reserve additional capacity for the control stack if it shares this VM. Actual ESX hardware sizing and whole-farm migration remain to be tested.

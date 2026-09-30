@@ -209,5 +209,5 @@
     "The original 2.0 profile supports 512 only and uses sequential CUDA stages; no 2.1 or turbo substitution.",
     "Release gates remain 20 partial, 41 not run, zero fully passed."
   ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Private deployment inventory redacted; validation outcomes describe the original run."
 }

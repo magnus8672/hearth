@@ -4,7 +4,7 @@ Status: original candidate decision, 12 September 2026. The deployed engine sele
 
 Local 3D and validated GLB output remain required scope. Select TripoSR as the first image-to-mesh qualification candidate at source revision `107cefdc244c39106fa830359024f6a2f1c78871`. Its upstream describes source and pretrained weights as MIT licensed and reports roughly 6 GB VRAM for default single-image inference. Those are upstream statements, not hearth performance results. [TripoSR repository](https://github.com/VAST-AI-Research/TripoSR).
 
-[Historical deployment inventory removed for repository privacy.]
+Reference hardware inventory is omitted for privacy. Available GPU capacity alone does not prove that native CUDA extensions or a supported PyTorch build work on a target; qualify each supported hardware profile explicitly.
 
 The initial recipe pipeline will accept an authorized image artifact, perform controlled preprocessing, run the model locally, convert its mesh to GLB, validate it and attach provenance. A text request requires a separately approved local image-generation deployment before this image-to-mesh stage. If that dependency is absent, text-to-3D is unavailable with a reason. A shape-only route must not advertise textured output. Upstream exposes texture baking as a separate option and its CLI is the starting point for a bounded adapter. [TripoSR CLI](https://github.com/VAST-AI-Research/TripoSR/blob/main/run.py).
 

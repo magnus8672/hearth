@@ -28,5 +28,5 @@
   },
   "browser_flows_exercised": false,
   "owner_enrollment_and_provider_setup": "left to the user as requested",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

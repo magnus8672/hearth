@@ -1,5 +1,7 @@
 # Set up a fresh hearth VM from the ZIP
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Package evidence in this guide describes the 14 September build. The active farm and later features are tracked in [current state](../implementation/CURRENT_STATE.md). Generated ZIPs are ignored outputs; rebuild from the intended source revision and qualify that package before treating older archive contents or sizes as current. Do not use fresh-farm setup to reset the running head.
 
 This package creates a **new farm**. The existing laptop farm, its accounts, chats, memory and provider settings remain on the laptop. The ZIP contains the head application, built browser apps, branded identity theme, database migrations, setup console and optional CPU audio installer. No laptop credentials, farm data, virtual disks, model weights or development environments are included.

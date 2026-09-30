@@ -1,7 +1,8 @@
+import { browserOrigins } from './origins';
 import { test, expect, type Page } from '@playwright/test';
 
-const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
-const adminOrigin = 'https://hearth.example.invalid:8443';
+const origin = browserOrigins.workspace;
+const adminOrigin = browserOrigins.admin;
 async function session(page: Page, permissions: string[], state = 'active', admin = false) {
   await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'owner', display_name: 'Test person', state, roles: admin ? ['Owner'] : state === 'pending' ? [] : ['Member'], permissions, csrf_token: 'access-fixture', user_origin: origin, admin_origin: adminOrigin } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
@@ -65,7 +66,7 @@ test('People approves selected capabilities and handles concurrent edits', async
 });
 
 test('HTTP welcome offers current public installer and confirmation before HTTPS signup', async ({ page }) => {
-  await page.goto('http://hearth.example.invalid');
+  await page.goto(browserOrigins.welcome);
   await expect(page.getByRole('link', { name: 'Install certificate on Windows' })).toHaveAttribute('href', '/install-hearth-certificate.cmd');
   const register = page.getByRole('button', { name: 'Continue to secure registration' });
   await expect(register).toBeDisabled();
@@ -73,7 +74,7 @@ test('HTTP welcome offers current public installer and confirmation before HTTPS
   await expect(register).toBeEnabled();
   await register.click();
   await expect(page.getByRole('textbox', { name: 'Username', exact: true })).toBeVisible();
-  expect(page.url()).toMatch(/^https:\/\/hearth.example.invalid:8445\//);
+  expect(new URL(page.url()).origin).toBe(browserOrigins.identity);
   await expect(page.locator('input[name="password"]')).toBeVisible();
   await page.screenshot({ path: '.hearth/test-results/accounts/registration.png', fullPage: true });
 });

@@ -28,5 +28,5 @@
     "browser_mode": "Deployed production bundle over validated HTTPS, with explicit API fixtures. Existing opt-in live edge boundary probe also passes."
   },
   "limitations": "No user images or live inference were used for these UI fixtures. Existing owner/channel authorization and geometry execution are unchanged. Natural-language 3D requests and shared model artifacts are not implemented here.",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

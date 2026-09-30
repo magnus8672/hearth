@@ -367,6 +367,5 @@
       "status": "not_run",
       "note": "Manual provider assignment and bounded image/geometry services work without NAS/MCP prerequisites. Protected admin-agent setup, address-only member enrollment and agent-driven expansion remain unimplemented. The full P4/P8 gate, including required local 3D workflow qualification, remains open."
     }
-  ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  ]
 }

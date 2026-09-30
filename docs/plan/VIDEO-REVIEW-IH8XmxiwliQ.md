@@ -170,7 +170,7 @@ Summaries retain provenance and restrictive locality labels. Changed source snap
 | P8 | Implement and compare direct-fast, direct-strong, and plan/execute/review workflows. |
 | P9 | Require evidence for each advertised OS/backend/profile combination and multi-user contention behavior. |
 
-[Historical deployment inventory removed for repository privacy.]
+P4-H starts on the available NVIDIA machine with the strongest combination of host RAM, local SSD, supported runtime, and GPU headroom. Hardware names alone cannot choose that machine. Probe the farm before assigning it. Other accelerator hosts remain eligible for their validated backends; CUDA cache results must not be carried over as promises for another backend.
 
 The experiment is complete when it records:
 

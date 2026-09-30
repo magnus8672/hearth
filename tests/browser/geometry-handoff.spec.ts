@@ -1,8 +1,9 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 
-const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+const origin = browserOrigins.workspace;
 const imageId = '00000000-0000-4000-8000-000000000091';
 test.beforeEach(async ({ page }) => {
   if (process.env.HEARTH_BROWSER_LOCAL_BUILD !== '1') return;

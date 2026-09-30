@@ -75,7 +75,7 @@ def install(args):
     finally:
         os.umask(previous)
     unit = (SOURCE / 'runtimes/geometry/hearth-trellis.service').read_text()
-    unit = unit.replace('User=operator', 'User=' + args.user).replace('Group=operator', 'Group=' + str(account.pw_gid)).replace('/opt/hearth-trellis', str(root)).replace('/var/lib/hearth-trellis', str(state))
+    unit = unit.replace('User=hearth-provider', 'User=' + args.user).replace('Group=hearth-provider', 'Group=' + str(account.pw_gid)).replace('/opt/hearth-trellis', str(root)).replace('/var/lib/hearth-trellis', str(state))
     if backend == 'hunyuan':
         unit = unit.replace('TRELLIS', 'Hunyuan3D 2.0')
         unit = unit.replace('[Service]', '[Service]\nEnvironment=PYTHONDONTWRITEBYTECODE=1\nEnvironment=NUMBA_CACHE_DIR=' + str(state / 'jobs/cache'))

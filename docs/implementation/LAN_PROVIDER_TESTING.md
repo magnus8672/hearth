@@ -1,5 +1,7 @@
 # hearth provider network test
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 This development build lets one hearth route work among existing model servers. Model applications stay under their owners' control. A provider is an address and model; a capability assignment is an ordered list of those models. A resource group describes one shared GPU. Different capabilities can share a model, and a capability can have several independently hosted choices.
 
 The preferred test topology keeps different specialist models resident on separate machines at the same time, then routes requests to their hosting machines. Give independent GPUs separate resource groups and deliberately group services sharing hardware. Multiple models on one machine are optional. media-worker deliberately shares its GPU between image and geometry services; [multi-server onboarding, residency and concurrent dispatch](DESIGN_COVERAGE.md#same-type-provider-registration-and-resident-models) still need joint qualification. Record loaded models before and after probes and routed work because a compatible endpoint alone does not establish resident-only behavior.

@@ -121,5 +121,5 @@
     "No real GPU render or real-account login was performed for this patch.",
     "Release gate statuses remain unchanged."
   ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

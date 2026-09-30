@@ -1,7 +1,8 @@
+import { browserOrigins } from './origins';
 import { test, expect, type Page } from '@playwright/test';
 import path from 'node:path';
 
-const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+const origin = browserOrigins.workspace;
 const messages = () => Array.from({ length: 45 }, (_, i) => ({ id: `m${i}`, role: i % 2 ? 'assistant' : 'user', display_name: 'Member', content: `Message ${i}: ` + 'A saved conversation with enough history to scroll. '.repeat(8), status: 'completed', reason: null }));
 async function fixture(page: Page) {
   const state = { messages: messages(), runs: [] as Record<string, unknown>[] };

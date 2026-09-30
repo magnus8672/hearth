@@ -2,7 +2,7 @@
 
 Updated 18 September 2026. This index separates active guides, dated feature evidence and preserved historical records. Start with [the documentation index](README.md), [current farm state](implementation/CURRENT_STATE.md), [coverage](implementation/DESIGN_COVERAGE.md) and [build status](implementation/BUILD_STATUS.md).
 
-There are 56 Markdown documents outside the baseline/archive directories. The immutable `docs/plan/` package has 119 files, including 30 Markdown documents, twelve numbered engineering designs, ten phase plans and fourteen rendered diagrams. Original snapshot hashes remain the preservation authority. Counts describe inventory, not acceptance coverage.
+There are 56 Markdown documents outside the baseline/archive directories. The preserved `docs/plan/` package has 119 files, including 30 Markdown documents, twelve numbered engineering designs, ten phase plans and fourteen rendered diagrams. Original hashes and exact approved privacy-redaction hashes remain the preservation authority. Counts describe inventory, not acceptance coverage.
 
 Feature reports retain their dated evidence and fixture boundaries. Their current-status notes and the farm snapshot resolve superseded topology, URL, adapter and availability claims. A historical model/provider test does not prove it is registered today. The website presents the finished-product vision by design.
 
@@ -92,7 +92,7 @@ Feature reports retain their dated evidence and fixture boundaries. Their curren
 - [Original design package](plan/README.md): unchanged requirements, phase exits, original brand and source references. Its planned/no-code statements describe 12 September, not the current application.
 - [Root-package archive](archive/root-package/README.md): relocated duplicates from the initial document reorganization; use canonical `plan/` links for baseline requirements.
 - [Pre-refresh build ledger](archive/status-2026-09-18/BUILD_STATUS_PRE_REFRESH.md) and [coverage audit](archive/status-2026-09-18/DESIGN_COVERAGE_PRE_REFRESH.md): retain all earlier milestone prose, requirement mappings and test counts, including superseded status statements.
-- [Pre-refresh development](archive/status-2026-09-18/DEVELOPMENT_PRE_REFRESH.md) and [testing](archive/status-2026-09-18/TESTING_PRE_REFRESH.md): retain retired laptop commands solely to interpret historical evidence. They are not operating instructions for the active farm.
+- [Pre-refresh development](archive/status-2026-09-18/DEVELOPMENT_PRE_REFRESH.md) and [testing](archive/status-2026-09-18/TESTING_PRE_REFRESH.md): retain historical development commands solely to interpret historical evidence. They are not operating instructions for the active farm.
 
 Executable assets, generated contracts, runtime manifests and curated evidence remain beside code/assets. Model weights, binaries, certificates and generated connector ZIPs are ignored outputs, not source-document downloads. Build connectors using the [LAN guide](implementation/LAN_PROVIDER_TESTING.md).
 

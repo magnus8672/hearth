@@ -1,10 +1,12 @@
 # hearth image provider
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 For the dedicated Linux Fooocus machine at `10.20.30.20`, use [Fooocus on media-worker](../operations/FOOOCUS_PROVIDER.md). Its new adapter shares the existing Fooocus worker and model while speaking the same job protocol. The Windows reference below is historical and must not be restarted for current farm tests.
 
 This experimental headless provider runs Stable Diffusion XL directly through Diffusers. It is the first local text-to-image implementation, separate from chat servers and graphical model tools. It does not implement the signed native worker installer, enrollment, remote supervision, image editing or 3D generation.
 
-[Historical deployment inventory removed for repository privacy.]
+The qualified reference is Windows, Python 3.12, a CUDA-capable GPU and PyTorch 2.7.1 with CUDA 12.8. The real 1024 × 1024, 20-step proof took 13.48 seconds including first pipeline load and peaked at 5,593,327,104 bytes of GPU allocation. LM Studio remained loaded. These are observations on this machine, not a hardware minimum or throughput guarantee.
 
 ## Installation on this development checkout
 

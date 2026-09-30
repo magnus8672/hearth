@@ -1,7 +1,8 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 import path from 'node:path';
 
-const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+const origin = browserOrigins.workspace;
 const channel = '00000000-0000-4000-8000-000000000051';
 
 test('live HTTPS edge permits channel image bodies up to the dedicated upload limit', async ({ page }) => {

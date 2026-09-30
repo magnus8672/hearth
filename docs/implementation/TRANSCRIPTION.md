@@ -1,5 +1,7 @@
 # hearth microphone and transcription
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 > Current status, 18 September: transcription is implemented, but no transcription provider is registered in the active farm. The prepared CPU Whisper service below describes historical qualification. Memory, shared tools and geometry have since been implemented as bounded slices. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. Private chat now records a microphone or accepts a PCM WAV upload, transcribes it through the assigned local `audio.transcribe` provider and saves a transcript draft. It does not submit a chat turn. Users review or edit the transcript, choose **Use in message**, then send or steer through the existing composer.

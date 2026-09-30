@@ -1,5 +1,7 @@
 # Image settings and 4K output
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Deployed 17 September 2026 to the existing head at `10.20.30.10` and Fooocus on media-worker at `10.20.30.20`. Refresh the workspace, open Images and select the existing Fooocus provider. No replacement provider registration is needed.
 
 ## Controls
@@ -43,6 +45,6 @@ Checkpoint paths, LoRAs, samplers, schedulers, refiner selection, image editing 
 | Widescreen 4K | 3840 × 2160, validated PNG | 13.22 s | 11,267,017 |
 | Square 4K | 4096 × 4096, validated PNG | 23.01 s | 21,632,401 |
 
-These are individual observations on the 16 GB mobile RTX 4090, not throughput guarantees. The widescreen image was visually inspected. No test pictures were added to the user's gallery.
+These are individual observations on the CUDA test configuration, not throughput guarantees. The widescreen image was visually inspected. No test pictures were added to the user's gallery.
 
 [Validation record](../../evidence/images/2026-09-17-options/validation.json): 55 Python tests pass on the head VM with restricted roles in a temporary database; three opt-in tests skip and real GPU transport is qualified separately above. Coverage includes settings admission, adapter forwarding, legacy compatibility, incorrect receipt rejection, large artifact storage, restoration and deletion. All 188 shared contract fixtures pass in Python and native Go on the VM. Two browser tests pass against the deployed HTTPS bundle with synthetic API responses, covering advanced settings, restoration, provider switching, deletion and 390-pixel layout. Browser fixtures do not prove real authenticated user generation. TypeScript checking, both production builds, Python lint and documentation checks pass. User acceptance of the new controls remains pending; no full release gate changes status.

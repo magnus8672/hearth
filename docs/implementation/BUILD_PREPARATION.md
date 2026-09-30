@@ -130,7 +130,7 @@ Hybrid GPU/RAM/SSD execution, expert-profile warming and staged planning/review 
 
 ## Current environment and inspection evidence
 
-[Historical deployment inventory removed for repository privacy.]
+The original read-only inspection checked tool availability on a development workstation. Personal operating-system inventory, installed memory and application paths have been removed. Tool availability must be checked on each development host; it is not hardware qualification.
 
 No dependency installation, OS configuration, network enrollment, NAS connection, model execution or paid provider call was performed. Upstream packages and price/model configurations were not revalidated during this document inspection. The source list's earlier upstream checks remain inputs to P0, not newly verified compatibility claims.
 

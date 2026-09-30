@@ -1,5 +1,7 @@
 # notes, shared channels and local images
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 > Current status, 18 September: the active image provider is Fooocus on media-worker. Qwen runs independently on model-host; image and geometry services share media-worker's managed GPU. Hourly evidence expiry and the prepared laptop topology below are historical. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Current update: [provider qualification](PROVIDER_LIFECYCLE.md) no longer expires after one hour. The hourly behavior described in this historical milestone has been superseded.
@@ -54,7 +56,7 @@ Migrations 0004â€“0008 add forced-RLS side notes, durable steering requests
 
 The image transport is a typed job protocol, independent of any upstream UI. It checks request/receipt identity and settings, advertised model closure, bounded downloads, SHA-256, PNG decoding and dimensions. Its experimental Python runtime loads only a pinned local SDXL safetensors closure with offline loading and CPU offload. It retains one job slot until CUDA synchronization completes. This is not the signed native worker/runtime distribution or an enforced OS network sandbox. See the [runtime recipe and limits](../runtimes/IMAGE_PROVIDER.md).
 
-[Historical deployment inventory removed for repository privacy.]
+The supplied Fooocus ZIP was extracted under `C:\src\Fooocus-main`. Its own Python environment was prepared with CUDA 12.8 support, and a real matrix operation passed on the test CUDA GPU. Source inspection found a large Gradio positional UI contract, automatic update/install behavior and a launcher TLS override. The hearth experiment used the direct Diffusers route without running the Fooocus updater or disabling TLS validation. Fooocus's graphical workflow remains an optional future adapter, not a requirement for this capability.
 
 Image input/editing, refiner/upscaling workflows, style/LoRA catalogs, voice, 3D generation, exports/import qualification, native remote connectors, richer routing preferences and the administration agent remain unimplemented. The original geometry decisions and [Shapecast observations](SHAPECAST_INSPECTION.md) still guide separate image, geometry, material and export stages.
 

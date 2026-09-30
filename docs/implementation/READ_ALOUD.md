@@ -1,5 +1,7 @@
 # hearth Read aloud
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 > Current status, 18 September: Read aloud is implemented, but no speech provider is registered in the active farm. The prepared Kokoro process and real synthesis below describe the retired development reference. Configure a supported provider before using these controls. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. Completed private assistant replies now have a **Read aloud** control. It sends that saved reply's text to the assigned `audio.speak` provider, saves a validated WAV with the reply, and records the speech model and stock voice. Reloading or replaying that audio does not generate another job. Existing text, vision and image routes keep their assignments.

@@ -65,6 +65,6 @@ Give a new coding session [BUILD_HANDOFF.md](BUILD_HANDOFF.md). It contains the 
 
 One logical control head created by the first installer, a managed Linux control appliance on supported Windows/Linux/macOS hosts, one PostgreSQL instance on local SSD, native workers, one NAS gateway, and separate browser origins for users and administrators. No Kubernetes, distributed VRAM pooling, compulsory vector database, or MoE pruning is required for the first release. These are scope decisions for a home farm, not judgments about those technologies.
 
-[Historical deployment inventory removed for repository privacy.]
+Each deployment must measure its available GPU memory and backend support. Hardware labels are inventory hints, not validated specifications. Older machines can serve tools, memory, storage, or CPU inference without GPU acceleration.
 
 See [BUILD_STATUS.md](BUILD_STATUS.md) for what has actually been built. All Mermaid diagrams in this package are Markdown source diagrams and should render in GitHub, Obsidian, or another Mermaid-capable viewer.

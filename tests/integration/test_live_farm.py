@@ -14,13 +14,14 @@ from tests.integration.test_chat import csrf, promote, wait_finished
 from tests.integration.test_identity import bff as bff
 from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
+from tests.live_targets import configured_provider
 
 
 @pytest.mark.skipif(os.environ.get('HEARTH_LIVE_FARM') != '1', reason='Explicit two-machine local inference test required.')
 def test_real_resident_specialists_stream_concurrently(bff, monkeypatch):
     factory, settings, _, migration, _ = bff
-    servers = [('http://127.0.0.1:1234', 'openai/gpt-oss-20b', 'chat.general'),
-               ('http://10.20.30.40:1234', 'qwen/qwen3.8-27b', 'code.implement')]
+    servers = [(*configured_provider(), 'chat.general'),
+               (*configured_provider('HEARTH_TEST_SECOND_PROVIDER'), 'code.implement')]
 
     def loaded():
         return {url: sorted(i['id'] for m in httpx.get(url+'/api/v1/models', timeout=10, trust_env=False).raise_for_status().json()['models'] for i in m['loaded_instances']) for url, _, _ in servers}
@@ -73,7 +74,7 @@ def test_real_resident_specialists_stream_concurrently(bff, monkeypatch):
         assert overlap > 0, intervals
         assert loaded() == before
         assert all(row['execution_state'] == 'idle' for row in admin.get('/api/v1/providers').json()['items'])
-        out = Path('evidence/vision/2026-09-13')
+        out = Path('.hearth/test-results/vision/2026-09-13')
         out.mkdir(parents=True, exist_ok=True)
         (out/'physical-concurrency.json').write_text(json.dumps({'scope': 'Two real LM Studio servers and resident models through real PostgreSQL/BFF APIs in a disposable farm, with explicit OIDC fixtures.',
             'servers': servers, 'simultaneous_stream_seconds': round(overlap, 3), 'independent_pool_ids': True,

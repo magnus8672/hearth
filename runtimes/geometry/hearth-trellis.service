@@ -6,8 +6,8 @@ Wants=network-online.target
 [Service]
 Type=exec
 ExitType=cgroup
-User=operator
-Group=operator
+User=hearth-provider
+Group=hearth-provider
 WorkingDirectory=/opt/hearth-trellis
 Environment=PYTHONPATH=/opt/hearth-trellis/app
 Environment=PYTHONUNBUFFERED=1

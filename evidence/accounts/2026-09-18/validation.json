@@ -109,5 +109,5 @@
     "Already dispatched external tool side effects cannot be undone by revocation",
     "No full release gate closed; 20 partial and 41 not run"
   ],
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

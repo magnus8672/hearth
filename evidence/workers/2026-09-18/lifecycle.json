@@ -26,5 +26,5 @@
   "gpu_memory_after_unload_mib": 651,
   "note": "Resident service restored; admission paused for isolated live queue qualification.",
   "admission_resumed_after_qualification": true,
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

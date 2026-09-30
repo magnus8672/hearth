@@ -1,0 +1,10 @@
+{
+  "reason": "Screenshots containing private deployment identifiers removed, not retouched.",
+  "paths": [
+    "evidence/geometry/2026-09-17/preview-fixture.png",
+    "evidence/head-esx/2026-09-14-welcome/chromium-mobile.png",
+    "evidence/head-esx/2026-09-14-welcome/chromium-welcome.png",
+    "evidence/http-consent/2026-09-13/admin-desktop.png",
+    "evidence/http-consent/2026-09-13/admin-mobile.png"
+  ]
+}

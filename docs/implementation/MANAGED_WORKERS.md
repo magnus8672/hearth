@@ -1,5 +1,7 @@
 # Managed Linux services and GPU queues
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Implemented 18 September 2026. The first native Go worker can adopt approved, already installed systemd services. media-worker (`10.20.30.20`) is connected to the existing head (`10.20.30.10`) and manages Fooocus. [TRELLIS and Hunyuan3D 2.0 geometry adapters](LOCAL_GEOMETRY.md) share its GPU through explicit shared mode.
 
 ## Try it

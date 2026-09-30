@@ -1,6 +1,8 @@
 # Historical copy captured 18 September 2026
 
-This document preserves the pre-refresh text, including superseded status claims and retired laptop commands. It is not an operating guide. Use the [current documentation index](../../README.md) and [dated farm snapshot](../../implementation/CURRENT_STATE.md). Do not start the retired appliance or run its fixtures against the live farm.
+> Privacy note: deployment identifiers and workstation paths below are sanitized examples. This is a historical record, not current deployment instructions.
+
+This document preserves the pre-refresh text, including superseded status claims and historical development commands. It is not an operating guide. Use the [current documentation index](../../README.md) and [dated farm snapshot](../../implementation/CURRENT_STATE.md). Do not start the retired appliance or run its fixtures against the live farm.
 
 # Testing hearth
 

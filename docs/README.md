@@ -50,7 +50,7 @@ For deployment and validation, start with [head VM setup](operations/HEAD_VM_SET
 
 ## Specifications and historical records
 
-[The original design package](plan/README.md) contains the twelve engineering specifications, ten phase plans, build handoff, source references, brand v1.0 and fourteen rendered diagrams. Its 119 files remain byte-for-byte unchanged. Its old status statements describe the planning date, not today's application.
+[The original design package](plan/README.md) contains the twelve engineering specifications, ten phase plans, build handoff, source references, brand v1.0 and fourteen rendered diagrams. Its 119 baseline files are preserved with two documented [privacy redactions](operations/REPOSITORY_PRIVACY.md). Its old status statements describe the planning date, not today's application.
 
 Current decisions extend that baseline. [ADR 0006](adr/0006-managed-and-external-providers.md) adds existing services alongside managed runtimes. [Brand revision 1.2](implementation/BRAND_REVISION_1_2.md) requires lowercase `hearth` and uses the fireplace as the first h in the combined wordmark. The [hybrid inference video review](plan/VIDEO-REVIEW-IH8XmxiwliQ.md) is an experiment proposal; required local 3D remains in the binding release scope.
 

@@ -39,5 +39,5 @@
   "release_gates_changed": false,
   "cancellation_during_readiness": "passed",
   "documentation": "114 Markdown files, 986 local links and 119 original snapshot hashes pass",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

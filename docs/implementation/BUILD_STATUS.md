@@ -4,6 +4,12 @@ Updated 29 September 2026. This ledger records implemented behavior, dated valid
 
 All fourteen capability profiles have bounded implementations. Database migration is **0027**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Repository privacy cleanup — 29 September
+
+Sanitized current documentation, archived notes, test fixtures and evidence to use generic roles and illustrative endpoints. Browser and opt-in inference tests now take deployment targets from private environment configuration; new live evidence goes into ignored local storage. Provider service templates use a dedicated generic account. Removed five identifying screenshots, and recorded two exact baseline-document redaction exceptions. The historical cleanup removes deployment identifiers and identifying media from earlier revisions and replaces personal author email with the public repository account identity. Private backups and operator notes stay in ignored storage.
+
+Source validation covers documentation links and baseline hashes, TypeScript, Python syntax and lint, explicit live-target validation, and browser test discovery. These checks do not rerun live inference or change release-gate status. See [publication and clone limitations](../operations/REPOSITORY_PRIVACY.md).
+
 ## Illustrated repository introduction — 29 September
 
 Added an [offline HTML README](../readme.html) using the farm map's dotted machine boundaries and separate capability nodes. The introduction covers the edge-inference motivation, workspace features, provider architecture, setup paths and development limits. Its selectable workflows are explicitly illustrative, contain no private farm addresses and make no live requests. Firelight/Daylight themes use the existing brand assets. The root README includes a preview image and points to the HTML; GitHub renders that image but displays the HTML file as source.
@@ -125,4 +131,4 @@ These rows summarize dated evidence. Earlier test-environment results do not est
 
 Use [current coverage and next work](DESIGN_COVERAGE.md) as the implementation checklist. Full managed membership/provisioning, protected admin-agent/bootstrap paths, live routing/cloud boundaries, task/sandbox/knowledge expansion, media quality and release/recovery remain open. Required local geometry and P8/A12 have not been removed from scope.
 
-Keep the original 119-file design package unchanged. The active name is lowercase hearth with the integrated fireplace-h wordmark. The [static website](../WEBSITE.md) intentionally describes the finished product; marketing copy does not change engineering readiness. Keep this public ledger focused on product behavior and qualification, without private network inventories or deployment identifiers.
+Preserve the original 119-file design package except for the exact, owner-authorized privacy redactions recorded by the documentation checker. The active name is lowercase hearth with the integrated fireplace-h wordmark. The [static website](../WEBSITE.md) intentionally describes the finished product; marketing copy does not change engineering readiness. Keep this public ledger focused on product behavior and qualification, without private network inventories or deployment identifiers.

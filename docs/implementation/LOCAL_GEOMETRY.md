@@ -1,5 +1,7 @@
 # Local image-to-3D generation
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Implemented on the existing head and media-worker, 17 September 2026. The original runtime is [trellis.cpp v0.6.0](https://github.com/pwilkin/trellis.cpp/releases/tag/v0.6.0), executing TRELLIS.2 with the pinned Q8 GGUF profile. This replaces the earlier TripoSR candidate for this deployment, without tying the geometry protocol to one engine.
 
 ## Generation tuning — 18 September 2026
@@ -64,7 +66,7 @@ The alternative is the original [Tencent Hunyuan3D 2.0](https://github.com/Tence
 
 On media-worker, the two geometry providers and Fooocus share `media-worker GPU`. Owner fairness selects the next job before its stored target selects the backend. The worker stops every other approved service and confirms its cgroup has exited before starting Hunyuan, TRELLIS or Fooocus. A selected Hunyuan job is never silently converted into a TRELLIS job. Failed readiness or generation remains a visible failure; unknown execution continues to hold capacity. Independent future hosts should use separate provider connections and resource groups so they can run concurrently.
 
-[Historical deployment inventory removed for repository privacy.]
+This implementation targets a bounded 16 GiB CUDA profile (compute capability 8.9). Shape and texture generation run in separate child processes: shape fully exits before paint loads, and paint loads on CPU, offloads its delight stage, then moves the multiview pipeline onto CUDA for its own call. Both paint VAEs use tiling/slicing. The pinned upstream shape offload method and multiview offload device handling are incompatible with this profile, so those stages use explicit CUDA residency instead. The paint loader uses reviewed engine classes and the pinned safetensors directly; it does not import loose model-repository Python code. CPU RAM is also needed for model loading. The runner uses fixed local paths and offline mode, produces a GLB with textures enabled by default, and removes private intermediate images/meshes after the entire process group has been reaped. Cancellation and the twenty-minute deadline cover both stages.
 
 The installer leaves the new service stopped for reviewed adoption:
 
@@ -109,7 +111,7 @@ media-worker's worker is configured in explicit **shared GPU** mode. Geometry jo
 
 ## Observed qualification
 
-[Historical deployment inventory removed for repository privacy.]
+The original cube reference completed in 27.29 seconds at 512 and 60.27 seconds at 1024. The first GLB contained 144,438 triangles and two textures; the detailed file was 14,253,468 bytes. These are individual measurements, not latency guarantees or a broad quality benchmark.
 
 A real BFF test on isolated VM PostgreSQL storage completed two textured GLBs, cancelled one waiting request and one active generation, reused the GPU after cancellation, downloaded and validated the result, and deleted it. The existing live farm's accounts and artifacts were not test fixtures. Actual signed-worker selection of TRELLIS and restoration of Fooocus also passed. Mixed image/geometry scheduling and service readiness have a separate database fixture; multi-user live mixed-load acceptance is still open.
 

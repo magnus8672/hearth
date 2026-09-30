@@ -108,5 +108,5 @@
   "ssh_account": "[redacted deployment detail]",
   "passwordless_sudo": "[redacted deployment detail]",
   "os_release": "[redacted deployment detail]",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Private deployment inventory redacted; validation outcomes describe the original run."
 }

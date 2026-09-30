@@ -88,5 +88,5 @@
     "new_farm_started": false
   },
   "release_gate_changes": false,
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

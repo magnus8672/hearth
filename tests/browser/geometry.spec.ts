@@ -1,9 +1,10 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
 test('provider tuning defaults, nondefault submission, saved settings and reset', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   let submitted: any; const jobs: any[] = [];
   await page.route('**/api/**', async route => {
     const url = new URL(route.request().url()).pathname;
@@ -52,7 +53,7 @@ test('provider tuning defaults, nondefault submission, saved settings and reset'
 });
 
 test('changing from detailed TRELLIS to Hunyuan submits the supported detail and selected model', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   let submitted: any;
   await page.route('**/api/**', async route => {
     const url = new URL(route.request().url()).pathname;
@@ -82,7 +83,7 @@ test('changing from detailed TRELLIS to Hunyuan submits the supported detail and
 // Inspect the new bundle on the VM origin before deployment, without a local server.
 test.beforeEach(async ({ page }) => {
   if (process.env.HEARTH_BROWSER_LOCAL_BUILD !== '1') return;
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   await page.route(origin + '/**', async route => {
     const pathname = new URL(route.request().url()).pathname;
     if (pathname !== '/' && !pathname.startsWith('/assets/')) return route.fallback();
@@ -93,9 +94,9 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('geometry upload, private preview, cancellation and deletion', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   let jobs: Record<string, any>[] = [];
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: browserOrigins.admin } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/geometry-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'trellis2/q8', name: 'media-worker fixture', state: 'ready', profile: { resolutions: [512, 1024] } }] } }));
   await page.route('**/api/v1/geometry', async route => {
@@ -163,8 +164,8 @@ test('geometry upload, private preview, cancellation and deletion', async ({ pag
 });
 
 test('upload errors preserve HTTP meaning and keep the selected file', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: 'https://hearth.example.invalid:8443' } }));
+  const origin = browserOrigins.workspace;
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own', 'channel.use', 'capability.image.generate', 'capability.geometry.generate'], csrf_token: 'fixture', user_origin: origin, admin_origin: browserOrigins.admin } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/geometry-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'trellis2/q8', name: 'Fixture', state: 'ready', profile: { resolutions: [512] } }] } }));
   let failure = { status: 413, body: '', contentType: 'text/plain' };
@@ -188,7 +189,7 @@ test('upload errors preserve HTTP meaning and keep the selected file', async ({ 
 });
 
 test('legacy models stay identifiable and rename failures preserve the draft', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   const jobs = ['a1234567', 'b7654321'].map(id => ({ id, name: `Model ${id}`, has_thumbnail: false, status: 'completed', request: { model: 'trellis2/q8', resolution: 512, seed: 1 } }));
   await page.route('**/api/**', route => {
     const url = new URL(route.request().url()).pathname;
@@ -224,7 +225,7 @@ test('legacy models stay identifiable and rename failures preserve the draft', a
 
 test('live edge admits geometry upload envelopes while retaining other limits', async ({ page }) => {
   test.skip(process.env.HEARTH_LIVE_UPLOAD_EDGE !== '1', 'Opt in against the deployed head; no session or generation is used.');
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   await page.goto(origin + '/health/browser');
   const results = await page.evaluate(async () => {
     const request = { name: 'Unauthenticated boundary fixture', target_id: crypto.randomUUID(), request: { id: crypto.randomUUID(), model: 'unauthenticated-boundary-test', image_sha256: '0'.repeat(64) }, image: '' };

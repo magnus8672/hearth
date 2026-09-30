@@ -1,5 +1,7 @@
 # hearth vision and concurrent resident models
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 > Current status, 18 September: private vision is implemented; channel uploads are sharing-only, but the active Qwen target lacks saved vision verification. Run the explicit pixel probe before treating its Vision binding as eligible. Audio, memory and geometry implementations now also exist; their deployment status is separate. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. Private chat can now send actual image pixels to a separately verified vision model. Automatic routing selects `vision.describe` when a turn or its retained history contains uploaded images. Normal text chats continue using their existing conversation/coding routes.

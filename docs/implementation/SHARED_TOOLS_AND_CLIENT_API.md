@@ -1,5 +1,7 @@
 # Shared tools and client connections
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Implemented 14 September 2026 with migration `0020`. hearth now owns a shared MCP gateway and serves a capability-based Chat Completions API. Register upstream tools once in Administration. Private chat and external MCP clients use the same catalog, credentials, approval decisions and invocation receipts.
 
 ## Try it on the active VM head
@@ -19,7 +21,7 @@ Implemented 14 September 2026 with migration `0020`. hearth now owns a shared MC
 | Coding model | `code.implement` |
 | Shared MCP endpoint | `https://hearth.example.invalid/mcp`, Streamable HTTP, same Bearer key |
 
-The active [ESX head](../operations/ESX_HEAD.md) binds its public edge to `0.0.0.0`; use the saved VM address for HTTPS, clients and sign-in. The retired laptop appliance's loopback URLs do not reach this farm. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
+For a [VM deployment](../operations/ESX_HEAD.md), use its configured HTTPS origins for clients and sign-in. Loopback addresses refer to the client itself. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
 
 ## Three tools, regardless of catalog size
 
@@ -109,7 +111,7 @@ For a private CA, supply a CA bundle through `SSL_CERT_FILE` in the selected Her
 
 Hermes Desktop can have multiple Python backends running at once. Configuring only the named **hearth** profile was insufficient here: that backend loaded its CA and passed its own onboarding probe, while the **default** backend still reproduced the user's exact unreachable error. Check every backend involved in setup, not just a separately launched Python test.
 
-Both the laptop's default and **hearth** profile `.env` files now point `SSL_CERT_FILE` at `certificates/hearth-ca-bundle.pem` under the main Hermes home directory. The bundle is independent of either profile's lifetime. The changes were applied through each running backend's authenticated environment-setting API, so both processes picked them up without another restart. Both environment files were backed up first; model settings, API credentials and system-wide environment were preserved. For manual file edits on a new installation, fully quit and reopen Hermes to reload its environment, then select **Local / custom endpoint**, enter `https://hearth.example.invalid/v1` and the existing hearth key. Do not remove `/v1` or disable TLS verification.
+Configure the client runtime's CA bundle independently of browser trust. For a Hermes installation, set `SSL_CERT_FILE` to a private bundle containing the deployment CA, then fully quit and reopen the client after editing its environment. Select **Local / custom endpoint**, enter your workspace origin plus `/v1`, and supply a scoped hearth key. Do not disable TLS verification.
 
 [Initial transport evidence](../../evidence/client-api/2026-09-15/hermes-trust.json) records verified TLS from a separate Python process: `/health/browser` returns 200 and `/v1/models` without a key correctly returns 401. The [running-backend follow-up](../../evidence/client-api/2026-09-15/hermes-desktop-backends.json) verifies the actual Desktop onboarding and custom-endpoint probes in both processes: the network connection succeeds and the stricter probe correctly rejects a missing key.
 
@@ -125,7 +127,7 @@ Provider definitions are profile-scoped. This installation's endpoint is saved u
 
 The main Hermes request carries `reasoning_effort` and 37 native tool definitions, including regex constraints. The client API now accepts that bounded request shape. model-host's resident Qwen passes the native function-call/result probe and is qualified for tools. A short authenticated client request returns a real reply, and a separate client-owned function round trip reads a synthetic local file and consumes its contents through the VM. These checks use the existing key and preserve TLS validation.
 
-Historical 15 September failure: full Hermes inference was blocked by loaded context capacity: LM Studio reports **28,074 prompt tokens against an 8,192-token context** for the captured request. The 18 September read-only inventory now reports [redacted capacity] loaded tokens. The old 8,192-token setting is superseded; a full Hermes session must still be retested with room for reply/history growth. Reduce client context/tools or deliberately configure capacity if a new request exceeds it. Allow room for replies and growing history. hearth does not automatically reload or swap the model. A Hermes context estimate alone does not increase LM Studio's loaded context.
+Historical 15 September failure: full Hermes inference was blocked by loaded context capacity: LM Studio reports **28,074 prompt tokens against an 8,192-token context** for the captured request. Later provider configuration superseded that context setting; a full Hermes session must still be retested with room for reply/history growth. Reduce client context/tools or deliberately configure capacity if a new request exceeds it. Allow room for replies and growing history. hearth does not automatically reload or swap the model. A Hermes context estimate alone does not increase LM Studio's loaded context.
 
 The transport now recognizes LM Studio's explicit pre-generation context rejection inside SSE, returns safe token counts and a `context_length_exceeded` error, releases the request's pool and preserves provider qualification. Non-streaming requests receive HTTP 400; streams carry the same error code and status metadata without a success terminator. Unknown failures or errors after partial output keep their conservative uncertain-execution handling. Provider text and request contents are not echoed into these errors.
 

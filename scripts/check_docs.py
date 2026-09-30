@@ -80,11 +80,18 @@ def check():
         GalleryLinks(source).feed(source.read_text(encoding='utf-8'))
 
     baseline = json.loads((ROOT / 'evidence/preparation/2026-09-12/inspection.json').read_text(encoding='utf-8'))['source_inventory']
+    redaction_path = ROOT / 'evidence/privacy/2026-09-29/baseline-redactions.json'
+    redactions = {item['path']: item for item in json.loads(redaction_path.read_text(encoding='utf-8'))['files']} if redaction_path.exists() else {}
     preserved = 0
+    redacted = 0
     for record in baseline:
         path = ROOT / 'docs/plan' / record['file']
+        exception = redactions.get(path.relative_to(ROOT).as_posix())
         if path.is_file() and digest(path) == record['sha256']:
             preserved += 1
+        elif (path.is_file() and exception and exception['original_sha256'] == record['sha256']
+              and digest(path) == exception['sanitized_sha256']):
+            redacted += 1
         else:
             errors.append(f'Original snapshot changed or missing: {record["file"]}')
     gates = json.loads((ROOT / 'docs/implementation/release-gates.json').read_text(encoding='utf-8'))['gates']
@@ -97,6 +104,7 @@ def check():
         'documents_outside_docs': outside,
         'root_pointers': [path.name for path in documents if path.parent == ROOT],
         'original_snapshot_files_verified': preserved,
+        'approved_privacy_redactions_verified': redacted,
         'original_snapshot_file_count': len(baseline),
         'release_gate_counts': dict(Counter(gate['status'] for gate in gates)),
         'errors': errors,

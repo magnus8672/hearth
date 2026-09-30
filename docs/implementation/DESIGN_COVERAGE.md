@@ -37,9 +37,9 @@ Use the feature guides in [the index](../README.md) for actual bounds, tests and
 
 Seven text profiles share the compatible chat transport: conversation, planning, code explanation, coding, writing, summarization and extraction. A text transport probe does not demonstrate code execution, specialist quality or vision. Tools require their own native call/result probe; caller-owned tools execute in the external client.
 
-The active farm has three provider targets: model-host Qwen, media-worker Fooocus and media-worker TRELLIS. Chat, Coding, Images and Geometry have compatible saved assignments. Vision is assigned but its saved target features currently omit `vision`. The other five text specialists have no dedicated bindings; automatic routing may use general chat for an unassigned specialist. Audio has no registered providers. Memory executes inside the head and does not require a model assignment. See [exact endpoints and observed settings](CURRENT_STATE.md).
+Capability availability depends on each deployment's registered targets, saved verification and resource groups. The [capability overview](CURRENT_STATE.md) describes those requirements without publishing a private farm inventory.
 
-A saved ready media target need not have its service running: media-worker explicitly shares one GPU and selects Fooocus or TRELLIS for gallery work. This qualified exception does not change the default architecture of resident specialists on independently resourced machines. Desired service, observed process state and verified capability readiness remain separate.
+A saved ready media target need not have its service running: explicit shared-GPU mode selects Fooocus, TRELLIS or Hunyuan for the scheduled media job. This qualified exception does not change the default architecture of resident specialists on independently resourced machines. Desired service, observed process state and verified capability readiness remain separate.
 
 ## Same-type provider registration and resident models
 

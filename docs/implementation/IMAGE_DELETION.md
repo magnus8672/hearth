@@ -1,5 +1,7 @@
 # Delete generated images
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 Deployed to the existing head at `10.20.30.10` on 17 September 2026.
 
 The private Images gallery offers **Delete image** beside **Save PNG** and **Use settings** on completed or stopped jobs. A confirmation names both the gallery and private chat effect. Successful deletion removes the card immediately and survives refresh or a new session. Errors leave the card available for retry. Pending and running jobs must finish or stop first.

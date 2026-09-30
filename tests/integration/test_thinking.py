@@ -16,6 +16,7 @@ from tests.integration.test_chat import configure, csrf, promote, setup, wait_fi
 from tests.integration.test_identity import bff as bff
 from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
+from tests.live_targets import configured_provider
 
 
 @pytest.mark.parametrize('ending', ['complete', 'steer', 'stop', 'revoke'])
@@ -130,7 +131,7 @@ def test_thinking_preview_has_utf8_cap_without_cutting_off_answer(bff, monkeypat
 def test_live_resident_qwen_thinking_before_answer_and_restore(bff):
     import httpx
     factory, settings, _, migration, _ = bff
-    url, model = 'http://10.20.30.40:1234', 'qwen/qwen3.8-27b'
+    url, model = configured_provider()
     def loaded():
         return sorted(item['id'] for row in httpx.get(url+'/api/v1/models', trust_env=False, timeout=10).raise_for_status().json()['models'] for item in row['loaded_instances'])
     before = loaded()
@@ -167,6 +168,6 @@ def test_live_resident_qwen_thinking_before_answer_and_restore(bff):
             signin(fresh)
             assert fresh.get(path).json()['runs'] == result['runs']
         assert loaded() == before
-        output = Path('evidence/thinking/2026-09-13')
+        output = Path('.hearth/test-results/thinking/2026-09-13')
         output.mkdir(parents=True, exist_ok=True)
         (output/'live-qwen.json').write_text(json.dumps({'scope': 'Real resident LAN Qwen and restricted-role PostgreSQL/BFF, disposable farm, explicit OIDC fixtures. Synthetic garden arithmetic only.', 'model': model, 'reasoning_visible_before_answer': observed, 'distinct_preview_lengths': sorted(sizes), 'reasoning_characters': len(run['reasoning_text']), 'reasoning_text_recorded_in_evidence': False, 'answer': result['messages'][-1]['content'], 'saved_preview_restored': True, 'loaded_models_unchanged': True, 'cloud_calls': 0}, indent=2), encoding='utf-8')

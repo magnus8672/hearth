@@ -78,5 +78,5 @@
   },
   "deployment": "Updated both web bundles and restarted the validated head edge after checking that no provider pool was executing. Backend and GPU runtime changes were not needed.",
   "limitations": "The user's jeep.png was not supplied or used. This correction qualifies upload admission and error presentation; it does not repeat GPU model quality acceptance or close release gates.",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }

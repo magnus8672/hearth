@@ -17,6 +17,7 @@ from tests.integration.test_chat import configure, csrf, promote, setup, wait_fi
 from tests.integration.test_identity import bff as bff
 from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
+from tests.live_targets import configured_provider
 
 
 def picture():
@@ -180,12 +181,13 @@ def test_failed_vision_check_keeps_successfully_verified_text(bff, monkeypatch):
 
 @pytest.mark.skipif(os.environ.get('HEARTH_LIVE_VISION') != '1', reason='Explicit real vision model test required.')
 def test_live_qwen_understands_uploaded_pixels_and_restores(bff):
+    url, model = configured_provider()
     factory, settings, _, migration, _ = bff
     with factory('admin') as admin, factory() as user:
         signin(admin)
         promote(admin, migration, settings)
         ah = csrf(admin, settings.admin_origin)
-        target = admin.post('/api/v1/providers', headers=ah, json={'name': 'Live vision fixture', 'base_url': 'http://10.20.30.40:1234', 'model_id': 'qwen/qwen3.8-27b', 'local_only': True, 'allow_insecure_http': True, 'residency_policy': 'lmstudio_loaded'}).json()['id']
+        target = admin.post('/api/v1/providers', headers=ah, json={'name': 'Live vision fixture', 'base_url': url, 'model_id': model, 'local_only': True, 'allow_insecure_http': True, 'residency_policy': 'lmstudio_loaded'}).json()['id']
         probe = admin.post(f'/api/v1/providers/{target}/probe', headers=ah, json={'revision': 1, 'vision': True}).json()
         assert probe['state'] == 'ready' and 'vision' in probe['features'], probe
         assert assign(admin, ah, 'vision.describe', [target]).status_code == 200
@@ -205,7 +207,7 @@ def test_live_qwen_understands_uploaded_pixels_and_restores(bff):
             signin(fresh)
             assert fresh.get(path).json()['messages'] == complete['messages']
             assert fresh.get(path+'/attachments/'+attachment).status_code == 200
-        output = Path('evidence/vision/2026-09-13')
+        output = Path('.hearth/test-results/vision/2026-09-13')
         output.mkdir(parents=True, exist_ok=True)
         (output/'vision-fixture.png').write_bytes(picture())
         (output/'live-vision.json').write_text(json.dumps({'scope': 'Real remote Qwen, pixel challenge, uploaded synthetic image and restricted-role PostgreSQL/BFF APIs; explicit OIDC fixtures in disposable farm.', 'model': run['model_id'], 'capability': run['capability_id'], 'finish_reason': run['finish_reason'], 'answer': complete['messages'][-1]['content'], 'pixel_challenge_passed': True, 'restored_upload_and_reply': True}, indent=2), encoding='utf-8')

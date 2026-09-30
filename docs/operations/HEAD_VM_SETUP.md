@@ -1,5 +1,7 @@
 # Run the hearth head on a LAN VM
 
+> Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
+
 The standalone head profile listens on **0.0.0.0** and accepts your public **workspace base URL** during setup. Its hostname/IP determines the server certificate, while its port determines where the workspace, client API and MCP listen. Your laptop's browser, Hermes, OpenClaw and editor clients use that address. `0.0.0.0` is a listening address; it is never a browser URL or certificate identity.
 
 This runs the current application directly in Docker Compose on Linux. It does not require the Windows launcher or its QEMU appliance. The signed product installer and migration of an existing farm remain separate work.

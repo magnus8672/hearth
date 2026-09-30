@@ -16,6 +16,7 @@ from tests.integration.test_chat import configure, csrf, promote, setup, wait_fi
 from tests.integration.test_identity import bff as bff
 from tests.integration.test_identity import signin
 from tests.integration.test_postgres import databases as databases
+from tests.live_targets import configured_provider
 
 
 def textured_picture():
@@ -112,7 +113,7 @@ def test_memory_status_budget_pause_and_followup_scope(bff):
 def test_live_resident_qwen_name_recall_with_prior_image(bff):
     import httpx
     factory, settings, _, migration, _ = bff
-    url, model = 'http://10.20.30.40:1234', 'qwen/qwen3.8-27b'
+    url, model = configured_provider()
     def loaded():
         return sorted(item['id'] for row in httpx.get(url+'/api/v1/models', timeout=10, trust_env=False).raise_for_status().json()['models'] for item in row['loaded_instances'])
     before = loaded()
@@ -133,6 +134,6 @@ def test_live_resident_qwen_name_recall_with_prior_image(bff):
         for turn in replies[1:]:
             assert name.lower() in turn['reply'].lower(), turn['reply']
         assert loaded() == before
-        output = Path('evidence/memory/2026-09-13-vision-fix')
+        output = Path('.hearth/test-results/memory/2026-09-13-vision-fix')
         output.mkdir(parents=True, exist_ok=True)
         (output/'live-recall.json').write_text(json.dumps({'scope': 'Real resident Qwen vision over LAN, restricted-role PostgreSQL and BFF in disposable farm; explicit OIDC fixtures.', 'model': model, 'ordinary_note': True, 'prior_image_retained': True, 'replies': replies, 'loaded_models_unchanged': True, 'cloud_calls': 0}, indent=2), encoding='utf-8')

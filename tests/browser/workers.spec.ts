@@ -1,9 +1,10 @@
+import { browserOrigins } from './origins';
 import { test, expect } from '@playwright/test';
 
 test('worker controls separate pause from service switching and forbid busy unloads', async ({ page }) => {
-  const origin = process.env.HEARTH_ADMIN_BROWSER_ORIGIN || 'https://hearth.example.invalid:8443';
+  const origin = browserOrigins.admin;
   let worker = { id: 'fixture', name: 'media-worker fixture', pool_name: 'GPU fixture', online: true, state: 'ready', reason: '', policy: 'resident', paused: false, revoked: false, revision: 1, desired_service: 'fooocus', ready_service: 'fooocus', active_run_id: null as string | null, execution_state: 'idle', queued: 2, services: { fooocus: { name: 'Fooocus', connection_id: 'fixture' } } };
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'worker-fixture', display_name: 'Operator', roles: ['Owner'], permissions: ['farm.inspect', 'node.operate', 'node.assign'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: 'https://hearth.example.invalid' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'worker-fixture', display_name: 'Operator', roles: ['Owner'], permissions: ['farm.inspect', 'node.operate', 'node.assign'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: browserOrigins.workspace } }));
   await page.route('**/api/v1/farm', route => route.fulfill({ json: { farm: { name: 'Fixture' }, members: [] } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/workers', route => route.fulfill({ json: { items: [worker] } }));
@@ -34,9 +35,9 @@ test('worker controls separate pause from service switching and forbid busy unlo
 });
 
 test('gallery accepts another image while one is queued and supports cancellation', async ({ page }) => {
-  const origin = process.env.HEARTH_BROWSER_ORIGIN || 'https://hearth.example.invalid';
+  const origin = browserOrigins.workspace;
   const jobs: Record<string, any>[] = [];
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own'], csrf_token: 'fixture', admin_origin: 'https://hearth.example.invalid:8443', user_origin: origin } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'fixture', display_name: 'Tester', roles: ['Member'], permissions: ['conversation.own'], csrf_token: 'fixture', admin_origin: browserOrigins.admin, user_origin: origin } }));
   await page.route('**/api/v1/capabilities', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/image-targets', route => route.fulfill({ json: { items: [{ id: 'gpu', model_id: 'fixture', name: 'Local GPU', ready: true }] } }));
   await page.route('**/api/v1/images', async route => {

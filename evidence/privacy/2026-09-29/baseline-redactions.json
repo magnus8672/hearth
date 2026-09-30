@@ -1,0 +1,17 @@
+{
+  "reason": "Owner-authorized repository privacy sweep",
+  "files": [
+    {
+      "path": "docs/plan/README.md",
+      "original_sha256": "747ba9b5cc31ebe3bb105619fd6362e384826578651828b85aa2929781fe5c98",
+      "sanitized_sha256": "b2f484890917cbad8a1267a54e84773230b01e7dd3c0a6d115d2b40efa3a1506",
+      "reason": "Remove personal equipment inventory; retain technical requirements."
+    },
+    {
+      "path": "docs/plan/VIDEO-REVIEW-IH8XmxiwliQ.md",
+      "original_sha256": "942662826f878b4e9c76ea509d90ecd9b5cb96b95d3ee40ad3fbad040ca75e24",
+      "sanitized_sha256": "cf0dbb88d1876f6d022019c1fb82ab104b02ef086ea2c46d82f1b73258a35d6c",
+      "reason": "Remove personal equipment inventory; retain technical requirements."
+    }
+  ]
+}

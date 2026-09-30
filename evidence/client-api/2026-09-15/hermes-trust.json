@@ -14,5 +14,5 @@
   "system_environment_changed": false,
   "api_key_read_or_changed": false,
   "remaining": "Running Hermes backend must reload environment; authenticated UI connection still needs retry.",
-  "privacy_note": "Historical deployment identifiers removed or replaced with illustrative values; original test outcomes retained."
+  "privacy_note": "Deployment identifiers and local paths are sanitized placeholders; validation outcomes describe the original run."
 }
