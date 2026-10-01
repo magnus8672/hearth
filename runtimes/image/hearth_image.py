@@ -5,9 +5,11 @@ The control plane owns user authorization; this process accepts one trusted
 controller credential and one pinned local model closure.
 """
 import argparse
+import base64
 import contextlib
 import hashlib
 import hmac
+import io
 import json
 import os
 import sqlite3
@@ -20,10 +22,34 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from hearth.contracts import ImageGeneration as Generate
 from hearth.image_settings import MAX_IMAGE_BYTES, SIZES, dimensions, validate_settings
+from PIL import Image
+from pydantic import Field
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 MODEL = 'stabilityai/stable-diffusion-xl-base-1.0'
 REVISION = '462165984030d82259a11f4367a4eed129e94a7b'
+
+
+class Submission(Generate):
+    image: str | None = Field(default=None, max_length=4_194_304)
+
+
+def source_pixels(data, encoded):
+    if (data.edit is not None) != (encoded is not None):
+        raise HTTPException(422, 'Image editing requires an image and matching edit settings.')
+    if encoded is None:
+        return None
+    try:
+        raw = base64.b64decode(encoded, validate=True)
+        if not raw or len(raw) > 3_145_728 or hashlib.sha256(raw).hexdigest() != data.edit.image_sha256:
+            raise ValueError()
+        with Image.open(io.BytesIO(raw)) as image:
+            if image.format != 'JPEG' or max(image.size) > 1600 or getattr(image, 'n_frames', 1) != 1:
+                raise ValueError()
+            image.load()
+        return raw
+    except (ValueError, OSError, Image.DecompressionBombError):
+        raise HTTPException(422, 'The normalized source image is invalid or does not match its digest.') from None
 
 
 class Cancelled(Exception):
@@ -137,15 +163,16 @@ class Jobs:
         return {'schema_version': 1, 'id': row['id'], 'model': data['model'], 'state': row['state'], 'progress': row['progress'], 'steps': data['steps'],
                 'seed': data['seed'], 'shape': data['shape'], 'width': width, 'height': height,
                 'reason': row['reason'], 'sha256': row['digest'], 'execution_released': bool(row['released']),
-                'manifest_sha256': self.manifest_digest, 'cancel_requested': bool(row['cancel'])}
+                'manifest_sha256': self.manifest_digest, 'cancel_requested': bool(row['cancel']), 'edit': data.get('edit')}
 
-    def submit(self, data):
+    def submit(self, data, image=None):
         if data.model != self.model:
             raise HTTPException(404, 'This model is not installed on this provider.')
         try:
             validate_settings(data, self.profile)
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from None
+        source = source_pixels(data, image)
         payload = data.model_dump_json()
         with self.mutex, self.db() as db:
             previous = db.execute('SELECT request FROM jobs WHERE id=?', (str(data.id),)).fetchone()
@@ -159,10 +186,10 @@ class Jobs:
                     raise HTTPException(409, 'This experimental provider reached its saved image limit.')
                 db.execute("INSERT INTO jobs(id,request,state) VALUES(?,?,'queued')", (str(data.id), payload))
                 db.commit()
-                self.pool.submit(self.execute, data)
+                self.pool.submit(self.execute, data, source)
         return self.get(data.id)
 
-    def execute(self, data):
+    def execute(self, data, source=None):
         job_id = str(data.id)
         def cancelled():
             with self.db() as db:
@@ -179,7 +206,8 @@ class Jobs:
         try:
             if cancelled():
                 raise Cancelled()
-            self.engine.generate(data, cancelled, progress, output)
+            extras = {'source_image': source} if data.edit is not None else {}
+            self.engine.generate(data, cancelled, progress, output, **extras)
             if cancelled():
                 raise Cancelled()
             if output.stat().st_size > MAX_IMAGE_BYTES:
@@ -246,7 +274,8 @@ def create_app(root, model_path, token, *, engine=None, manifest_digest=None, mo
         body = bytearray()
         async for block in request.stream():
             body.extend(block)
-            if len(body) > 16384:
+            maximum = 4_220_000 if request.method == 'POST' and request.url.path == '/v1/image-jobs' and jobs.profile.get('editing') else 16384
+            if len(body) > maximum:
                 return JSONResponse({'detail': 'The image request is too large.'}, status_code=413)
         request._body = bytes(body)
         response = await call_next(request)
@@ -260,8 +289,8 @@ def create_app(root, model_path, token, *, engine=None, manifest_digest=None, mo
                 **jobs.profile, 'job_cancellation': True, 'offline': True}
 
     @app.post('/v1/image-jobs', status_code=202)
-    def submit(data: Generate):
-        return jobs.submit(data)
+    def submit(data: Submission):
+        return jobs.submit(Generate.model_validate(data.model_dump(exclude={'image'})), data.image)
 
     @app.get('/v1/image-jobs/{job_id}')
     def status(job_id: UUID):

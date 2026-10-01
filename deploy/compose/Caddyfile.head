@@ -94,12 +94,12 @@ http://{$HEARTH_PUBLIC_HOST}:{$HEARTH_SETUP_HTTP_PORT} {
     }
     @geometry_upload {
         method POST
-        path /api/v1/geometry
+        path /api/v1/geometry /api/v1/images
     }
     @ordinary_body {
         not {
             method POST
-            path_regexp "^/api/v1/(geometry|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
+            path_regexp "^/api/v1/(geometry|images|chats/[0-9a-fA-F-]{36}/(attachments|transcriptions)|channels/[0-9a-fA-F-]{36}/attachments)$"
         }
     }
     request_body @image_upload {

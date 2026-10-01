@@ -2123,6 +2123,8 @@ export interface components {
         };
         /** CreateImage */
         CreateImage: {
+            /** Image */
+            image?: string | null;
             request: components["schemas"]["ImageGeneration"];
             /**
              * Target Id
@@ -2742,8 +2744,26 @@ export interface components {
              */
             texture_size: 512 | 1024 | 2048 | 4096;
         };
+        /** ImageEdit */
+        ImageEdit: {
+            /** Image Sha256 */
+            image_sha256: string;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Strength
+             * @default 0.5
+             */
+            strength: number;
+        };
         /** ImageGeneration */
         ImageGeneration: {
+            /** @default null */
+            edit: components["schemas"]["ImageEdit"] | null;
             /**
              * Id
              * Format: uuid
@@ -2899,6 +2919,11 @@ export interface components {
         };
         /** ImageProviderInfo */
         ImageProviderInfo: {
+            /**
+             * Editing
+             * @default null
+             */
+            editing: "fooocus-vary-v1" | null;
             /** Job Cancellation */
             job_cancellation: boolean;
             /** Manifest Sha256 */
@@ -2931,6 +2956,8 @@ export interface components {
         ImageReceipt: {
             /** Cancel Requested */
             cancel_requested: boolean;
+            /** @default null */
+            edit: components["schemas"]["ImageEdit"] | null;
             /** Execution Released */
             execution_released: boolean;
             /** Height */

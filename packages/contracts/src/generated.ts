@@ -281,6 +281,12 @@ export interface HunyuanOptions {
   delight_text_guidance?: number;
 }
 
+export interface ImageEdit {
+  schema_version?: 1;
+  image_sha256: string;
+  strength?: number;
+}
+
 export interface ImageGeneration {
   schema_version?: 1;
   id: string;
@@ -291,6 +297,7 @@ export interface ImageGeneration {
   steps?: 20 | 30 | 40 | 60;
   seed: number;
   options?: ImageOptions;
+  edit?: ImageEdit | null;
 }
 
 export interface ImageOptions {
@@ -336,6 +343,7 @@ export interface ImageProviderInfo {
   shapes: Array<"square" | "landscape" | "portrait" | "widescreen" | "tall">;
   steps: Array<20 | 30 | 40 | 60>;
   options?: ImageOptionsProfile | null;
+  editing?: "fooocus-vary-v1" | null;
   job_cancellation: boolean;
   offline: boolean;
 }
@@ -356,6 +364,7 @@ export interface ImageReceipt {
   execution_released: boolean;
   manifest_sha256: string;
   cancel_requested: boolean;
+  edit?: ImageEdit | null;
 }
 
 export interface InferenceTarget {

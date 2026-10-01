@@ -8,6 +8,7 @@ import argparse
 import copy
 import hashlib
 import importlib
+import io
 import json
 import os
 import re
@@ -49,12 +50,12 @@ class Fooocus:
     def profile(self):
         styles = [item[1] if isinstance(item, (list, tuple)) else item for item in self.ui.style_selections.choices]
         upscaler = Path(self.ui.modules.config.path_upscale_models) / 'fooocus_upscaler_s409985e5.bin'
-        return {'shapes': list(SIZES), 'steps': [20, 30, 40, 60], 'options': {
+        return {'shapes': list(SIZES), 'steps': [20, 30, 40, 60], 'editing': 'fooocus-vary-v1', 'options': {
             'resolutions': ['native', '2k', '4k'] if upscaler.is_file() else ['native'], 'styles': styles,
             'default_styles': list(self.ui.style_selections.value),
             'guidance_scale': self.ui.guidance_scale.value, 'sharpness': self.ui.sharpness.value}}
 
-    def build_task(self, data, cancelled):
+    def build_task(self, data, cancelled, source_image=None):
         # Fooocus interprets these as filesystem-backed wildcard/LoRA requests.
         # Remote controls never select filesystem paths, checkpoints or LoRAs.
         if any('__' in text or re.search(r'<\s*lora\s*:', text, re.I) for text in (data.prompt, data.negative_prompt)):
@@ -70,6 +71,15 @@ class Fooocus:
             'enhance_checkbox': False, 'disable_preview': True, 'disable_intermediate_results': True,
             'save_metadata_to_images': False,
         }
+        if data.edit is not None:
+            import numpy as np
+            from PIL import Image, ImageOps
+            if source_image is None or hashlib.sha256(source_image).hexdigest() != data.edit.image_sha256:
+                raise GenerationError('The source image does not match this edit request.')
+            with Image.open(io.BytesIO(source_image)) as source:
+                pixels = np.array(ImageOps.fit(source.convert('RGB'), (width, height), method=Image.Resampling.LANCZOS))
+            changes.update(input_image_checkbox=True, current_tab='uov', uov_method='Vary (Subtle)',
+                           uov_input_image=pixels, overwrite_vary_strength=data.edit.strength)
         if data.options.styles is not None:
             changes['style_selections'] = data.options.styles
         for name in ('guidance_scale', 'sharpness'):
@@ -118,13 +128,26 @@ class Fooocus:
             image = image.resize(size, Image.Resampling.LANCZOS)
         image.save(path, format='PNG')
 
-    def generate(self, data, cancelled, progress, output):
+    def generate(self, data, cancelled, progress, output, *, source_image=None):
         self.task = None
         if cancelled():
             raise Cancelled()
-        task = self.build_task(data, cancelled)
-        if data.options.resolution != 'native':
-            task.hearth_postprocess = lambda: self.upscale(task, data, cancelled, progress)
+        task = self.build_task(data, cancelled, source_image)
+        # Fooocus rounds variation latents to its own resolution grid. Fit the
+        # result back to the requested canvas before optional AI upscaling.
+        def finish_canvas():
+            if data.edit is not None and not cancelled() and len(task.results) == 1:
+                from PIL import Image, ImageOps
+                path = Path(task.results[0]).resolve()
+                if not path.is_relative_to(Path(self.ui.modules.config.temp_path).resolve()):
+                    raise GenerationError('Fooocus returned an unexpected output location.')
+                with Image.open(path) as picture:
+                    picture = ImageOps.fit(picture.convert('RGB'), SIZES[data.shape], method=Image.Resampling.LANCZOS)
+                    picture.save(path, format='PNG')
+            if data.options.resolution != 'native':
+                self.upscale(task, data, cancelled, progress)
+        if data.edit is not None or data.options.resolution != 'native':
+            task.hearth_postprocess = finish_canvas
         self.task = task
         self.ui.worker.async_tasks.append(task)
         deadline = time.monotonic() + 1200
@@ -161,6 +184,7 @@ class Fooocus:
         if self.task is not None and not self.task.hearth_released.is_set():
             raise RuntimeError('Worker completion is uncertain.')
         if self.task is not None:
+            self.task.uov_input_image = None
             permitted = Path(self.ui.modules.config.temp_path).resolve()
             for result in self.task.results:
                 if isinstance(result, str):
@@ -201,7 +225,7 @@ def main():
             raise RuntimeError('Fooocus worker failed to initialize.')
         engine = Fooocus(ui)
         app = create_app(Path(config['jobs']), root, Path(config['token_file']).read_text().strip(),
-                         engine=engine, manifest_digest=digest, model=MODEL, revision='fooocus-2.5.5-juggernaut-v8-upscale',
+                         engine=engine, manifest_digest=digest, model=MODEL, revision='fooocus-2.5.5-juggernaut-v8-edit',
                          allowed_hosts=config['allowed_hosts'], allowed_controllers=config['allowed_controllers'], profile=engine.profile())
         import uvicorn
         uvicorn.run(app, host=config['listen'], port=config['port'], access_log=False, proxy_headers=False)

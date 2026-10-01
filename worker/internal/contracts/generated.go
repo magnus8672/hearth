@@ -283,6 +283,12 @@ type HunyuanOptions struct {
 	DelightTextGuidance  float64 `json:"delight_text_guidance"`
 }
 
+type ImageEdit struct {
+	SchemaVersion int64   `json:"schema_version"`
+	ImageSha256   string  `json:"image_sha256"`
+	Strength      float64 `json:"strength"`
+}
+
 type ImageGeneration struct {
 	SchemaVersion  int64        `json:"schema_version"`
 	Id             string       `json:"id"`
@@ -293,6 +299,7 @@ type ImageGeneration struct {
 	Steps          int64        `json:"steps"`
 	Seed           int64        `json:"seed"`
 	Options        ImageOptions `json:"options"`
+	Edit           *ImageEdit   `json:"edit"`
 }
 
 type ImageOptions struct {
@@ -338,26 +345,28 @@ type ImageProviderInfo struct {
 	Shapes          []string             `json:"shapes"`
 	Steps           []int64              `json:"steps"`
 	Options         *ImageOptionsProfile `json:"options"`
+	Editing         *string              `json:"editing"`
 	JobCancellation bool                 `json:"job_cancellation"`
 	Offline         bool                 `json:"offline"`
 }
 
 type ImageReceipt struct {
-	SchemaVersion     int64   `json:"schema_version"`
-	Id                string  `json:"id"`
-	Model             string  `json:"model"`
-	State             string  `json:"state"`
-	Progress          int64   `json:"progress"`
-	Steps             int64   `json:"steps"`
-	Seed              int64   `json:"seed"`
-	Shape             string  `json:"shape"`
-	Width             int64   `json:"width"`
-	Height            int64   `json:"height"`
-	Reason            *string `json:"reason"`
-	Sha256            *string `json:"sha256"`
-	ExecutionReleased bool    `json:"execution_released"`
-	ManifestSha256    string  `json:"manifest_sha256"`
-	CancelRequested   bool    `json:"cancel_requested"`
+	SchemaVersion     int64      `json:"schema_version"`
+	Id                string     `json:"id"`
+	Model             string     `json:"model"`
+	State             string     `json:"state"`
+	Progress          int64      `json:"progress"`
+	Steps             int64      `json:"steps"`
+	Seed              int64      `json:"seed"`
+	Shape             string     `json:"shape"`
+	Width             int64      `json:"width"`
+	Height            int64      `json:"height"`
+	Reason            *string    `json:"reason"`
+	Sha256            *string    `json:"sha256"`
+	ExecutionReleased bool       `json:"execution_released"`
+	ManifestSha256    string     `json:"manifest_sha256"`
+	CancelRequested   bool       `json:"cancel_requested"`
+	Edit              *ImageEdit `json:"edit"`
 }
 
 type InferenceTarget struct {

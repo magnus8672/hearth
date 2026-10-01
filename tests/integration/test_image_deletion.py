@@ -45,6 +45,15 @@ def test_delete_private_image_is_scoped_durable_and_cannot_replay(bff, monkeypat
                 {'active': True, 'sub': subject if data.get('token') == 'EXPLICIT PROVIDER FIXTURE' else other_subject, 'iss': config.issuer}
                 if endpoint == 'token/introspect' else {'id_token': 'FIXTURE', 'access_token': 'OTHER', 'refresh_token': 'FIXTURE', 'expires_in': 300})
             signin(outsider)
+            # New accounts are pending; approve this fixture so the test reaches
+            # owner-scoped artifact checks rather than stopping at capability ACLs.
+            other_id = outsider.get('/api/v1/session').json()['id']
+            account = next(item for item in admin.get('/api/v1/accounts').json()['items'] if item['id'] == other_id)
+            approved = admin.put('/api/v1/accounts/' + other_id + '/access', headers=ah, json={
+                'revision': account['revision'], 'state': 'active', 'role': 'Member',
+                'permissions': ['capability.image.generate']})
+            assert approved.status_code == 200, approved.text
+            signin(outsider)  # Changing access deliberately invalidates prior sessions.
             assert outsider.delete(path, headers=csrf(outsider, settings.user_origin)).status_code == 404
             assert outsider.get(path + '/image').status_code == 404
         if state == 'completed':

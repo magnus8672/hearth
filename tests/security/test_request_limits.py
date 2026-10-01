@@ -18,6 +18,9 @@ async def test_chunked_body_limit_cannot_be_bypassed_without_length_header():
 
 
 @pytest.mark.parametrize('method,path,megabytes,status', [
+    ('POST', '/api/v1/images', 11, 200),
+    ('POST', '/api/v1/images', 12, 413),
+    ('PUT', '/api/v1/images', 2, 413),
     ('POST', '/api/v1/chats/12345678-1234-1234-1234-123456789abc/attachments', 2, 200),
     ('POST', '/api/v1/chats/12345678-1234-1234-1234-123456789abc/attachments', 9, 413),
     ('POST', '/api/v1/session', 2, 413),

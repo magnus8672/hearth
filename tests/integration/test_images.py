@@ -32,7 +32,7 @@ def image_target(admin, headers):
     assert result.status_code == 201, result.text
     target = result.json()
     probe = admin.post('/api/v1/providers/' + target['id'] + '/probe', headers=headers, json={'revision': 1})
-    assert probe.json()['features'] == ['image.text_to_image', 'image.jobs'], probe.text
+    assert {'image.text_to_image', 'image.jobs'} <= set(probe.json()['features']), probe.text
     return target['id']
 
 

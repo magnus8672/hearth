@@ -1,10 +1,12 @@
 """Private image jobs with shared resource admission and verified PNG artifacts."""
+import base64
+import hashlib
 import json
 import time
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Request, Response
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import text
 
 from hearth import conversation_media, image_queue, image_transport
@@ -15,6 +17,7 @@ from hearth.image_settings import validate_settings
 from hearth.inference import ProviderError
 from hearth.provider_health import record_failure
 from hearth.providers import credential_for, release_pool, target_record, transport_settings
+from hearth.vision import normalize_image
 
 router = APIRouter()
 
@@ -23,6 +26,7 @@ class CreateImage(BaseModel):
     model_config = ConfigDict(extra='forbid')
     request: ImageGeneration
     target_id: UUID
+    image: str | None = Field(default=None, max_length=12_000_000)
 
 
 def reconcile(db):
@@ -63,6 +67,18 @@ def images(request: Request):
 def generate(request: Request, data: CreateImage):
     principal = member(request, mutation=True, permission='capability.image.generate')
     engine = request.app.state.engine
+    source = None
+    if (data.image is not None) != (data.request.edit is not None):
+        raise HTTPException(422, 'Image editing requires both an uploaded image and edit settings.')
+    if data.request.edit is not None:
+        try:
+            source = base64.b64decode(data.image, validate=True)
+        except ValueError:
+            raise HTTPException(422, 'Choose a valid image.') from None
+        if hashlib.sha256(source).hexdigest() != data.request.edit.image_sha256:
+            raise HTTPException(422, 'The uploaded image digest did not match.')
+        source, _, _ = normalize_image(source)
+        data.request.edit.image_sha256 = hashlib.sha256(source).hexdigest()
     payload = data.request.model_dump(mode='json')
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         workspace = db.execute(text('SELECT id FROM workspaces FOR UPDATE')).scalar_one()
@@ -85,8 +101,8 @@ def generate(request: Request, data: CreateImage):
             validate_settings(data.request, row['profile'])
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from None
-        db.execute(text("INSERT INTO image_jobs(id,farm_id,owner_id,workspace_id,target_id,request,session_hash,authorization_version,status) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:session,:version,'queued')"),
-            {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': row['id'], 'request': json.dumps(payload), 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
+        db.execute(text("INSERT INTO image_jobs(id,farm_id,owner_id,workspace_id,target_id,request,source_image,session_hash,authorization_version,status) VALUES(:id,:farm,:owner,:workspace,:target,CAST(:request AS jsonb),:source,:session,:version,'queued')"),
+            {'id': data.request.id, 'farm': principal.farm_id, 'owner': principal.id, 'workspace': workspace, 'target': row['id'], 'request': json.dumps(payload), 'source': source, 'session': request.state.identity['token_hash'], 'version': principal.authorization_version})
         image_queue.enqueue(db, principal, row, data.request.id)
     return {'id': data.request.id, 'status': 'queued'}
 
@@ -131,7 +147,7 @@ def delete_image(request: Request, job_id: UUID):
             raise HTTPException(409, 'Stop this image and wait for generation to end before deleting it.')
         # Keep IDs for idempotency, batch bookkeeping and variation references,
         # but atomically erase both copies of the artifact and its byte receipt.
-        db.execute(text('UPDATE image_jobs SET image=NULL,metadata=NULL,deleted_at=now() WHERE id=:id'), {'id': job_id})
+        db.execute(text('UPDATE image_jobs SET image=NULL,source_image=NULL,metadata=NULL,deleted_at=now() WHERE id=:id'), {'id': job_id})
         db.execute(text("UPDATE conversation_images SET image=NULL,sha256=NULL,status='deleted',reason='Image deleted.' WHERE id=:id AND channel_id IS NULL"), {'id': job_id})
     return {'deleted': True}
 
@@ -180,7 +196,8 @@ def execute(engine, settings, principal, target, data):
                 db.execute(text("UPDATE provider_pools SET lease_until=now()+interval '240 seconds' WHERE id=:pool AND active_run_id=:run"), {'pool': target['resource_pool_id'], 'run': execution_id})
             return stopped
 
-        result, artifact = image_transport.render(target['base_url'], credential_for(target, settings), transport_settings(target, settings), data, observe)
+        extras = {'source_image': bytes(run['source_image'])} if data.edit is not None and run['source_image'] is not None else {}
+        result, artifact = image_transport.render(target['base_url'], credential_for(target, settings), transport_settings(target, settings), data, observe, **extras)
     except ProviderError as exc:
         problem = exc
     except Exception:

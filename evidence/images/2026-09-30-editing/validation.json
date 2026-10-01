@@ -1,0 +1,30 @@
+{
+  "date": "2026-09-30",
+  "feature": "Fooocus uploaded-image variations",
+  "schema": "0028",
+  "checks": {
+    "isolated_vm_backend": { "passed": 62, "skipped": 1 },
+    "shared_contract_fixtures": { "count": 204, "python": "passed", "native_go": "passed" },
+    "deployed_browser_fixtures": { "passed": 3, "scope": "Synthetic API responses with deployed HTTPS assets; upload, retry, provider selection, restoration, deletion and narrow layout." },
+    "typescript": "passed",
+    "admin_and_user_builds": "passed",
+    "focused_python_lint": "passed",
+    "documentation_and_privacy": "passed",
+    "https_readiness": "Both admin and user endpoints returned 200.",
+    "anonymous_https_body_limits": { "image_upload_2_mib": 401, "image_upload_12_mib": 413, "ordinary_request_2_mib": 413 }
+  },
+  "live_provider": {
+    "model": "fooocus/juggernaut-xl-v8",
+    "saved_features": ["image.text_to_image", "image.jobs", "image.image_to_image"],
+    "text_probe": { "state": "completed", "elapsed_seconds": 12.26, "execution_released": true },
+    "edits": [
+      { "strength": 0.5, "width": 1024, "height": 1024, "elapsed_seconds": 8.97, "png_bytes": 172756, "execution_released": true },
+      { "strength": 0.85, "width": 1024, "height": 768, "elapsed_seconds": 8.70, "png_bytes": 369829, "execution_released": true }
+    ],
+    "inspection": "Both edits preserve the cube reference composition. The stronger edit changes flat artwork into a rendered ceramic appearance but does not reliably follow the requested blue color.",
+    "afterward": "Worker ready and unpaused, with no active pool execution. No test images added to a user's gallery."
+  },
+  "deployment": "Source, bundles and database backed up; additive migration, rebuilt APIs, validated edge restart, stopped-worker adapter update and re-signed recipe; previous active service restored.",
+  "limits": "Whole-image variation only. No masked inpainting, outpainting or instruction-exact editing. Synthetic browser sessions and service-level real GPU checks do not constitute authenticated end-user acceptance, broad quality or sustained mixed-load qualification.",
+  "release_gates": { "partial": 20, "not_run": 41, "fully_passed": 0 }
+}

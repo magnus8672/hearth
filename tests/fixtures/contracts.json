@@ -782,7 +782,8 @@
           "styles": null,
           "guidance_scale": null,
           "sharpness": null
-        }
+        },
+        "edit": null
       },
       "status": "queued",
       "progress": 0,
@@ -816,7 +817,8 @@
           "styles": null,
           "guidance_scale": null,
           "sharpness": null
-        }
+        },
+        "edit": null
       },
       "status": "queued",
       "progress": 0,
@@ -851,7 +853,8 @@
           "styles": null,
           "guidance_scale": null,
           "sharpness": null
-        }
+        },
+        "edit": null
       },
       "status": "queued",
       "progress": 0,
@@ -885,7 +888,8 @@
           "styles": null,
           "guidance_scale": null,
           "sharpness": null
-        }
+        },
+        "edit": null
       },
       "status": "queued",
       "progress": 0,
@@ -1270,7 +1274,9 @@
       "model": "fixture",
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
-      "resolution": 512
+      "resolution": 512,
+      "trellis": null,
+      "hunyuan": null
     }
   },
   {
@@ -1284,6 +1290,8 @@
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
       "resolution": 512,
+      "trellis": null,
+      "hunyuan": null,
       "is_admin": true
     }
   },
@@ -1297,7 +1305,9 @@
       "model": "fixture",
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
-      "resolution": 512
+      "resolution": 512,
+      "trellis": null,
+      "hunyuan": null
     }
   },
   {
@@ -1310,7 +1320,9 @@
       "model": "fixture",
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
-      "resolution": 512
+      "resolution": 512,
+      "trellis": null,
+      "hunyuan": null
     }
   },
   {
@@ -1328,7 +1340,8 @@
       "resolutions": [
         512
       ],
-      "output_format": "glb"
+      "output_format": "glb",
+      "tuning": null
     }
   },
   {
@@ -1347,6 +1360,7 @@
         512
       ],
       "output_format": "glb",
+      "tuning": null,
       "is_admin": true
     }
   },
@@ -1365,7 +1379,8 @@
       "resolutions": [
         512
       ],
-      "output_format": "glb"
+      "output_format": "glb",
+      "tuning": null
     }
   },
   {
@@ -1383,7 +1398,8 @@
       "resolutions": [
         512
       ],
-      "output_format": "glb"
+      "output_format": "glb",
+      "tuning": null
     }
   },
   {
@@ -1397,6 +1413,8 @@
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
       "resolution": 512,
+      "trellis": null,
+      "hunyuan": null,
       "state": "queued",
       "progress": 0,
       "reason": null,
@@ -1417,6 +1435,8 @@
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
       "resolution": 512,
+      "trellis": null,
+      "hunyuan": null,
       "state": "queued",
       "progress": 0,
       "reason": null,
@@ -1438,6 +1458,8 @@
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
       "resolution": 512,
+      "trellis": null,
+      "hunyuan": null,
       "state": "queued",
       "progress": 0,
       "reason": null,
@@ -1458,6 +1480,8 @@
       "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "seed": 42,
       "resolution": 512,
+      "trellis": null,
+      "hunyuan": null,
       "state": "queued",
       "progress": 0,
       "reason": null,
@@ -1594,6 +1618,47 @@
     }
   },
   {
+    "name": "ImageEdit.valid",
+    "contract": "ImageEdit",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "strength": 0.5
+    }
+  },
+  {
+    "name": "ImageEdit.unknown_authority",
+    "contract": "ImageEdit",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "strength": 0.5,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "ImageEdit.future_version",
+    "contract": "ImageEdit",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "strength": 0.5
+    }
+  },
+  {
+    "name": "ImageEdit.boolean_version",
+    "contract": "ImageEdit",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "strength": 0.5
+    }
+  },
+  {
     "name": "ImageGeneration.valid",
     "contract": "ImageGeneration",
     "valid": true,
@@ -1612,7 +1677,8 @@
         "styles": null,
         "guidance_scale": null,
         "sharpness": null
-      }
+      },
+      "edit": null
     }
   },
   {
@@ -1635,6 +1701,7 @@
         "guidance_scale": null,
         "sharpness": null
       },
+      "edit": null,
       "is_admin": true
     }
   },
@@ -1657,7 +1724,8 @@
         "styles": null,
         "guidance_scale": null,
         "sharpness": null
-      }
+      },
+      "edit": null
     }
   },
   {
@@ -1679,7 +1747,8 @@
         "styles": null,
         "guidance_scale": null,
         "sharpness": null
-      }
+      },
+      "edit": null
     }
   },
   {
@@ -1911,6 +1980,7 @@
         20
       ],
       "options": null,
+      "editing": null,
       "job_cancellation": true,
       "offline": true
     }
@@ -1932,6 +2002,7 @@
         20
       ],
       "options": null,
+      "editing": null,
       "job_cancellation": true,
       "offline": true,
       "is_admin": true
@@ -1954,6 +2025,7 @@
         20
       ],
       "options": null,
+      "editing": null,
       "job_cancellation": true,
       "offline": true
     }
@@ -1975,6 +2047,7 @@
         20
       ],
       "options": null,
+      "editing": null,
       "job_cancellation": true,
       "offline": true
     }
@@ -1998,7 +2071,8 @@
       "sha256": null,
       "execution_released": true,
       "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "cancel_requested": true
+      "cancel_requested": true,
+      "edit": null
     }
   },
   {
@@ -2021,6 +2095,7 @@
       "execution_released": true,
       "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "cancel_requested": true,
+      "edit": null,
       "is_admin": true
     }
   },
@@ -2043,7 +2118,8 @@
       "sha256": null,
       "execution_released": true,
       "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "cancel_requested": true
+      "cancel_requested": true,
+      "edit": null
     }
   },
   {
@@ -2065,7 +2141,8 @@
       "sha256": null,
       "execution_released": true,
       "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "cancel_requested": true
+      "cancel_requested": true,
+      "edit": null
     }
   },
   {

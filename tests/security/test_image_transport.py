@@ -70,6 +70,7 @@ def test_resolution_receipt_and_legacy_request_compatibility(monkeypatch, large)
         if request.method == 'POST':
             import json
             payload = json.loads(request.content)
+            assert 'edit' not in payload and 'image' not in payload
             assert ('options' in payload) is large
             if large:
                 assert payload['options']['resolution'] == '4k'
@@ -87,3 +88,27 @@ def test_resolution_receipt_and_legacy_request_compatibility(monkeypatch, large)
     result.width = 1024 if large else 2048
     with pytest.raises(ProviderError, match='different request'):
         image_transport.render('http://fixture', '', Settings(mode='test'), data)
+
+
+def test_edit_transport_sends_pixels_and_binds_receipt_to_edit(monkeypatch):
+    import base64
+
+    from hearth.contracts import ImageEdit
+    raw = b'normalized bytes supplied by the controller'
+    edit = ImageEdit(image_sha256=hashlib.sha256(raw).hexdigest(), strength=0.4)
+    data = ImageGeneration(id=uuid4(), model='fixture', prompt='A cabin', seed=7, edit=edit)
+    receipt = ImageReceipt(id=data.id, model=data.model, state='cancelled', progress=0, steps=20, seed=7,
+        shape='square', width=1024, height=1024, execution_released=True, manifest_sha256='a'*64, cancel_requested=True, edit=edit)
+    def rpc(*args, **kwargs):
+        assert base64.b64decode(kwargs['payload']['image']) == raw
+        assert kwargs['payload']['edit']['strength'] == 0.4
+        return receipt
+    monkeypatch.setattr(image_transport, 'rpc', rpc)
+    assert image_transport.render('http://fixture', '', Settings(mode='test'), data, source_image=raw)[1] is None
+    with pytest.raises(ProviderError, match='missing or changed') as error:
+        image_transport.render('http://fixture', '', Settings(mode='test'), data)
+    assert not error.value.uncertain
+    receipt.edit = None
+    with pytest.raises(ProviderError, match='different request') as error:
+        image_transport.render('http://fixture', '', Settings(mode='test'), data, source_image=raw)
+    assert error.value.uncertain

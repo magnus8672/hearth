@@ -1,4 +1,4 @@
-# Image settings and 4K output
+# Image settings, uploaded-image editing and 4K output
 
 > Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
 
@@ -33,7 +33,19 @@ Fooocus advertises larger outputs only when its upscaler file is installed. The 
 
 Migration `0022` raises the head's gallery and conversation PNG bounds from 16 MiB to 64 MiB and permits 60-step conversation progress. The transport enforces exact requested dimensions, digest and PNG decoding, plus the same byte cap and a 60-second transfer bound. The existing generation deadline remains 15 minutes. Account and stored-image byte totals were unchanged by migration.
 
-Checkpoint paths, LoRAs, samplers, schedulers, refiner selection, image editing and arbitrary dimensions are not exposed in this profile. Existing wildcard/path directives remain rejected. This change adds gallery controls; it does not add natural-language resolution/style planning to chat. Local image-to-3D is covered by [TRELLIS](LOCAL_GEOMETRY.md); all full release gates remain open.
+Checkpoint paths, LoRAs, samplers, schedulers, refiner selection and arbitrary dimensions are not exposed in this profile. Existing wildcard/path directives remain rejected. Gallery upload editing is described below; natural-language resolution/style planning in chat remains separate work. Local image-to-3D is covered by [TRELLIS](LOCAL_GEOMETRY.md); all full release gates remain open.
+
+## Modify an uploaded image — 30 September 2026
+
+On **Images**, select **Modify an uploaded image**, choose a local PNG, JPEG or WebP and describe the finished picture you want. **Edit strength** defaults to 50%, with a 10–90% range: lower values preserve more of the source and higher values allow larger changes. This uses Fooocus's pixel-based variation mode. It modifies the whole picture; masks, brush editing and outpainting are not implemented. Output shape, styles, negative prompt, detail passes, seed and optional AI upscaling remain available. The source is center-cropped to the selected output shape. The original file on your computer is unchanged.
+
+Uploads are limited to 8 MiB, 20 megapixels and one still frame. The head applies orientation, composites transparency onto white, removes metadata and normalizes to JPEG at no more than 1600 pixels per side and 3 MiB. Migration `0028` stores this input separately from the request and generated artifact under the image job's existing owner/farm RLS. The provider receives it only when the job is dispatched; no LM Studio or Vision request is needed. Deleting the job clears both source and output from the head. Existing backup-retention limits still apply. Provider execution keeps source pixels in memory rather than its saved request JSON.
+
+Edit jobs use the same owner-fair media queue, per-account limits, backend selection and cancellation/release fences as image and geometry generation. A digest and strength bind the source to its request and receipt. Only a verified provider advertising `fooocus-vary-v1` accepts edits; unsupported providers fail explicitly. Reverification runs a text render and a separate real image-edit probe. Legacy text providers retain their existing payload format.
+
+The form preserves the image and request identity after a failed submission. **Use settings** restores the parameters but asks you to choose the source again; it cannot silently turn an edit into a text-only render. Saved cards identify edits and their strength.
+
+Deployment and validation are recorded in the [implementation ledger](BUILD_STATUS.md#uploaded-image-fooocus-variations--30-september). Real square and landscape edits completed and released the GPU. Variation preserves composition and can change appearance, but it does not guarantee literal compliance with every instruction or color request.
 
 ## Observed validation
 

@@ -8,7 +8,7 @@ test('gallery deletion confirms, handles failures, removes the card and restores
   let deleted = false, fail = true, deletes = 0;
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'deletion-fixture', display_name: 'Gallery tester', roles: ['Owner'], permissions: ['conversation.own'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: origin } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'deletion-fixture', display_name: 'Gallery tester', roles: ['Owner'], permissions: ['conversation.own', 'capability.image.generate'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: origin } }));
   for (const name of ['capabilities', 'side-notes', 'chat-targets']) await page.route(`**/api/v1/${name}`, route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/image-targets', route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/chats', route => route.fulfill({ json: { items: [{ id: 'deletion-chat', title: 'Image deletion test', revision: 2 }] } }));

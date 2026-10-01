@@ -1789,9 +1789,48 @@
       "title": "HunyuanOptions",
       "type": "object"
     },
+    "ImageEdit": {
+      "additionalProperties": false,
+      "properties": {
+        "image_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Image Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "strength": {
+          "default": 0.5,
+          "maximum": 0.9,
+          "minimum": 0.1,
+          "title": "Strength",
+          "type": "number"
+        }
+      },
+      "required": [
+        "image_sha256"
+      ],
+      "title": "ImageEdit",
+      "type": "object"
+    },
     "ImageGeneration": {
       "additionalProperties": false,
       "properties": {
+        "edit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageEdit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "id": {
           "format": "uuid",
           "title": "Id",
@@ -2133,6 +2172,19 @@
     "ImageProviderInfo": {
       "additionalProperties": false,
       "properties": {
+        "editing": {
+          "anyOf": [
+            {
+              "const": "fooocus-vary-v1",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Editing"
+        },
         "job_cancellation": {
           "title": "Job Cancellation",
           "type": "boolean"
@@ -2231,6 +2283,17 @@
         "cancel_requested": {
           "title": "Cancel Requested",
           "type": "boolean"
+        },
+        "edit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ImageEdit"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "execution_released": {
           "title": "Execution Released",

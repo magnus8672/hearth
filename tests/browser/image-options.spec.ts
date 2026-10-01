@@ -8,7 +8,7 @@ test('advertised image settings submit, restore, and reset when switching to a l
     resolutions: ['native', '2k', '4k'], styles: ['Fooocus V2', 'Fooocus Sharp', 'SAI Photographic'],
     default_styles: ['Fooocus V2', 'Fooocus Sharp'], guidance_scale: 4, sharpness: 2,
   } };
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'options-fixture', display_name: 'Image tester', roles: ['Owner'], permissions: ['conversation.own'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: origin } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'options-fixture', display_name: 'Image tester', roles: ['Owner'], permissions: ['conversation.own', 'capability.image.generate'], csrf_token: 'fixture-csrf', admin_origin: origin, user_origin: origin } }));
   for (const name of ['chats', 'capabilities', 'side-notes']) await page.route(`**/api/v1/${name}`, route => route.fulfill({ json: { items: [] } }));
   await page.route('**/api/v1/image-targets', route => route.fulfill({ json: { items: [
     { id: 'fooocus', name: 'Fooocus', model_id: 'fooocus/fixture', ready: true, profile },

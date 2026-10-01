@@ -21,6 +21,7 @@ For deployment and validation, start with [head VM setup](operations/HEAD_VM_SET
 | Understand reply limits, continuation and model labels | [Reply streaming and identity](implementation/REPLY_STREAMING_AND_IDENTITY.md) |
 | Understand images and concurrent model dispatch | [Vision and concurrent farm](implementation/VISION_AND_CONCURRENT_FARM.md) |
 | Remove generated pictures from the gallery and private chat | [Image deletion](implementation/IMAGE_DELETION.md) |
+| Modify an uploaded picture with Fooocus or tune image output | [Image editing and settings](implementation/IMAGE_OPTIONS.md) |
 | Turn images into private 3D models | [Local geometry](implementation/LOCAL_GEOMETRY.md) |
 | Choose Fooocus styles, advanced controls and 4K output | [Image settings](implementation/IMAGE_OPTIONS.md) |
 | Record or upload speech and review its transcript | [Microphone and transcription](implementation/TRANSCRIPTION.md) |

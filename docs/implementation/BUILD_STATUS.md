@@ -1,8 +1,16 @@
 # hearth implementation ledger
 
-Updated 29 September 2026. This ledger records implemented behavior, dated validation and remaining qualification work. Deployment descriptions use generic head, model-host and media-worker roles. See [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
+Updated 30 September 2026. This ledger records implemented behavior, dated validation and remaining qualification work. Deployment descriptions use generic head, model-host and media-worker roles. See [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
 
-All fourteen capability profiles have bounded implementations. Database migration is **0027**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+All fourteen capability profiles have bounded implementations. Database migration is **0028**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+
+## Uploaded-image Fooocus variations — 30 September
+
+The Images page now accepts a local picture for Fooocus to modify, with a result description, preview and 10–90% edit-strength control defaulting to 50%. Existing output/style controls remain available. Normalized private pixels travel through the existing owner-fair GPU queue, with digest/strength-bound receipts, cancellation fences and source erasure on deletion. This uses Fooocus variation without a Vision or LM Studio call. It is whole-picture variation, not masked or instruction-exact editing. See [image controls and limits](IMAGE_OPTIONS.md#modify-an-uploaded-image--30-september-2026).
+
+[Validation](../../evidence/images/2026-09-30-editing/validation.json) passed 62 focused backend cases on isolated VM storage, with one separately gated test skipped; all 204 shared contract fixtures passed in Python and native Go. TypeScript, both bundles, focused Python lint and three browser fixtures passed. The browser fixtures also passed against deployed assets, covering upload preview, retry identity, unsupported providers, settings restoration, deletion and narrow-screen layout. Real HTTPS checks confirmed both readiness endpoints, the larger image-upload body limit and unchanged ordinary-request limits.
+
+Deployment backed up source, bundles and the database, applied migration `0028`, rebuilt both APIs and restarted the validated edge configuration. Fooocus's adapter closure was updated only after confirmed worker unload, then its reviewed recipe was re-signed and the previous active service restored. Reverification completed a text render and an uploaded-image edit. Real GPU edits at 50% and 85% strength returned validated 1024-square and 1024×768 PNGs in 8.97 and 8.70 seconds respectively, with execution release confirmed and the pool idle afterward. Both were visually reviewed; stronger variation changed the reference's appearance but did not reliably follow the requested color. These single-input checks establish operation, not general edit quality or sustained-load qualification. No test pictures were added to a user's gallery. Release gates remain unchanged.
 
 ## MIT license — 29 September
 

@@ -15,6 +15,8 @@ def dimensions(shape, resolution='native'):
 
 
 def validate_settings(data, profile):
+    if data.edit is not None and profile.get('editing') != 'fooocus-vary-v1':
+        raise ValueError('This provider does not support uploaded image editing. Update and verify Fooocus in Administration.')
     if data.shape not in profile.get('shapes', []) or data.steps not in profile.get('steps', []):
         raise ValueError('These image dimensions or detail passes are not supported by this provider. Refresh its settings.')
     options = profile.get('options') or {}

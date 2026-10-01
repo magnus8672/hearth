@@ -13,7 +13,14 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, StrictBool, model_validator
 from sqlalchemy import text
 
-from hearth import geometry_transport, image_transport, speech_transport, transcription_probe, transcription_transport, vision
+from hearth import (
+    geometry_transport,
+    image_transport,
+    speech_transport,
+    transcription_probe,
+    transcription_transport,
+    vision,
+)
 from hearth.contracts import GeometryGeneration, ImageGeneration, SpeechGeneration, TranscriptionRequest
 from hearth.database import scoped_session
 from hearth.identity import authenticate, cipher
@@ -294,6 +301,17 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
             if result.state == 'completed' and artifact and result.manifest_sha256 == info.manifest_sha256:
                 features = ['image.text_to_image', 'image.jobs']
                 profile = info.model_dump(mode='json')
+                if info.editing:
+                    from hearth.contracts import ImageEdit
+                    from hearth.geometry_probe import reference
+                    from hearth.vision import normalize_image
+                    source, _, _ = normalize_image(reference())
+                    edited, artifact = image_transport.render(row['base_url'], key, transport,
+                        ImageGeneration(id=uuid4(), model=row['model_id'], prompt='A small blue geometric toy on a plain background', seed=452,
+                                        edit=ImageEdit(image_sha256=sha256(source).hexdigest())), progress, source_image=source)
+                    if edited.state != 'completed' or not artifact or edited.manifest_sha256 != info.manifest_sha256:
+                        raise ProviderError('The image provider did not complete its uploaded-image editing check.')
+                    features.append('image.image_to_image')
         else:
             if row['model_id'] not in list_models(row['base_url'], key, transport):
                 raise ProviderError('The selected model is not listed by this server. Check its exact model identifier.')

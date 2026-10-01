@@ -1,4 +1,5 @@
 """Bounded image-job transport independent of any upstream graphical UI."""
+import base64
 import hashlib
 import io
 import time
@@ -59,11 +60,19 @@ def collect_png(base_url, credential, settings, receipt):
         raise ProviderError('The image could not be validated or collected.') from None
 
 
-def render(base_url, credential, settings, data, on_receipt=lambda receipt: False):
+def render(base_url, credential, settings, data, on_receipt=lambda receipt: False, *, source_image=None):
     dispatched, released, cancel_sent = False, False, False
     try:
         # Omit new default options so existing v1 providers still accept a basic request.
         payload = data.model_dump(mode='json')
+        if data.edit is None:
+            payload.pop('edit')
+            if source_image is not None:
+                raise ProviderError('Unexpected source image for a text request.', provider_fault=False)
+        else:
+            if not source_image or hashlib.sha256(source_image).hexdigest() != data.edit.image_sha256:
+                raise ProviderError('The saved image-edit source is missing or changed.', provider_fault=False)
+            payload['image'] = base64.b64encode(source_image).decode()
         if not data.options.model_dump(exclude_defaults=True, exclude={'schema_version'}):
             payload.pop('options')
         receipt = rpc(base_url, credential, settings, 'image-jobs', payload=payload, model=ImageReceipt)
@@ -72,7 +81,7 @@ def render(base_url, credential, settings, data, on_receipt=lambda receipt: Fals
         while True:
             expected_size = dimensions(data.shape, data.options.resolution)
             if (receipt.id != data.id or receipt.model != data.model or receipt.seed != data.seed
-                    or receipt.steps != data.steps or receipt.shape != data.shape or (receipt.width, receipt.height) != expected_size):
+                    or receipt.steps != data.steps or receipt.shape != data.shape or receipt.edit != data.edit or (receipt.width, receipt.height) != expected_size):
                 raise ProviderError('The image provider returned a receipt for a different request.', uncertain=True)
             released = receipt.execution_released
             stop = on_receipt(receipt)

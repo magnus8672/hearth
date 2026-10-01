@@ -496,6 +496,11 @@ class ImageOptionsProfile(WireModel):
     sharpness: Annotated[float, Field(ge=0, le=30, allow_inf_nan=False)] | None = None
 
 
+class ImageEdit(WireModel):
+    image_sha256: Digest
+    strength: Annotated[float, Field(ge=0.1, le=0.9, allow_inf_nan=False)] = 0.5
+
+
 class ImageGeneration(WireModel):
     id: UUID
     model: Annotated[str, Field(min_length=1, max_length=200)]
@@ -505,6 +510,7 @@ class ImageGeneration(WireModel):
     steps: Literal[20, 30, 40, 60] = 20
     seed: Annotated[StrictInt, Field(ge=0, le=4294967295)]
     options: ImageOptions = Field(default_factory=ImageOptions)
+    edit: ImageEdit | None = None
 
     @field_validator('prompt')
     @classmethod
@@ -529,6 +535,7 @@ class ImageReceipt(WireModel):
     execution_released: StrictBool
     manifest_sha256: Digest
     cancel_requested: StrictBool
+    edit: ImageEdit | None = None
 
 
 class ConversationImage(WireModel):
@@ -588,6 +595,7 @@ class ImageProviderInfo(WireModel):
     shapes: list[Literal['square', 'landscape', 'portrait', 'widescreen', 'tall']] = Field(min_length=1, max_length=5)
     steps: list[Literal[20, 30, 40, 60]] = Field(min_length=1, max_length=4)
     options: ImageOptionsProfile | None = None
+    editing: Literal['fooocus-vary-v1'] | None = None
     job_cancellation: StrictBool
     offline: StrictBool
 
