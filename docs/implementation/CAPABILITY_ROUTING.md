@@ -1,5 +1,7 @@
 # Capability routing and external LAN providers
 
+The [P5A phase design](P5A_ROUTING_AND_DECISIONS.md) proposes live Switchyard selection, semantic intent decisions and direct typed decision access. Its selected architecture uses built-in Laya on the head with a configurable dedicated decision binding and independent member assignments. It does not change the implemented behavior described here.
+
 > Current status, 18 September: all fourteen bounded profiles are implemented. The initial assignment matrix below records the 13 September milestone, not the active farm. Live dispatch remains deterministic; Switchyard is not on its request path. See [the dated farm snapshot](CURRENT_STATE.md) and [current coverage](DESIGN_COVERAGE.md).
 
 Implemented 13 September 2026. This slice separates the fourteen capability assignments from provider registration and makes the existing text and image transports usable through those assignments. It preserves the fixed control-plane, identity, privacy and resource-pool boundaries in ADR 0006.

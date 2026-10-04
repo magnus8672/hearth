@@ -66,6 +66,8 @@ The normal external-provider request path does not load, unload or swap models. 
 
 ## Next work and non-goals
 
+The [P5A routing and decision-services design](P5A_ROUTING_AND_DECISIONS.md), dated 4 October, carves out the next local-routing phase and a new typed decision capability. The selected architecture starts with built-in Laya on the head, with a configurable dedicated decision binding and independent member assignments for simultaneous experiments. Checkpoint qualification and implementation remain pending; the fourteen implemented profiles and release-gate counts above are unchanged.
+
 1. Qualify the active configuration: vision verification, intentional specialist assignments, full client workflows, and provider busy/loss/recovery behavior. Audio installation is a separate deployment task.
 2. Complete managed membership and provisioning, preserving signed typed operations and existing-service ownership.
 3. Implement the protected admin agent and original bootstrap paths, including cloud boundaries before any paid test.

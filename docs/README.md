@@ -8,6 +8,7 @@ For deployment and validation, start with [head VM setup](operations/HEAD_VM_SET
 
 | Need | Document |
 |---|---|
+| Review the Switchyard phase and selected Laya/dedicated decision architecture | [P5A: routing and decision services](implementation/P5A_ROUTING_AND_DECISIONS.md) |
 | Inspect live capability placement and model residency | [Admin farm map](implementation/FARM_MAP.md) |
 | Register people, approve accounts and grant individual capabilities | [Signup and account approval](implementation/ACCOUNT_APPROVAL.md) |
 | Control installed worker services and queue GPU image jobs | [Managed Linux workers](implementation/MANAGED_WORKERS.md) |

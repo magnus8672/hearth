@@ -1,8 +1,12 @@
 # hearth implementation ledger
 
-Updated 30 September 2026. This ledger records implemented behavior, dated validation and remaining qualification work. Deployment descriptions use generic head, model-host and media-worker roles. See [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
+Updated 4 October 2026. This ledger records implemented behavior, dated validation and remaining qualification work. Deployment descriptions use generic head, model-host and media-worker roles. See [coverage](DESIGN_COVERAGE.md) for remaining implementation work.
 
 All fourteen capability profiles have bounded implementations. Database migration is **0028**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
+
+## Routing and decision-services phase draft — 4 October
+
+Added [P5A: routing and decision services](P5A_ROUTING_AND_DECISIONS.md). It extracts local Switchyard integration from P5 and proposes semantic intent classification plus a direct `decision.evaluate` capability. The operator selected built-in CPU Laya on the head for initial internal use, with a configurable dedicated decision binding and independent member-facing assignments for simultaneous experiments. The design specifies process/resource isolation, explicit fallback, model provenance and future dedicated 9B/27B placement, preserving hearth's authorization, scheduling and direct media dispatch. Current source and primary upstream documentation were reviewed; the exact Laya checkpoint, performance and hardware fit remain unqualified. This is documentation-only planning: no runtime changes, dependency upgrades, model installation or deployment. Schema remains `0028`, the catalog still has fourteen implemented profiles, and all release gates retain their status.
 
 ## Uploaded-image Fooocus variations — 30 September
 

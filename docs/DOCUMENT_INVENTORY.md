@@ -30,6 +30,8 @@ Feature reports retain their dated evidence and fixture boundaries. Their curren
 
 ## Implementation and evidence ledgers
 
+New planning document, 4 October 2026: [P5A: routing and decision services](implementation/P5A_ROUTING_AND_DECISIONS.md). This phase design records the selected built-in Laya and configurable dedicated-provider architecture and supplements the preserved P5/P8 plans; it is not implementation evidence.
+
 | Document | Location |
 |---|---|
 | [Signup, approval and capability access](implementation/ACCOUNT_APPROVAL.md) | `implementation/ACCOUNT_APPROVAL.md` |
