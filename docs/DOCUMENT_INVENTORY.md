@@ -1,8 +1,8 @@
 # Documentation inventory
 
-Updated 18 September 2026. This index separates active guides, dated feature evidence and preserved historical records. Start with [the documentation index](README.md), [current farm state](implementation/CURRENT_STATE.md), [coverage](implementation/DESIGN_COVERAGE.md) and [build status](implementation/BUILD_STATUS.md).
+Updated 4 October 2026. This index separates active guides, dated feature evidence and preserved historical records. Start with [the documentation index](README.md), [active roadmap](implementation/ROADMAP.md), [capability overview](implementation/CURRENT_STATE.md), [coverage](implementation/DESIGN_COVERAGE.md) and [build status](implementation/BUILD_STATUS.md).
 
-There are 56 Markdown documents outside the baseline/archive directories. The preserved `docs/plan/` package has 119 files, including 30 Markdown documents, twelve numbered engineering designs, ten phase plans and fourteen rendered diagrams. Original hashes and exact approved privacy-redaction hashes remain the preservation authority. Counts describe inventory, not acceptance coverage.
+The preserved `docs/plan/` package has 119 files, including 30 Markdown documents, twelve numbered engineering designs, ten phase plans and fourteen rendered diagrams. Original hashes and exact approved privacy-redaction hashes remain the preservation authority. The active guides include P5A and the reconciled continuity design and roadmap; inventory does not establish acceptance coverage.
 
 Feature reports retain their dated evidence and fixture boundaries. Their current-status notes and the farm snapshot resolve superseded topology, URL, adapter and availability claims. A historical model/provider test does not prove it is registered today. The website presents the finished-product vision by design.
 
@@ -40,6 +40,8 @@ New planning document, 4 October 2026: [P5A: routing and decision services](impl
 | [hearth build preparation](implementation/BUILD_PREPARATION.md) | `implementation/BUILD_PREPARATION.md` |
 | [hearth implementation ledger](implementation/BUILD_STATUS.md) | `implementation/BUILD_STATUS.md` |
 | [Capability routing and external LAN providers](implementation/CAPABILITY_ROUTING.md) | `implementation/CAPABILITY_ROUTING.md` |
+| [Context compaction and managed text runtime](implementation/CONTEXT_CONTINUITY_PLAN.md) | `implementation/CONTEXT_CONTINUITY_PLAN.md` |
+| [hearth active roadmap and remaining work](implementation/ROADMAP.md) | `implementation/ROADMAP.md` |
 | [contextual image planning](implementation/CONTEXTUAL_IMAGE_PLANNING.md) | `implementation/CONTEXTUAL_IMAGE_PLANNING.md` |
 | [images inside conversations](implementation/CONVERSATION_IMAGES.md) | `implementation/CONVERSATION_IMAGES.md` |
 | [Current farm snapshot](implementation/CURRENT_STATE.md) | `implementation/CURRENT_STATE.md` |

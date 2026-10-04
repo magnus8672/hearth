@@ -2,13 +2,15 @@
 
 New here? [Explore the illustrated HTML README](readme.html) for the idea behind hearth, its workspace and an interactive example farm. Open the file in a browser from a checkout; it needs no build, server or network connection. Validate this static page with `node scripts/check_readme.mjs`; add `--update-preview` to refresh its root-README preview image.
 
-Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md). The coverage table was reconciled on 18 September against source, feature evidence and read-only live metadata. All fourteen capability profiles now have bounded executable implementations; none of the 61 full release gates is closed.
+Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md) and the [active roadmap](implementation/ROADMAP.md). Reconciled on 4 October against current source and recorded feature evidence, including uploaded-image variation and the planned P5A decision service. All fourteen implemented capability profiles have bounded executable implementations; compaction and `decision.evaluate` remain planned. None of the 61 full release gates is closed. This documentation review did not refresh live deployment state.
 
 For deployment and validation, start with [head VM setup](operations/HEAD_VM_SETUP.md) and [testing](TESTING.md).
 
 | Need | Document |
 |---|---|
 | Review the Switchyard phase and selected Laya/dedicated decision architecture | [P5A: routing and decision services](implementation/P5A_ROUTING_AND_DECISIONS.md) |
+| Choose the next delivery slice and review the full remaining scope | [Active roadmap](implementation/ROADMAP.md) |
+| Build context budgeting, compaction and managed text inference | [Context continuity design](implementation/CONTEXT_CONTINUITY_PLAN.md) |
 | Inspect live capability placement and model residency | [Admin farm map](implementation/FARM_MAP.md) |
 | Register people, approve accounts and grant individual capabilities | [Signup and account approval](implementation/ACCOUNT_APPROVAL.md) |
 | Control installed worker services and queue GPU image jobs | [Managed Linux workers](implementation/MANAGED_WORKERS.md) |

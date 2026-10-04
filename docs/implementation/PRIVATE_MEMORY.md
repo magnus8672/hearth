@@ -32,6 +32,8 @@ Retrieved excerpts are quoted JSON data, explicitly not instructions or authorit
 
 ## Vault projection and migration
 
+The [context continuity design](CONTEXT_CONTINUITY_PLAN.md), integrated into the [active roadmap](ROADMAP.md), adds planned model-generated summaries and per-target token budgets while retaining complete source history and existing providers. Compaction remains unimplemented and is independent of P5A's routing decisions.
+
 Committed note/message/conversation changes enqueue `memory.vault.changed` events transactionally. The admin service projects each principal through a separate RLS transaction into `HEARTH_MEMORY_VAULT_PATH/<farm UUID>/<owner UUID>/`. The development stack mounts the named `memory-vaults` volume at `/var/lib/hearth/vaults`, owned by UID 10001. This directory is not exposed through the web server or as a general network share.
 
 The projector coalesces generations, uses atomic file replacement, records its completed generation, and retries filesystem failures. Committed database history remains safe if the vault is unavailable. Unexpected file edits are preserved in `conflicts/` before regeneration. Paths are generated from opaque IDs, never note titles or imported paths. Generated obsolete note files disappear after removal; the private revision log retains their history. Exports are built from the current committed database state, even while the server projection is behind.

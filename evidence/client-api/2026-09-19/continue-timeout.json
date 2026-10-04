@@ -1,0 +1,73 @@
+{
+  "date": "2026-09-19",
+  "scope": "Continue 2.0.0 certificate configuration, model-read timeout regression, existing ESX head deployment and a real installed-adapter streaming request. No new farm or model lifecycle changes.",
+  "observed_failures": {
+    "original_continue": "Generic Connection error in the running VS Code extension.",
+    "after_explicit_ca": "HTTP 503 No ready, idle target supports this capability.",
+    "diagnostic_upstream_request": {
+      "started_utc": "2026-09-19T21:12:09.239150Z",
+      "interrupted_utc": "2026-09-19T21:12:39.335397Z",
+      "read_timeout_seconds": 30,
+      "operator_log": "LM Studio logged client disconnect and finished streaming at 17:12:39 local time. Only this matching completed request's resource slot was cleared, with an audit entry."
+    }
+  },
+  "change": {
+    "generation_read_timeout": "Configured chat budget; 180 seconds for explicit bounded probes/planners.",
+    "default_chat_budget_seconds": 900,
+    "connection_timeout_seconds": 5,
+    "metadata_timeout_seconds": 30,
+    "silent_failure": "Explicit response-data timeout, uncertain execution retained, no automatic retry.",
+    "model_reload_or_reconfiguration": false
+  },
+  "verification": {
+    "transport_and_security": {
+      "passed": 61,
+      "real_socket_silent_start_seconds": 31
+    },
+    "isolated_vm_database": {
+      "passed": 18,
+      "skipped_opt_in_live": 1,
+      "temporary_database_removed": true
+    },
+    "focused_lint": "passed",
+    "workspace_https_readiness": 200,
+    "admin_https_readiness": 200,
+    "schema": "0027",
+    "existing_accounts_and_private_configuration_preserved": true,
+    "provider_probe": {
+      "state": "ready",
+      "features": [
+        "chat",
+        "streaming",
+        "vision",
+        "tools"
+      ],
+      "elapsed_seconds": 49.18
+    },
+    "installed_continue_adapter": {
+      "provider": "OpenAIApi",
+      "api_base": "https://hearth.example.invalid/v1",
+      "tls_verified": true,
+      "existing_key_preserved": true,
+      "models": [
+        "auto",
+        "chat.general",
+        "code.implement"
+      ],
+      "requested_model": "chat.general",
+      "stream_chunks": 34,
+      "answer_characters": 24,
+      "first_content_seconds": 2.446,
+      "completion_seconds": 5.742,
+      "finish_reason": "stop"
+    },
+    "user_confirmed_vscode_connection": true
+  },
+  "limitations": [
+    "Installed adapter qualification runs its bundled implementation in a separate Node process, not through the VS Code webview.",
+    "The precise internal cause of Continue's original generic connection error was not exposed by its log; explicit CA configuration restored API access.",
+    "Full VS Code agent execution, local filesystem tools and shared MCP round trips remain unqualified.",
+    "Release gates remain 20 partial, 41 not run, zero fully passed."
+  ],
+  "privacy_note": "Sanitized on 4 October 2026: the original private deployment URL was replaced with a non-operational example. Dates and historical outcomes are retained; this is not a fresh live-client run."
+}

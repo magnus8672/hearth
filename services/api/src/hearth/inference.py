@@ -237,7 +237,12 @@ def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_t
     saw_answer = False
     answer_prefix = AnswerPrefix(model_id)
     try:
-        with client_for(base_url, credential, settings) as (client, extensions), client.stream('POST', 'chat/completions', json=payload, extensions=extensions) as response:
+        # Model prefill/reasoning can be silent longer than a metadata request.
+        # Keep short connection/write bounds, but let reads use this generation's
+        # budget. The elapsed-time and size checks below still bound active output.
+        timeout = httpx.Timeout(30, connect=5, read=deadline)
+        with client_for(base_url, credential, settings) as (client, extensions), client.stream(
+                'POST', 'chat/completions', json=payload, extensions=extensions, timeout=timeout) as response:
             response_ok(response)
             if 'text/event-stream' not in response.headers.get('content-type', ''):
                 raise ProviderError('This model server did not return a streaming response.', uncertain=True)
@@ -323,5 +328,8 @@ def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_t
         raise ProviderError('The model server returned an invalid stream event.', uncertain=True) from None
     except httpx.ConnectError:
         raise ProviderError('The model server is unreachable. Start it and check the connection.') from None
+    except httpx.ReadTimeout:
+        raise ProviderError('The model did not send response data within this request\'s time limit. '
+                            'It may still be processing; check its server before retrying.', uncertain=True) from None
     except httpx.HTTPError:
         raise ProviderError('The model connection was interrupted. The server may still be generating.', uncertain=True) from None

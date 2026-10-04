@@ -23,6 +23,14 @@ Implemented 14 September 2026 with migration `0020`. hearth now owns a shared MC
 
 For a [VM deployment](../operations/ESX_HEAD.md), use its configured HTTPS origins for clients and sign-in. Loopback addresses refer to the client itself. Existing-farm migration and the signed installer remain open. Trust the head's CA in each client runtime; browser trust alone may not configure Python or Node trust. Continue supports `requestOptions.caBundlePath`; Node clients can use a correctly supplied `NODE_EXTRA_CA_CERTS` file. Keep certificate verification enabled.
 
+## Generation timeout and Continue recovery
+
+Generation reads use the applicable generation budget: the configured chat limit (900 seconds by default) or 180 seconds for bounded probes/planners. Connection establishment remains limited to five seconds, while writes, connection-pool waits and metadata requests retain their existing short bounds. Elapsed-output and size checks remain enforced. A silent read timeout reports the response-data timeout explicitly and keeps the execution uncertain; it does not retry generation or clear an occupied resource automatically.
+
+The [19 September recovery record](../../evidence/client-api/2026-09-19/continue-timeout.json) documents the original timeout fix, verified TLS, a short Continue adapter reply and the user's connection confirmation. That record is historical and has been sanitized for publication. The source fix was absent from rewritten `main` and was restored during the 4 October reconciliation. New isolated transport checks are recorded in the [implementation ledger](BUILD_STATUS.md); this restoration did not deploy code or rerun real model/client qualification.
+
+Continue supports an explicit farm root certificate through `requestOptions.caBundlePath`, as noted above. Use a private local certificate path and the actual configured head URL, keep TLS verification enabled, and allow reply/tool space within the selected provider's loaded context. Full VS Code agent/local-tool/shared-MCP acceptance remains separate from a successful connection.
+
 ## Three tools, regardless of catalog size
 
 | Manifest tool | Arguments and behavior |
@@ -134,6 +142,8 @@ The transport now recognizes LM Studio's explicit pre-generation context rejecti
 [Compatibility evidence](../../evidence/client-api/2026-09-15/hermes-compatibility.json) separates the working small client round trip from the pending full Hermes session. Hermes's auxiliary title generator also requests structured JSON-schema output, which this API subset does not yet support; its title warning is separate from key authentication and the main turn. Complete Hermes local-tool and shared-MCP acceptance remains open.
 
 ## Validation and remaining work
+
+The [active roadmap](ROADMAP.md) retains the [context continuity design](CONTEXT_CONTINUITY_PLAN.md): opt-in client compaction/sessions remain planned. Existing `/v1/chat/completions` stays caller-owned and stateless by default. P5A's proposed decision API is separate; no managed runtime or routing change silently opts clients into history storage.
 
 [Validation](../../evidence/tools/2026-09-14/validation.json) distinguishes fixture tests, real network MCP, actual resident LAN Qwen and deployed services. The Qwen test performs a client-owned function round trip and a private-chat `list_tools` → `describe_tool` → `run_tool` sequence returning 42 from an actual MCP server. Its loaded model set remains unchanged.
 

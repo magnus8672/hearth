@@ -123,6 +123,8 @@ Run semantic inference outside admission transactions, then acquire the needed l
 
 ## Roadmap boundaries and discussion points
 
+The [active roadmap](ROADMAP.md) tracks this phase under R10/R35 alongside the independent [context continuity design](CONTEXT_CONTINUITY_PLAN.md). Typed intent decisions do not replace context budgeting or compaction. Neither slice requires completion of the other, and the chosen routing decision model is not automatically a qualified summarizer.
+
 P5A advances the local portions of P5 items 1–2 and extends its client-access work with decisions. It contributes evidence to E07/E09/E15/E16 and S06/S17; it does not close those entire scenarios. Central configuration contributes to C03/C04 but does not implement automatic provisioning. It prepares a typed specialist result for P8; general task trees, parent/child slot release and orchestration remain P8 work.
 
 Defer cloud activation and paid tests, full text/audio queue unification, learned model-quality routing, multimodal decision uploads, training/fine-tuning and general specialist orchestration. Jev/hosted Clef can be future connectors using the same typed contract once consent, locality, budgets and unknown-outcome accounting are implemented. Local-only classification must remain local even if the final user task has a cloud option. Free, open-source hearth does not depend on a subscription to a decision provider.

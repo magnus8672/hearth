@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-04",
+  "scope": "Restore an orphaned generation timeout fix and reconcile planning documents with sanitized main. No live service deployment or model calls.",
+  "upstream_commit": "7ed87728b244c36604ffaa429b3c9ecd25446c57",
+  "baseline_comparison": {
+    "inference_source_identical_to_pre_fix_version": true,
+    "regression_tests_failed": 2,
+    "elapsed_bound_control_passed": 1,
+    "duration_seconds": 32.73,
+    "failures": [
+      "Silent startup beyond 30 seconds disconnects despite a longer configured generation budget.",
+      "A silent provider does not honor the shortened read budget or produce the explicit response-data timeout."
+    ]
+  },
+  "restored_fix": {
+    "focused_transport_cases_passed": 39,
+    "duration_seconds": 32.35,
+    "silent_start_seconds": 31,
+    "generation_read_budget": "Configured chat timeout, or 180 seconds for explicit bounded probes/planners.",
+    "uncertain_timeout_retained": true,
+    "automatic_retry_added": false
+  },
+  "environment": {
+    "location": "Operator-designated runtime VM",
+    "isolation": "Ephemeral containers using an existing test image; read-only source, temporary scratch storage, no capabilities, no new privileges and networking disabled except loopback.",
+    "pytest_version": "9.1.1",
+    "httpx_version": "0.28.1",
+    "database_access": false,
+    "production_volumes_mounted": false,
+    "live_model_calls": false,
+    "live_services_changed": false
+  },
+  "limitations": [
+    "Transport fixtures do not establish full Continue, Hermes or OpenClaw acceptance.",
+    "The source fix was not deployed during this reconciliation.",
+    "Compaction, P5A and managed text-runtime changes remain planning only.",
+    "Release gates remain 20 partial, 41 not run and zero fully passed."
+  ],
+  "source_checks": {
+    "focused_ruff": "passed",
+    "git_diff_check": "passed",
+    "documentation": "passed",
+    "markdown_files": 126,
+    "local_links_checked": 1260,
+    "original_baseline_files_verified": 117,
+    "approved_privacy_redactions_verified": 2,
+    "release_gate_ledger_unchanged": true,
+    "added_content_private_identifier_scan": "passed"
+  }
+}
