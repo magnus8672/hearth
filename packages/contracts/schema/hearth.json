@@ -879,6 +879,385 @@
       "title": "ConversationImage",
       "type": "object"
     },
+    "DecisionAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "abstained": {
+          "default": false,
+          "title": "Abstained",
+          "type": "boolean"
+        },
+        "answer_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer Confidence"
+        },
+        "choice": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Choice"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "choice",
+            "score",
+            "boolean"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "probabilities": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probabilities"
+        },
+        "probability_true": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability True"
+        },
+        "provider_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Confidence"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "maximum": 15,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "title": "DecisionAnswer",
+      "type": "object"
+    },
+    "DecisionProviderInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "languages": {
+          "items": {
+            "maxLength": 16,
+            "minLength": 2,
+            "type": "string"
+          },
+          "maxItems": 120,
+          "minItems": 1,
+          "title": "Languages",
+          "type": "array"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "maximum_characters": {
+          "maximum": 8000,
+          "minimum": 1,
+          "title": "Maximum Characters",
+          "type": "integer"
+        },
+        "maximum_tokens": {
+          "maximum": 65536,
+          "minimum": 128,
+          "title": "Maximum Tokens",
+          "type": "integer"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "offline": {
+          "title": "Offline",
+          "type": "boolean"
+        },
+        "protocol": {
+          "const": "hearth.decision.v1",
+          "default": "hearth.decision.v1",
+          "title": "Protocol",
+          "type": "string"
+        },
+        "question_kinds": {
+          "items": {
+            "enum": [
+              "choice",
+              "score",
+              "boolean"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Question Kinds",
+          "type": "array"
+        },
+        "ready": {
+          "title": "Ready",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "model",
+        "model_revision",
+        "manifest_sha256",
+        "question_kinds",
+        "maximum_tokens",
+        "maximum_characters",
+        "languages",
+        "offline",
+        "ready"
+      ],
+      "title": "DecisionProviderInfo",
+      "type": "object"
+    },
+    "DecisionQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_.-]{0,79}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "instructions": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Instructions",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "choice",
+            "score",
+            "boolean"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 16,
+          "title": "Options",
+          "type": "object"
+        },
+        "rubric": {
+          "items": {
+            "maxLength": 160,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Rubric",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "instructions"
+      ],
+      "title": "DecisionQuestion",
+      "type": "object"
+    },
+    "DecisionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/DecisionQuestion"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Questions",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "state": {
+          "maxLength": 8000,
+          "minLength": 1,
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "state",
+        "questions"
+      ],
+      "title": "DecisionRequest",
+      "type": "object"
+    },
+    "DecisionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "answers": {
+          "items": {
+            "$ref": "#/$defs/DecisionAnswer"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Answers",
+          "type": "array"
+        },
+        "elapsed_ms": {
+          "maximum": 120000,
+          "minimum": 0,
+          "title": "Elapsed Ms",
+          "type": "number"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "input_tokens": {
+          "maximum": 9007199254740991,
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "model_revision": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "truncated": {
+          "const": false,
+          "default": false,
+          "title": "Truncated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "model_revision",
+        "manifest_sha256",
+        "answers",
+        "elapsed_ms",
+        "input_tokens"
+      ],
+      "title": "DecisionResult",
+      "type": "object"
+    },
     "EnrollmentEnvelope": {
       "additionalProperties": false,
       "properties": {

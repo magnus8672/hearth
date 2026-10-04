@@ -2,12 +2,13 @@
 
 New here? [Explore the illustrated HTML README](readme.html) for the idea behind hearth, its workspace and an interactive example farm. Open the file in a browser from a checkout; it needs no build, server or network connection. Validate this static page with `node scripts/check_readme.mjs`; add `--update-preview` to refresh its root-README preview image.
 
-Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md) and the [active roadmap](implementation/ROADMAP.md). Reconciled on 4 October against current source and recorded feature evidence, including uploaded-image variation and the planned P5A decision service. All fourteen implemented capability profiles have bounded executable implementations; compaction and `decision.evaluate` remain planned. None of the 61 full release gates is closed. This documentation review did not refresh live deployment state.
+Start with [what works and what is missing](implementation/DESIGN_COVERAGE.md) and the [active roadmap](implementation/ROADMAP.md). The 4 October P5A implementation adds a fifteenth profile, typed Decisions, built-in CPU Laya, configurable dedicated decision sources and opt-in Switchyard balancing. [Setup and testing](operations/DECISIONS_SETUP_AND_TESTING.md) explains the measured limits: semantic routing remains experimental and off by default. Compaction remains planned. None of the 61 full release gates is closed.
 
 For deployment and validation, start with [head VM setup](operations/HEAD_VM_SETUP.md) and [testing](TESTING.md).
 
 | Need | Document |
 |---|---|
+| Install and test Decisions, internal routing and provider balancing | [Decisions setup and testing](operations/DECISIONS_SETUP_AND_TESTING.md) |
 | Review the Switchyard phase and selected Laya/dedicated decision architecture | [P5A: routing and decision services](implementation/P5A_ROUTING_AND_DECISIONS.md) |
 | Choose the next delivery slice and review the full remaining scope | [Active roadmap](implementation/ROADMAP.md) |
 | Build context budgeting, compaction and managed text inference | [Context continuity design](implementation/CONTEXT_CONTINUITY_PLAN.md) |

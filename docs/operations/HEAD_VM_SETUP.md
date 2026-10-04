@@ -85,3 +85,8 @@ The configuration follows [Compose's explicit port replacement rules](https://do
 ## Change the address after setup
 
 Use [Administration → Settings → Address & certificates](../implementation/HEAD_ADDRESS_SETTINGS.md) to preview and apply a new base URL. The local supervisor preserves the trust root and existing accounts, updates sign-in bindings, rebuilds the public certificate package and attempts rollback if checks fail. Browser sessions end during the change. Install the supervisor with `sudo python3 scripts/head.py install-control` on an updated existing systemd deployment.
+
+
+## Optional resident Decisions service
+
+The package includes the pinned CPU Laya runtime and `scripts/setup_decisions.py`. On the head VM, explicitly run `sudo python3 scripts/setup_decisions.py` before `sudo python3 scripts/head.py up` to prepare its checkpoint and enable the private-socket overlay. Existing farm data and trust are preserved. This is separate from speech/transcription and external model services. See [Decisions setup, limits and testing](DECISIONS_SETUP_AND_TESTING.md); semantic routing stays opt-in because the current checkpoint has not met promotion targets.

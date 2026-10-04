@@ -504,6 +504,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/decision-settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Settings */
+        get: operations["get_settings_api_v1_decision_settings_get"];
+        /** Put Settings */
+        put: operations["put_settings_api_v1_decision_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Listing */
+        get: operations["listing_api_v1_decisions_get"];
+        put?: never;
+        /** Create */
+        post: operations["create_api_v1_decisions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/decisions/{decision_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get */
+        get: operations["get_api_v1_decisions__decision_id__get"];
+        put?: never;
+        post?: never;
+        /** Remove */
+        delete: operations["remove_api_v1_decisions__decision_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/drafts": {
         parameters: {
             query?: never;
@@ -1483,6 +1537,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Client Decision */
+        post: operations["client_decision_v1_decisions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/models": {
         parameters: {
             query?: never;
@@ -2029,7 +2100,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1";
             /**
              * Residency Policy
              * @default unknown
@@ -2136,6 +2207,199 @@ export interface components {
         Decision: {
             /** Approve */
             approve: boolean;
+        };
+        /** DecisionAnswer */
+        DecisionAnswer: {
+            /**
+             * Abstained
+             * @default false
+             */
+            abstained: boolean;
+            /**
+             * Answer Confidence
+             * @default null
+             */
+            answer_confidence: number | null;
+            /**
+             * Choice
+             * @default null
+             */
+            choice: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "choice" | "score" | "boolean";
+            /**
+             * Probabilities
+             * @default null
+             */
+            probabilities: {
+                [key: string]: number;
+            } | null;
+            /**
+             * Probability True
+             * @default null
+             */
+            probability_true: number | null;
+            /**
+             * Provider Confidence
+             * @default null
+             */
+            provider_confidence: number | null;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Score
+             * @default null
+             */
+            score: number | null;
+        };
+        /** DecisionProviderInfo */
+        DecisionProviderInfo: {
+            /** Languages */
+            languages: string[];
+            /** Manifest Sha256 */
+            manifest_sha256: string;
+            /** Maximum Characters */
+            maximum_characters: number;
+            /** Maximum Tokens */
+            maximum_tokens: number;
+            /** Model */
+            model: string;
+            /** Model Revision */
+            model_revision: string;
+            /** Offline */
+            offline: boolean;
+            /**
+             * Protocol
+             * @default hearth.decision.v1
+             * @constant
+             */
+            protocol: "hearth.decision.v1";
+            /** Question Kinds */
+            question_kinds: ("choice" | "score" | "boolean")[];
+            /** Ready */
+            ready: boolean;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+        };
+        /** DecisionQuestion */
+        DecisionQuestion: {
+            /** Id */
+            id: string;
+            /** Instructions */
+            instructions: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "choice" | "score" | "boolean";
+            /** Options */
+            options?: {
+                [key: string]: string;
+            };
+            /** Rubric */
+            rubric?: string[];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+        };
+        /** DecisionRequest */
+        DecisionRequest: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Questions */
+            questions: components["schemas"]["DecisionQuestion"][];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /** State */
+            state: string;
+        };
+        /** DecisionResult */
+        DecisionResult: {
+            /** Answers */
+            answers: components["schemas"]["DecisionAnswer"][];
+            /** Elapsed Ms */
+            elapsed_ms: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Input Tokens */
+            input_tokens: number;
+            /** Manifest Sha256 */
+            manifest_sha256: string;
+            /** Model */
+            model: string;
+            /** Model Revision */
+            model_revision: string;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Truncated
+             * @default false
+             * @constant
+             */
+            truncated: false;
+        };
+        /** DecisionSettings */
+        DecisionSettings: {
+            /** Deadline Ms */
+            deadline_ms: number;
+            /**
+             * Fallback Builtin
+             * @default true
+             */
+            fallback_builtin: boolean;
+            /**
+             * Member Builtin
+             * @default true
+             */
+            member_builtin: boolean;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "legacy" | "shadow" | "semantic";
+            /** Revision */
+            revision: number;
+            /** Shadow Sample */
+            shadow_sample: number;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "builtin" | "dedicated";
+            /** Target Id */
+            target_id?: string | null;
+            /** Threshold */
+            threshold: number;
         };
         /** DraftInput */
         DraftInput: {
@@ -2312,6 +2576,31 @@ export interface components {
              * @constant
              */
             schema_version: 1;
+        };
+        /** Evaluate */
+        Evaluate: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Questions */
+            questions: components["schemas"]["DecisionQuestion"][];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /** State */
+            state: string;
+            /** Target Id */
+            target_id?: string | null;
+            /**
+             * Use Route
+             * @default false
+             */
+            use_route: boolean;
         };
         /** EventEnvelope */
         EventEnvelope: {
@@ -3454,7 +3743,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1";
             /**
              * Residency Policy
              * @default unknown
@@ -3716,6 +4005,12 @@ export interface components {
         SetRoute: {
             /** Revision */
             revision: number;
+            /**
+             * Selection Policy
+             * @default ordered
+             * @enum {string}
+             */
+            selection_policy: "ordered" | "balanced";
             /** Targets */
             targets: components["schemas"]["RouteTarget"][];
         };
@@ -5178,6 +5473,174 @@ export interface operations {
             header?: never;
             path: {
                 job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_settings_api_v1_decision_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    put_settings_api_v1_decision_settings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionSettings"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listing_api_v1_decisions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    create_api_v1_decisions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Evaluate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_api_v1_decisions__decision_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                decision_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_api_v1_decisions__decision_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                decision_id: string;
             };
             cookie?: never;
         };
@@ -7132,6 +7595,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["Completion"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    client_decision_v1_decisions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Evaluate"];
             };
         };
         responses: {

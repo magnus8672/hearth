@@ -133,6 +133,8 @@ def compose_context(state):
                '--env-file', str(state / 'empty.env'),
                '-f', str(ROOT / 'deploy/compose/development.yaml'),
                '-f', str(ROOT / 'deploy/compose/head.yaml')]
+    if (state / 'decisions/checkpoint/manifest.json').is_file():
+        command.extend(['-f', str(ROOT / 'deploy/compose/decision.yaml')])
     environment = {key: value for key, value in os.environ.items()
                    if not key.startswith(('HEARTH_', 'COMPOSE_'))}
     setup_port = setup_http_port(values)
@@ -158,6 +160,7 @@ def compose_context(state):
             except ValueError:
                 pass
     environment.update(values, HEARTH_CA_PASSWORD_FILE=str(ca_path),
+                       HEARTH_DECISION_DIR=str(state / 'decisions'),
                        HEARTH_CONTROL_DIR=str(control_directory),
                        HEARTH_DEFAULT_SNI=default_sni,
                        HEARTH_SETUP_HTTP_PORT=str(setup_port),

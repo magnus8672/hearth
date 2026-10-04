@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-04",
+  "scope": "P5A feature implementation and operator-test deployment; semantic promotion not accepted",
+  "database_revision": "0029",
+  "capability_profiles": 15,
+  "validation": {
+    "backend_regression": {
+      "passed": 545,
+      "skipped": 20,
+      "seconds": 189.82,
+      "scope": "Restricted-role isolated PostgreSQL on authorized VM; opt-in live tests skipped"
+    },
+    "final_decision_checks": {
+      "passed": 9,
+      "seconds": 15.3,
+      "includes": "Private/dedicated real pinned checkpoint; all three typed answers; abstention; settings/fallback; client scopes; semantic surfaces; real Switchyard selection"
+    },
+    "browser_checks": {
+      "passed": 5,
+      "scope": "Decisions desktop/mobile and admin controls (2), reply identity private/channel (2), multi-provider (1); isolated API fixtures against VM-served assets"
+    },
+    "typescript_contract_tests": {
+      "passed": 227
+    },
+    "native_go_shared_fixtures": {
+      "passed": 224
+    },
+    "typecheck": "passed",
+    "browser_bundles": "built",
+    "changed_python_lint": "passed",
+    "fresh_farm_package": {
+      "built": true,
+      "files": 160,
+      "contains_farm_data": false,
+      "scope": "Package closure checked; no second farm started"
+    },
+    "docs": {
+      "markdown_files": 127,
+      "local_links": 1280,
+      "status": "passed"
+    }
+  },
+  "preserved": [
+    "existing farm data and credentials",
+    "provider bindings",
+    "trust root",
+    "legacy intent and ordered routing defaults"
+  ],
+  "not_claimed": [
+    "Semantic model meets promotion targets",
+    "Multilingual or independent user-traffic quality",
+    "A large dedicated decision checkpoint qualified",
+    "Full authenticated operator regression sweep",
+    "Any new release gate closed"
+  ],
+  "references": [
+    "benchmark.json",
+    "runtime.json",
+    "deployment.json"
+  ]
+}

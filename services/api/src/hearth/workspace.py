@@ -43,6 +43,12 @@ def capabilities(request: Request):
         db.execute(text('SELECT revision FROM memory_settings LIMIT 1'))
         ready.update({'memory.retrieve', 'memory.index'})
         assigned = set(db.execute(text('SELECT DISTINCT capability_id FROM capability_bindings')).scalars().all())
+        from hearth.decisions import configuration
+        builtin_decisions = configuration(db)['member_builtin']
+    if builtin_decisions and request.app.state.settings.decision_socket:
+        from hearth.decisions import builtin_status
+        if builtin_status(request.app.state.settings).get('ready'):
+            ready.add('decision.evaluate')
     return {'items': [dict(item) | {
         'state': 'ready' if item['capability_id'] in ready else ('offline' if item['capability_id'] in assigned else 'unassigned'),
         'input_modalities': profile(item['capability_id']).get('input_modalities', item['input_modalities']),

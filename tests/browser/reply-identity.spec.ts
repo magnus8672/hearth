@@ -2,7 +2,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function identity(page: Page) {
-  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'reply-fixture', display_name: 'Tester', roles: ['Owner'], permissions: ['conversation.own'], csrf_token: 'fixture-csrf', admin_origin: 'http://127.0.0.1:5173', user_origin: 'http://127.0.0.1:5174' } }));
+  await page.route('**/api/v1/session', route => route.fulfill({ json: { id: 'reply-fixture', display_name: 'Tester', roles: ['Owner'], permissions: ['conversation.own', 'channel.use'], csrf_token: 'fixture-csrf', admin_origin: 'http://127.0.0.1:5173', user_origin: 'http://127.0.0.1:5174' } }));
   for (const endpoint of ['capabilities', 'side-notes']) await page.route(`**/api/v1/${endpoint}`, route => route.fulfill({ json: { items: [] } }));
 }
 

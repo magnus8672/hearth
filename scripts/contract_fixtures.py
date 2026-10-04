@@ -52,6 +52,10 @@ for name, model in sorted(CONTRACTS.items()):
         payload["prompt"] = "A fixture stone arch"
     if name == 'ImagePromptPlan':
         payload['prompt'] = 'A fixture stone arch'
+    if name == 'DecisionQuestion':
+        payload['options'] = {'yes': 'Delivered', 'no': 'Not delivered'}
+    if name == 'DecisionRequest':
+        payload['questions'][0]['options'] = {'yes': 'Delivered', 'no': 'Not delivered'}
     payload = model.model_validate(payload).model_dump(mode="json")
     cases.extend([
         {"name": name + ".valid", "contract": name, "valid": True, "payload": payload},

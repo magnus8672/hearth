@@ -1,0 +1,82 @@
+{
+  "schema": "0029",
+  "http_checks": [
+    {
+      "surface": "user",
+      "path": "/health/ready",
+      "status": 200,
+      "tls_verified": true
+    },
+    {
+      "surface": "user",
+      "path": "/",
+      "status": 200,
+      "tls_verified": true
+    },
+    {
+      "surface": "admin",
+      "path": "/health/ready",
+      "status": 200,
+      "tls_verified": true
+    },
+    {
+      "surface": "admin",
+      "path": "/",
+      "status": 200,
+      "tls_verified": true
+    },
+    {
+      "surface": "anonymous",
+      "path": "/v1/models",
+      "status": 401
+    },
+    {
+      "surface": "anonymous",
+      "path": "/v1/decisions",
+      "status": 401
+    },
+    {
+      "surface": "anonymous",
+      "path": "/api/v1/decisions",
+      "status": 401
+    },
+    {
+      "surface": "user",
+      "path": "/assets/index-4dyhEAI7.js",
+      "status": 200
+    },
+    {
+      "surface": "user",
+      "path": "/assets/index-Bn81QZ5D.css",
+      "status": 200
+    },
+    {
+      "surface": "admin",
+      "path": "/assets/index-DYEvsbV2.js",
+      "status": 200
+    },
+    {
+      "surface": "admin",
+      "path": "/assets/index-Bn81QZ5D.css",
+      "status": 200
+    }
+  ],
+  "live_typed_smoke": {
+    "model": "convaiinnovations/laya-typed-decisions",
+    "revision": "1a793eb568e6718f15941d08f85432581df534e3",
+    "kinds": [
+      "choice",
+      "score",
+      "boolean"
+    ],
+    "elapsed_ms": 1185.6130808591843,
+    "truncated": false
+  },
+  "default_mode": "legacy",
+  "default_policy": "ordered",
+  "config_and_root_preserved": true,
+  "synthetic_production_users_created": false,
+  "production_member_content_written": false,
+  "provider_states_unchanged": true,
+  "temporary_test_services_removed": true
+}

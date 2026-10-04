@@ -3,6 +3,7 @@ from hearth.contracts import CapabilityDefinition
 _ENTRIES = [
     ("chat.general", "Conversation", "chat", ["text"], ["text"]),
     ("reason.plan", "Planning", "reasoning", ["text"], ["text"]),
+    ("decision.evaluate", "Decisions", "reasoning", ["text"], ["text"]),
     ("code.explain", "Code explanation", "code", ["text", "artifact"], ["text"]),
     ("code.implement", "Coding", "code", ["text", "artifact"], ["text", "artifact"]),
     ("write.compose", "Writing", "writing", ["text"], ["text"]),
@@ -21,5 +22,5 @@ CAPABILITIES = tuple(CapabilityDefinition(
     capability_id=id, revision=1, display_name=label, description=f"{label} through an approved hearth deployment.",
     icon=icon, input_modalities=inputs, output_modalities=outputs, quality_suite=id + ".v1",
     deadline_seconds=900 if outputs[0] in {"image", "geometry", "audio"} else 300,
-    cloud_eligible=not id.startswith("memory.") and id != "geometry.generate",
+    cloud_eligible=not id.startswith("memory.") and id not in {"geometry.generate", "decision.evaluate"},
 ) for id, label, icon, inputs, outputs in _ENTRIES)

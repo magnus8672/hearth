@@ -126,8 +126,8 @@ def test_four_servers_persist_and_dispatch_concurrently_without_model_loading(bf
         state['loaded'] = False
         posts = len([c for c in state['calls'] if c[0] == 'POST'])
         response = user.post(paths[0]+'/turns', headers=uh, json={'request_id': str(uuid4()), 'revision': 2, 'content': 'Hello', 'capability': 'chat.general'})
-        assert response.status_code == 202
-        assert wait_finished(user, paths[0])['runs'][-1]['status'] == 'failed'
+        assert response.status_code == 409  # Fresh residency excludes it before admission.
+        assert wait_finished(user, paths[0])['runs'][-1]['status'] == 'completed'  # Previous reply is preserved.
         assert len([c for c in state['calls'] if c[0] == 'POST']) == posts
         for _, service in services:
             assert all(call[1] in {'/v1/models', '/api/v1/models', '/v1/chat/completions'} for call in service['calls'])

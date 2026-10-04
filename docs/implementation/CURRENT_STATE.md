@@ -1,6 +1,6 @@
 # Deployment roles and capability status
 
-Updated 29 September 2026. This public overview describes implementation roles and qualification requirements. Actual hostnames, addresses, accounts, hardware inventories and saved provider state belong in private deployment configuration. For a live inventory, open **Administration → Farm map**, **Providers** and **Workers** on your own deployment. Dated validation is in the [implementation ledger](BUILD_STATUS.md).
+Updated 4 October 2026. This public overview describes implementation roles and qualification requirements. Actual hostnames, addresses, accounts, hardware inventories and saved provider state belong in private deployment configuration. For a live inventory, open **Administration → Farm map**, **Providers** and **Workers** on your own deployment. Dated validation is in the [implementation ledger](BUILD_STATUS.md).
 
 ## Roles
 
@@ -16,13 +16,14 @@ Updated 29 September 2026. This public overview describes implementation roles a
 | Capability | Implemented behavior and requirements |
 |---|---|
 | Text profiles | Compatible chat transports with verified targets. Automatic intent selection may fall back to general chat for an unassigned specialist; explicit selection requires an eligible assignment. |
+| `decision.evaluate` | Private typed Choice/Score/Boolean decisions through prepared head CPU Laya or independently assigned dedicated providers. Scoped client API, comparison and export. [Setup and limits](../operations/DECISIONS_SETUP_AND_TESTING.md). |
 | `vision.describe` | Private image understanding requires saved pixel-reading verification, not just advertised Vision support. |
 | `image.generate` | Fooocus jobs from the gallery, private chat and channels join the durable media queue. |
 | `geometry.generate` | TRELLIS.2 and Hunyuan3D 2.0 support private image-to-3D, names, reference thumbnails, tuning, previews, GLB/OBJ exports and cancellation. |
 | `memory.retrieve`, `memory.index` | Built-in, scoped PostgreSQL functions; no inference-target binding is required. Account grants still apply. |
 | `audio.speak`, `audio.transcribe` | Compatible providers must be installed, registered and verified. Adapter implementation does not imply deployment availability. |
 
-All fourteen profiles have bounded implementations; this does not mean all are enabled in a particular installation. Configuration, observed residency, saved verification and model quality are separate facts. There is no automatic model loading/swapping on the external LM Studio request path.
+All fifteen profiles have bounded implementations; this does not mean all are enabled in a particular installation. Configuration, observed residency, saved verification and model quality are separate facts. Intent routing defaults to Legacy; opt-in semantic/shadow mode uses a separately selected decision source. Text/Vision/Decisions routes can use real selection-only Switchyard balancing over eligible resident targets; quality-ranked placement remains open. There is no automatic model loading/swapping on the external LM Studio request path.
 
 ## Scheduling and access
 

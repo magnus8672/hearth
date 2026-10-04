@@ -903,6 +903,439 @@
     }
   },
   {
+    "name": "DecisionAnswer.valid",
+    "contract": "DecisionAnswer",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "fixture",
+      "kind": "choice",
+      "choice": null,
+      "score": null,
+      "probability_true": null,
+      "probabilities": null,
+      "provider_confidence": null,
+      "answer_confidence": null,
+      "abstained": false
+    }
+  },
+  {
+    "name": "DecisionAnswer.unknown_authority",
+    "contract": "DecisionAnswer",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "fixture",
+      "kind": "choice",
+      "choice": null,
+      "score": null,
+      "probability_true": null,
+      "probabilities": null,
+      "provider_confidence": null,
+      "answer_confidence": null,
+      "abstained": false,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "DecisionAnswer.future_version",
+    "contract": "DecisionAnswer",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "fixture",
+      "kind": "choice",
+      "choice": null,
+      "score": null,
+      "probability_true": null,
+      "probabilities": null,
+      "provider_confidence": null,
+      "answer_confidence": null,
+      "abstained": false
+    }
+  },
+  {
+    "name": "DecisionAnswer.boolean_version",
+    "contract": "DecisionAnswer",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "fixture",
+      "kind": "choice",
+      "choice": null,
+      "score": null,
+      "probability_true": null,
+      "probabilities": null,
+      "provider_confidence": null,
+      "answer_confidence": null,
+      "abstained": false
+    }
+  },
+  {
+    "name": "DecisionProviderInfo.valid",
+    "contract": "DecisionProviderInfo",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.decision.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "question_kinds": [
+        "choice"
+      ],
+      "maximum_tokens": 128,
+      "maximum_characters": 1,
+      "languages": [
+        "fixture"
+      ],
+      "offline": true,
+      "ready": true
+    }
+  },
+  {
+    "name": "DecisionProviderInfo.unknown_authority",
+    "contract": "DecisionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "protocol": "hearth.decision.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "question_kinds": [
+        "choice"
+      ],
+      "maximum_tokens": 128,
+      "maximum_characters": 1,
+      "languages": [
+        "fixture"
+      ],
+      "offline": true,
+      "ready": true,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "DecisionProviderInfo.future_version",
+    "contract": "DecisionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "protocol": "hearth.decision.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "question_kinds": [
+        "choice"
+      ],
+      "maximum_tokens": 128,
+      "maximum_characters": 1,
+      "languages": [
+        "fixture"
+      ],
+      "offline": true,
+      "ready": true
+    }
+  },
+  {
+    "name": "DecisionProviderInfo.boolean_version",
+    "contract": "DecisionProviderInfo",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "protocol": "hearth.decision.v1",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "question_kinds": [
+        "choice"
+      ],
+      "maximum_tokens": 128,
+      "maximum_characters": 1,
+      "languages": [
+        "fixture"
+      ],
+      "offline": true,
+      "ready": true
+    }
+  },
+  {
+    "name": "DecisionQuestion.valid",
+    "contract": "DecisionQuestion",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "fixture",
+      "kind": "choice",
+      "instructions": "fixture",
+      "options": {
+        "yes": "Delivered",
+        "no": "Not delivered"
+      },
+      "rubric": []
+    }
+  },
+  {
+    "name": "DecisionQuestion.unknown_authority",
+    "contract": "DecisionQuestion",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "fixture",
+      "kind": "choice",
+      "instructions": "fixture",
+      "options": {
+        "yes": "Delivered",
+        "no": "Not delivered"
+      },
+      "rubric": [],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "DecisionQuestion.future_version",
+    "contract": "DecisionQuestion",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "fixture",
+      "kind": "choice",
+      "instructions": "fixture",
+      "options": {
+        "yes": "Delivered",
+        "no": "Not delivered"
+      },
+      "rubric": []
+    }
+  },
+  {
+    "name": "DecisionQuestion.boolean_version",
+    "contract": "DecisionQuestion",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "fixture",
+      "kind": "choice",
+      "instructions": "fixture",
+      "options": {
+        "yes": "Delivered",
+        "no": "Not delivered"
+      },
+      "rubric": []
+    }
+  },
+  {
+    "name": "DecisionRequest.valid",
+    "contract": "DecisionRequest",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "state": "fixture",
+      "questions": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "instructions": "fixture",
+          "options": {
+            "yes": "Delivered",
+            "no": "Not delivered"
+          },
+          "rubric": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "DecisionRequest.unknown_authority",
+    "contract": "DecisionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "state": "fixture",
+      "questions": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "instructions": "fixture",
+          "options": {
+            "yes": "Delivered",
+            "no": "Not delivered"
+          },
+          "rubric": []
+        }
+      ],
+      "is_admin": true
+    }
+  },
+  {
+    "name": "DecisionRequest.future_version",
+    "contract": "DecisionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "state": "fixture",
+      "questions": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "instructions": "fixture",
+          "options": {
+            "yes": "Delivered",
+            "no": "Not delivered"
+          },
+          "rubric": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "DecisionRequest.boolean_version",
+    "contract": "DecisionRequest",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "state": "fixture",
+      "questions": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "instructions": "fixture",
+          "options": {
+            "yes": "Delivered",
+            "no": "Not delivered"
+          },
+          "rubric": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "DecisionResult.valid",
+    "contract": "DecisionResult",
+    "valid": true,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "answers": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "choice": null,
+          "score": null,
+          "probability_true": null,
+          "probabilities": null,
+          "provider_confidence": null,
+          "answer_confidence": null,
+          "abstained": false
+        }
+      ],
+      "elapsed_ms": 0.0,
+      "input_tokens": 0,
+      "truncated": false
+    }
+  },
+  {
+    "name": "DecisionResult.unknown_authority",
+    "contract": "DecisionResult",
+    "valid": false,
+    "payload": {
+      "schema_version": 1,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "answers": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "choice": null,
+          "score": null,
+          "probability_true": null,
+          "probabilities": null,
+          "provider_confidence": null,
+          "answer_confidence": null,
+          "abstained": false
+        }
+      ],
+      "elapsed_ms": 0.0,
+      "input_tokens": 0,
+      "truncated": false,
+      "is_admin": true
+    }
+  },
+  {
+    "name": "DecisionResult.future_version",
+    "contract": "DecisionResult",
+    "valid": false,
+    "payload": {
+      "schema_version": 2,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "answers": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "choice": null,
+          "score": null,
+          "probability_true": null,
+          "probabilities": null,
+          "provider_confidence": null,
+          "answer_confidence": null,
+          "abstained": false
+        }
+      ],
+      "elapsed_ms": 0.0,
+      "input_tokens": 0,
+      "truncated": false
+    }
+  },
+  {
+    "name": "DecisionResult.boolean_version",
+    "contract": "DecisionResult",
+    "valid": false,
+    "payload": {
+      "schema_version": true,
+      "id": "00000000-0000-4000-8000-000000000001",
+      "model": "fixture",
+      "model_revision": "fixture",
+      "manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "answers": [
+        {
+          "schema_version": 1,
+          "id": "fixture",
+          "kind": "choice",
+          "choice": null,
+          "score": null,
+          "probability_true": null,
+          "probabilities": null,
+          "provider_confidence": null,
+          "answer_confidence": null,
+          "abstained": false
+        }
+      ],
+      "elapsed_ms": 0.0,
+      "input_tokens": 0,
+      "truncated": false
+    }
+  },
+  {
     "name": "EnrollmentEnvelope.valid",
     "contract": "EnrollmentEnvelope",
     "valid": true,

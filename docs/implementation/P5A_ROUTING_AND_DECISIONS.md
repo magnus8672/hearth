@@ -1,5 +1,8 @@
 # P5A: routing and decision services
 
+Implementation update, 4 October: the service, selection, classification controls and direct Decisions UI/API below now have bounded implementations. Migration 0029 adds the fifteenth profile. See [setup and operator testing](../operations/DECISIONS_SETUP_AND_TESTING.md) and [evidence](../../evidence/decisions/2026-10-04/validation.json). Legacy/Ordered remain defaults. The pinned English checkpoint's 216-case held-out benchmark reached 0.736 raw macro F1, 3.24% accepted coverage at 0.85 confidence and 1.66 seconds p95, so semantic promotion and full phase acceptance remain open. The following design and proposed targets are retained as the acceptance baseline.
+
+
 Phase design, 4 October 2026. The operator has selected built-in Laya on the head for the initial internal decision service, with configurable use of a dedicated decision capability. Implementation and qualification remain pending; the exact Laya checkpoint/runtime still requires review. This phase extracts local routing work from [P5](../plan/phases/P5-ROUTING-AND-CLOUD.md), with a narrow connection to [P8](../plan/phases/P8-COLLABORATION-AND-MEDIA.md). The preserved baseline and all 61 release-gate statuses remain unchanged.
 
 ## Outcome and recommendation
@@ -129,4 +132,4 @@ P5A advances the local portions of P5 items 1–2 and extends its client-access 
 
 Defer cloud activation and paid tests, full text/audio queue unification, learned model-quality routing, multimodal decision uploads, training/fine-tuning and general specialist orchestration. Jev/hosted Clef can be future connectors using the same typed contract once consent, locality, budgets and unknown-outcome accounting are implemented. Local-only classification must remain local even if the final user task has a cloud option. Free, open-source hearth does not depend on a subscription to a decision provider.
 
-Selected direction: start with text-only Laya on the head for internal use and allow an explicit switch to a qualified dedicated decision capability. Include independent direct Decisions UI/API access so both placements can be explored at the same time. Benchmark the selected Laya checkpoint before promotion and treat larger models as optional challengers. This document records the architecture choice; it does not claim that either placement has been installed, measured or deployed.
+Selected direction: start with text-only Laya on the head for internal use and allow an explicit switch to a qualified dedicated decision capability. Include independent direct Decisions UI/API access so both placements can be explored at the same time. Benchmark the selected Laya checkpoint before promotion and treat larger models as optional challengers. The architecture choice above is the acceptance baseline. The implementation update and linked evidence record which parts are delivered and which qualification remains open.

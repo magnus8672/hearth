@@ -678,6 +678,78 @@ class CloudAuthorization(WireModel):
     input_localities: list[Locality] = Field(min_length=1, max_length=1000)
 
 
+class DecisionQuestion(WireModel):
+    id: Identifier
+    kind: Literal['choice', 'score', 'boolean']
+    instructions: Annotated[str, Field(min_length=1, max_length=800)]
+    options: dict[str, str] = Field(default_factory=dict, max_length=16)
+    rubric: list[Annotated[str, Field(min_length=1, max_length=160)]] = Field(default_factory=list, max_length=16)
+
+    @model_validator(mode='after')
+    def question_shape(self):
+        import re
+        if any(not re.fullmatch(r'[a-z][a-z0-9_.-]{0,79}', key) or not 1 <= len(value) <= 160 for key, value in self.options.items()):
+            raise ValueError('Use stable option IDs and descriptions of at most 160 characters.')
+        if self.kind == 'choice' and (len(self.options) < 2 or self.rubric):
+            raise ValueError('Choice requires 2 to 16 options and no rubric.')
+        if self.kind == 'score' and (len(self.rubric) < 2 or self.options):
+            raise ValueError('Score requires an ordered rubric and no options.')
+        if self.kind == 'boolean' and (self.options or self.rubric):
+            raise ValueError('Boolean questions do not take options or a rubric.')
+        return self
+
+
+class DecisionRequest(WireModel):
+    id: UUID
+    state: Annotated[str, Field(min_length=1, max_length=8000)]
+    questions: list[DecisionQuestion] = Field(min_length=1, max_length=4)
+
+    @model_validator(mode='after')
+    def unique_questions(self):
+        if len({q.id for q in self.questions}) != len(self.questions):
+            raise ValueError('Question IDs must be unique.')
+        return self
+
+
+Probability = Annotated[float, Field(ge=0, le=1, allow_inf_nan=False, strict=True)]
+
+
+class DecisionAnswer(WireModel):
+    id: Identifier
+    kind: Literal['choice', 'score', 'boolean']
+    choice: Identifier | None = None
+    score: Annotated[float, Field(ge=0, le=15, allow_inf_nan=False, strict=True)] | None = None
+    probability_true: Probability | None = None
+    probabilities: dict[str, Probability] | None = None
+    provider_confidence: Probability | None = None
+    answer_confidence: Probability | None = None
+    abstained: StrictBool = False
+
+
+class DecisionResult(WireModel):
+    id: UUID
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=100)]
+    manifest_sha256: Digest
+    answers: list[DecisionAnswer] = Field(min_length=1, max_length=4)
+    elapsed_ms: Annotated[float, Field(ge=0, le=120000, allow_inf_nan=False)]
+    input_tokens: Nonnegative
+    truncated: Literal[False] = False
+
+
+class DecisionProviderInfo(WireModel):
+    protocol: Literal['hearth.decision.v1'] = 'hearth.decision.v1'
+    model: Annotated[str, Field(min_length=1, max_length=200)]
+    model_revision: Annotated[str, Field(min_length=1, max_length=100)]
+    manifest_sha256: Digest
+    question_kinds: list[Literal['choice', 'score', 'boolean']] = Field(min_length=1, max_length=3)
+    maximum_tokens: Annotated[StrictInt, Field(ge=128, le=65536)]
+    maximum_characters: Annotated[StrictInt, Field(ge=1, le=8000)]
+    languages: list[Annotated[str, Field(min_length=2, max_length=16)]] = Field(min_length=1, max_length=120)
+    offline: StrictBool
+    ready: StrictBool
+
+
 CONTRACTS = {
     name: value for name, value in list(globals().items())
     if isinstance(value, type) and issubclass(value, WireModel) and value is not WireModel

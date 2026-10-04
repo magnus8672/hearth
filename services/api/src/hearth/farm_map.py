@@ -163,4 +163,20 @@ def farm_map(request: Request):
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = {key: executor.submit(request.app.state.farm_map_observations.get, row, settings) for key, row in eligible.items()}
         observations = {key: future.result() for key, future in futures.items()}
-    return topology(settings, rows, bindings, worker_rows, observations)
+    result = topology(settings, rows, bindings, worker_rows, observations)
+    from hearth.decisions import builtin_status, configuration
+    status = builtin_status(settings)
+    with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
+        config = configuration(db)
+    result['machines'][0]['nodes'].append({'id': 'decision.evaluate:builtin', 'capability': 'decision.evaluate',
+        'name': 'Built-in Laya', 'icon': 'reasoning', 'model': status.get('model'), 'verified': status['ready'],
+        'residency': 'builtin' if status['ready'] else 'offline', 'protocol': 'hearth.decision.v1',
+        'internal_source': config['source'] == 'builtin', 'member_enabled': config['member_builtin']})
+    if status['ready'] and config['member_builtin']:
+        result['unassigned'] = [item for item in result['unassigned'] if item['id'] != 'decision.evaluate']
+    for machine in result['machines']:
+        for node in machine['nodes']:
+            if node.get('target_id') == str(config['target_id']):
+                node['internal_source'] = config['source'] == 'dedicated'
+    result['decision_routing'] = {'mode': config['mode'], 'source': config['source'], 'target_id': config['target_id'], 'revision': config['revision']}
+    return result

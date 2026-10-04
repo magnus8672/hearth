@@ -55,7 +55,7 @@ def bff(databases, monkeypatch):
         users = db.execute(text('SELECT id FROM users WHERE farm_id=:farm'), {'farm': farm}).scalars().all()
     for user in users:
         with scoped_session(app_engine, user, farm) as db:
-            for table in ['capability_queue', 'managed_workers', 'tool_invocations', 'mcp_credentials', 'client_runs', 'client_keys']:
+            for table in ['decision_runs', 'route_affinity', 'decision_observations', 'capability_queue', 'managed_workers', 'tool_invocations', 'mcp_credentials', 'client_runs', 'client_keys']:
                 db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
             db.execute(text('UPDATE image_jobs SET batch_run_id=NULL WHERE batch_run_id IS NOT NULL'))
             db.execute(text('DELETE FROM image_plans'))
@@ -70,7 +70,7 @@ def bff(databases, monkeypatch):
             for table in ['geometry_jobs', 'transcription_jobs', 'speech_jobs', 'conversation_images', 'image_jobs', 'channel_attachments', 'channel_memberships', 'side_notes', 'chat_requests', 'chat_runs', 'outbox', 'messages', 'chat_attachments', 'conversations', 'workspaces']:
                 db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
     with scoped_session(app_engine, owner, farm) as db:
-        for table in ['mcp_servers', 'channels', 'capability_routes', 'capability_bindings', 'inference_targets', 'provider_connections', 'provider_pools']:
+        for table in ['decision_settings', 'mcp_servers', 'channels', 'capability_routes', 'capability_bindings', 'inference_targets', 'provider_connections', 'provider_pools']:
             db.execute(text(f'DELETE FROM {table} WHERE farm_id=:farm'), {'farm': farm})
     with migration.begin() as db:
         for table in ['browser_sessions', 'audit_events', 'role_grants', 'users']:

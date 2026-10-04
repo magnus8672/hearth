@@ -136,6 +136,61 @@ type ConversationImage struct {
 	BatchCount    int64           `json:"batch_count"`
 }
 
+type DecisionAnswer struct {
+	SchemaVersion      int64           `json:"schema_version"`
+	Id                 string          `json:"id"`
+	Kind               string          `json:"kind"`
+	Choice             *string         `json:"choice"`
+	Score              *float64        `json:"score"`
+	ProbabilityTrue    *float64        `json:"probability_true"`
+	Probabilities      *map[string]any `json:"probabilities"`
+	ProviderConfidence *float64        `json:"provider_confidence"`
+	AnswerConfidence   *float64        `json:"answer_confidence"`
+	Abstained          bool            `json:"abstained"`
+}
+
+type DecisionProviderInfo struct {
+	SchemaVersion     int64    `json:"schema_version"`
+	Protocol          string   `json:"protocol"`
+	Model             string   `json:"model"`
+	ModelRevision     string   `json:"model_revision"`
+	ManifestSha256    string   `json:"manifest_sha256"`
+	QuestionKinds     []string `json:"question_kinds"`
+	MaximumTokens     int64    `json:"maximum_tokens"`
+	MaximumCharacters int64    `json:"maximum_characters"`
+	Languages         []string `json:"languages"`
+	Offline           bool     `json:"offline"`
+	Ready             bool     `json:"ready"`
+}
+
+type DecisionQuestion struct {
+	SchemaVersion int64          `json:"schema_version"`
+	Id            string         `json:"id"`
+	Kind          string         `json:"kind"`
+	Instructions  string         `json:"instructions"`
+	Options       map[string]any `json:"options"`
+	Rubric        []string       `json:"rubric"`
+}
+
+type DecisionRequest struct {
+	SchemaVersion int64              `json:"schema_version"`
+	Id            string             `json:"id"`
+	State         string             `json:"state"`
+	Questions     []DecisionQuestion `json:"questions"`
+}
+
+type DecisionResult struct {
+	SchemaVersion  int64            `json:"schema_version"`
+	Id             string           `json:"id"`
+	Model          string           `json:"model"`
+	ModelRevision  string           `json:"model_revision"`
+	ManifestSha256 string           `json:"manifest_sha256"`
+	Answers        []DecisionAnswer `json:"answers"`
+	ElapsedMs      float64          `json:"elapsed_ms"`
+	InputTokens    int64            `json:"input_tokens"`
+	Truncated      bool             `json:"truncated"`
+}
+
 type EnrollmentEnvelope struct {
 	SchemaVersion        int64  `json:"schema_version"`
 	FarmId               string `json:"farm_id"`

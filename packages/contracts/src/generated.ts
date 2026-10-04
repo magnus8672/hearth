@@ -134,6 +134,61 @@ export interface ConversationImage {
   batch_count?: number;
 }
 
+export interface DecisionAnswer {
+  schema_version?: 1;
+  id: string;
+  kind: "choice" | "score" | "boolean";
+  choice?: string | null;
+  score?: number | null;
+  probability_true?: number | null;
+  probabilities?: Record<string, unknown> | null;
+  provider_confidence?: number | null;
+  answer_confidence?: number | null;
+  abstained?: boolean;
+}
+
+export interface DecisionProviderInfo {
+  schema_version?: 1;
+  protocol?: "hearth.decision.v1";
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  question_kinds: Array<"choice" | "score" | "boolean">;
+  maximum_tokens: number;
+  maximum_characters: number;
+  languages: Array<string>;
+  offline: boolean;
+  ready: boolean;
+}
+
+export interface DecisionQuestion {
+  schema_version?: 1;
+  id: string;
+  kind: "choice" | "score" | "boolean";
+  instructions: string;
+  options?: Record<string, unknown>;
+  rubric?: Array<string>;
+}
+
+export interface DecisionRequest {
+  schema_version?: 1;
+  id: string;
+  state: string;
+  questions: Array<DecisionQuestion>;
+}
+
+export interface DecisionResult {
+  schema_version?: 1;
+  id: string;
+  model: string;
+  model_revision: string;
+  manifest_sha256: string;
+  answers: Array<DecisionAnswer>;
+  elapsed_ms: number;
+  input_tokens: number;
+  truncated?: false;
+}
+
 export interface EnrollmentEnvelope {
   schema_version?: 1;
   farm_id: string;

@@ -37,7 +37,7 @@ class ConnectProvider(BaseModel):
     api_key: SecretStr = SecretStr('')
     resource_pool: str | None = Field(default=None, min_length=1, max_length=120)
     local_only: StrictBool
-    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1', 'hearth.geometry.v1'] = 'openai.chat.v1'
+    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1', 'hearth.geometry.v1', 'hearth.decision.v1'] = 'openai.chat.v1'
     tls_ca_pem: str = Field(default='', max_length=16384)
     residency_policy: Literal['unknown', 'lmstudio_loaded'] = 'unknown'
     allow_insecure_http: StrictBool = False
@@ -247,7 +247,20 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
     try:
         transport = transport_settings(row, settings)
         key = credential_for(row, settings)
-        if row['protocol'] == 'hearth.transcription.v1':
+        if row['protocol'] == 'hearth.decision.v1':
+            from hearth import decision_transport
+            from hearth.contracts import DecisionQuestion, DecisionRequest
+            info = decision_transport.information(settings, row)
+            if set(info.question_kinds) != {'choice', 'score', 'boolean'}:
+                raise ProviderError('This decision profile requires choice, score and boolean questions.')
+            profile = info.model_dump(mode='json')
+            decision_transport.evaluate(settings, DecisionRequest(id=receipt, state='The customer is delighted. The parcel arrived on Monday.', questions=[
+                DecisionQuestion(id='day', kind='choice', instructions='On which day did the parcel arrive?', options={'monday': 'Monday', 'friday': 'Friday'}),
+                DecisionQuestion(id='satisfaction', kind='score', instructions='Rate customer satisfaction.', rubric=['unhappy', 'neutral', 'delighted']),
+                DecisionQuestion(id='delivered', kind='boolean', instructions='Has the parcel arrived?'),
+            ]), row | {'profile': profile})
+            features = ['decision.choice', 'decision.score', 'decision.boolean']
+        elif row['protocol'] == 'hearth.transcription.v1':
             info = transcription_transport.information(row['base_url'], key, transport)
             if info.model != row['model_id'] or not info.offline or not info.job_cancellation or 'en' not in info.languages:
                 raise ProviderError('The transcription provider does not offer the selected local English model and job controls.')
@@ -362,7 +375,7 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
         db.execute(text("UPDATE inference_targets SET state=:state,features=CAST(:features AS jsonb),profile=CAST(:profile AS jsonb),probed_at=now(),verified_until=NULL,reason=:reason WHERE id=:id"),
             {'id': target_id, 'state': 'failed' if problem else 'ready', 'features': json.dumps(features), 'profile': json.dumps(profile), 'ready': not problem, 'reason': str(problem) if problem else warning})
         if not problem:
-            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.geometry.v1': 'geometry.generate', 'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
+            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.decision.v1': 'decision.evaluate', 'hearth.geometry.v1': 'geometry.generate', 'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
         db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'provider.probed',jsonb_build_object('target_id',CAST(:target AS text),'ready',CAST(:ready AS boolean)))"),
             {'farm': principal.farm_id, 'actor': principal.id, 'target': str(target_id), 'ready': not problem})
     return {'id': target_id, 'revision': revision + 1, 'state': 'failed' if problem else 'ready', 'features': features,

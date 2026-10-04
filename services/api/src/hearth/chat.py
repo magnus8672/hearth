@@ -254,6 +254,11 @@ def consume_note(db, data):
 
 
 def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, from_queue=False):
+    from hearth.route_decisions import prepare
+    with scoped_session(engine, principal.id, principal.farm_id) as preflight:
+        steering = bool(data.interrupt_run_id and not from_queue and preflight.execute(text("SELECT 1 FROM chat_runs WHERE id=:id AND conversation_id=:chat AND status='running'"), {'id': data.interrupt_run_id, 'chat': chat_id}).first())
+    prepared = None if steering else prepare(engine, settings, principal, data.content, data.capability, chat_id=chat_id,
+                                            attachments=bool(data.attachment_ids), request_id=data.request_id)
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         memory.state(db, lock=True)
         row = conversation(db, chat_id, lock=True)
@@ -310,10 +315,14 @@ def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, fro
             prompt, needs_plan = None, False
         planned_image = image_planning.candidate(db) if needs_plan else None
         capability = 'image.generate' if prompt and not needs_plan else routing.text_capability(db, data.content, data.capability, planning=needs_plan)
+        if prepared and not prompt and not needs_plan and data.capability == 'auto':
+            capability = prepared.capability
+            if capability == 'image.generate':
+                prompt = data.content
         if use_vision:
             capability = 'vision.describe'
         context = vision.with_images(db, chat_id, context, use_vision)
-        target = routing.select(db, capability, queued=capability == 'image.generate')
+        target = routing.select(db, capability, queued=capability == 'image.generate', prepared=prepared)
         if target is None:
             raise HTTPException(409, f'No verified model for {capability} is idle. Check its route in Administration, or wait for the current job.')
         if capability != 'image.generate':

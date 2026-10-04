@@ -173,7 +173,7 @@ def list_models(base_url, credential, settings):
         raise ProviderError('The model server is unreachable. Check its address, certificate and API key.') from None
 
 
-def require_loaded_model(base_url, credential, model_id, settings):
+def require_loaded_model(base_url, credential, model_id, settings, *, deadline=5):
     """Read-only LM Studio preflight; never call load/download/unload endpoints.
 
     This is an observation, not a reservation. The operator must disable JIT
@@ -185,13 +185,13 @@ def require_loaded_model(base_url, credential, model_id, settings):
     try:
         with client_for(base_url, credential, settings) as (client, extensions):
             address = client.base_url.copy_with(path='/api/v1/models')
-            with client.stream('GET', address, extensions=extensions) as response:
+            with client.stream('GET', address, extensions=extensions, timeout=deadline) as response:
                 if response.status_code != 200:
                     raise ProviderError('Cannot check loaded models. This target requires LM Studio /api/v1/models; check the service and connector version.')
                 raw = bytearray()
                 for block in response.iter_bytes():
                     raw.extend(block)
-                    if len(raw) > 262144 or time.monotonic() - started > 30:
+                    if len(raw) > 262144 or time.monotonic() - started > deadline:
                         raise ProviderError('The loaded-model check exceeded its size or time limit.')
                 entries = json.loads(raw)['models']
                 if not isinstance(entries, list) or len(entries) > 1000:

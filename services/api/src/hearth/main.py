@@ -19,6 +19,7 @@ from hearth.client_keys import router as client_keys_router
 from hearth.config import Settings, get_settings
 from hearth.contracts import ErrorDetail, ErrorResponse
 from hearth.database import make_engine, verify_application_role
+from hearth.decisions import router as decisions_router
 from hearth.farm_map import Observations
 from hearth.farm_map import router as farm_map_router
 from hearth.geometry import router as geometry_router
@@ -50,6 +51,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         engine = make_engine(settings.database_url.get_secret_value()) if settings.database_url.get_secret_value() else None
         app.state.engine = engine
         app.state.inference_executor = ThreadPoolExecutor(max_workers=32, thread_name_prefix='hearth-inference')
+        app.state.decision_executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix='hearth-decisions')
+        from hearth.route_decisions import warm_selector
+        app.state.inference_executor.submit(warm_selector)
         if engine is not None:
             verify_application_role(engine)
         checks = None
@@ -76,6 +80,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if checks:
             checks.close()
         app.state.inference_executor.shutdown(wait=True)
+        app.state.decision_executor.shutdown(wait=True)
         if engine is not None:
             engine.dispose()
 
@@ -148,6 +153,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(head_settings_router)
     app.include_router(providers_router)
     app.include_router(routing_router)
+    app.include_router(decisions_router)
     app.include_router(chat_router)
     app.include_router(vision_router)
     app.include_router(speech_router)

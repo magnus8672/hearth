@@ -16,13 +16,16 @@ FILES = (
     'deploy/compose/Caddyfile.development', 'deploy/compose/Caddyfile.head',
     'deploy/compose/init-databases.sh', 'deploy/compose/init-ca.sh',
     'deploy/compose/images.lock.json',
+    'deploy/compose/decision.yaml', 'scripts/setup_decisions.py',
+    'runtimes/decision/Dockerfile', 'runtimes/decision/requirements.lock',
+    'runtimes/decision/service.py', 'runtimes/decision/serve.py', 'runtimes/decision/prepare.py',
     'scripts/head.py', 'scripts/head_console.py', 'scripts/head_control.py', 'scripts/configure_identity.py',
     'scripts/setup_audio_vm.py', 'scripts/qualify_audio_vm.py',
     'runtimes/speech/hearth_speech.py', 'runtimes/speech/model-manifest.json',
     'runtimes/speech/pyproject.toml', 'runtimes/speech/uv.lock',
     'runtimes/transcription/hearth_transcription.py', 'runtimes/transcription/model-manifest.json',
     'runtimes/transcription/pyproject.toml', 'runtimes/transcription/uv.lock',
-    'docs/operations/VM_PACKAGE.md',
+    'docs/operations/VM_PACKAGE.md', 'docs/operations/DECISIONS_SETUP_AND_TESTING.md',
 )
 TREES = {
     'deploy/setup': {'.html', '.js', '.css', '.svg'},

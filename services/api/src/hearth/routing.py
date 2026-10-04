@@ -28,6 +28,11 @@ PENDING = {}
 
 
 def profile(capability):
+    if capability == 'decision.evaluate':
+        return {'protocol': 'hearth.decision.v1', 'executable': True,
+                'features': ['decision.choice', 'decision.score', 'decision.boolean'],
+                'input_modalities': ['text'], 'output_modalities': ['text'],
+                'scope': 'Private typed choices, rubric scores and boolean probabilities. Decisions propose answers; they never execute actions.'}
     if capability in {'memory.retrieve', 'memory.index'}:
         return {'protocol': 'hearth.memory.v1', 'executable': True, 'builtin': True, 'features': [],
                 'scope': 'Private notes and chat history indexed in the hearth database, with scoped recall and Obsidian vault export. Semantic graph extraction and external knowledge workers are still in development.'}
@@ -77,12 +82,21 @@ def candidates(db, capability):
     return [row['id'] for row in rows if readiness(capability, row)[0]]
 
 
-def select(db, capability, *, tools=False, queued=False):
+def select(db, capability, *, tools=False, queued=False, prepared=None):
     require_capability(db, capability)
-    for target_id in candidates(db, capability):
+    choices = candidates(db, capability)
+    if prepared and prepared.capability == capability:
+        prepared.revalidate(db)
+        if prepared.signature:
+            choices = [item for item in choices if item in prepared.target_revisions]
+        if prepared.target_id in choices:
+            choices = [prepared.target_id] + [item for item in choices if item != prepared.target_id]
+    for target_id in choices:
         item = target_record(db, target_id, lock=True, idle_only=not queued)
         # Recheck under the same row locks used by disable, retarget and probes.
         if item and readiness(capability, item)[0] and (queued or not item['active_run_id']) and (not tools or 'tools' in item['features']):
+            if prepared and prepared.capability == capability:
+                item['_selection'] = prepared.metadata | {'admitted_target_id': str(item['id']), 'admission_changed_selection': item['id'] != prepared.target_id}
             return item
     return None
 
@@ -134,7 +148,8 @@ def receipt(db, capability, target):
             'provider_name': target['name'], 'connection_id': str(target['connection_id']),
             'resource_pool_id': str(target['resource_pool_id']),
             'residency_policy': target.get('residency_policy', 'unknown'),
-            'allow_insecure_http': target.get('allow_insecure_http', False), 'provenance': 'admission'}
+            'allow_insecure_http': target.get('allow_insecure_http', False), 'provenance': 'admission',
+            **({'selection': target['_selection']} if '_selection' in target else {})}
 
 
 class RouteTarget(BaseModel):
@@ -147,6 +162,7 @@ class SetRoute(BaseModel):
     model_config = ConfigDict(extra='forbid')
     revision: int = Field(strict=True, ge=1, le=9007199254740991)
     targets: list[RouteTarget] = Field(max_length=8)
+    selection_policy: Literal['ordered', 'balanced'] = 'ordered'
 
     @model_validator(mode='after')
     def distinct(self):
@@ -159,9 +175,10 @@ class SetRoute(BaseModel):
 
 def route_snapshot(db):
     revisions = dict(db.execute(text('SELECT capability_id,revision FROM capability_routes')).all())
+    policies = dict(db.execute(text('SELECT capability_id,selection_policy FROM capability_routes')).all())
     bindings = db.execute(text('SELECT b.capability_id,b.target_id,b.priority,t.*,c.name FROM capability_bindings b JOIN inference_targets t ON t.id=b.target_id JOIN provider_connections c ON c.id=t.connection_id ORDER BY b.priority DESC,t.id')).mappings().all()
     return [{'capability_id': cap.capability_id, 'display_name': cap.display_name,
-             'revision': revisions.get(cap.capability_id, 1), 'profile': profile(cap.capability_id),
+             'revision': revisions.get(cap.capability_id, 1), 'selection_policy': policies.get(cap.capability_id, 'ordered'), 'profile': profile(cap.capability_id),
              'targets': [{'target_id': row['target_id'], 'priority': row['priority'], 'name': row['name'], 'model_id': row['model_id'],
                           'ready': readiness(cap.capability_id, row)[0], 'reason': readiness(cap.capability_id, row)[1]}
                          for row in bindings if row['capability_id'] == cap.capability_id]}
@@ -183,8 +200,10 @@ def assign(request: Request, capability_id: str, data: SetRoute):
 
 def assign_route(engine, principal, capability_id, data):
     principal.require('provider.configure')
-    if capability_id not in TEXT and capability_id not in PENDING and capability_id not in {'image.generate', 'geometry.generate', 'vision.describe', 'audio.speak', 'audio.transcribe', 'memory.retrieve', 'memory.index'}:
+    if capability_id not in TEXT and capability_id not in PENDING and capability_id not in {'decision.evaluate', 'image.generate', 'geometry.generate', 'vision.describe', 'audio.speak', 'audio.transcribe', 'memory.retrieve', 'memory.index'}:
         raise HTTPException(404, 'Unknown capability.')
+    if data.selection_policy == 'balanced' and capability_id not in {*TEXT, 'vision.describe', 'decision.evaluate'}:
+        raise HTTPException(400, 'Balanced selection currently supports text and decision targets. Media retains its fair queue.')
     if profile(capability_id).get('builtin'):
         raise HTTPException(409, 'Memory is provided by the private knowledge store on this hearth. Manage it in your workspace Memory page.')
     with scoped_session(engine, principal.id, principal.farm_id) as db:
@@ -201,6 +220,6 @@ def assign_route(engine, principal, capability_id, data):
         db.execute(text('DELETE FROM capability_bindings WHERE capability_id=:capability'), {'capability': capability_id})
         for item in data.targets:
             db.execute(text('INSERT INTO capability_bindings(farm_id,capability_id,target_id,priority) VALUES(:farm,:capability,:target,:priority)'), {'farm': principal.farm_id, 'capability': capability_id, 'target': item.target_id, 'priority': item.priority})
-        db.execute(text('UPDATE capability_routes SET revision=revision+1 WHERE capability_id=:capability'), {'capability': capability_id})
+        db.execute(text('UPDATE capability_routes SET revision=revision+1,selection_policy=:policy WHERE capability_id=:capability'), {'capability': capability_id, 'policy': data.selection_policy})
         db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'capability.route.changed',jsonb_build_object('capability_id',CAST(:capability AS text),'revision',CAST(:revision AS bigint)))"), {'farm': principal.farm_id, 'actor': principal.id, 'capability': capability_id, 'revision': version+1})
         return next(row for row in route_snapshot(db) if row['capability_id'] == capability_id)

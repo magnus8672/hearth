@@ -86,3 +86,8 @@ Docker restart policies resume services at VM boot. Re-running `up` rebuilds/app
 Back up `.hearth/head/config.json` together with the Compose project's PostgreSQL, Caddy and memory-vault volumes. The default project is `hearth-head`. Configuration contains the farm identity and encryption keys needed for recovery. Restoring only the application ZIP does not restore a farm. Keep the current laptop farm separately; this package neither exports nor changes it.
 
 This package is for a fresh farm. Existing-farm migration, signed distribution, full ESX qualification and all external agent/harness combinations remain separate work. Packaging itself does not qualify media or other product features. Local TRELLIS image-to-3D was implemented after this package milestone; see [its separate evidence](../implementation/LOCAL_GEOMETRY.md). Image editing remains unfinished.
+
+
+## Optional resident Decisions service
+
+The package includes the pinned CPU Laya runtime and `scripts/setup_decisions.py`. On the head VM, explicitly run `sudo python3 scripts/setup_decisions.py` before `sudo python3 scripts/head.py up` to prepare its checkpoint and enable the private-socket overlay. Existing farm data and trust are preserved. This is separate from speech/transcription and external model services. See [Decisions setup, limits and testing](DECISIONS_SETUP_AND_TESTING.md); semantic routing stays opt-in because the current checkpoint has not met promotion targets.

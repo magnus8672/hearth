@@ -1,0 +1,34 @@
+{
+  "pressure": {
+    "concurrency": 24,
+    "deadline_ms": 300,
+    "status_counts": {
+      "200": 1,
+      "504": 11,
+      "429": 12
+    },
+    "info_during_load_ms": 30.773479025810957,
+    "oversize_status": 413,
+    "token_limit_status": 413,
+    "invalid_deadline_status": 400,
+    "anonymous_status": 401,
+    "after_load_answer": "yes"
+  },
+  "recovery": {
+    "kill_recovery_seconds": 22.55,
+    "ready": true
+  },
+  "resident_memory_gib_approx": 1.9,
+  "scope": "Disposable provider processes on the operator-designated VM; no production database writes",
+  "live_head_readiness_under_load": {
+    "concurrent_synthetic_decisions": 12,
+    "api_ready_status": 200,
+    "api_ready_ms_during_load": 24.28846899420023,
+    "decision_statuses": {
+      "504": 4,
+      "429": 7,
+      "200": 1
+    },
+    "scope": "Non-persistent decision transport only; no user records"
+  }
+}

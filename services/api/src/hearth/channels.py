@@ -133,6 +133,16 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
     principal = member(request, mutation=True, permission='channel.use')
     engine, settings = request.app.state.engine, request.app.state.settings
     target, context, assistant_id = None, [], None
+    from hearth.route_decisions import prepare
+    prepared, decision_problem = None, None
+    if MENTION.search(data.content):
+        try:
+            prepared = prepare(engine, settings, principal, MENTION.sub('', data.content).strip(' ,:'),
+                               channel_id=channel_id, request_id=data.request_id)
+        except HTTPException as exc:
+            if exc.status_code not in {409, 503}:
+                raise
+            decision_problem = str(exc.detail)
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         room(db, channel_id, lock=True)
         existing = db.execute(text("SELECT id,author_id,content FROM channel_messages WHERE channel_id=:channel AND request_id=:request AND role='user'"), {'channel': channel_id, 'request': data.request_id}).mappings().one_or_none()
@@ -174,7 +184,12 @@ def post(request: Request, channel_id: UUID, data: ChannelPost):
                     content += '\n[Shared image attached. Pixels are not included in channel chat; do not claim to see it.]'
                 context.insert(0, {'role': row['role'], 'content': content})
             capability = 'image.generate' if prompt and not needs_plan else routing.text_capability(db, MENTION.sub('', data.content).strip(' ,:'), planning=needs_plan)
-            target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate')
+            if prepared and not prompt and not needs_plan:
+                capability = prepared.capability
+                if capability == 'image.generate':
+                    prompt = request_text
+            route_problem = route_problem or decision_problem
+            target = None if route_problem else routing.select(db, capability, queued=capability == 'image.generate', prepared=prepared)
             assistant_id = uuid4()
             reason = None if target and context else f'No verified {"image" if prompt else "prompt-planning" if needs_plan else "chat"} model is idle. Your message is saved. Mention @hearth again when a model is available.'
             if route_problem:

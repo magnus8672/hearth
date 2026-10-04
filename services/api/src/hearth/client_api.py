@@ -157,6 +157,11 @@ def admit(engine, settings, client, data):
     principal = client.principal
     if data.tools and not client.allow_tools:
         raise HTTPException(403, 'This key does not allow tool calls. Create a key with tool access enabled.')
+    from hearth.route_decisions import prepare
+    content = next(item.get('content') or '' for item in reversed(data.messages) if item['role'] == 'user')
+    recent_users = [item['content'] for item in data.messages if item['role'] == 'user']
+    prepared = prepare(engine, settings, principal, content, data.model, tools=bool(data.tools),
+                       permitted=client.capabilities, context='\n'.join(recent_users[-3:-1]))
     with scoped_session(engine, principal.id, principal.farm_id) as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:owner,21))'), {'owner': str(principal.id)})
         if not key_current(db, principal, client.key_id):
@@ -164,10 +169,10 @@ def admit(engine, settings, client, data):
         if db.execute(text("SELECT count(*) FROM client_runs r JOIN provider_pools p ON p.active_run_id=r.id WHERE r.state='running' AND p.lease_until>now()")).scalar_one() >= 4:
             raise HTTPException(429, 'This account already has four active client requests.')
         content = next(item.get('content') or '' for item in reversed(data.messages) if item['role'] == 'user')
-        capability = routing.text_capability(db, content, data.model)
+        capability = prepared.capability
         if capability not in client.capabilities:
             raise HTTPException(403, 'This key does not permit the selected capability. Choose an allowed capability explicitly.')
-        target = routing.select(db, capability, tools=bool(data.tools))
+        target = routing.select(db, capability, tools=bool(data.tools), prepared=prepared)
         if not target:
             raise HTTPException(503, 'No ready, idle target supports this capability'+(' with verified tool calling.' if data.tools else '.'))
         run_id = uuid4()
@@ -274,6 +279,10 @@ def completion(request: Request, data: Completion):
     created = int(time.time())
     from urllib.parse import quote
     headers = {'X-Hearth-Capability': receipt['capability_id'], 'X-Hearth-Model': quote(target['model_id'], safe='/.-_'), 'X-Hearth-Run-ID': str(run_id)}
+    if receipt.get('selection'):
+        headers['X-Hearth-Routing-Policy'] = receipt['selection'].get('policy', 'typed')
+        headers['X-Hearth-Routing-Reason'] = receipt['selection'].get('reason', 'typed_dispatch')
+        headers['X-Hearth-Intent-Source'] = receipt['selection'].get('intent', {}).get('source', 'explicit')
     def chunks():
         finish, usage = None, None
         def event(delta, reason=None):

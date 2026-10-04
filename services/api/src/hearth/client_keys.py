@@ -14,13 +14,15 @@ from hearth.identity import authenticate, check_origin, digest
 from hearth.policy import Principal, permissions_for
 from hearth.routing import TEXT
 
+CLIENT_CAPABILITIES = {*TEXT, 'decision.evaluate'}
+
 router = APIRouter()
 
 
 class NewKey(BaseModel):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     name: str = Field(min_length=1, max_length=120)
-    capabilities: list[str] = Field(min_length=1, max_length=7)
+    capabilities: list[str] = Field(min_length=1, max_length=8)
     allow_tools: StrictBool = False
     expires_days: int = Field(default=90, strict=True, ge=1, le=365)
 
@@ -76,8 +78,8 @@ def principal_current(db, principal):
 
 def issue_key(engine, principal, data):
     principal.require('api_key.own')
-    if len(set(data.capabilities)) != len(data.capabilities) or not set(data.capabilities) <= set(TEXT):
-        raise HTTPException(400, 'Choose supported text capabilities for this key.')
+    if len(set(data.capabilities)) != len(data.capabilities) or not set(data.capabilities) <= CLIENT_CAPABILITIES:
+        raise HTTPException(400, 'Choose supported text or decision capabilities for this key.')
     for capability in data.capabilities:
         principal.require('capability.'+capability)
     if data.allow_tools:
@@ -104,7 +106,7 @@ def keys(request: Request):
     principal = browser_owner(request)
     with scoped_session(request.app.state.engine, principal.id, principal.farm_id) as db:
         rows = db.execute(text('SELECT id,name,capabilities,allow_tools,created_at,expires_at,revoked_at,last_used_at FROM client_keys ORDER BY created_at DESC LIMIT 100')).mappings().all()
-    return {'items': [dict(row) for row in rows], 'capabilities': [cap for cap in TEXT if 'capability.'+cap in principal.permissions], 'base_url': request.app.state.settings.user_origin+'/v1', 'mcp_url': request.app.state.settings.user_origin+'/mcp'}
+    return {'items': [dict(row) for row in rows], 'capabilities': [cap for cap in sorted(CLIENT_CAPABILITIES) if 'capability.'+cap in principal.permissions], 'base_url': request.app.state.settings.user_origin+'/v1', 'mcp_url': request.app.state.settings.user_origin+'/mcp'}
 
 
 @router.post('/api/v1/client-keys', tags=['clients'], status_code=201)

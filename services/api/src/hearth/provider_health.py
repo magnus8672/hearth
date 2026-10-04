@@ -36,6 +36,11 @@ def check_connection(target, settings):
         if target['model_id'] not in list_models(target['base_url'], key, transport):
             raise ProviderError('The saved model is not listed on this server. Check the model server and verify again.')
         require_loaded_model(target['base_url'], key, target['model_id'], transport)
+    elif target['protocol'] == 'hearth.decision.v1':
+        from hearth.decision_transport import information
+        info = information(settings, target).model_dump(mode='json')
+        if any(target['profile'].get(key) != value for key, value in info.items()):
+            raise ProviderError('The decision checkpoint or limits changed. Verify it again.')
     else:
         adapter = {'hearth.geometry.v1': geometry_transport, 'hearth.image.v1': image_transport, 'hearth.speech.v1': speech_transport,
                    'hearth.transcription.v1': transcription_transport}[target['protocol']]
