@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-04",
+  "scope": "Synchronize the operator-designated production head to pushed main, preserving the existing farm and running services.",
+  "source_commit": "219cccfd39d47a272b53b864878b231ce586f22f",
+  "source_files_verified": 956,
+  "source_files_updated": 594,
+  "pre_deployment": {
+    "api_modules_compared_per_container": 55,
+    "api_containers_compared": 2,
+    "application_code_already_matched_after_line_ending_normalization": true,
+    "generation_timeout_fix_already_running": true,
+    "occupied_resource_pools": 0,
+    "active_chat_image_geometry_speech_transcription_jobs": 0,
+    "source_backup_created_and_verified": true
+  },
+  "changes": {
+    "source_documentation_and_package_metadata_synchronized": true,
+    "images_rebuilt": false,
+    "containers_restarted": false,
+    "database_migrated": false,
+    "farm_configuration_preserved": true,
+    "root_certificate_preserved": true,
+    "built_browser_assets_preserved": true,
+    "private_farm_storage_preserved": true
+  },
+  "post_deployment": {
+    "https_certificate_validation_enabled": true,
+    "workspace_readiness_status": 200,
+    "administration_readiness_status": 200,
+    "workspace_and_administration_root_status": 200,
+    "referenced_javascript_and_css_assets_status": 200,
+    "anonymous_client_models_status": 401,
+    "schema": "0028"
+  },
+  "limitations": [
+    "Readiness, asset and authentication-boundary checks do not establish authenticated client acceptance or model quality.",
+    "No new live inference, browser sign-in or client tool workflow was run.",
+    "Existing running API code already contained the recovered timeout fix; this was source synchronization, not a new behavioral rollout.",
+    "Compaction and P5A remain planning only; release gates remain 20 partial, 41 not run and zero fully passed."
+  ],
+  "privacy_note": "Sanitized from private deployment manifests and observed HTTPS checks. Deployment addresses, accounts, configuration, backup paths and raw diagnostics are retained only in ignored private storage."
+}

@@ -4,6 +4,12 @@ Updated 4 October 2026. This ledger records implemented behavior, dated validati
 
 All fourteen capability profiles have bounded implementations. Database migration is **0028**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Production source synchronization - 4 October
+
+Synchronized the operator-designated head's source package to pushed commit `219cccf`, verifying all 956 tracked files against the Git archive. Comparison before deployment established that all 55 Python application modules in each running API already matched this commit after line-ending normalization, including the restored generation timeout fix. The update therefore synchronized source, documentation and package metadata without rebuilding images, restarting containers or migrating the database. Existing browser bundles were preserved.
+
+A verified private source backup was retained before replacement. Farm configuration and root-certificate hashes remained unchanged, and read-only admission checks showed no occupied pools or active chat/media/audio jobs. After synchronization, workspace and administration readiness, root pages and referenced JavaScript/CSS assets returned HTTP 200 with certificate validation enabled; anonymous `/v1/models` returned 401. Schema remains `0028`. See [sanitized deployment evidence](../../evidence/client-api/2026-10-04/deployment.json). These checks did not run new inference or an authenticated client workflow, and do not close release gates.
+
 ## Source reconciliation and generation timeout recovery - 4 October
 
 Reconciled the earlier continuity notes with current `main`, preserving the privacy cleanup, MIT license, uploaded-image variation and P5A decision-service architecture. The [active roadmap](ROADMAP.md) now tracks 35 missing/incomplete items, 10 separately prioritized extension groups and 8 qualification groups. P5A routing/decisions and private-chat context compaction are independent workstreams; both remain unimplemented. The [continuity design](CONTEXT_CONTINUITY_PLAN.md) preserves original history, source lineage and ordinary stateless client behavior. Whole-picture uploaded-image variation is delivered; masks and instruction-exact editing remain open. No private machine inventory was restored to public guides.
