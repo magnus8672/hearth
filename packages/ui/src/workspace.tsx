@@ -20,7 +20,7 @@ export function Workspace({ name, owner, leftLabel, rightLabel, conversation = f
   useEffect(() => { try { localStorage.setItem(key, JSON.stringify(layout)); } catch { /* Storage is optional. */ } }, [key, layout]);
   useEffect(() => {
     const element = root.current!;
-    const size = () => element.style.setProperty('--workspace-height', `${Math.max(520, window.innerHeight - element.getBoundingClientRect().top - window.scrollY - 24)}px`);
+    const size = () => element.style.setProperty('--workspace-height', `${Math.max(420, window.innerHeight - element.getBoundingClientRect().top - window.scrollY - 16)}px`);
     size(); window.addEventListener('resize', size);
     const observer = new ResizeObserver(size); observer.observe(element.parentElement!);
     return () => { window.removeEventListener('resize', size); observer.disconnect(); };
