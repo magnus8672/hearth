@@ -4,6 +4,12 @@ Updated 20 October 2026. This ledger records implemented behavior, dated validat
 
 All fifteen capability profiles have bounded implementations. Database migration is **0030**. No full phase exit or release gate is complete: **20 partial, 41 not run, zero fully passed**. Keep configuration, observed service state, saved feature verification and quality acceptance separate.
 
+## Worker control styling - 20 October
+
+Worker policy and selected-service dropdowns now share hearth's themed form surfaces, with labels above the controls and a responsive layout. Native selection, keyboard focus, disabled states and existing worker actions are preserved.
+
+TypeScript and both UI builds passed. The existing worker-controls browser check passed against deployed assets, and Chromium fixtures passed at desktop and phone widths in both light and dark themes, including horizontal overflow and keyboard-focus checks. Matching static bundles and source were deployed with a private rollback archive; no API restart, worker configuration change or model operation was needed. Release-gate statuses remain unchanged.
+
 ## Windows text runner and NCM XSum preview - 20 October
 
 The native Go worker now supports Windows AMD64 with fixed, signed engine/connector recipes and exclusive state ownership. Windows Job Objects bind processes before they run and contain descendants; explicit backend switching confirms the old tree has stopped. Runtime files, model weights and dependency directories are hashed before launch. This is a development ZIP with preparation scripts, not a signed installer or Windows Service. Linux systemd adoption remains supported.

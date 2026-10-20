@@ -277,7 +277,7 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .route-targets { padding-left: 1.5rem; }
 .route-targets li { display: flex; gap: .65rem; align-items: end; margin-bottom: 1rem; }
 .route-targets select, .route-editor select { width: 100%; min-width: 0; }
-.route-editor select, .specialist-choice select, .provider-form textarea { padding: 12px; border: 1px solid var(--hearth-border); border-radius: 8px; background: var(--hearth-background); color: var(--hearth-text); font: inherit; }
+.route-editor select, .specialist-choice select, .provider-form textarea, .worker-controls select { padding: 12px; border: 1px solid var(--hearth-border); border-radius: 8px; background: var(--hearth-background); color: var(--hearth-text); font: inherit; }
 .provider-form textarea { width: 100%; min-width: 0; min-height: 140px; resize: vertical; }
 .specialist-choice { display: grid; gap: .4rem; margin: .5rem 0 1rem; }
 .specialist-choice select { width: min(100%, 23rem); }
@@ -504,3 +504,10 @@ h3 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
 .decision-probabilities > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 .decision-probabilities dd { margin: 0; }
 @media (max-width: 1050px) { .decision-layout { grid-template-columns: minmax(0, 1fr); } }
+
+/* Worker settings use the same field surfaces as provider and routing forms. */
+.worker-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 16px; margin-block: 20px; }
+.worker-controls label { display: grid; gap: 8px; min-width: 0; font-size: 14px; font-weight: 600; }
+.worker-controls select { width: 100%; min-width: 0; max-width: 100%; font-weight: 400; }
+.worker-controls select:hover:not(:disabled) { border-color: var(--hearth-primary); }
+.worker-controls select:disabled { opacity: .6; cursor: not-allowed; }
