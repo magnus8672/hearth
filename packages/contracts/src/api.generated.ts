@@ -2100,7 +2100,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1" | "hearth.summary.v1";
             /**
              * Residency Policy
              * @default unknown
@@ -3743,7 +3743,7 @@ export interface components {
              * @default openai.chat.v1
              * @enum {string}
              */
-            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1";
+            protocol: "openai.chat.v1" | "hearth.image.v1" | "hearth.speech.v1" | "hearth.transcription.v1" | "hearth.geometry.v1" | "hearth.decision.v1" | "hearth.summary.v1";
             /**
              * Residency Policy
              * @default unknown

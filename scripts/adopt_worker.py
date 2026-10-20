@@ -1,4 +1,4 @@
-"""Console-only adoption of operator-reviewed, already installed Linux services.
+"""Console-only adoption of operator-reviewed, installed Linux/Windows services.
 
 Run as root on the head. Input is a local reviewed inventory, never model output
 or an HTTP request. Output is a private bundle to copy over authenticated SSH.
@@ -13,7 +13,7 @@ import re
 import secrets
 import shutil
 import subprocess
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from urllib.parse import urlsplit
 from uuid import UUID, uuid4
 
@@ -46,6 +46,15 @@ def prepare(inventory, output, state, existing_bundle=None):
     if not isinstance(name, str) or not 1 <= len(name) <= 120:
         raise ValueError('Use a short worker name.')
     public, approved = {}, {}
+    windows = inventory.get('platform', 'linux') == 'windows'
+    if inventory.get('platform', 'linux') not in ('linux', 'windows'):
+        raise ValueError('Unsupported worker platform.')
+    def absolute(path):
+        p = PureWindowsPath(path) if windows else Path(path)
+        return p.is_absolute() and '..' not in p.parts and str(p) == path
+    destination = inventory.get('bundle_directory') if windows else '/etc/hearth-worker'
+    if windows and (not isinstance(destination, str) or not absolute(destination)):
+        raise ValueError('Supply the private Windows bundle_directory.')
     if not 1 <= len(inventory['services']) <= 16:
         raise ValueError('Approve from one to sixteen services per GPU group.')
     for key, entry in inventory['services'].items():
@@ -54,11 +63,26 @@ def prepare(inventory, output, state, existing_bundle=None):
         service = {k: entry[k] for k in ('unit', 'files', 'health_url', 'health_key_file', 'health_field', 'health_value')}
         if not re.fullmatch(r'[A-Za-z0-9_-]{1,80}\.service', service['unit']):
             raise ValueError('Use an exact systemd service unit without templates.')
-        if '/etc/systemd/system/' + service['unit'] not in service['files'] or len(service['files']) < 2:
+        if (not windows and '/etc/systemd/system/' + service['unit'] not in service['files']) or len(service['files']) < 2:
             raise ValueError('Inventory must bind the unit and its entrypoint.')
         for path, digest in service['files'].items():
-            if not path.startswith('/') or '..' in Path(path).parts or not re.fullmatch('[a-f0-9]{64}', digest):
+            if not absolute(path) or not re.fullmatch('[a-f0-9]{64}', digest):
                 raise ValueError('Invalid approved file digest.')
+        if windows:
+            service['processes'] = entry['processes']
+            service['directories'] = entry.get('directories', {})
+            if not 1 <= len(service['processes']) <= 2 or len(service['directories']) > 8:
+                raise ValueError('Invalid Windows process closure.')
+            for process in service['processes']:
+                if set(process) != {'executable', 'arguments', 'directory'} or not absolute(process['executable']) or not absolute(process['directory']):
+                    raise ValueError('Use approved absolute Windows process paths.')
+                if PureWindowsPath(process['executable']).name.lower() not in ('python.exe', 'llama-server.exe', 'hearth-connector.exe') or process['executable'] not in service['files']:
+                    raise ValueError('Unsupported or unbound engine executable.')
+                if not isinstance(process['arguments'], list) or len(process['arguments']) > 48 or any(not isinstance(a, str) or len(a) > 4096 or '\x00' in a for a in process['arguments']):
+                    raise ValueError('Invalid process arguments.')
+            for path, digest in service['directories'].items():
+                if not absolute(path) or not re.fullmatch('[a-f0-9]{64}', digest):
+                    raise ValueError('Invalid runtime directory digest.')
         endpoint = urlsplit(service['health_url'])
         if endpoint.scheme != 'http' or endpoint.hostname != '127.0.0.1' or not endpoint.port or endpoint.username or endpoint.password or endpoint.query or endpoint.fragment:
             raise ValueError('Health checks must use a fixed loopback URL.')
@@ -96,9 +120,9 @@ def prepare(inventory, output, state, existing_bundle=None):
     write(output / 'trust.json', json.dumps({kid: encode(key_der[-32:])}))
     write(output / 'worker.key', token)
     shutil.copyfile(state / 'hearth-root.crt', output / 'head-ca.pem')
-    destination = '/etc/hearth-worker'
-    config = {'head_url': values['HEARTH_ADMIN_ORIGIN'], 'worker_id': str(node), 'state_directory': '/var/lib/hearth-worker',
-              **{key: destination + '/' + filename for key, filename in [('token_file', 'worker.key'), ('ca_file', 'head-ca.pem'), ('recipe_file', 'recipe.jws'), ('trust_file', 'trust.json')]}}
+    directory = PureWindowsPath(destination) if windows else Path(destination)
+    config = {'head_url': values['HEARTH_ADMIN_ORIGIN'], 'worker_id': str(node), 'state_directory': str(directory/'state') if windows else '/var/lib/hearth-worker',
+              **{key: str(directory/filename) for key, filename in [('token_file', 'worker.key'), ('ca_file', 'head-ca.pem'), ('recipe_file', 'recipe.jws'), ('trust_file', 'trust.json')]}}
     write(output / 'config.json', json.dumps(config, indent=2))
     # Locked, fail-closed adoption. An already managed or occupied group must
     # be reviewed manually, never silently replaced by another worker identity.

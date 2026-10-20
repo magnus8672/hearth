@@ -37,7 +37,7 @@ class ConnectProvider(BaseModel):
     api_key: SecretStr = SecretStr('')
     resource_pool: str | None = Field(default=None, min_length=1, max_length=120)
     local_only: StrictBool
-    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1', 'hearth.geometry.v1', 'hearth.decision.v1'] = 'openai.chat.v1'
+    protocol: Literal['openai.chat.v1', 'hearth.image.v1', 'hearth.speech.v1', 'hearth.transcription.v1', 'hearth.geometry.v1', 'hearth.decision.v1', 'hearth.summary.v1'] = 'openai.chat.v1'
     tls_ca_pem: str = Field(default='', max_length=16384)
     residency_policy: Literal['unknown', 'lmstudio_loaded'] = 'unknown'
     allow_insecure_http: StrictBool = False
@@ -102,6 +102,7 @@ def credential_for(row, settings):
 
 def transport_settings(row, settings):
     return settings.model_copy(update={'provider_ca_pem': row.get('tls_ca_pem', ''),
+                                      'provider_protocol': row.get('protocol', 'openai.chat.v1'),
                                       'provider_http_approved_url': normalize_url(row['base_url']) if row.get('allow_insecure_http', False) else '',
                                       'provider_residency_policy': row.get('residency_policy', 'unknown')})
 
@@ -325,6 +326,14 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
                     if edited.state != 'completed' or not artifact or edited.manifest_sha256 != info.manifest_sha256:
                         raise ProviderError('The image provider did not complete its uploaded-image editing check.')
                     features.append('image.image_to_image')
+        elif row['protocol'] == 'hearth.summary.v1':
+            from hearth import summary_transport
+            info = summary_transport.information(row['base_url'], key, transport)
+            result = summary_transport.summarize(row['base_url'], key, row['model_id'],
+                'The town library reopened on Monday after a six-month renovation. The work added a reading room and improved access for wheelchair users. The library will now stay open until eight in the evening on weekdays.', transport)
+            if result.text.strip():
+                features = ['text.summarize', 'summary.single_document']
+                profile = info.model_dump(mode='json')
         else:
             if row['model_id'] not in list_models(row['base_url'], key, transport):
                 raise ProviderError('The selected model is not listed by this server. Check its exact model identifier.')
@@ -375,7 +384,7 @@ def probe_target(engine, settings, principal, target_id, revision, *, check_visi
         db.execute(text("UPDATE inference_targets SET state=:state,features=CAST(:features AS jsonb),profile=CAST(:profile AS jsonb),probed_at=now(),verified_until=NULL,reason=:reason WHERE id=:id"),
             {'id': target_id, 'state': 'failed' if problem else 'ready', 'features': json.dumps(features), 'profile': json.dumps(profile), 'ready': not problem, 'reason': str(problem) if problem else warning})
         if not problem:
-            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.decision.v1': 'decision.evaluate', 'hearth.geometry.v1': 'geometry.generate', 'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
+            db.execute(text("INSERT INTO capability_bindings(farm_id,capability_id,target_id) SELECT :farm,CAST(:capability AS varchar(80)),:target WHERE NOT EXISTS(SELECT 1 FROM capability_routes WHERE capability_id=CAST(:capability AS varchar(80))) ON CONFLICT DO NOTHING"), {'farm': principal.farm_id, 'target': target_id, 'capability': {'hearth.summary.v1': 'text.summarize', 'hearth.decision.v1': 'decision.evaluate', 'hearth.geometry.v1': 'geometry.generate', 'hearth.image.v1': 'image.generate', 'hearth.speech.v1': 'audio.speak', 'hearth.transcription.v1': 'audio.transcribe'}.get(row['protocol'], 'chat.general')})
         db.execute(text("INSERT INTO audit_events(id,farm_id,actor_id,action,safe_metadata) VALUES(gen_random_uuid(),:farm,:actor,'provider.probed',jsonb_build_object('target_id',CAST(:target AS text),'ready',CAST(:ready AS boolean)))"),
             {'farm': principal.farm_id, 'actor': principal.id, 'target': str(target_id), 'ready': not problem})
     return {'id': target_id, 'revision': revision + 1, 'state': 'failed' if problem else 'ready', 'features': features,

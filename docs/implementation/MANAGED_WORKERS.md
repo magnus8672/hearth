@@ -1,5 +1,7 @@
 # Managed Linux services and GPU queues
 
+20 October implementation note: the [Windows runner preview](../operations/WINDOWS_RUNNER.md) now supervises pinned llama.cpp or experimental NCM XSum through signed recipes and explicit backend selection. This bounded text-runner slice does not complete installers, automatic enrollment, universal text queues, context compaction or broad hardware qualification.
+
 > Addresses, host labels and accounts shown here are illustrative placeholders. Use your own private deployment configuration.
 
 The [active roadmap](ROADMAP.md) separates the managed text-runtime pilot from automatic enrollment, worker PKI, NodePlan installation and clean-machine provisioning. Head-side [context compaction](CONTEXT_CONTINUITY_PLAN.md) can use existing model servers independently; P5A's bounded decision service does not complete general text-worker provisioning.

@@ -6,6 +6,8 @@ The preserved `docs/plan/` package has 119 files, including 30 Markdown document
 
 Feature reports retain their dated evidence and fixture boundaries. Their current-status notes and the farm snapshot resolve superseded topology, URL, adapter and availability claims. A historical model/provider test does not prove it is registered today. The website presents the finished-product vision by design.
 
+New operation guides, 20 October 2026: [Windows runner preview](operations/WINDOWS_RUNNER.md) and [NCM sources and notices](operations/NCM_THIRD_PARTY.md).
+
 ## Guides
 
 | Document | Location |

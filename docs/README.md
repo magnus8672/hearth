@@ -8,6 +8,7 @@ For deployment and validation, start with [head VM setup](operations/HEAD_VM_SET
 
 | Need | Document |
 |---|---|
+| Build the Windows LLM/NCM runner and switch approved backends | [Windows runner preview](operations/WINDOWS_RUNNER.md) |
 | Install and test Decisions, internal routing and provider balancing | [Decisions setup and testing](operations/DECISIONS_SETUP_AND_TESTING.md) |
 | Review the Switchyard phase and selected Laya/dedicated decision architecture | [P5A: routing and decision services](implementation/P5A_ROUTING_AND_DECISIONS.md) |
 | Choose the next delivery slice and review the full remaining scope | [Active roadmap](implementation/ROADMAP.md) |

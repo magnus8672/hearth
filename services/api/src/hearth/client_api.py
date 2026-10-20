@@ -175,11 +175,17 @@ def admit(engine, settings, client, data):
         target = routing.select(db, capability, tools=bool(data.tools), prepared=prepared)
         if not target:
             raise HTTPException(503, 'No ready, idle target supports this capability'+(' with verified tool calling.' if data.tools else '.'))
+        if target['protocol'] == 'hearth.summary.v1':
+            from hearth.summary_transport import source_from_messages
+            try:
+                source_from_messages(data.messages, caller_owned=True)
+            except ProviderError as exc:
+                raise HTTPException(400, str(exc)) from None
         run_id = uuid4()
         claim_pool(db, target, run_id, principal.id)
         receipt = routing.receipt(db, capability, target)
         db.execute(text('INSERT INTO client_runs(id,farm_id,owner_id,key_id,target_id,route_receipt) VALUES(:id,:farm,:owner,:key,:target,CAST(:receipt AS jsonb))'), {'id': run_id, 'farm': principal.farm_id, 'owner': principal.id, 'key': client.key_id, 'target': target['id'], 'receipt': json.dumps(receipt)})
-    return run_id, target, receipt, normalize_messages(capability, data)
+    return run_id, target, receipt, data.messages if target['protocol'] == 'hearth.summary.v1' else normalize_messages(capability, data)
 
 
 def produce(engine, settings, client, data, run_id, target, context, emit, disconnected):

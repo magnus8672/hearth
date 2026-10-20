@@ -1,5 +1,7 @@
 # hearth active roadmap and remaining work
 
+20 October implementation note: the [Windows runner preview](../operations/WINDOWS_RUNNER.md) now supervises pinned llama.cpp or experimental NCM XSum through signed recipes and explicit backend selection. This bounded text-runner slice does not complete installers, automatic enrollment, universal text queues, context compaction or broad hardware qualification.
+
 Reconciled 4 October 2026 with current `main`, including the privacy cleanup, MIT license, uploaded-image variation and [P5A routing and decision services](P5A_ROUTING_AND_DECISIONS.md). The September continuity design remains applicable. The [original plan](../plan/README.md), with its explicitly approved privacy redactions, remains the baseline; [coverage](DESIGN_COVERAGE.md) records delivered behavior and [build status](BUILD_STATUS.md) records evidence. The P5A implementation is available for an operator sweep; semantic quality and latency promotion remain open. See the [testing guide](../operations/DECISIONS_SETUP_AND_TESTING.md) and [ledger](BUILD_STATUS.md).
 
 The scope is a farm of resident specialists on separate machines, with optional explicitly shared resources. Existing LM Studio and other compatible providers remain supported. A managed text runtime adds an easier first-party deployment path. Compaction belongs in the head and does not depend on that runtime.

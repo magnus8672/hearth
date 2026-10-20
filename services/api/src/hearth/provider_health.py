@@ -36,6 +36,11 @@ def check_connection(target, settings):
         if target['model_id'] not in list_models(target['base_url'], key, transport):
             raise ProviderError('The saved model is not listed on this server. Check the model server and verify again.')
         require_loaded_model(target['base_url'], key, target['model_id'], transport)
+    elif target['protocol'] == 'hearth.summary.v1':
+        from hearth.summary_transport import information
+        info = information(target['base_url'], key, transport).model_dump(mode='json')
+        if info != target['profile']:
+            raise ProviderError('The NCM checkpoint or limits changed. Verify it again.')
     elif target['protocol'] == 'hearth.decision.v1':
         from hearth.decision_transport import information
         info = information(settings, target).model_dump(mode='json')

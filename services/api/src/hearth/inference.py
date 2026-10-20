@@ -218,6 +218,17 @@ def chat_stream(base_url, credential, model_id, messages, settings, *, maximum_t
     Reasoning fields and tool calls never become executable input or UI HTML.
     A caller may stop displaying output while continuing to drain this iterator.
     """
+    if getattr(settings, 'provider_protocol', '') == 'hearth.summary.v1':
+        from hearth.summary_transport import source_from_messages, summarize
+        if tools or tool_choice or parameters and any(k != 'stream_options' for k in parameters):
+            raise ProviderError('NCM XSum does not support tools or chat sampling controls.', provider_fault=False)
+        if maximum_tokens is not None and maximum_tokens < 48:
+            raise ProviderError('NCM XSum uses a fixed output budget of 48 tokens.', provider_fault=False)
+        source = source_from_messages(messages, caller_owned=caller_owned_tools)
+        result = summarize(base_url, credential, model_id, source, settings)
+        yield 'text', result.text
+        yield 'done', 'stop'
+        return
     require_loaded_model(base_url, credential, model_id, settings)
     started = time.monotonic()
     # Interactive replies need room for reasoning as well as visible output.

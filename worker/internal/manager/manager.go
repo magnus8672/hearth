@@ -22,6 +22,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -45,6 +47,15 @@ type Service struct {
 	HealthKeyFile string            `json:"health_key_file"`
 	HealthField   string            `json:"health_field"`
 	HealthValue   string            `json:"health_value"`
+	Processes     []Process         `json:"processes,omitempty"`
+	Directories   map[string]string `json:"directories,omitempty"`
+}
+
+// Process is an operator-signed launch specification, never a network command.
+type Process struct {
+	Executable string   `json:"executable"`
+	Arguments  []string `json:"arguments"`
+	Directory  string   `json:"directory"`
 }
 type Recipe struct {
 	SchemaVersion int                `json:"schema_version"`
@@ -167,10 +178,24 @@ func Load(path string) (Config, Recipe, string, error) {
 		if len(service.Files) < 2 || len(service.Files) > 128 || !filepath.IsAbs(service.HealthKeyFile) {
 			return fail()
 		}
-		if _, ok := service.Files["/etc/systemd/system/"+service.Unit]; !ok {
-			return fail()
+		if runtime.GOOS == "windows" {
+			if err := validateProcesses(service); err != nil {
+				return fail()
+			}
+		} else {
+			if _, ok := service.Files["/etc/systemd/system/"+service.Unit]; !ok || len(service.Processes) != 0 {
+				return fail()
+			}
 		}
 		for path, sum := range service.Files {
+			if !filepath.IsAbs(path) || filepath.Clean(path) != path || !digestPattern.MatchString(sum) {
+				return fail()
+			}
+		}
+		if len(service.Directories) > 8 {
+			return fail()
+		}
+		for path, sum := range service.Directories {
 			if !filepath.IsAbs(path) || filepath.Clean(path) != path || !digestPattern.MatchString(sum) {
 				return fail()
 			}
@@ -260,7 +285,9 @@ func (c *Controller) Reconcile(ctx context.Context) {
 		return
 	}
 	service := c.recipe.Services[*command.DesiredService]
-	if err := VerifyFiles(service); err != nil {
+	// Windows verifies the full model closure at process start; rehashing large
+	// weights each heartbeat would monopolize the disk while inference is active.
+	if err := verifyRunning(service); err != nil {
 		c.set(command, "failed", "recipe_mismatch", nil)
 		return
 	}
@@ -269,7 +296,25 @@ func (c *Controller) Reconcile(ctx context.Context) {
 		if !c.current(command) {
 			return
 		}
-		if c.driver.Start(ctx, service) != nil {
+		startCtx, cancelStart := context.WithCancel(ctx)
+		go func() {
+			tick := time.NewTicker(50 * time.Millisecond)
+			defer tick.Stop()
+			for {
+				select {
+				case <-startCtx.Done():
+					return
+				case <-tick.C:
+					if !c.current(command) {
+						cancelStart()
+						return
+					}
+				}
+			}
+		}()
+		err := c.driver.Start(startCtx, service)
+		cancelStart()
+		if err != nil {
 			c.set(command, "failed", "start_failed", nil)
 			return
 		}
@@ -283,16 +328,75 @@ func (c *Controller) Reconcile(ctx context.Context) {
 
 func VerifyFiles(service Service) error {
 	for path, expected := range service.Files {
-		data, err := read(path, 16<<20)
+		file, err := os.Open(path)
 		if err != nil {
 			return errors.New("approved service file unavailable")
 		}
-		sum := sha256.Sum256(data)
-		if hex.EncodeToString(sum[:]) != expected {
+		stat, err := file.Stat()
+		if err != nil || !stat.Mode().IsRegular() {
+			file.Close()
+			return errors.New("approved service file unavailable")
+		}
+		hash := sha256.New()
+		_, err = io.Copy(hash, file)
+		file.Close()
+		if err != nil || hex.EncodeToString(hash.Sum(nil)) != expected {
 			return errors.New("approved service file changed")
 		}
 	}
+	for path, expected := range service.Directories {
+		sum, err := DirectoryDigest(path)
+		if err != nil || sum != expected {
+			return errors.New("approved runtime directory changed")
+		}
+	}
 	return nil
+}
+
+// DirectoryDigest binds the dependency closure without trusting a mutable list
+// of files, including executable bytecode caches. Symlinks are rejected.
+func DirectoryDigest(root string) (string, error) {
+	info, err := os.Lstat(root)
+	if err != nil || !info.IsDir() {
+		return "", errors.New("runtime directory unavailable")
+	}
+	names := []string{}
+	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.Mode()&os.ModeSymlink != 0 {
+			return errors.New("runtime links are not allowed")
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if !info.Mode().IsRegular() {
+			return errors.New("invalid runtime entry")
+		}
+		names = append(names, path)
+		return nil
+	})
+	if err != nil {
+		return "", err
+	}
+	sort.Strings(names)
+	h := sha256.New()
+	for _, path := range names {
+		f, err := os.Open(path)
+		if err != nil {
+			return "", err
+		}
+		inner := sha256.New()
+		_, err = io.Copy(inner, f)
+		f.Close()
+		if err != nil {
+			return "", err
+		}
+		rel, _ := filepath.Rel(root, path)
+		fmt.Fprintf(h, "%s\x00%x\n", filepath.ToSlash(rel), inner.Sum(nil))
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 type Systemd struct{}
@@ -368,6 +472,9 @@ func (Systemd) Healthy(ctx context.Context, s Service) bool {
 	if !approvedUnit(ctx, s) {
 		return false
 	}
+	return serviceHealth(ctx, s)
+}
+func serviceHealth(ctx context.Context, s Service) bool {
 	key, err := read(s.HealthKeyFile, 4096)
 	if err != nil {
 		return false
@@ -418,7 +525,12 @@ func Run(ctx context.Context, path string) error {
 		return errors.New("worker credential invalid")
 	}
 	client := &http.Client{Timeout: 8 * time.Second, Transport: &http.Transport{Proxy: nil, TLSClientConfig: &tls.Config{MinVersion: tls.VersionTLS12, RootCAs: roots}}, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
-	controller := New(recipe, digest, Systemd{})
+	driver, closeDriver, err := platformDriver()
+	if err != nil {
+		return err
+	}
+	defer closeDriver()
+	controller := New(recipe, digest, driver)
 	workerDone := make(chan struct{})
 	go func() {
 		defer close(workerDone)

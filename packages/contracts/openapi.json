@@ -1226,7 +1226,8 @@
               "hearth.speech.v1",
               "hearth.transcription.v1",
               "hearth.geometry.v1",
-              "hearth.decision.v1"
+              "hearth.decision.v1",
+              "hearth.summary.v1"
             ],
             "title": "Protocol",
             "type": "string"
@@ -4649,7 +4650,8 @@
               "hearth.speech.v1",
               "hearth.transcription.v1",
               "hearth.geometry.v1",
-              "hearth.decision.v1"
+              "hearth.decision.v1",
+              "hearth.summary.v1"
             ],
             "title": "Protocol",
             "type": "string"

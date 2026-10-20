@@ -66,6 +66,12 @@ def profile(capability):
 
 def readiness(capability, target):
     required = profile(capability)
+    if target['protocol'] == 'hearth.summary.v1':
+        if capability != 'text.summarize':
+            return False, 'NCM XSum is a single-document summarizer, not a chat, tool or planning model.'
+        required = {'protocol': 'hearth.summary.v1', 'executable': True,
+                    'features': ['text.summarize', 'summary.single_document'],
+                    'scope': 'English XSum summaries: one source article, at most 512 tokens; no chat history or tools.'}
     if not required['executable']:
         return False, required['scope']
     if target['protocol'] != required['protocol']:
@@ -217,6 +223,8 @@ def assign_route(engine, principal, capability_id, data):
             row = target_record(db, target_id, lock=True)
             if row['active_run_id']:
                 raise HTTPException(409, 'Wait for the affected resource groups to finish before changing this route.')
+            if data.selection_policy == 'balanced' and row['protocol'] == 'hearth.summary.v1' and target_id in {item.target_id for item in data.targets}:
+                raise HTTPException(400, 'NCM XSum has different input limits and task semantics. Keep its route Ordered rather than balancing it with chat models.')
         db.execute(text('DELETE FROM capability_bindings WHERE capability_id=:capability'), {'capability': capability_id})
         for item in data.targets:
             db.execute(text('INSERT INTO capability_bindings(farm_id,capability_id,target_id,priority) VALUES(:farm,:capability,:target,:priority)'), {'farm': principal.farm_id, 'capability': capability_id, 'target': item.target_id, 'priority': item.priority})

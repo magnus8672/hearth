@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-20",
+  "kind": "windows-runner-development-preview",
+  "schema": "0030",
+  "head": [
+    {
+      "surface": "user",
+      "trusted_https_readiness": 200,
+      "index_and_linked_asset_hashes_match": true
+    },
+    {
+      "surface": "admin",
+      "trusted_https_readiness": 200,
+      "index_and_linked_asset_hashes_match": true
+    }
+  ],
+  "native_windows_go_suite": "passed",
+  "linux_manager_tests": {
+    "passed": 5
+  },
+  "head_regression": {
+    "passed": 22,
+    "skipped": 1
+  },
+  "final_ncm_regression": {
+    "passed": 15
+  },
+  "ui_typecheck_and_both_builds": "passed",
+  "live_backends": {
+    "llama_cpp": {
+      "chat": true,
+      "streaming": true,
+      "native_tools": true,
+      "vision_qualified": false
+    },
+    "ncm_xsum": {
+      "transport_probe": true,
+      "device": "cpu",
+      "input_token_limit": 512,
+      "output_token_limit": 48,
+      "faithful_summary_qualified": false
+    }
+  },
+  "lifecycle": {
+    "llm_to_ncm": "observed",
+    "ncm_to_llm": "observed",
+    "left_resident": "llm",
+    "text_queue": "not_implemented"
+  },
+  "release_gates": {
+    "partial": 20,
+    "not_run": 41,
+    "fully_passed": 0
+  }
+}

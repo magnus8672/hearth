@@ -7,7 +7,7 @@ Updated 4 October 2026. This public overview describes implementation roles and 
 | Role | Responsibility |
 |---|---|
 | Head | Identity, authorization, routing, private storage, queues, memory, and separate workspace/admin interfaces. A GPU is not required. |
-| Model host | An existing compatible server such as LM Studio, with explicitly configured targets and verified capability bindings. |
+| Model host | An existing compatible server such as LM Studio, or the [Windows runner preview](../operations/WINDOWS_RUNNER.md) with managed llama.cpp and experimental NCM XSum. Targets and capability bindings require verification. |
 | Media worker | Approved Fooocus, TRELLIS or Hunyuan services. Independent hosts run concurrently; explicitly shared GPUs use the managed media queue. |
 | Optional providers | Compatible speech, transcription and tool services registered by an administrator. |
 
@@ -16,6 +16,7 @@ Updated 4 October 2026. This public overview describes implementation roles and 
 | Capability | Implemented behavior and requirements |
 |---|---|
 | Text profiles | Compatible chat transports with verified targets. Automatic intent selection may fall back to general chat for an unassigned specialist; explicit selection requires an eligible assignment. |
+| `text.summarize` | Compatible LLM summarization or experimental NCM XSum for one fresh article of at most 512 GPT-2 tokens. NCM uses a distinct transport, has no chat/history/tools support and is not qualified for faithful summaries or automatic compaction. |
 | `decision.evaluate` | Private typed Choice/Score/Boolean decisions through prepared head CPU Laya or independently assigned dedicated providers. Scoped client API, comparison and export. [Setup and limits](../operations/DECISIONS_SETUP_AND_TESTING.md). |
 | `vision.describe` | Private image understanding requires saved pixel-reading verification, not just advertised Vision support. |
 | `image.generate` | Fooocus jobs from the gallery, private chat and channels join the durable media queue. |

@@ -325,6 +325,14 @@ def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, fro
         target = routing.select(db, capability, queued=capability == 'image.generate', prepared=prepared)
         if target is None:
             raise HTTPException(409, f'No verified model for {capability} is idle. Check its route in Administration, or wait for the current job.')
+        if target['protocol'] == 'hearth.summary.v1':
+            from hearth.summary_transport import source_from_messages
+            if history_count or omitted:
+                raise HTTPException(409, 'NCM XSum needs one complete article in a fresh conversation. History and truncated context are not supported.')
+            try:
+                source_from_messages(context)
+            except ProviderError as exc:
+                raise HTTPException(409, str(exc)) from None
         if capability != 'image.generate':
             claim_pool(db, target, data.request_id, principal.id)
         if not from_queue:
@@ -341,7 +349,7 @@ def accept_turn(engine, settings, principal, session_hash, chat_id, data, *, fro
             image_planning.admit(db, principal, session_hash, data.request_id, target, planned_image, context, data.content, reference, message_id=assistant_message, chat_id=chat_id)
         if prompt:
             conversation_media.admit(db, principal, session_hash, target, data.request_id, prompt, shape=conversation_media.image_shape(data.content), message_id=assistant_message)
-        if not prompt and not needs_plan:
+        if not prompt and not needs_plan and target['protocol'] != 'hearth.summary.v1':
             context, memory_receipt = memory.recall_context(db, data.content, chat_id, context, omitted)
             db.execute(text('UPDATE chat_runs SET memory_receipt=CAST(:receipt AS jsonb) WHERE id=:id'), {'id': data.request_id, 'receipt': json.dumps(memory_receipt)})
             context = routing.context_for(capability, context, tools='tools' in target['features'])

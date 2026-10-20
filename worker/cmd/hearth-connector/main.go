@@ -91,9 +91,9 @@ var imageJob = regexp.MustCompile(`^/v1/image-jobs/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}
 
 func allowed(method, path string) bool {
 	switch path {
-	case "/v1/models", "/v1/image-provider", "/api/v1/models":
+	case "/v1/models", "/v1/image-provider", "/api/v1/models", "/v1/ncm-provider":
 		return method == "GET"
-	case "/v1/chat/completions", "/v1/embeddings", "/v1/audio/speech", "/v1/audio/transcriptions", "/v1/image-jobs":
+	case "/v1/chat/completions", "/v1/embeddings", "/v1/audio/speech", "/v1/audio/transcriptions", "/v1/image-jobs", "/v1/summaries":
 		return method == "POST"
 	}
 	return imageJob.MatchString(path) && ((strings.HasSuffix(path, "/cancel") && method == "POST") || (!strings.HasSuffix(path, "/cancel") && method == "GET"))
@@ -121,7 +121,7 @@ func handler(c config, token, upstreamKey string) (http.Handler, error) {
 				p.Out.Header.Set("Authorization", "Bearer "+upstreamKey)
 			}
 		},
-		Transport:     &http.Transport{Proxy: nil, DialContext: (&net.Dialer{Timeout: 5 * time.Second}).DialContext, ResponseHeaderTimeout: 30 * time.Second, DisableCompression: true, MaxIdleConnsPerHost: 4},
+		Transport:     &http.Transport{Proxy: nil, DialContext: (&net.Dialer{Timeout: 5 * time.Second}).DialContext, ResponseHeaderTimeout: 180 * time.Second, DisableCompression: true, MaxIdleConnsPerHost: 4},
 		FlushInterval: -1,
 		ModifyResponse: func(r *http.Response) error {
 			if r.StatusCode >= 300 && r.StatusCode < 400 {

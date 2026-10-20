@@ -1,5 +1,7 @@
 # Context compaction and managed text runtime
 
+20 October implementation note: the [Windows runner preview](../operations/WINDOWS_RUNNER.md) now supervises pinned llama.cpp or experimental NCM XSum through signed recipes and explicit backend selection. This bounded text-runner slice does not complete installers, automatic enrollment, universal text queues, context compaction or broad hardware qualification.
+
 Integrated into the [active roadmap](ROADMAP.md) on 20 September 2026 and reconciled with current source and [P5A](P5A_ROUTING_AND_DECISIONS.md) on 4 October. This is implementation design, not delivered functionality or a release acceptance claim. The source inspection below did not change a running service or model configuration.
 
 ## Direction
@@ -57,7 +59,7 @@ Workspace chat compaction can ship independently of these client extensions. Sha
 
 Extend the worker with approved text-service recipes and eventual provisioning that report the actual tokenizer/template, loaded context, cache format, Flash Attention, speculative decoding, concurrency, residency and GPU/host allocation. Expose reviewed settings through Administration, with an explicit drain/reload operation for changes that require it. Report unsupported settings per backend rather than pretending every engine has equivalent controls.
 
-Preserve the distributed default: different resident specialists on independent machines. Compaction is normal inference dispatched to an already eligible target, not an implicit model download or swap. Existing services remain under their operator's control until explicitly adopted. The current Linux service supervisor does not establish Windows worker support or cross-platform provisioning readiness.
+Preserve the distributed default: different resident specialists on independent machines. Compaction is normal inference dispatched to an already eligible target, not an implicit model download or swap. Existing services remain under their operator's control until explicitly adopted. Linux systemd and Windows Job Object supervision now have bounded implementations; cross-platform provisioning and recovery qualification remain open.
 
 Prompt compaction reduces the text processed on future requests. It does not by itself shrink a runtime's preallocated KV cache; context allocation remains a separate managed or operator-controlled setting. These two changes solve related but distinct resource problems.
 
